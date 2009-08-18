@@ -1,9 +1,10 @@
 $: << File.join(File.dirname(__FILE__), "/../lib") 
 
-require 'interpreter/channel'
-require 'interpreter/code'
-require 'interpreter/interpreter'
-require 'interpreter/leaves'
+require "treetop"
+require "polyglot"
+
+
 require 'interpreter/stack'
+require 'interpreter/grammars/nudge_language'
 
 require 'instructions/int_arithmetic.rb'

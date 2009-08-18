@@ -1,32 +1,15 @@
 grammar Nudgelike
-	rule point
-		(indent opcode)
-	end
-	
-	rule opcode
-		block
-	end
-	
-	rule parameters
-		(.*) eoc
-	end
-		
 	rule block
-		"block" parameters
+		"block" otherstuff
 	end
 	
-	rule indent
-		'  '*
+	rule otherstuff
+		char*
 	end
 	
-	rule eoc
-		!. / eol
+	rule char
+		.
 	end
-	
-	rule eol
-		[\n]
-	end
-	
 	
 	
 end

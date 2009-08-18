@@ -1,0 +1,29 @@
+grammar NudgeLanguage
+	rule my_program
+		block_line / instr_line
+	end
+	
+	rule block_line
+		"block"
+	end
+	
+	rule instr_line
+		"instr" space ":" space inst_name {
+			def instruction_name
+				return inst_name.text_value
+			end
+		}
+	end
+	
+	rule space
+		' '*
+	end
+	
+	
+	rule inst_name
+		(.*)
+	end
+	
+	
+	
+end
