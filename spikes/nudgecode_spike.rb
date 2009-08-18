@@ -20,7 +20,7 @@ block
       block
         instr :bool_xor
   erc :bool, true
-  opcode :code_if
+  instr :code_if
 
 # here's a "flat" multiline program in Nudge2
 
