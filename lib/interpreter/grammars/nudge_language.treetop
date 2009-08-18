@@ -1,15 +1,31 @@
 grammar NudgeLanguage
 	rule my_program
-		block_line / instr_line / channel_line / literal_line
+		block_statement (block_contents)* / nonblock_statement
+	end
+	
+	rule nonblock_statement
+		instr_statement / channel_statement / literal_statement
+	end
+	
+	rule block_contents
+		(newline one_indent block_statement)
+	end
+	
+	rule one_indent
+		[\s]+ / "\t"
 	end
 	
 	
-	rule block_line
+	rule newline
+		"\n"
+	end
+	
+	
+	rule block_statement
 		"block"
 	end
 	
-	
-	rule instr_line
+	rule instr_statement
 		"instr" some_space inst_name {
 			def instruction_name
 				return inst_name.text_value
@@ -18,7 +34,7 @@ grammar NudgeLanguage
 	end
 	
 	
-	rule channel_line
+	rule channel_statement
 		"channel" some_space chan_name {
 			def channel_name
 				return chan_name.text_value
@@ -26,7 +42,7 @@ grammar NudgeLanguage
 		}
 	end
 	
-	rule literal_line
+	rule literal_statement
 		"literal" some_space where:stack some_space "," some_space what:lit_value {
 			def stack_name
 				return where.text_value
@@ -74,7 +90,7 @@ grammar NudgeLanguage
 	end
 	
 	rule inst_name
-		(.*)
+		.*
 	end
 	
 	

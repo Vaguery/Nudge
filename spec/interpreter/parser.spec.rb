@@ -50,6 +50,10 @@ describe "parser" do
           it "should have a value of 8" do
             @parser.parse(b).value.should == 8
           end
+          
+          it "should work for negatives"
+          
+          it "should raise an exception if the value isn't an integer"
         end
       end
       
@@ -66,10 +70,47 @@ describe "parser" do
           it "should be a boolean" do
             [FalseClass,TrueClass].should include(@parser.parse(b).value.class)
           end
+          
+          it "should ignore case"
+          
+          it "should raise an exception if the value isn't a boolean"
         end
+      end
+      
+      describe "floats" do
+        it "should work for floats"
+      end
+      
+      describe "complex literals" do
+        it "use some kind of reference system for complicated literals"
       end
       
     end
     
+  end
+  
+  describe "should handle two-line code" do
+    b2s = ["  block\n  block","\tblock\n\tblock"]
+    b2s.each do |b|
+      it "should fail to recognize #{b} because of the initial space" do
+        @parser.parse(b).should == nil
+      end
+    end
+    
+    # b2s = ["block\nblock","instr hey_there\ninstr now_then"]
+    # b2s.each do |b|
+    #   it "should fail to recognize #{b} because there are two root lines" do
+    #     @parser.parse(b).should == nil
+    #   end
+    # end
+    
+    b2s = ["block\n  block","block\n\tblock"]
+    b2s.each do |b|
+      it "should recognize #{b}" do
+        @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+      end
+    end
+  
+    it "should have two block elements"
   end
 end
