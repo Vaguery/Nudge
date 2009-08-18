@@ -1,5 +1,4 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
-include Nudge
 
 describe "Leaf" do
   it "should require a value and stackname parameter to be created"

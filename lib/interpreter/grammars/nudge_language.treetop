@@ -3,9 +3,11 @@ grammar NudgeLanguage
 		block_line / instr_line
 	end
 	
+	
 	rule block_line
 		"block"
 	end
+	
 	
 	rule instr_line
 		"instr" space ":" space inst_name {
@@ -14,6 +16,7 @@ grammar NudgeLanguage
 			end
 		}
 	end
+	
 	
 	rule space
 		' '*

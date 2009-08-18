@@ -1,7 +1,4 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
-require 'interpreter/leaves'
-
-include Nudge
 
 describe "channel" do
   it "should have a 'name' attribute set at initialization"

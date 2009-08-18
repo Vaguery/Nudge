@@ -1,8 +1,5 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 
-include Nudge
-
-
 describe "subtree crossover" do
   it "should accept an array containing any number of parents"
   it "should accept N≠2 parents, and simply crossover between neighbors in a cycle"
