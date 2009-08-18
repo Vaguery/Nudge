@@ -4,8 +4,6 @@ require "trees"
 
 parser = NudgelikeParser.new
 
-p parser.parse("")
+p parser.parse("block")
 
-p parser.parse("123")
-
-p parser.parse("123\n456")
+p parser.parse("block\n  block")

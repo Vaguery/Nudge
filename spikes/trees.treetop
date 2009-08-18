@@ -1,18 +1,32 @@
 grammar Nudgelike
-	rule content
-		number / eoc
+	rule point
+		(indent opcode)
+	end
+	
+	rule opcode
+		block
+	end
+	
+	rule parameters
+		(.*) eoc
 	end
 		
-	rule number
-		[0-9]* eoc
+	rule block
+		"block" parameters
+	end
+	
+	rule indent
+		'  '*
 	end
 	
 	rule eoc
-		"\n" / eof
+		!. / eol
 	end
 	
-	rule eof
-		!.
+	rule eol
+		[\n]
 	end
+	
+	
 	
 end
