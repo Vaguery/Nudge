@@ -1,6 +1,6 @@
 grammar NudgeLanguage
 	rule my_program
-		block_line / instr_line
+		block_line / instr_line / channel_line / literal_line
 	end
 	
 	
@@ -10,7 +10,7 @@ grammar NudgeLanguage
 	
 	
 	rule instr_line
-		"instr" space ":" space inst_name {
+		"instr" some_space inst_name {
 			def instruction_name
 				return inst_name.text_value
 			end
@@ -18,10 +18,60 @@ grammar NudgeLanguage
 	end
 	
 	
-	rule space
-		' '*
+	rule channel_line
+		"channel" some_space chan_name {
+			def channel_name
+				return chan_name.text_value
+			end
+		}
 	end
 	
+	rule literal_line
+		"literal" some_space where:stack some_space "," some_space what:lit_value {
+			def stack_name
+				return where.text_value
+			end
+			
+			def value
+				uncorrected = what.text_value
+				case
+				when stack_name == "int"
+					corrected = uncorrected.to_i
+				when stack_name == "bool"
+					if uncorrected == "false"
+						corrected = false
+					else
+						corrected = true
+					end
+				end
+				return corrected
+			end
+		}
+	end
+	
+	rule chan_name
+		([a-zA-Z0-9_?]*)
+	end
+	
+	rule stack
+		([a-zA-Z]+)
+	end
+	
+	rule some_space
+		[\s\t]*
+	end
+	
+	rule lit_value
+		int_val / bool_val
+	end
+	
+	rule int_val
+		[0-9]+
+	end
+	
+	rule bool_val
+		"true" / "false"
+	end
 	
 	rule inst_name
 		(.*)
