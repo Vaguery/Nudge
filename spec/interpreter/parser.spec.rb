@@ -13,12 +13,12 @@ describe "parser" do
   describe "should handle single-line code" do
     it "should recognize 'block'" do
       just_block = "block"
-      @parser.parse(just_block).should be_a_kind_of(Treetop::Runtime::SyntaxNode)      
+      @parser.parse(just_block).should be_a_kind_of(BlockNode)      
     end
 
     ["instr foo_bar", "instr      foo_bar", "instr\tfoo_bar"].each do |b|
       it "should recognize #{b}" do
-        @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+        @parser.parse(b).should be_a_kind_of(InstructionNode)
       end
       
       it "should have an opcode 'foo_bar'" do
@@ -28,7 +28,7 @@ describe "parser" do
     
     ["channel x", "channel\tx"].each do |b|
       it "should recognize #{b}" do
-        @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+        @parser.parse(b).should be_a_kind_of(ChannelNode)
       end
       
       it "should have a channel name 'x'" do
@@ -40,7 +40,7 @@ describe "parser" do
       describe "integers" do
         ["literal int,8", "literal\tint , 8"].each do |b|
           it "should recognize #{b}" do
-            @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+            @parser.parse(b).should be_a_kind_of(LiteralNode)
           end
 
           it "should have a target_stack of int" do
@@ -50,17 +50,23 @@ describe "parser" do
           it "should have a value of 8" do
             @parser.parse(b).value.should == 8
           end
-          
-          it "should work for negatives"
-          
-          it "should raise an exception if the value isn't an integer"
         end
+        
+        it "should work for negatives" do
+          neg_thing = "literal int,-221"
+          @parser.parse(neg_thing).should be_a_kind_of(LiteralNode)
+          @parser.parse(neg_thing).value.should == -221
+          
+        end
+        
+        it "should raise an exception if the value isn't an integer"
+        
       end
       
       describe "booleans" do
         ["literal bool,true", "literal\t bool ,false"].each do |b|
           it "should recognize #{b}" do
-            @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+            @parser.parse(b).should be_a_kind_of(LiteralNode)
           end
 
           it "should have a target_stack of bool" do
@@ -71,7 +77,7 @@ describe "parser" do
             [FalseClass,TrueClass].should include(@parser.parse(b).value.class)
           end
           
-          it "should ignore case"
+          it "should ignore case" 
           
           it "should raise an exception if the value isn't a boolean"
         end
@@ -97,17 +103,17 @@ describe "parser" do
       end
     end
     
-    # b2s = ["block\nblock","instr hey_there\ninstr now_then"]
-    # b2s.each do |b|
-    #   it "should fail to recognize #{b} because there are two root lines" do
-    #     @parser.parse(b).should == nil
-    #   end
-    # end
+    b2s = ["block\nblock","instr hey_there\ninstr now_then"]
+    b2s.each do |b|
+      it "should fail to recognize #{b} because there are two root lines" do
+        @parser.parse(b).should == nil
+      end
+    end
     
     b2s = ["block\n  block","block\n\tblock"]
     b2s.each do |b|
       it "should recognize #{b}" do
-        @parser.parse(b).should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+        @parser.parse(b).should be_a_kind_of(BlockNode)
       end
     end
   

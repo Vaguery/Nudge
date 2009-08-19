@@ -1,14 +1,19 @@
 grammar NudgeLanguage
 	rule my_program
-		block_statement (block_contents)* / nonblock_statement
+		block_statement (block_contents)* <BlockNode>
+		/ nonblock_statement
 	end
 	
 	rule nonblock_statement
-		instr_statement / channel_statement / literal_statement
+		instr_statement <InstructionNode>
+		/
+		channel_statement <ChannelNode>
+		/
+		literal_statement <LiteralNode>
 	end
 	
 	rule block_contents
-		(newline one_indent block_statement)
+		(newline one_indent block_statement) # will break for more than 2 lines
 	end
 	
 	rule one_indent
@@ -20,49 +25,21 @@ grammar NudgeLanguage
 		"\n"
 	end
 	
-	
 	rule block_statement
 		"block"
 	end
 	
 	rule instr_statement
-		"instr" some_space inst_name {
-			def instruction_name
-				return inst_name.text_value
-			end
-		}
+		("instr" some_space inst_params) # see helper module
 	end
 	
 	
 	rule channel_statement
-		"channel" some_space chan_name {
-			def channel_name
-				return chan_name.text_value
-			end
-		}
+		"channel" some_space chan_name # see helper module
 	end
 	
 	rule literal_statement
-		"literal" some_space where:stack some_space "," some_space what:lit_value {
-			def stack_name
-				return where.text_value
-			end
-			
-			def value
-				uncorrected = what.text_value
-				case
-				when stack_name == "int"
-					corrected = uncorrected.to_i
-				when stack_name == "bool"
-					if uncorrected == "false"
-						corrected = false
-					else
-						corrected = true
-					end
-				end
-				return corrected
-			end
-		}
+		"literal" some_space where:stack some_space "," some_space what:lit_value 
 	end
 	
 	rule chan_name
@@ -82,15 +59,15 @@ grammar NudgeLanguage
 	end
 	
 	rule int_val
-		[0-9]+
+		[0-9]+ / "-" [0-9]+
 	end
 	
 	rule bool_val
 		"true" / "false"
 	end
 	
-	rule inst_name
-		.*
+	rule inst_params
+		[a-zA-Z_]*
 	end
 	
 	
