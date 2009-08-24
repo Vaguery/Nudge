@@ -17,7 +17,7 @@ describe "parser" do
     end
 
     ["instr foo_bar", "instr      foo_bar", "instr\tfoo_bar"].each do |b|
-      it "should recognize #{b}" do
+      it "should recognize \"#{b}\"" do
         @parser.parse(b).should be_a_kind_of(InstructionNode)
       end
       
@@ -27,7 +27,7 @@ describe "parser" do
     end    
     
     ["channel x", "channel\tx"].each do |b|
-      it "should recognize #{b}" do
+      it "should recognize \"#{b}\"" do
         @parser.parse(b).should be_a_kind_of(ChannelNode)
       end
       
@@ -39,7 +39,7 @@ describe "parser" do
     describe "literals:" do
       describe "integers" do
         ["literal int,8", "literal\tint , 8"].each do |b|
-          it "should recognize #{b}" do
+          it "should recognize \"#{b}\"" do
             @parser.parse(b).should be_a_kind_of(LiteralNode)
           end
 
@@ -65,7 +65,7 @@ describe "parser" do
       
       describe "booleans" do
         ["literal bool,true", "literal\t bool ,false"].each do |b|
-          it "should recognize #{b}" do
+          it "should recognize \"#{b}\"" do
             @parser.parse(b).should be_a_kind_of(LiteralNode)
           end
 
@@ -98,29 +98,34 @@ describe "parser" do
   describe "should handle two-line code" do
     b2s = ["  block\n  block","\tblock\n\tblock"]
     b2s.each do |b|
-      it "should fail to recognize #{b} because of the initial space" do
+      it "should fail to recognize \"#{b}\" because of the initial space" do
         @parser.parse(b).should == nil
       end
     end
     
     b2s = ["block\nblock","instr hey_there\ninstr now_then"]
     b2s.each do |b|
-      it "should fail to recognize #{b} because there are two root lines" do
+      it "should fail to recognize \"#{b}\" because there are two root lines" do
         @parser.parse(b).should == nil
       end
     end
     
     b2s = ["block\n  block","block\n\tblock"]
     b2s.each do |b|
-      it "should recognize #{b}" do
+      it "should recognize \"#{b}\"" do
         @parser.parse(b).should be_a_kind_of(BlockNode)
       end
       
-      it "should have return two nested block elements for #{b}"
+      it "should have return two nested block elements for \"#{b}\""
       
       it "should create a #contents attribute for each containing the right stuff"
     end
-  
     
+    b2s = ["block\n  instr hey_now","block\n  literal int, 22", "block\n  channel WVIZ"]
+    b2inners = [InstructionNode, LiteralNode, ChannelNode]
+    
+    b2s.each do |b|
+      it "should have the corrent inner node type for \"#{b}\""
+    end
   end
 end
