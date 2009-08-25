@@ -13,12 +13,12 @@ describe "parser" do
   describe "should handle single-line code" do
     it "should recognize 'block'" do
       just_block = "block"
-      @parser.parse(just_block).should be_a_kind_of(BlockNode)      
+      @parser.parse(just_block).should be_a_kind_of(BlockNode)  
     end
 
     ["instr foo_bar", "instr      foo_bar", "instr\tfoo_bar"].each do |b|
       it "should recognize \"#{b}\"" do
-        @parser.parse(b).should be_a_kind_of(InstructionNode)
+        @parser.parse(b).should be_a_kind_of(InstructionNode)        
       end
       
       it "should have an opcode 'foo_bar'" do
@@ -45,6 +45,7 @@ describe "parser" do
 
           it "should have a target_stack of int" do
             @parser.parse(b).stack_name.should == "int"
+            
           end
 
           it "should have a value of 8" do
