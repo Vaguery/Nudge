@@ -67,6 +67,7 @@ grammar NudgeLanguage
   end
   
   rule inst_params
-    [a-zA-Z_]*
+    [a-z_A-Z]+
   end
+  
 end
