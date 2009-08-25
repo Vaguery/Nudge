@@ -12,8 +12,13 @@ describe "parser" do
   
   describe "should handle single-line code" do
     it "should recognize 'block'" do
-      just_block = "block"
+      just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)      
+    end
+    
+    it %(should recoginize block \n) do
+      pending("doesn't work yet")
+      @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)      
     end
 
     ["instr foo_bar", "instr      foo_bar", "instr\tfoo_bar"].each do |b|
