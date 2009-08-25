@@ -116,7 +116,7 @@ describe "parser" do
         @parser.parse(b).should be_a_kind_of(BlockNode)
       end
       
-      it "should have return two nested block elements for \"#{b}\""
+      it %(should return two nested block elements for "#{b}")
       
       it "should create a #contents attribute for each containing the right stuff"
     end
