@@ -119,7 +119,7 @@ describe "parser" do
       it "should create a #contents attribute for each containing the right stuff"
     end
     
-    b2s = ["block\n  instr hey_now","block\n  literal int, 22", "block\n  channel WVIZ"]
+    b2s = ["block {\n  instr hey_now}","block {\n  literal int, 22 }", "block {\n  channel WVIZ}"]
     b2inners = [InstructionNode, LiteralNode, ChannelNode]
     
     b2s.each do |b|
