@@ -1,5 +1,7 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 
+require 'pp'
+
 describe "parser" do
   before(:each) do
     @parser = NudgeLanguageParser.new
@@ -11,17 +13,16 @@ describe "parser" do
   end
   
   describe "should handle single-line code" do
-    it "should recognize 'block'" do
+    it "should recognize 'block {}'" do
       just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)      
     end
     
-    it %(should recoginize block \n) do
-      pending("doesn't work yet")
+    it %(should recognize \"block \\n\") do
       @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)      
     end
 
-    ["instr foo_bar", "instr      foo_bar", "instr\tfoo_bar"].each do |b|
+    [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
       it "should recognize \"#{b}\"" do
         @parser.parse(b).should be_a_kind_of(InstructionNode)        
       end
@@ -102,25 +103,16 @@ describe "parser" do
   end
   
   describe "should handle two-line code" do
-    b2s = ["  block\n  block","\tblock\n\tblock"]
-    b2s.each do |b|
-      it "should fail to recognize \"#{b}\" because of the initial space" do
-        @parser.parse(b).should == nil
-      end
-    end
-    
-    b2s = ["block\nblock","instr hey_there\ninstr now_then"]
+    b2s = ["  block {}  block {}","\tblock{}\n\tblock{}","instr hey_there\ninstr now_then"]
     b2s.each do |b|
       it "should fail to recognize \"#{b}\" because there are two root lines" do
         @parser.parse(b).should == nil
       end
     end
-    
-    b2s = ["block\n  block","block\n\tblock"]
+      
+    b2s = ["block {\n  block {}}","block {\n\tblock { }  }"]
     b2s.each do |b|
-      it "should recognize \"#{b}\"" do
-        @parser.parse(b).should be_a_kind_of(BlockNode)
-      end
+      it "should recognize \"#{b}\""
       
       it %(should return two nested block elements for "#{b}")
       

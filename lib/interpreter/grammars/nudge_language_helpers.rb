@@ -1,9 +1,12 @@
 module BlockNode
+  def contents
+    return innards.text_value
+  end
 end
 
 module InstructionNode
   def instruction_name
-    return inst_params.text_value
+    return opcode.text_value
   end
 end
 
