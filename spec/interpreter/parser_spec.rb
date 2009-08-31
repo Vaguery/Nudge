@@ -15,16 +15,16 @@ describe "parser" do
   describe "should handle single-line code" do
     it "should recognize 'block {}'" do
       just_block = fixture(:just_block)
-      @parser.parse(just_block).should be_a_kind_of(BlockNode)      
+      @parser.parse(just_block).should be_a_kind_of(BlockNode)
     end
     
     it %(should recognize \"block \\n\") do
-      @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)      
+      @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
     end
 
     [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
       it "should recognize \"#{b}\"" do
-        @parser.parse(b).should be_a_kind_of(InstructionNode)        
+        @parser.parse(b).should be_a_kind_of(InstructionNode)
       end
       
       it "should have an opcode 'foo_bar'" do
@@ -43,7 +43,7 @@ describe "parser" do
     end
     
     describe "literals:" do
-      describe "integers" do
+      describe "#integer parser" do
         ["literal int,8", "literal\tint , 8"].each do |b|
           it "should recognize \"#{b}\"" do
             @parser.parse(b).should be_a_kind_of(LiteralNode)
@@ -51,7 +51,6 @@ describe "parser" do
 
           it "should have a target_stack of int" do
             @parser.parse(b).stack_name.should == "int"
-            
           end
 
           it "should have a value of 8" do
@@ -63,14 +62,10 @@ describe "parser" do
           neg_thing = "literal int,-221"
           @parser.parse(neg_thing).should be_a_kind_of(LiteralNode)
           @parser.parse(neg_thing).value.should == -221
-          
         end
-        
-        it "should raise an exception if the value isn't an integer"
-        
       end
       
-      describe "booleans" do
+      describe "#boolean parser" do
         ["literal bool,true", "literal\t bool ,false"].each do |b|
           it "should recognize \"#{b}\"" do
             @parser.parse(b).should be_a_kind_of(LiteralNode)
@@ -83,15 +78,32 @@ describe "parser" do
           it "should be a boolean" do
             [FalseClass,TrueClass].should include(@parser.parse(b).value.class)
           end
-          
-          it "should ignore case" 
-          
-          it "should raise an exception if the value isn't a boolean"
+        end
+        
+        it "should ignore case" do
+          @parser.parse("literal bool,FALSE").value.should == false
+          @parser.parse("literal bool,True").value.should == true
         end
       end
       
-      describe "floats" do
-        it "should work for floats"
+      describe "#float parser" do
+        [["literal float,-6.2",-6.2],
+          ["literal\t float ,1992.0001",1992.0001],
+          ["literal\t float , 0.00010101",0.00010101],
+          ["literal\t float , 2",2.0]].each do |b|
+          it "should recognize \"#{b[0]}\"" do
+            @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
+          end
+
+          it "should have a target_stack of float" do
+            @parser.parse(b[0]).stack_name.should == "float"
+          end
+
+          it "should have the right value" do
+            @parser.parse(b[0]).value.should be_close(b[1],0.000001)
+          end
+          
+        end
       end
       
       describe "complex literals" do
@@ -123,7 +135,7 @@ describe "parser" do
     b2inners = [InstructionNode, LiteralNode, ChannelNode]
     
     b2s.each do |b|
-      it "should have the corrent inner node type for \"#{b}\""
+      it "should have the correct inner node type for \"#{b}\""
     end
   end
 end

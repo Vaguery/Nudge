@@ -23,7 +23,7 @@ grammar NudgeLanguage
   end
   
   rule literal_statement
-    "literal" spc where:alpha_or_underscore comma what:rest_of_line <LiteralNode>
+    "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line <LiteralNode>
   end
   
   rule comma
@@ -31,7 +31,7 @@ grammar NudgeLanguage
   end
   
   rule rest_of_line
-    [-\w]+
+    [-\w\.]+
   end
   
   rule alpha_or_underscore

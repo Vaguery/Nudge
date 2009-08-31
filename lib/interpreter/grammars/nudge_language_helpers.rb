@@ -17,22 +17,21 @@ module ChannelNode
 end
 
 module LiteralNode
+  # extending SyntaxNodes found by nudge_language.treetop grammar
+  # 'literal int, 6'
+  # 'literal float, -4.3'
+  # 'literal robot, <WTF>'
+  
+  # single word string naming stack where 'what' will be pushed
+  # ex: 'int', 'float', 'robot' (see above)
   def stack_name
     return where.text_value
   end
   
+  # assigned_value.text_value is the right hand side of the literal line, as a string
+  # ex: '6', '-4.3', '<WTF>' as a string
   def value
-    uncorrected = what.text_value
-    case
-    when stack_name == "int"
-      corrected = uncorrected.to_i
-    when stack_name == "bool"
-      if uncorrected == "false"
-        corrected = false
-      else
-        corrected = true
-      end
-    end
-    return corrected
+    # this depends on existence of class {stack_name}Literal with #build that returns
+    "#{stack_name.capitalize}Literal".constantize.new.build(assigned_value.text_value)
   end
 end
