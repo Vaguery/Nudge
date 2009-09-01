@@ -130,6 +130,10 @@ describe "parser" do
             @parser.parse(b).value.should == -912
           end
         end
+        describe "handling unspecified value" do
+          it "should work even when there's no value specified"
+        end
+        
       end
       describe "#boolean parser" do
         [["erc bool,true",true],
@@ -151,6 +155,10 @@ describe "parser" do
           @parser.parse("literal bool,FALSE").value.should == false
           @parser.parse("literal bool,True").value.should == true
         end
+        describe "handling unspecified value" do
+          it "should work even when there's no value specified"
+        end
+        
       end
       describe "#float parser" do
         [["erc float,-9999.001",-9999.001],
@@ -168,8 +176,11 @@ describe "parser" do
           it "should have a value of #{b[1]}" do
             @parser.parse(b[0]).value.should be_close(b[1],0.000001)
           end
-          
         end
+        describe "handling unspecified value" do
+          it "should work even when there's no value specified"
+        end
+        
       end
       
     end
