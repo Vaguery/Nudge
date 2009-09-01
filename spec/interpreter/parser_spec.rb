@@ -89,7 +89,7 @@ describe "parser" do
           @parser.parse("literal bool,True").value.should == true
         end
       end
-      
+
       describe "#float parser" do
         [["literal float,-6.2",-6.2],
           ["literal\t float ,1992.0001",1992.0001],
