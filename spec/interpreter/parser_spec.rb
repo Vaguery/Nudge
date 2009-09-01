@@ -21,24 +21,28 @@ describe "parser" do
     it %(should recognize \"block \\n\") do
       @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
     end
-
-    [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
-      it "should recognize \"#{b}\"" do
-        @parser.parse(b).should be_a_kind_of(InstructionNode)
-      end
-      
-      it "should have an opcode 'foo_bar'" do
-        @parser.parse(b).instruction_name.should == "foo_bar"
-      end
-    end    
     
-    ["channel x", "channel\tx"].each do |b|
-      it "should recognize \"#{b}\"" do
-        @parser.parse(b).should be_a_kind_of(ChannelNode)
-      end
+    describe "instructions" do
+      [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
+        it "should recognize \"#{b}\"" do
+          @parser.parse(b).should be_a_kind_of(InstructionNode)
+        end
       
-      it "should have a channel name 'x'" do
-        @parser.parse(b).channel_name.should == "x"
+        it "should have an opcode 'foo_bar'" do
+          @parser.parse(b).instruction_name.should == "foo_bar"
+        end
+      end
+    end
+    
+    describe "channels:" do
+      ["channel x", "channel\tx"].each do |b|
+        it "should recognize \"#{b}\"" do
+          @parser.parse(b).should be_a_kind_of(ChannelNode)
+        end
+      
+        it "should have a channel name 'x'" do
+          @parser.parse(b).channel_name.should == "x"
+        end
       end
     end
     
@@ -108,6 +112,64 @@ describe "parser" do
       
       describe "complex literals" do
         it "use some kind of reference system for complicated literals"
+      end
+    end
+    
+    describe "ercs" do
+      describe "#integer parser" do
+        ["erc int,-912", "erc\tint , -912"].each do |b|
+          it "should recognize \"#{b}\"" do
+            @parser.parse(b).should be_a_kind_of(ERCNode)
+          end
+
+          it "should have a target_stack of int" do
+            @parser.parse(b).stack_name.should == "int"
+          end
+
+          it "should have a value of -912" do
+            @parser.parse(b).value.should == -912
+          end
+        end
+      end
+      describe "#boolean parser" do
+        [["erc bool,true",true],
+          ["erc\t bool ,false",false]].each do |b|
+          it "should recognize \"#{b[0]}\"" do
+            @parser.parse(b[0]).should be_a_kind_of(ERCNode)
+          end
+
+          it "should have a target_stack of bool" do
+            @parser.parse(b[0]).stack_name.should == "bool"
+          end
+
+          it "should have value #{b[1]}" do
+            @parser.parse(b[0]).value.should ==  b[1]
+          end
+        end
+        
+        it "should ignore case" do
+          @parser.parse("literal bool,FALSE").value.should == false
+          @parser.parse("literal bool,True").value.should == true
+        end
+      end
+      describe "#float parser" do
+        [["erc float,-9999.001",-9999.001],
+          ["erc\t float ,33.3",33.3],
+          ["erc\t\t  \tfloat , 12.12",12.12],
+          ["erc         float , 1000",1000.0]].each do |b|
+          it "should recognize \"#{b[0]}\"" do
+            @parser.parse(b[0]).should be_a_kind_of(ERCNode)
+          end
+
+          it "should have a target_stack of float" do
+            @parser.parse(b[0]).stack_name.should == "float"
+          end
+
+          it "should have a value of #{b[1]}" do
+            @parser.parse(b[0]).value.should be_close(b[1],0.000001)
+          end
+          
+        end
       end
       
     end

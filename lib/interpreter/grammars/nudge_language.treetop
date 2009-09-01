@@ -11,7 +11,8 @@ grammar NudgeLanguage
   rule nonblock_statement
     instruction_statement /
     channel_statement /
-    literal_statement
+    literal_statement /
+	erc_statement
   end
   
   rule instruction_statement
@@ -25,6 +26,11 @@ grammar NudgeLanguage
   rule literal_statement
     "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line <LiteralNode>
   end
+  
+  rule erc_statement
+    "erc" spc where:alpha_or_underscore comma assigned_value:rest_of_line <ERCNode>
+  end
+  
   
   rule comma
     spc? "," spc?
