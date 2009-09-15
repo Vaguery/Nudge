@@ -18,7 +18,7 @@ describe "parser" do
       @parser.parse(just_block).should be_a_kind_of(BlockNode)
     end
     
-    it %(should recognize \"block \\n\") do
+    it %(should recognize \"block {}\\n\") do
       @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
     end
     
@@ -196,11 +196,13 @@ describe "parser" do
       end
     end
       
-    b2s = ["block {\n  block {}}","block {\n\tblock { }  }"]
+    b2s = ["block {\n  block {}}"]
     b2s.each do |b|
-      it "should recognize \"#{b}\""
+      it "should recognize \"#{b}\"" do
+         @parser.parse(b).should_not == nil
+      end
       
-      it %(should return two nested block elements for "#{b}")
+      it %(should return two nested block elements for "#{b}") 
       
       it "should create a #contents attribute for each containing the right stuff"
     end
