@@ -11,7 +11,7 @@ describe "code objects" do
     tCode.listing.should == "block\n  literal int, 3"
   end
   
-  it "should parse" 
+  it "should parse"
 end
 
 describe "code methods" do  
