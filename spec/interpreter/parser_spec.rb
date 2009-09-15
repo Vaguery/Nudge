@@ -135,6 +135,7 @@ describe "parser" do
         end
         
       end
+      
       describe "#boolean parser" do
         [["erc bool,true",true],
           ["erc\t bool ,false",false]].each do |b|

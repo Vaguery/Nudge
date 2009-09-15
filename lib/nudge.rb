@@ -5,6 +5,7 @@ require "polyglot"
 
 
 require 'interpreter/stack'
+require 'interpreter/code'
 require 'interpreter/grammars/nudge_language_helpers'
 require 'interpreter/grammars/nudge_language'
 require 'interpreter/types/pushTypes'

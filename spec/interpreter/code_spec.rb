@@ -1,6 +1,20 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
+include Nudge
 
-describe "code fragments" do  
+
+describe "code objects" do
+  it "should include a default listing" do
+    sCode = Code.new()
+    sCode.listing.should == "block"
+    
+    tCode = Code.new("block\n  literal int, 3")
+    tCode.listing.should == "block\n  literal int, 3"
+  end
+  
+  it "should parse" 
+end
+
+describe "code methods" do  
   describe "#split" do
     it "should produce an empty list if the block contains nothing"
     
