@@ -3,15 +3,36 @@ include Nudge
 
 
 describe "code objects" do
-  it "should include a default listing" do
+  it "should take a listing as a param, default to 'block {}'" do
     sCode = Code.new()
-    sCode.listing.should == "block"
+    sCode.listing.should == "block {}"
     
-    tCode = Code.new("block\n  literal int, 3")
-    tCode.listing.should == "block\n  literal int, 3"
+    tCode = Code.new("block {\n  literal int, 3}")
+    tCode.listing.should == "block {\n  literal int, 3}"
   end
   
-  it "should parse"
+  it "should include a class method to parse code" do #see parser_spec.rb for language def'n
+    Code.parse("nothing").should == nil
+    Code.parse("block {}").should_not == nil
+    Code.parse("").should == nil
+    Code.parse("literal bool,false").should_not == nil
+  end
+  
+  it "should have a parsed version of the listing" do #see parser_spec.rb for language def'n
+    Code.new().parsed.should_not == nil
+    Code.new().parsed.should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+    Code.new().parsed.should be_a_kind_of(BlockNode)
+    
+    instCode = Code.new("instr foo_bar")
+    instCode.parsed.should_not == nil
+    instCode.parsed.should be_a_kind_of(Treetop::Runtime::SyntaxNode)
+    instCode.parsed.should be_a_kind_of(InstructionNode)
+    
+    badCode = Code.new("what a mess")
+    badCode.parsed.should == nil
+    badCode.parsed.should_not be_a_kind_of(Treetop::Runtime::SyntaxNode)
+    badCode.parsed.should_not be_a_kind_of(InstructionNode)
+  end
 end
 
 describe "code methods" do  
@@ -24,7 +45,17 @@ describe "code methods" do
   end
   
   describe "#points" do
-    it "should return the number of lines in the listing"
+    it "should return the number of lines in the listing" do
+      l1 = ["block {}", "instr thing,value", "channel x1"]
+      l1.each do |ll|
+        Code.new(ll).points.should == 1
+      end
+      
+      l2plus = ["block {\n  block {\n    block{}}}", "block {\n  instr thing,value\n  channel x1}"]
+      l2plus.each do |ll|
+        Code.new(ll).points.should == 3
+      end
+    end
   end
   
   describe "nth_point" do
