@@ -204,6 +204,11 @@ describe "parser" do
     end
   end
   
+  describe "maintain structure for manipulation" do
+    it "should fail when there are empty lines"
+    it "should fail when a nonblock follows a block without a brace between"
+  end
+  
   
   describe "should handle two-line code" do
     b2s = ["  block {}  block {}","\tblock{}\n\tblock{}","instr hey_there\ninstr now_then"]
