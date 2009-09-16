@@ -233,7 +233,7 @@ describe "parser" do
   end
   
   describe "should handle nested blocks" do
-    nesty = ["block{\n  block {\n    block {}}}","block {\n  block {\n    block {\n      block {}}}}"]
+    nesty = ["block{\n  block {\n    block {}}}","block {\n  block {}\n  block {\n    block {\n      block {}}}}"]
     nesty.each do |n|
       it "should recognize \"#{n}\"" do
         @parser.parse(n).should_not == nil
@@ -242,14 +242,13 @@ describe "parser" do
   end
   
   describe "should handle complex blocks" do
-    nasty = ["block{\n  channel x\n  block {}}","block{\n  block {}\n  channel x}"]
+    nasty = ["block{\n  channel x\n  block {\n    channel y}}","block {\n  block {}\n  channel x\n  channel y}"]
     nasty.each do |n|
       it "should recognize \"#{n}\"" do
         @parser.parse(n).should_not == nil
       end
     end
   end
-  
   
   
 end
