@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 require 'pp'
 
 describe "parser" do
-  before(:each) do
+  before(:all) do
     @parser = NudgeLanguageParser.new
   end
   
@@ -28,11 +28,12 @@ describe "parser" do
           @parser.parse(b).should be_a_kind_of(InstructionNode)
         end
       
-        it "should have an opcode 'foo_bar'" do
+        it "should have a name 'foo_bar'" do
           @parser.parse(b).instruction_name.should == "foo_bar"
         end
       end
     end
+    
     
     describe "channels:" do
       ["channel x", "channel\tx"].each do |b|
@@ -115,6 +116,10 @@ describe "parser" do
       end
     end
     
+    
+    
+    
+    
     describe "ercs" do
       describe "#integer parser" do
         ["erc int,-912", "erc\tint , -912"].each do |b|
@@ -161,6 +166,8 @@ describe "parser" do
         end
         
       end
+      
+      
       describe "#float parser" do
         [["erc float,-9999.001",-9999.001],
           ["erc\t float ,33.3",33.3],
@@ -188,6 +195,16 @@ describe "parser" do
     
   end
   
+  describe "should handle long lists in blocks" do
+    listy = ["block {\n  literal int,1}", "block {\n  literal int,2\n  literal int,3}"]
+    listy.each do |n|
+      it "should recognize \"#{n}\"" do
+        @parser.parse(n).should_not == nil
+      end
+    end
+  end
+  
+  
   describe "should handle two-line code" do
     b2s = ["  block {}  block {}","\tblock{}\n\tblock{}","instr hey_there\ninstr now_then"]
     b2s.each do |b|
@@ -214,4 +231,25 @@ describe "parser" do
       it "should have the correct inner node type for \"#{b}\""
     end
   end
+  
+  describe "should handle nested blocks" do
+    nesty = ["block{\n  block {\n    block {}}}","block {\n  block {\n    block {\n      block {}}}}"]
+    nesty.each do |n|
+      it "should recognize \"#{n}\"" do
+        @parser.parse(n).should_not == nil
+      end
+    end
+  end
+  
+  describe "should handle complex blocks" do
+    nasty = ["block{\n  channel x\n  block {}}","block{\n  block {}\n  channel x}"]
+    nasty.each do |n|
+      it "should recognize \"#{n}\"" do
+        @parser.parse(n).should_not == nil
+      end
+    end
+  end
+  
+  
+  
 end

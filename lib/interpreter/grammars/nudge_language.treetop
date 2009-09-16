@@ -1,34 +1,34 @@
 grammar NudgeLanguage
-  rule any_subtree
-    block_statement /
-    nonblock_statement
+  
+  rule any_point
+    nonblock_point / block_point
   end
 
-  rule block_statement
-    "block" spc open_block innards:(any_subtree)* close_block <BlockNode>
+  rule block_point
+    "block" spc* open_block innards:(any_point)* spc* close_block <BlockNode>
   end
   
-  rule nonblock_statement
+  rule nonblock_point
     instruction_statement /
     channel_statement /
     literal_statement /
-	erc_statement
+    erc_statement
   end
   
   rule instruction_statement
-    "instr" spc opcode:alpha_or_underscore <InstructionNode>
+    "instr" spc opcode:alpha_or_underscore spc* <InstructionNode>
   end
   
   rule channel_statement
-    "channel" spc chan_name:alpha_or_underscore <ChannelNode>
+    "channel" spc chan_name:alpha_or_underscore spc* <ChannelNode>
   end
   
   rule literal_statement
-    "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line <LiteralNode>
+    "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <LiteralNode>
   end
   
   rule erc_statement
-    "erc" spc where:alpha_or_underscore comma assigned_value:rest_of_line <ERCNode>
+    "erc" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
   end
   
   
@@ -37,7 +37,7 @@ grammar NudgeLanguage
   end
   
   rule rest_of_line
-    [-\w\.]+
+    [-\w\.]*
   end
   
   rule alpha_or_underscore
@@ -55,5 +55,5 @@ grammar NudgeLanguage
   rule close_block
     spc? "}" spc?
   end
-   
+  
 end
