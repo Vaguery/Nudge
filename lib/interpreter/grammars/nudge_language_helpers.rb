@@ -1,6 +1,7 @@
 module BlockNode
   def to_code
     newBlob = Code.new(text_value)
+    newBlob.contents = []
     return newBlob
   end
 end

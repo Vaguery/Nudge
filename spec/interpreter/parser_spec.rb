@@ -21,14 +21,22 @@ describe "parser" do
       asCode.should be_a_kind_of(Code)
     end
     
-    it "should have the right #contents for 'block {}'"
-    
-    it %(should recognize \"block {}\\n\") do
-      @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
+    it "should have the right #contents for 'block {}'" do
+      just_block = fixture(:just_block)
+      asCode = @parser.parse(just_block).to_code
+      asCode.should be_a_kind_of(Code)
+      asCode.contents.should be_a_kind_of(Array)
+      asCode.contents.length.should == 0
     end
     
-    it "should return an empty list for the #contents of 'block {}'"
-    
+    it %(should recognize \"block {}\\n\") do
+      extraSpace = @parser.parse(fixture(:just_block_with_newline))
+      extraSpace.should be_a_kind_of(BlockNode)
+      asCode = extraSpace.to_code
+      asCode.should be_a_kind_of(Code)
+      asCode.contents.should be_a_kind_of(Array)
+      asCode.contents.length.should == 0
+    end
     
     describe ": just one instruction line" do
       [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
@@ -67,7 +75,7 @@ describe "parser" do
     
     describe ": just one literal line" do
       
-      describe "(integer literals)" do
+      describe "(integer literalsG)" do
         [["literal int,8","int",8],
           ["literal\tint , 8","int",8],
           ["literal int,-221","int",-221]
