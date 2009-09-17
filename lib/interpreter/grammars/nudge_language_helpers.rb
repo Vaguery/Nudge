@@ -72,4 +72,11 @@ module ERCNode
     # (in future versions, #build will also resample if nil)
     "#{stack_name.capitalize}ERC".constantize.new.build(assigned_value.text_value)
   end
+  
+  def to_code
+    newBlob = Code.new(text_value)
+    newBlob.contents = [ Erc.new(stack_name,value) ]
+    return newBlob
+  end
+  
 end

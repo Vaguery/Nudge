@@ -36,11 +36,12 @@ describe "parser" do
           @parser.parse(b).should be_a_kind_of(InstructionNode)
         end
         
-        it "should return a Code object for \"#{b}\"" do
+        it "should return a Code object for \"#{b}\" containing exactly one Instruction" do
           asCode = @parser.parse(b).to_code
           asCode.should be_a_kind_of(Code)
           asCode.contents.should be_a_kind_of(Array)
           asCode.contents[0].should be_a_kind_of(Instruction)
+          asCode.contents.length.should == 1
           asCode.contents[0].name.should == "foo_bar"
         end
       end
@@ -53,11 +54,12 @@ describe "parser" do
           @parser.parse(b).should be_a_kind_of(ChannelNode)
         end
       
-        it "should return a Channel object for \"#{b}\"" do
+        it "should return a Code object for \"#{b}\" containing exactly one Channel" do
           asCode = @parser.parse(b).to_code
           asCode.should be_a_kind_of(Code)
           asCode.contents.should be_a_kind_of(Array)
           asCode.contents[0].should be_a_kind_of(Channel)
+          asCode.contents.length.should == 1
           asCode.contents[0].name.should == "x"
         end
       end
@@ -65,7 +67,7 @@ describe "parser" do
     
     describe ": just one literal line" do
       
-      describe "#integer parser" do
+      describe "(integer literals)" do
         [["literal int,8","int",8],
           ["literal\tint , 8","int",8],
           ["literal int,-221","int",-221]
@@ -87,7 +89,7 @@ describe "parser" do
         end
       end
       
-      describe "#boolean parser" do
+      describe "(boolean literals)" do
         [["literal bool,true","bool",true],
           ["literal\t bool ,false","bool",false],
           ["literal bool,FALSE","bool",false],
@@ -110,7 +112,7 @@ describe "parser" do
         end
       end
 
-      describe "#float parser" do
+      describe "(float literals)" do
         [["literal float,-6.2","float",-6.2],
           ["literal\t float ,1992.0001","float",1992.0001],
           ["literal\t float , 0.00010101","float",0.00010101],
@@ -138,82 +140,77 @@ describe "parser" do
     end
     
     
-    
-    
-    
     describe ": just one ERC line" do
-      describe "#integer parser" do
-        ["erc int,-912", "erc\tint , -912"].each do |b|
+      describe "(integer ERCs)" do
+        [["erc int,-912","int",-912],["erc\tint , -88","int",-88]].each do |b|
           it "should recognize \"#{b}\"" do
-            @parser.parse(b).should be_a_kind_of(ERCNode)
+            @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
-
-          it "should have a target_stack of int" do
-            @parser.parse(b).stack_name.should == "int"
-          end
-
-          it "should have a value of -912" do
-            @parser.parse(b).value.should == -912
-          end
+          
+          it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Erc)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should ==b[2]
+          end          
         end
-        describe "handling unspecified value" do
-          it "should work even when there's no value specified"
-        end
-        
       end
       
-      describe "#boolean parser" do
-        [["erc bool,true",true],
-          ["erc\t bool ,false",false]].each do |b|
+      describe "(boolean ERCs)" do
+        [["erc bool,true","bool", true],
+          ["erc\t bool ,false","bool", false]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
-
-          it "should have a target_stack of bool" do
-            @parser.parse(b[0]).stack_name.should == "bool"
-          end
-
-          it "should have value #{b[1]}" do
-            @parser.parse(b[0]).value.should ==  b[1]
-          end
+          
+          it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Erc)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should ==b[2]
+          end          
         end
         
         it "should ignore case" do
           @parser.parse("literal bool,FALSE").value.should == false
           @parser.parse("literal bool,True").value.should == true
         end
-        describe "handling unspecified value" do
-          it "should work even when there's no value specified"
-        end
-        
       end
       
       
-      describe "#float parser" do
-        [["erc float,-9999.001",-9999.001],
-          ["erc\t float ,33.3",33.3],
-          ["erc\t\t  \tfloat , 12.12",12.12],
-          ["erc         float , 1000",1000.0]].each do |b|
+      describe "(float ERCs)" do
+        [["erc float,-9999.001","float",-9999.001],
+          ["erc\t float ,33.3","float",33.3],
+          ["erc\t\t  \tfloat , 12.12","float",12.12],
+          ["erc         float , 1000","float",1000.0]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
-
-          it "should have a target_stack of float" do
-            @parser.parse(b[0]).stack_name.should == "float"
-          end
-
-          it "should have a value of #{b[1]}" do
-            @parser.parse(b[0]).value.should be_close(b[1],0.000001)
+          
+          it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Erc)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should be_close(b[2],0.000001)
           end
         end
-        describe "handling unspecified value" do
-          it "should work even when there's no value specified"
-        end
-        
       end
       
     end
     
+    describe "handling missing/unspecified value" do
+      it "should work even when there's no value specified"
+      it "should set the value once, until reset"
+    end
   end
   
   describe "should handle long lists in blocks" do
