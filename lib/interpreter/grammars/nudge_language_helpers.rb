@@ -1,7 +1,7 @@
 module BlockNode
   def to_code
     newBlob = Code.new(text_value)
-    newBlob.contents = [] #hardcoded to pass early specs!
+    newBlob.contents = innards.elements.collect {|item| item.to_code}
     return newBlob
   end
 end

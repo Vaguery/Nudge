@@ -242,20 +242,35 @@ describe "parser" do
         @parser.parse(b).should == nil
       end
     end
+    
+    b2s = ["block {\n channel x}"]
+    b2s.each do |b|
+      it "should recognize \"#{b}\"" do
+         @parser.parse(b).should_not == nil
+      end
       
+      it "should have the right stuff inside it" do
+        asCode = @parser.parse(b).to_code
+        asCode.should be_a_kind_of(Code)
+        asCode.contents.should be_a_kind_of(Array)
+        asCode.contents[0].should be_a_kind_of(Code)
+        asCode.contents[0].contents[0].should be_a_kind_of(Channel)
+        asCode.contents[0].contents[0].name.should == "x"
+      end
+    end
+    
     b2s = ["block {\n  block {}}"]
     b2s.each do |b|
       it "should recognize \"#{b}\"" do
          @parser.parse(b).should_not == nil
       end
       
-      it "should create a #contents attribute for each containing the right stuff" do
+      it "should have the right stuff inside it" do
         asCode = @parser.parse(b).to_code
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(Code)
-        asCode.contents.length.should == 1
-        
+        asCode.contents[0].contents.should == []
       end
     end
     
