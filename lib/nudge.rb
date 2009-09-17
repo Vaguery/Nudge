@@ -11,5 +11,6 @@ require 'interpreter/stack'
 require 'interpreter/code'
 require 'interpreter/instruction'
 require 'interpreter/channel'
+require 'interpreter/literal'
 
 require 'activesupport'

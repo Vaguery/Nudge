@@ -49,6 +49,13 @@ module LiteralNode
     # this depends on existence of class {stack_name}Literal with #build that returns
     "#{stack_name.capitalize}Literal".constantize.new.build(assigned_value.text_value)
   end
+  
+  def to_code
+    newBlob = Code.new(text_value)
+    newBlob.contents = [ Literal.new(stack_name,value) ]
+    return newBlob
+  end
+  
 end
 
 module ERCNode

@@ -13,7 +13,7 @@ describe "parser" do
     @parser.parse(empty).should == nil
   end
   
-  describe "should handle single-line code" do
+  describe "works for single-line code" do
     it "should recognize 'block {}'" do
       just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)
@@ -29,7 +29,8 @@ describe "parser" do
     
     it "should return an empty list for the #contents of 'block {}'"
     
-    describe "instructions" do
+    
+    describe ": just one instruction line" do
       [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(InstructionNode)
@@ -46,7 +47,7 @@ describe "parser" do
     end
     
     
-    describe "channels:" do
+    describe ": just one channel line" do
       ["channel x", "channel\tx"].each do |b|
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(ChannelNode)
@@ -59,75 +60,75 @@ describe "parser" do
           asCode.contents[0].should be_a_kind_of(Channel)
           asCode.contents[0].name.should == "x"
         end
-      
-      
-        it "should have a channel name 'x'" do
-          @parser.parse(b).channel_name.should == "x"
-        end
       end
     end
     
-    describe "literals:" do
+    describe ": just one literal line" do
+      
       describe "#integer parser" do
-        ["literal int,8", "literal\tint , 8"].each do |b|
-          it "should recognize \"#{b}\"" do
-            @parser.parse(b).should be_a_kind_of(LiteralNode)
+        [["literal int,8","int",8],
+          ["literal\tint , 8","int",8],
+          ["literal int,-221","int",-221]
+          ].each do |b|
+          
+          it "should recognize \"#{b[0]}\"" do
+            @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
-
-          it "should have a target_stack of int" do
-            @parser.parse(b).stack_name.should == "int"
+          
+          it "should return a Code object containing one Literal for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Literal)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should == b[2]
           end
-
-          it "should have a value of 8" do
-            @parser.parse(b).value.should == 8
-          end
-        end
-        
-        it "should work for negatives" do
-          neg_thing = "literal int,-221"
-          @parser.parse(neg_thing).should be_a_kind_of(LiteralNode)
-          @parser.parse(neg_thing).value.should == -221
         end
       end
       
       describe "#boolean parser" do
-        ["literal bool,true", "literal\t bool ,false"].each do |b|
-          it "should recognize \"#{b}\"" do
-            @parser.parse(b).should be_a_kind_of(LiteralNode)
-          end
-
-          it "should have a target_stack of bool" do
-            @parser.parse(b).stack_name.should == "bool"
-          end
-
-          it "should be a boolean" do
-            [FalseClass,TrueClass].should include(@parser.parse(b).value.class)
-          end
-        end
-        
-        it "should ignore case" do
-          @parser.parse("literal bool,FALSE").value.should == false
-          @parser.parse("literal bool,True").value.should == true
-        end
-      end
-
-      describe "#float parser" do
-        [["literal float,-6.2",-6.2],
-          ["literal\t float ,1992.0001",1992.0001],
-          ["literal\t float , 0.00010101",0.00010101],
-          ["literal\t float , 2",2.0]].each do |b|
+        [["literal bool,true","bool",true],
+          ["literal\t bool ,false","bool",false],
+          ["literal bool,FALSE","bool",false],
+          ["literal bool,True","bool",true]
+          ].each do |b|
+          
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
 
-          it "should have a target_stack of float" do
-            @parser.parse(b[0]).stack_name.should == "float"
+          it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Literal)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should == b[2]
           end
+        end
+      end
 
-          it "should have the right value" do
-            @parser.parse(b[0]).value.should be_close(b[1],0.000001)
+      describe "#float parser" do
+        [["literal float,-6.2","float",-6.2],
+          ["literal\t float ,1992.0001","float",1992.0001],
+          ["literal\t float , 0.00010101","float",0.00010101],
+          ["literal\t float , 2","float",2.0]].each do |b|
+            
+          it "should recognize \"#{b[0]}\"" do
+            @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
           
+          it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
+            asCode = @parser.parse(b[0]).to_code
+            asCode.should be_a_kind_of(Code)
+            asCode.contents.should be_a_kind_of(Array)
+            asCode.contents[0].should be_a_kind_of(Literal)
+            asCode.contents.length.should == 1
+            asCode.contents[0].type.should == b[1]
+            asCode.contents[0].value.should be_close(b[2],0.000001)
+          end          
         end
       end
       
@@ -140,7 +141,7 @@ describe "parser" do
     
     
     
-    describe "ercs" do
+    describe ": just one ERC line" do
       describe "#integer parser" do
         ["erc int,-912", "erc\tint , -912"].each do |b|
           it "should recognize \"#{b}\"" do
