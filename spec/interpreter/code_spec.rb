@@ -10,29 +10,16 @@ describe "code objects" do
     tCode.listing.should == "block {\n  literal int, 3}"
   end
   
-  it "should include a class method to parse code" do #see parser_spec.rb for language def'n
-    Code.parse("nothing").should == nil
-    Code.parse("block {}").should_not == nil
-    Code.parse("").should == nil
-    Code.parse("literal bool,false").should_not == nil
-  end
+  it "should tidy its listing to be one point per line, with indents and snug braces" 
   
-  it "should have a parsed version of the listing" do #see parser_spec.rb for language def'n
-    Code.new().parsed.should_not == nil
-    Code.new().parsed.should be_a_kind_of(Treetop::Runtime::SyntaxNode)
-    Code.new().parsed.should be_a_kind_of(BlockNode)
-    
-    instCode = Code.new("instr foo_bar")
-    instCode.parsed.should_not == nil
-    instCode.parsed.should be_a_kind_of(Treetop::Runtime::SyntaxNode)
-    instCode.parsed.should be_a_kind_of(InstructionNode)
-    
-    badCode = Code.new("what a mess")
-    badCode.parsed.should == nil
-    badCode.parsed.should_not be_a_kind_of(Treetop::Runtime::SyntaxNode)
-    badCode.parsed.should_not be_a_kind_of(InstructionNode)
-  end
+  it "should print the tidy version in response to #inspect"
+  
+  it "should include a class method to parse code"
+  
+  it "should generate a parsed tree from its listing"
+  
 end
+
 
 describe "code methods" do  
   describe "#split" do

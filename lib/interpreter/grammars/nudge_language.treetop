@@ -47,7 +47,7 @@ grammar NudgeLanguage
   rule spc
     [\s\t\n]+
   end
-    
+  
   rule open_block
     "{" spc?
   end
