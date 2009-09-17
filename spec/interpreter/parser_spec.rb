@@ -55,7 +55,6 @@ describe "parser" do
       end
     end
     
-    
     describe ": just one channel line" do
       ["channel x", "channel\tx"].each do |b|
         it "should recognize \"#{b}\"" do
@@ -250,7 +249,14 @@ describe "parser" do
          @parser.parse(b).should_not == nil
       end
       
-      it "should create a #contents attribute for each containing the right stuff"
+      it "should create a #contents attribute for each containing the right stuff" do
+        asCode = @parser.parse(b).to_code
+        asCode.should be_a_kind_of(Code)
+        asCode.contents.should be_a_kind_of(Array)
+        asCode.contents[0].should be_a_kind_of(Code)
+        asCode.contents.length.should == 1
+        
+      end
     end
     
     b2s = ["block {\n  instr hey_now}","block {\n  literal int, 22 }", "block {\n  channel WVIZ}"]
