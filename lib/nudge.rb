@@ -9,5 +9,6 @@ require 'interpreter/grammars/nudge_language'
 require 'interpreter/types/pushTypes'
 require 'interpreter/stack'
 require 'interpreter/code'
+require 'interpreter/instruction'
 
 require 'activesupport'

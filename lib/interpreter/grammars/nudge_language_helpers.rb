@@ -1,12 +1,19 @@
 module BlockNode
-  def contents
-    return innards.text_value
+  def to_code
+    newBlob = Code.new(text_value)
+    return newBlob
   end
 end
 
 module InstructionNode
   def instruction_name
     return opcode.text_value
+  end
+  
+  def to_code
+    newBlob = Code.new(text_value)
+    newBlob.contents = [ Instruction.new(opcode.text_value) ]
+    return newBlob
   end
 end
 

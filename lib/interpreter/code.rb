@@ -6,7 +6,7 @@ module Nudge
       @@parser.parse(someListing)
     end
     
-    attr_accessor :listing, :parsed
+    attr_accessor :listing, :parsed, :contents
     
     def initialize(rawCode=nil)
       @listing = rawCode || "block {}"

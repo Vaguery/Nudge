@@ -1,6 +1,7 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 
 require 'pp'
+include Nudge
 
 describe "parser" do
   before(:all) do
@@ -16,7 +17,11 @@ describe "parser" do
     it "should recognize 'block {}'" do
       just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)
+      asCode = @parser.parse(just_block).to_code
+      asCode.should be_a_kind_of(Code)
     end
+    
+    it "should have the right #contents for 'block {}'"
     
     it %(should recognize \"block {}\\n\") do
       @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
@@ -28,6 +33,12 @@ describe "parser" do
       [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(InstructionNode)
+        end
+        
+        it "should return a Code object for \"#{b}\"" do
+          asCode = @parser.parse(b).to_code
+          asCode.should be_a_kind_of(Code)
+          asCode.contents.should be_a_kind_of(Array)
         end
       
         it "should have a name 'foo_bar'" do
