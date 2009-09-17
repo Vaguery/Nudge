@@ -274,13 +274,33 @@ describe "parser" do
       end
     end
     
-    b2s = ["block {\n  instr hey_now}","block {\n  literal int, 22 }", "block {\n  channel WVIZ}"]
-    b2inners = [InstructionNode, LiteralNode, ChannelNode]
-    
+    b2s = [["block {\n  instr hey_now}",Instruction],
+      ["block {\n  literal int, 22 }",Literal],
+      ["block {\n  channel WVIZ}",Channel]]
     b2s.each do |b|
-      it "should have the correct inner node type for \"#{b}\""
+      it "should have the correct inner node type for \"#{b[0]}\"" do
+        asCode = @parser.parse(b[0]).to_code
+        asCode.should be_a_kind_of(Code)
+        asCode.contents.should be_a_kind_of(Array)
+        asCode.contents[0].contents[0].should be_a_kind_of(b[1])
+      end
     end
   end
+  
+  describe "it should work for long lists of one-line points in a block" do
+    b2s = [["block {\n  instr A\n  instr B\n  instr C}",3],
+      ["block {\n  literal int, 22\n  literal int, 23 \n  literal int, 24\n channel x\nchannel y}",5],
+      ["block {\n  channel WVIZ\n  channel WAMU}",2]]
+    b2s.each do |b|
+      it "should have the correct inner node type for \"#{b[0]}\"" do
+        asCode = @parser.parse(b[0]).to_code
+        asCode.should be_a_kind_of(Code)
+        asCode.contents.should be_a_kind_of(Array)
+        asCode.contents.length.should == b[1]
+      end
+    end
+  end
+  
   
   describe "should handle nested blocks" do
     nesty = ["block{\n  block {\n    block {}}}","block {\n  block {}\n  block {\n    block {\n      block {}}}}"]
