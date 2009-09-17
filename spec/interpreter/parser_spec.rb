@@ -22,6 +22,8 @@ describe "parser" do
       @parser.parse(fixture(:just_block_with_newline)).should be_a_kind_of(BlockNode)
     end
     
+    it "should return an empty list for the #contents of 'block {}'"
+    
     describe "instructions" do
       [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
         it "should recognize \"#{b}\"" do
@@ -223,8 +225,6 @@ describe "parser" do
       it "should recognize \"#{b}\"" do
          @parser.parse(b).should_not == nil
       end
-      
-      it %(should return two nested block elements for "#{b}") 
       
       it "should create a #contents attribute for each containing the right stuff"
     end
