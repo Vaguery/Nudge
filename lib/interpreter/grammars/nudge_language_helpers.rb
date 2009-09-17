@@ -21,6 +21,13 @@ module ChannelNode
   def channel_name
     return chan_name.text_value
   end
+  
+  def to_code
+    newBlob = Code.new(text_value)
+    newBlob.contents = [ Channel.new(channel_name) ]
+    return newBlob
+  end
+  
 end
 
 module LiteralNode

@@ -39,10 +39,8 @@ describe "parser" do
           asCode = @parser.parse(b).to_code
           asCode.should be_a_kind_of(Code)
           asCode.contents.should be_a_kind_of(Array)
-        end
-      
-        it "should have a name 'foo_bar'" do
-          @parser.parse(b).instruction_name.should == "foo_bar"
+          asCode.contents[0].should be_a_kind_of(Instruction)
+          asCode.contents[0].name.should == "foo_bar"
         end
       end
     end
@@ -53,6 +51,15 @@ describe "parser" do
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(ChannelNode)
         end
+      
+        it "should return a Channel object for \"#{b}\"" do
+          asCode = @parser.parse(b).to_code
+          asCode.should be_a_kind_of(Code)
+          asCode.contents.should be_a_kind_of(Array)
+          asCode.contents[0].should be_a_kind_of(Channel)
+          asCode.contents[0].name.should == "x"
+        end
+      
       
         it "should have a channel name 'x'" do
           @parser.parse(b).channel_name.should == "x"

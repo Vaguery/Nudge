@@ -10,5 +10,6 @@ require 'interpreter/types/pushTypes'
 require 'interpreter/stack'
 require 'interpreter/code'
 require 'interpreter/instruction'
+require 'interpreter/channel'
 
 require 'activesupport'
