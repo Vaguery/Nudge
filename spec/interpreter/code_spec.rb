@@ -4,7 +4,7 @@ include Nudge
 describe "code objects" do
   it "should take a listing as a param, default to 'block {}'" do
     sCode = Code.new()
-    sCode.listing.should == "block {}"
+    sCode.listing.should == "block {}"    
     
     tCode = Code.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
@@ -14,7 +14,11 @@ describe "code objects" do
   
   it "should print the tidy version in response to #inspect"
   
-  it "should include a class method to parse code"
+  it "should include a class method to parse code" do
+    Code.parser.should_not == nil
+    tt = Code.parser.parse("channel x").to_code
+    tt.contents[0].should be_a_kind_of(Channel)
+  end
   
   it "should generate a parsed tree from its listing"
   
