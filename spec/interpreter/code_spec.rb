@@ -20,12 +20,12 @@ describe "code objects" do
     tt.contents[0].should be_a_kind_of(Channel)
   end
   
-  it "should generate a parsed tree from its listing"
+  it "should generate a parsed tree from its listing" # WITHOUT AN INFINITE RECURSION
   
 end
 
 
-describe "code methods" do  
+describe "code methods" do
   describe "#split" do
     it "should produce an empty list if the block contains nothing"
     
