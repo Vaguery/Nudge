@@ -12,8 +12,7 @@ module InstructionNode
   end
   
   def to_code
-    newBlob = Code.new(text_value)
-    newBlob.contents = [ Instruction.new(opcode.text_value) ]
+    newBlob = Instruction.new(opcode.text_value)
     return newBlob
   end
 end
@@ -24,8 +23,7 @@ module ChannelNode
   end
   
   def to_code
-    newBlob = Code.new(text_value)
-    newBlob.contents = [ Channel.new(channel_name) ]
+    newBlob = Channel.new(channel_name)
     return newBlob
   end
   
@@ -52,8 +50,7 @@ module LiteralNode
   end
   
   def to_code
-    newBlob = Code.new(text_value)
-    newBlob.contents = [ Literal.new(stack_name,value) ]
+    newBlob = Literal.new(stack_name,value)
     return newBlob
   end
   
@@ -75,8 +72,7 @@ module ERCNode
   end
   
   def to_code
-    newBlob = Code.new(text_value)
-    newBlob.contents = [ Erc.new(stack_name,value) ]
+    newBlob = Erc.new(stack_name,value)
     return newBlob
   end
   

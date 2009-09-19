@@ -46,11 +46,8 @@ describe "parser" do
         
         it "should return a Code object for \"#{b}\" containing exactly one Instruction" do
           asCode = @parser.parse(b).to_code
-          asCode.should be_a_kind_of(Code)
-          asCode.contents.should be_a_kind_of(Array)
-          asCode.contents[0].should be_a_kind_of(Instruction)
-          asCode.contents.length.should == 1
-          asCode.contents[0].name.should == "foo_bar"
+          asCode.should be_a_kind_of(Instruction)
+          asCode.name.should == "foo_bar"
         end
       end
     end
@@ -63,18 +60,15 @@ describe "parser" do
       
         it "should return a Code object for \"#{b}\" containing exactly one Channel" do
           asCode = @parser.parse(b).to_code
-          asCode.should be_a_kind_of(Code)
-          asCode.contents.should be_a_kind_of(Array)
-          asCode.contents[0].should be_a_kind_of(Channel)
-          asCode.contents.length.should == 1
-          asCode.contents[0].name.should == "x"
+          asCode.should be_a_kind_of(Channel)
+          asCode.name.should == "x"
         end
       end
     end
     
     describe ": just one literal line" do
       
-      describe "(integer literalsG)" do
+      describe "(integer literals)" do
         [["literal int,8","int",8],
           ["literal\tint , 8","int",8],
           ["literal int,-221","int",-221]
@@ -86,12 +80,9 @@ describe "parser" do
           
           it "should return a Code object containing one Literal for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Literal)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should == b[2]
+            asCode.should be_a_kind_of(Literal)
+            asCode.type.should == b[1]
+            asCode.value.should == b[2]
           end
         end
       end
@@ -109,12 +100,9 @@ describe "parser" do
 
           it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Literal)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should == b[2]
+            asCode.should be_a_kind_of(Literal)
+            asCode.type.should == b[1]
+            asCode.value.should == b[2]
           end
         end
       end
@@ -131,12 +119,9 @@ describe "parser" do
           
           it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Literal)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should be_close(b[2],0.000001)
+            asCode.should be_a_kind_of(Literal)
+            asCode.type.should == b[1]
+            asCode.value.should be_close(b[2],0.000001)
           end          
         end
       end
@@ -156,12 +141,9 @@ describe "parser" do
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Erc)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should ==b[2]
+            asCode.should be_a_kind_of(Erc)
+            asCode.type.should == b[1]
+            asCode.value.should ==b[2]
           end          
         end
       end
@@ -175,12 +157,9 @@ describe "parser" do
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Erc)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should ==b[2]
+            asCode.should be_a_kind_of(Erc)
+            asCode.type.should == b[1]
+            asCode.value.should ==b[2]
           end          
         end
         
@@ -202,12 +181,9 @@ describe "parser" do
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_code
-            asCode.should be_a_kind_of(Code)
-            asCode.contents.should be_a_kind_of(Array)
-            asCode.contents[0].should be_a_kind_of(Erc)
-            asCode.contents.length.should == 1
-            asCode.contents[0].type.should == b[1]
-            asCode.contents[0].value.should be_close(b[2],0.000001)
+            asCode.should be_a_kind_of(Erc)
+            asCode.type.should == b[1]
+            asCode.value.should be_close(b[2],0.000001)
           end
         end
       end
@@ -253,9 +229,8 @@ describe "parser" do
         asCode = @parser.parse(b).to_code
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
-        asCode.contents[0].should be_a_kind_of(Code)
-        asCode.contents[0].contents[0].should be_a_kind_of(Channel)
-        asCode.contents[0].contents[0].name.should == "x"
+        asCode.contents[0].should be_a_kind_of(Channel)
+        asCode.contents[0].name.should == "x"
       end
     end
     
@@ -282,7 +257,7 @@ describe "parser" do
         asCode = @parser.parse(b[0]).to_code
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
-        asCode.contents[0].contents[0].should be_a_kind_of(b[1])
+        asCode.contents[0].should be_a_kind_of(b[1])
       end
     end
   end

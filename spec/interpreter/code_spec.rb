@@ -17,7 +17,7 @@ describe "code objects" do
   it "should include a class method to parse code" do
     Code.parser.should_not == nil
     tt = Code.parser.parse("channel x").to_code
-    tt.contents[0].should be_a_kind_of(Channel)
+    tt.should be_a_kind_of(Channel)
   end
   
   it "should generate a parsed tree from its listing" # WITHOUT AN INFINITE RECURSION
