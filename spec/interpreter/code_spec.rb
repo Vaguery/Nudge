@@ -16,7 +16,7 @@ describe "code objects" do
   
   it "should include a class method to parse code" do
     Code.parser.should_not == nil
-    tt = Code.parser.parse("channel x").to_code
+    tt = Code.parser.parse("channel x").to_points
     tt.should be_a_kind_of(Channel)
   end
   

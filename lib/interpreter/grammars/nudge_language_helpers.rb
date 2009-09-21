@@ -1,7 +1,7 @@
 module BlockNode
-  def to_code
+  def to_points
     newBlob = Code.new(text_value)
-    newBlob.contents = innards.elements.collect {|item| item.to_code}
+    newBlob.contents = innards.elements.collect {|item| item.to_points}
     return newBlob
   end
 end
@@ -11,7 +11,7 @@ module InstructionNode
     return opcode.text_value
   end
   
-  def to_code
+  def to_points
     newBlob = Instruction.new(opcode.text_value)
     return newBlob
   end
@@ -22,7 +22,7 @@ module ChannelNode
     return chan_name.text_value
   end
   
-  def to_code
+  def to_points
     newBlob = Channel.new(channel_name)
     return newBlob
   end
@@ -49,7 +49,7 @@ module LiteralNode
     "#{stack_name.capitalize}Literal".constantize.new.build(assigned_value.text_value)
   end
   
-  def to_code
+  def to_points
     newBlob = Literal.new(stack_name,value)
     return newBlob
   end
@@ -71,7 +71,7 @@ module ERCNode
     "#{stack_name.capitalize}ERC".constantize.new.build(assigned_value.text_value)
   end
   
-  def to_code
+  def to_points
     newBlob = Erc.new(stack_name,value)
     return newBlob
   end

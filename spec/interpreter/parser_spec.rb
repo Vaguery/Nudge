@@ -17,13 +17,13 @@ describe "parser" do
     it "should recognize 'block {}'" do
       just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)
-      asCode = @parser.parse(just_block).to_code
+      asCode = @parser.parse(just_block).to_points
       asCode.should be_a_kind_of(Code)
     end
     
     it "should have the right #contents for 'block {}'" do
       just_block = fixture(:just_block)
-      asCode = @parser.parse(just_block).to_code
+      asCode = @parser.parse(just_block).to_points
       asCode.should be_a_kind_of(Code)
       asCode.contents.should be_a_kind_of(Array)
       asCode.contents.length.should == 0
@@ -32,7 +32,7 @@ describe "parser" do
     it %(should recognize \"block {}\\n\") do
       extraSpace = @parser.parse(fixture(:just_block_with_newline))
       extraSpace.should be_a_kind_of(BlockNode)
-      asCode = extraSpace.to_code
+      asCode = extraSpace.to_points
       asCode.should be_a_kind_of(Code)
       asCode.contents.should be_a_kind_of(Array)
       asCode.contents.length.should == 0
@@ -45,7 +45,7 @@ describe "parser" do
         end
         
         it "should return a Code object for \"#{b}\" containing exactly one Instruction" do
-          asCode = @parser.parse(b).to_code
+          asCode = @parser.parse(b).to_points
           asCode.should be_a_kind_of(Instruction)
           asCode.name.should == "foo_bar"
         end
@@ -59,7 +59,7 @@ describe "parser" do
         end
       
         it "should return a Code object for \"#{b}\" containing exactly one Channel" do
-          asCode = @parser.parse(b).to_code
+          asCode = @parser.parse(b).to_points
           asCode.should be_a_kind_of(Channel)
           asCode.name.should == "x"
         end
@@ -79,7 +79,7 @@ describe "parser" do
           end
           
           it "should return a Code object containing one Literal for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Literal)
             asCode.type.should == b[1]
             asCode.value.should == b[2]
@@ -99,7 +99,7 @@ describe "parser" do
           end
 
           it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Literal)
             asCode.type.should == b[1]
             asCode.value.should == b[2]
@@ -118,7 +118,7 @@ describe "parser" do
           end
           
           it "should return a Code object containing one Literal object for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Literal)
             asCode.type.should == b[1]
             asCode.value.should be_close(b[2],0.000001)
@@ -140,7 +140,7 @@ describe "parser" do
           end
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Erc)
             asCode.type.should == b[1]
             asCode.value.should ==b[2]
@@ -156,7 +156,7 @@ describe "parser" do
           end
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Erc)
             asCode.type.should == b[1]
             asCode.value.should ==b[2]
@@ -180,7 +180,7 @@ describe "parser" do
           end
           
           it "should return a Code object containing one Erc object for \"#{b[0]}\"" do
-            asCode = @parser.parse(b[0]).to_code
+            asCode = @parser.parse(b[0]).to_points
             asCode.should be_a_kind_of(Erc)
             asCode.type.should == b[1]
             asCode.value.should be_close(b[2],0.000001)
@@ -226,7 +226,7 @@ describe "parser" do
       end
       
       it "should have the right stuff inside it" do
-        asCode = @parser.parse(b).to_code
+        asCode = @parser.parse(b).to_points
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(Channel)
@@ -241,7 +241,7 @@ describe "parser" do
       end
       
       it "should have the right stuff inside it" do
-        asCode = @parser.parse(b).to_code
+        asCode = @parser.parse(b).to_points
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(Code)
@@ -254,7 +254,7 @@ describe "parser" do
       ["block {\n  channel WVIZ}",Channel]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
-        asCode = @parser.parse(b[0]).to_code
+        asCode = @parser.parse(b[0]).to_points
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(b[1])
@@ -268,7 +268,7 @@ describe "parser" do
       ["block {\n  channel WVIZ\n  channel WAMU}",2]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
-        asCode = @parser.parse(b[0]).to_code
+        asCode = @parser.parse(b[0]).to_points
         asCode.should be_a_kind_of(Code)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents.length.should == b[1]
