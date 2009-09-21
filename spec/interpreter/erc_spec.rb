@@ -18,6 +18,8 @@ describe "erc" do
     it "should be created with a default randomizer that returns current value"
     
     it "should allow you to set a new randomizer"
+    
+    it "should be a kind of program point"
   end
     
   describe "randomization" do

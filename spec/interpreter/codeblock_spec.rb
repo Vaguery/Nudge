@@ -1,24 +1,23 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-describe "code objects" do
+describe "codeblock objects" do
+  it "should be a kind of program point"
+  
   it "should take a listing as a param, default to 'block {}'" do
-    sCode = Codeblock.new()
+    sCode = CodeBlock.new()
     sCode.listing.should == "block {}"    
-    tCode = Codeblock.new("block {\n  literal int, 3}")
+    tCode = CodeBlock.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
   end
   
   it "should tidy its listing to be one point per line, with indents and snug braces" 
   
   it "should print the tidy version in response to #inspect"
-  
-  it "should generate a parsed tree from its listing" # WITHOUT AN INFINITE RECURSION
-  
 end
 
 
-describe "code methods" do
+describe "codeblock methods" do
   describe "#split" do
     it "should produce an empty list if the block contains nothing"
     
@@ -31,12 +30,12 @@ describe "code methods" do
     it "should return the number of lines in the listing" do
       l1 = ["block {}", "instr thing,value", "channel x1"]
       l1.each do |ll|
-        Codeblock.new(ll).points.should == 1
+        CodeBlock.new(ll).points.should == 1
       end
       
       l2plus = ["block {\n  block {\n    block{}}}", "block {\n  instr thing,value\n  channel x1}"]
       l2plus.each do |ll|
-        Codeblock.new(ll).points.should == 3
+        CodeBlock.new(ll).points.should == 3
       end
     end
   end

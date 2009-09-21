@@ -6,8 +6,10 @@ require "polyglot"
 
 require 'interpreter/grammars/nudge_language_helpers'
 require 'interpreter/grammars/nudge_language'
+require 'interpreter/interpreter'
+
 require 'interpreter/types/pushTypes'
 require 'interpreter/stack'
-require 'interpreter/code'
+require 'interpreter/programPoints'
 
 require 'activesupport'

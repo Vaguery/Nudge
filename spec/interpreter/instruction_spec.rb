@@ -11,6 +11,8 @@ describe "Instruction" do
   
   it "should have a string as a name"
   
+  it "should be a kind of program point"
+  
   it "should have a requirements attribute, which defaults to an empty hash" do
     myI = Instruction.new("foo_bar")
     myI.requirements.should == {}

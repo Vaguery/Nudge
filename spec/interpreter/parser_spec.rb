@@ -18,13 +18,13 @@ describe "parser" do
       just_block = fixture(:just_block)
       @parser.parse(just_block).should be_a_kind_of(BlockNode)
       asCode = @parser.parse(just_block).to_points
-      asCode.should be_a_kind_of(Codeblock)
+      asCode.should be_a_kind_of(CodeBlock)
     end
     
     it "should have the right #contents for 'block {}'" do
       just_block = fixture(:just_block)
       asCode = @parser.parse(just_block).to_points
-      asCode.should be_a_kind_of(Codeblock)
+      asCode.should be_a_kind_of(CodeBlock)
       asCode.contents.should be_a_kind_of(Array)
       asCode.contents.length.should == 0
     end
@@ -33,7 +33,7 @@ describe "parser" do
       extraSpace = @parser.parse(fixture(:just_block_with_newline))
       extraSpace.should be_a_kind_of(BlockNode)
       asCode = extraSpace.to_points
-      asCode.should be_a_kind_of(Codeblock)
+      asCode.should be_a_kind_of(CodeBlock)
       asCode.contents.should be_a_kind_of(Array)
       asCode.contents.length.should == 0
     end
@@ -227,7 +227,7 @@ describe "parser" do
       
       it "should have the right stuff inside it" do
         asCode = @parser.parse(b).to_points
-        asCode.should be_a_kind_of(Codeblock)
+        asCode.should be_a_kind_of(CodeBlock)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(Channel)
         asCode.contents[0].name.should == "x"
@@ -242,9 +242,9 @@ describe "parser" do
       
       it "should have the right stuff inside it" do
         asCode = @parser.parse(b).to_points
-        asCode.should be_a_kind_of(Codeblock)
+        asCode.should be_a_kind_of(CodeBlock)
         asCode.contents.should be_a_kind_of(Array)
-        asCode.contents[0].should be_a_kind_of(Codeblock)
+        asCode.contents[0].should be_a_kind_of(CodeBlock)
         asCode.contents[0].contents.should == []
       end
     end
@@ -255,7 +255,7 @@ describe "parser" do
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
         asCode = @parser.parse(b[0]).to_points
-        asCode.should be_a_kind_of(Codeblock)
+        asCode.should be_a_kind_of(CodeBlock)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents[0].should be_a_kind_of(b[1])
       end
@@ -269,7 +269,7 @@ describe "parser" do
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
         asCode = @parser.parse(b[0]).to_points
-        asCode.should be_a_kind_of(Codeblock)
+        asCode.should be_a_kind_of(CodeBlock)
         asCode.contents.should be_a_kind_of(Array)
         asCode.contents.length.should == b[1]
       end

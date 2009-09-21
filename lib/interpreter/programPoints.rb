@@ -1,6 +1,5 @@
-
 module Nudge
-  class Codeblock
+  class CodeBlock
     attr_accessor :listing, :contents
     
     def initialize(rawCode=nil)
