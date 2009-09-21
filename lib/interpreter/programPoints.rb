@@ -13,9 +13,9 @@ module Nudge
       return @listing.split(/\n/).length
     end
     
-    # def go
-    #   @contents.reverse.each {|item| Nudge::Stack.push!(:exec,item)} 
-    # end
+    def go
+      @contents.reverse.each {|item| Nudge::Stack.push!(:exec,item)} 
+    end
   end
   
   

@@ -19,6 +19,50 @@ describe "codeblock objects" do
   it "should print the tidy version in response to #inspect"
 end
 
+describe "#go" do
+  describe "should split at the root #contents level and push IN REVERSE ORDER back onto :exec" do
+    before(:each) do
+      @ii = Interpreter.new()
+      Stack.cleanup
+    end
+    
+    it " : if it is an empty Codeblock" do
+      @ii.load("block {}")
+      @ii.step
+      Stack.stacks[:exec].depth.should == 0
+    end
+    
+    it " : if it is a long, flat Codeblock" do
+      @ii.load("block {\nliteral int,1\nliteral int,2\nliteral int,3\nliteral int,4}")
+      Stack.stacks[:exec].depth.should == 1
+      @ii.step
+      Stack.stacks[:exec].depth.should == 4
+      Stack.stacks[:exec].pop.value.should == 1
+      Stack.stacks[:exec].pop.value.should == 2
+      Stack.stacks[:exec].pop.value.should == 3
+      Stack.stacks[:exec].pop.value.should == 4
+      Stack.stacks[:exec].pop.should == nil
+    end
+    
+    it " : if it is a deeply nested Codeblock" do
+      @ii.load("block {\nblock {\n block {\nliteral int,1}\nliteral bool,false}}")
+      Stack.stacks[:exec].depth.should == 1
+      @ii.step
+      Stack.stacks[:exec].depth.should == 1
+      @ii.step
+      Stack.stacks[:exec].depth.should == 2
+      @ii.step
+      Stack.stacks[:exec].depth.should == 2
+      item = Stack.stacks[:exec].pop
+      item.should be_a_kind_of(Literal)
+      item.value.should == 1
+      item = Stack.stacks[:exec].pop
+      item.should be_a_kind_of(Literal)
+      item.value.should == false
+    end
+  end
+end
+
 
 describe "codeblock methods" do
   describe "#split" do

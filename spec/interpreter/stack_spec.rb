@@ -54,7 +54,7 @@ describe "stack" do
       @myStack.entries.should have(0).items
     end
     
-    it "should fail silently if popped when empty" do
+    it "should fail silently if popped when empty, returning nil" do
       empty = @myStack.pop
       empty.should == nil
       @myStack.entries.should have(0).items
