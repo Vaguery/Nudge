@@ -11,6 +11,8 @@ describe "codeblock objects" do
     tCode.listing.should == "block {\n  literal int, 3}"
   end
   
+  it "should [probably] be able to update its own #contents by invoking an external parser somehow"
+  
   it "should tidy its listing to be one point per line, with indents and snug braces" 
   
   it "should print the tidy version in response to #inspect"
