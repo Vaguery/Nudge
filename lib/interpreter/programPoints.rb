@@ -31,12 +31,18 @@ module Nudge
   end
   
   
-  class Erc
+  class Erc < ProgramPoint
     attr_accessor :type, :value
+    
     def initialize(type, value=nil)
-      @type = type
+      @type = type.to_sym
       @value = value
     end
+    
+    def to_literal()
+      Literal.new(@type,@value)
+    end
+    
     # def go
     #   Literal.new(@type,@value).go
     # end  

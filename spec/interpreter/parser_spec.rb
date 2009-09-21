@@ -138,7 +138,7 @@ describe "parser" do
     
     describe ": just one ERC line" do
       describe "(integer ERCs)" do
-        [["erc int,-912","int",-912],["erc\tint , -88","int",-88]].each do |b|
+        [["erc int,-912",:int,-912],["erc\tint , -88",:int,-88]].each do |b|
           it "should recognize \"#{b}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
@@ -153,8 +153,8 @@ describe "parser" do
       end
       
       describe "(boolean ERCs)" do
-        [["erc bool,true","bool", true],
-          ["erc\t bool ,false","bool", false]].each do |b|
+        [["erc bool,true",:bool, true],
+          ["erc\t bool ,false",:bool, false]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
@@ -175,10 +175,10 @@ describe "parser" do
       
       
       describe "(float ERCs)" do
-        [["erc float,-9999.001","float",-9999.001],
-          ["erc\t float ,33.3","float",33.3],
-          ["erc\t\t  \tfloat , 12.12","float",12.12],
-          ["erc         float , 1000","float",1000.0]].each do |b|
+        [["erc float,-9999.001",:float,-9999.001],
+          ["erc\t float ,33.3",:float,33.3],
+          ["erc\t\t  \tfloat , 12.12",:float,12.12],
+          ["erc         float , 1000",:float,1000.0]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end

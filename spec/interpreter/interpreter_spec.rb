@@ -43,16 +43,4 @@ describe "initialization" do
 end
 
 describe "stepping" do
-    
-  
-  describe "instructions" do
-    before(:each) do
-      @ii = Interpreter.new()
-    end
-
-
-    it "should pop the exec stack when it interprets an instruction"
-    
-    it "should check to see if the instruction name is in its Library"
-  end
 end

@@ -6,7 +6,7 @@ describe "erc" do
   describe "initialization" do
     it "should take a type name with no default value" do
       myE = Erc.new("int")
-      myE.type.should == "int"
+      myE.type.should == :int
       lambda {Erc.new()}.should raise_error(ArgumentError)
     end
     
@@ -15,11 +15,14 @@ describe "erc" do
       myE.value.should == 12
     end
     
-    it "should be created with a default randomizer that returns current value"
+    it "should be created with a default randomizer that does nothing"
     
     it "should allow you to set a new randomizer"
     
-    it "should be a kind of program point"
+    it "should be a kind of program point" do
+      myE = Erc.new("int")
+      myE.should be_a_kind_of(ProgramPoint)
+    end
   end
     
   describe "randomization" do
@@ -31,7 +34,12 @@ describe "erc" do
   end
   
   describe "converting to a literal" do
-    it "should allow you to cast it to a Literal with the same values"
+    it "should allow you to cast it to a Literal with the same values" do
+      myE = Erc.new("int", 4)
+      asL = myE.to_literal
+      asL.type.should == :int
+      asL.value.should == 4
+    end
   end
   
   describe "inspection" do
