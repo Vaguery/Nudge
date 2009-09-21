@@ -40,6 +40,46 @@ describe "erc" do
       asL.type.should == :int
       asL.value.should == 4
     end
+    it "should automatically set the value when converting, if it's not set"
+  end
+  
+  describe "#go" do
+    before(:each) do
+      @ii = Interpreter.new()
+      Stack.cleanup
+      Stack.stacks[:int] = Stack.new(:int)
+      @ii.load("erc int,999")
+    end
+    
+    it "should pop the exec stack when an Erc is interpreted" do
+      oldExec = Stack.stacks[:exec].depth
+      @ii.step
+      Stack.stacks[:exec].depth.should == (oldExec-1)
+    end
+    
+    it "should initialize the right stack for the type of the Erc if it doesn't exist" do
+      Stack.stacks.delete(:int)
+      @ii.step
+      Stack.stacks.should include(:int)
+    end
+    
+    it "should use the existing stack if it does exist" do
+      @ii.step
+      Stack.stacks[:int].depth.should == 1
+    end
+
+    it "should push the value onto the right stack" do
+      Stack.push! :exec, Erc.new("int",3)
+      Stack.push! :exec, Erc.new("float",2.2)
+      Stack.push! :exec, Erc.new("bool",false)
+      
+      3.times {@ii.step}
+      Stack.stacks.should include(:int)
+      Stack.stacks.should include(:float)
+      Stack.stacks.should include(:bool)
+    end
+    
+    it "should check for CODE size limits"
   end
   
   describe "inspection" do

@@ -43,9 +43,9 @@ module Nudge
       Literal.new(@type,@value)
     end
     
-    # def go
-    #   Literal.new(@type,@value).go
-    # end  
+    def go
+      self.to_literal.go
+    end  
   end
   
   class Channel < ProgramPoint
