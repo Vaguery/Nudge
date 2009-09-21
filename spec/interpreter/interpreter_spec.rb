@@ -43,28 +43,7 @@ describe "initialization" do
 end
 
 describe "stepping" do
-  before(:each) do
-    @ii = Interpreter.new()
-    Stack.stacks[:int] = Stack.new(:int)
-    @ii.load("literal int,999")
-  end
-  
-  describe "literals" do
-    it "should pop the exec stack when it interprets a Literal" do
-      oldExec = Stack.stacks[:exec].depth
-      @ii.step
-      Stack.stacks[:exec].depth.should == (oldExec-1)
-    end
-    it "should initialize the right stack for the type fo the Literal if it doesn't exist" do
-      Stack.stacks.delete("int")
-      @ii.step
-      Stack.stacks.should include("int")
-    end
-    it "should use the existing stack if it does exist"
-    it "should push the value onto the right stack"
-    it "should check for CODE size limits"
-  end
-  
+    
   
   describe "instructions" do
     before(:each) do

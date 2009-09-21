@@ -1,4 +1,7 @@
 module Nudge
+  class ProgramPoint
+  end
+  
   class CodeBlock
     attr_accessor :listing, :contents
     
@@ -16,7 +19,7 @@ module Nudge
   end
   
   
-  class Literal
+  class Literal < ProgramPoint
     attr_accessor :type, :value
     def initialize(type,value)
       @type = type

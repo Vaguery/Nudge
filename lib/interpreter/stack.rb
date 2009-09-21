@@ -9,6 +9,7 @@ module Nudge
     end
     
     def self.push!(name,item)
+      name = name.to_sym
       if self.stacks.include?(name)
         self.stacks[name].push item
       else
