@@ -1,6 +1,6 @@
 module BlockNode
   def to_points
-    newBlob = Code.new(text_value)
+    newBlob = Codeblock.new(text_value)
     newBlob.contents = innards.elements.collect {|item| item.to_points}
     return newBlob
   end

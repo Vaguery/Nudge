@@ -3,10 +3,10 @@ include Nudge
 
 describe "code objects" do
   it "should take a listing as a param, default to 'block {}'" do
-    sCode = Code.new()
+    sCode = Codeblock.new()
     sCode.listing.should == "block {}"    
     
-    tCode = Code.new("block {\n  literal int, 3}")
+    tCode = Codeblock.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
   end
   
@@ -15,8 +15,8 @@ describe "code objects" do
   it "should print the tidy version in response to #inspect"
   
   it "should include a class method to parse code" do
-    Code.parser.should_not == nil
-    tt = Code.parser.parse("channel x").to_points
+    Codeblock.parser.should_not == nil
+    tt = Codeblock.parser.parse("channel x").to_points
     tt.should be_a_kind_of(Channel)
   end
   
@@ -38,12 +38,12 @@ describe "code methods" do
     it "should return the number of lines in the listing" do
       l1 = ["block {}", "instr thing,value", "channel x1"]
       l1.each do |ll|
-        Code.new(ll).points.should == 1
+        Codeblock.new(ll).points.should == 1
       end
       
       l2plus = ["block {\n  block {\n    block{}}}", "block {\n  instr thing,value\n  channel x1}"]
       l2plus.each do |ll|
-        Code.new(ll).points.should == 3
+        Codeblock.new(ll).points.should == 3
       end
     end
   end

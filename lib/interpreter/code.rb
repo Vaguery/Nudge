@@ -1,6 +1,6 @@
 
 module Nudge
-  class Code
+  class Codeblock
     @parser = NudgeLanguageParser.new()
  
     def self.parser
