@@ -11,7 +11,7 @@ describe "Literal" do
     it "should be initialized with a type and a value, with no defaults" do
       myL = Literal.new("int", 4)
       myL.should be_a_kind_of(Literal)
-      myL.type.should == "int"
+      myL.type.should == :int
       myL.value.should == 4
       lambda{Literal.new()}.should raise_error(ArgumentError)
       lambda{Literal.new("bool")}.should raise_error(ArgumentError)
@@ -44,12 +44,21 @@ describe "Literal" do
       end
       
       it "should use the existing stack if it does exist" do
-        oldInt = Stack.stacks[:int].depth
         @ii.step
-        Stack.stacks[:int].depth.should == (oldInt + 1)
+        Stack.stacks[:int].depth.should == 1
       end
 
-      it "should push the value onto the right stack"
+      it "should push the value onto the right stack" do
+        Stack.push! :exec, Literal.new("int",3)
+        Stack.push! :exec, Literal.new("float",2.2)
+        Stack.push! :exec, Literal.new("bool",false)
+        
+        3.times {@ii.step}
+        Stack.stacks.should include(:int)
+        Stack.stacks.should include(:float)
+        Stack.stacks.should include(:bool)
+      end
+      
       it "should check for CODE size limits"
     end
 end

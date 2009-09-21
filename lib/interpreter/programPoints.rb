@@ -22,7 +22,7 @@ module Nudge
   class Literal < ProgramPoint
     attr_accessor :type, :value
     def initialize(type,value)
-      @type = type
+      @type = type.to_sym
       @value = value
     end
     def go

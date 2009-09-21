@@ -73,9 +73,9 @@ describe "parser" do
     describe ": just one literal line" do
       
       describe "(integer literals)" do
-        [["literal int,8","int",8],
-          ["literal\tint , 8","int",8],
-          ["literal int,-221","int",-221]
+        [["literal int,8",:int,8],
+          ["literal\tint , 8",:int,8],
+          ["literal int,-221",:int,-221]
           ].each do |b|
           
           it "should recognize \"#{b[0]}\"" do
@@ -92,10 +92,10 @@ describe "parser" do
       end
       
       describe "(boolean literals)" do
-        [["literal bool,true","bool",true],
-          ["literal\t bool ,false","bool",false],
-          ["literal bool,FALSE","bool",false],
-          ["literal bool,True","bool",true]
+        [["literal bool,true",:bool,true],
+          ["literal\t bool ,false",:bool,false],
+          ["literal bool,FALSE",:bool,false],
+          ["literal bool,True",:bool,true]
           ].each do |b|
           
           it "should recognize \"#{b[0]}\"" do
@@ -112,10 +112,10 @@ describe "parser" do
       end
 
       describe "(float literals)" do
-        [["literal float,-6.2","float",-6.2],
-          ["literal\t float ,1992.0001","float",1992.0001],
-          ["literal\t float , 0.00010101","float",0.00010101],
-          ["literal\t float , 2","float",2.0]].each do |b|
+        [["literal float,-6.2",:float,-6.2],
+          ["literal\t float ,1992.0001",:float,1992.0001],
+          ["literal\t float , 0.00010101",:float,0.00010101],
+          ["literal\t float , 2",:float,2.0]].each do |b|
             
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)

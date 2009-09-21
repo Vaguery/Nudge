@@ -12,6 +12,7 @@ module Nudge
     
     def load(program)
       newCode = @parser.parse(program).to_points
+      Stack.cleanup
       Stack.push!(:exec,newCode)
     end
     
