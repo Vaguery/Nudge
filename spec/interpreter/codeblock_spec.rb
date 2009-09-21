@@ -5,7 +5,6 @@ describe "code objects" do
   it "should take a listing as a param, default to 'block {}'" do
     sCode = Codeblock.new()
     sCode.listing.should == "block {}"    
-    
     tCode = Codeblock.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
   end
@@ -13,12 +12,6 @@ describe "code objects" do
   it "should tidy its listing to be one point per line, with indents and snug braces" 
   
   it "should print the tidy version in response to #inspect"
-  
-  it "should include a class method to parse code" do
-    Codeblock.parser.should_not == nil
-    tt = Codeblock.parser.parse("channel x").to_points
-    tt.should be_a_kind_of(Channel)
-  end
   
   it "should generate a parsed tree from its listing" # WITHOUT AN INFINITE RECURSION
   

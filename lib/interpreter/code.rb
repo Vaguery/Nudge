@@ -1,12 +1,6 @@
 
 module Nudge
   class Codeblock
-    @parser = NudgeLanguageParser.new()
- 
-    def self.parser
-      @parser
-    end
-    
     attr_accessor :listing, :contents
     
     def initialize(rawCode=nil)
