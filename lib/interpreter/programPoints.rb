@@ -33,7 +33,6 @@ module Nudge
   
   class Erc < ProgramPoint
     attr_accessor :type, :value
-    
     def initialize(type, value=nil)
       @type = type.to_sym
       @value = value
@@ -48,17 +47,47 @@ module Nudge
     end  
   end
   
-  class Channel < ProgramPoint
-    attr_accessor :name
-    def initialize(name)
-      @name = name
-    end
-    # def go
-    #   lookedUp = Channel.lookup(name) # returns literal
-    #   lookedUp.go
-    # end
-  end
   
+  class Channel < ProgramPoint
+    def self.variables
+      @variables ||= {}
+    end
+    
+    def self.bind_variable(name,value)
+      @variables[name] = value
+    end
+    
+    def self.names
+      @names ||= {}
+    end
+    
+    def self.bind_name(name,value)
+      @names[name] = value
+    end
+    
+    def self.lookup(var_name)
+      if @variables.include?(var_name)
+        return @variables[var_name]
+      elsif @names.include?(var_name)
+        return @names[var_name]
+      end
+    end
+    
+    attr_accessor :name
+    
+    def initialize(var_name)
+      @name = var_name
+    end
+    
+    def go
+      lookedUp = Channel.lookup(@name) # returns literal
+      if lookedUp
+        Stack.stacks[:exec].push(lookedUp)
+      else
+        Stack.push!(:name,self)
+      end
+    end
+  end
   
   
   class Instruction < ProgramPoint
