@@ -1,8 +1,23 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-describe "stack" do
+describe "Stack class" do
   
+  after(:each) do
+    Stack.cleanup
+  end
+  
+  it "should keep have an empty stacks attribute, empty to begin" do
+    Stack.stacks.should == {}
+  end
+  
+  it "should include a new stack when a new Stack instance is made" do
+    @ss = Stack.new(:boo)
+    Stack.stacks.should include(:boo)
+  end
+end
+
+describe "stack" do
   before(:each) do
     @myStack = Stack.new(:int)
   end

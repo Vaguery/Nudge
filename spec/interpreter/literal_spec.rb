@@ -13,4 +13,11 @@ describe "Literal" do
       lambda{Literal.new()}.should raise_error(ArgumentError)
       lambda{Literal.new("bool")}.should raise_error(ArgumentError)
     end
+    
+    it "should move to the appropriate stack when removed from the exec stack" do
+      ii = Interpreter.new("literal bool, true")
+      ii.step
+      Stack.stacks['bool'].peek.value.should == true
+    end
+    
 end

@@ -7,8 +7,12 @@ describe "parser" do
   before(:all) do
     @parser = NudgeLanguageParser.new
   end
+  
+  after(:each) do
+    Stack.cleanup
+  end
     
-  it "should fail for an empty listing" do
+  it "should fail for an empty program" do
     empty = ""
     @parser.parse(empty).should == nil
   end

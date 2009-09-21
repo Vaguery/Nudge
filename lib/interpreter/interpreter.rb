@@ -1,20 +1,23 @@
 module Nudge
   
   class Interpreter
-    attr_accessor :parser, :stacks
+    attr_accessor :parser
     
-    def initialize(listing=nil)
+    def initialize(initialProgram=nil)
       @parser = NudgeLanguageParser.new()
-      @stacks = {}
-      if listing
-        self.load(listing)
+      if initialProgram
+        self.load(initialProgram)
       end
     end
     
-    def load(listing)
-      newCode = @parser.parse(listing)
-      @stacks["exec"] = Stack.new("exec")
-      @stacks["exec"].push newCode.to_points
+    def load(program)
+      newCode = @parser.parse(program).to_points
+      Stack.push!(:exec,newCode)
+    end
+    
+    def step
+      nextPoint = Stack.stacks[:exec].pop
+      nextPoint.go
     end
     
   end
