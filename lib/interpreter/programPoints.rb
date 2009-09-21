@@ -2,7 +2,7 @@ module Nudge
   class ProgramPoint
   end
   
-  class CodeBlock
+  class CodeBlock < ProgramPoint
     attr_accessor :listing, :contents
     
     def initialize(rawCode=nil)
@@ -42,7 +42,7 @@ module Nudge
     # end  
   end
   
-  class Channel
+  class Channel < ProgramPoint
     attr_accessor :name
     def initialize(name)
       @name = name
@@ -55,7 +55,7 @@ module Nudge
   
   
   
-  class Instruction
+  class Instruction < ProgramPoint
     attr_accessor :name, :requirements, :effects
     def initialize(name, req={}, eff={})
       @name = name

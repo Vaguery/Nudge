@@ -2,7 +2,10 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 describe "codeblock objects" do
-  it "should be a kind of program point"
+  it "should be a kind of program point" do
+    myB = CodeBlock.new()
+    myB.should be_a_kind_of(ProgramPoint)
+  end
   
   it "should take a listing as a param, default to 'block {}'" do
     sCode = CodeBlock.new()

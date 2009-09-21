@@ -9,9 +9,15 @@ describe "Instruction" do
     lambda {Instruction.new()}.should raise_error(ArgumentError)
   end
   
-  it "should have a string as a name"
+  it "should have a symbol as a name" do
+    myI = Instruction.new("foo_bar")
+    myI.name.should be_a_kind_of(String)
+  end
   
-  it "should be a kind of program point"
+  it "should be a kind of program point" do
+    myL = Instruction.new("int_thing")
+    myL.should be_a_kind_of(ProgramPoint)
+  end
   
   it "should have a requirements attribute, which defaults to an empty hash" do
     myI = Instruction.new("foo_bar")
