@@ -43,9 +43,53 @@ describe "initialization" do
 end
 
 describe "stepping" do
+  before(:each) do
+    @ii = Interpreter.new()
+    Stack.cleanup
+  end
+  
+  it "should step only until the :exec stack is empty (if the PointLimit has not been reached)" do
+    myCode = "block {}"
+    @ii.load(myCode)
+    lambda{3.times {@ii.step}}.should_not raise_error 
+  end
+  
+  it "should step only until the stepLimit has not been reached, if the :exec stack is full" do
+    myCode = "block {"*20 + "}"*20
+    @ii.stepLimit = 3
+    @ii.load(myCode)
+    lambda{15.times {@ii.step}}.should_not raise_error
+  end
+  
+  it "should count how many steps are executed" do
+    myCode = "block {"*20 + "}"*20
+    @ii.load(myCode)
+    11.times {@ii.step}
+    @ii.steps.should == 11
+    11.times {@ii.step}
+    @ii.steps.should == 20
+  end
+  
 end
 
 describe "running" do
+  before(:each) do
+    @ii = Interpreter.new()
+    Stack.cleanup
+    myCode = "block {"*20 + "}"*20
+    @ii.load(myCode)
+  end
+  
+  it "should run until the stepLimit has been reached, if the :exec stack isn't empty" do
+    @ii.stepLimit = 9
+    @ii.run
+    @ii.steps.should == 9
+  end
+  
+  it "should run until the :exec stack is empty (if the PointLimit has not been reached)" do
+    @ii.run
+    @ii.steps.should == 20
+  end
 end
 
 describe "channel setup" do
