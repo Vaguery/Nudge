@@ -40,6 +40,7 @@ describe "initialization" do
     ij = Interpreter.new("literal int,7")
     Stack.stacks[:exec].peek.should be_a_kind_of(Literal)
   end
+  
 end
 
 describe "stepping" do

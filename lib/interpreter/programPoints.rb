@@ -115,7 +115,7 @@ module Nudge
     def go
       lookedUp = Channel.lookup(@name) # returns literal
       if lookedUp
-        Stack.stacks[:exec].push(lookedUp)
+        Stack.push!(:exec, lookedUp)
       else
         Stack.push!(:name,self)
       end
@@ -127,7 +127,7 @@ module Nudge
   end
   
   
-  class Instruction < ProgramPoint
+  class InstructionPoint < ProgramPoint
     attr_accessor :name, :requirements, :effects
     def initialize(name, req={}, eff={})
       @name = name
@@ -143,6 +143,10 @@ module Nudge
     #   create the className 
     #   determine if it exists or not
     #   if it does, DO THAT
+    #     check for preconditions (stacks have stuff)
+    #   if the params exist, pop them
+    #   calculate the result as a Literal
+    #   push! it
     #   otherwise raise an exception of some sort
     # end
     

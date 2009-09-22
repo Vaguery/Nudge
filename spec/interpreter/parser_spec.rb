@@ -50,7 +50,7 @@ describe "parser" do
         
         it "should return an Instruction object for \"#{b}\"" do
           asCode = @parser.parse(b).to_points
-          asCode.should be_a_kind_of(Instruction)
+          asCode.should be_a_kind_of(InstructionPoint)
           asCode.name.should == "foo_bar"
         end
       end
@@ -253,7 +253,7 @@ describe "parser" do
       end
     end
     
-    b2s = [["block {\n  instr hey_now}",Instruction],
+    b2s = [["block {\n  instr hey_now}",InstructionPoint],
       ["block {\n  literal int, 22 }",Literal],
       ["block {\n  channel WVIZ}",Channel]]
     b2s.each do |b|

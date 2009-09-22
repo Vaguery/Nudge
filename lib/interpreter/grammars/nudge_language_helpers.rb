@@ -12,7 +12,7 @@ module InstructionNode
   end
   
   def to_points
-    newBlob = Instruction.new(opcode.text_value)
+    newBlob = InstructionPoint.new(opcode.text_value)
     return newBlob
   end
 end
