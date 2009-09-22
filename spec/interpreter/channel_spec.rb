@@ -58,7 +58,7 @@ describe "channel" do
     before(:each) do
       @ii = Interpreter.new()
       Stack.cleanup
-      @ii.load("block{\nchannel x\nchannel y\nchannel z}")
+      @ii.reset("block{\nchannel x\nchannel y\nchannel z}")
       Channel.bind_variable("x", Literal.new("float", 1.1))
       Channel.bind_name("y", Literal.new("int", 99999))
       #Channel z is unbound

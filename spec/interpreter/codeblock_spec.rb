@@ -90,13 +90,13 @@ describe "#go" do
     end
     
     it " : if it is an empty Codeblock" do
-      @ii.load("block {}")
+      @ii.reset("block {}")
       @ii.step
       Stack.stacks[:exec].depth.should == 0
     end
     
     it " : if it is a long, flat Codeblock" do
-      @ii.load("block {\nliteral int,1\nliteral int,2\nliteral int,3\nliteral int,4}")
+      @ii.reset("block {\nliteral int,1\nliteral int,2\nliteral int,3\nliteral int,4}")
       Stack.stacks[:exec].depth.should == 1
       @ii.step
       Stack.stacks[:exec].depth.should == 4
@@ -108,7 +108,7 @@ describe "#go" do
     end
     
     it " : if it is a deeply nested Codeblock" do
-      @ii.load("block {\nblock {\n block {\nliteral int,1}\nliteral bool,false}}")
+      @ii.reset("block {\nblock {\n block {\nliteral int,1}\nliteral bool,false}}")
       Stack.stacks[:exec].depth.should == 1
       @ii.step
       Stack.stacks[:exec].depth.should == 1

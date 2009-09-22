@@ -48,7 +48,7 @@ describe "erc" do
       @ii = Interpreter.new()
       Stack.cleanup
       Stack.stacks[:int] = Stack.new(:int)
-      @ii.load("erc int,999")
+      @ii.reset("erc int,999")
     end
     
     it "should pop the exec stack when an Erc is interpreted" do

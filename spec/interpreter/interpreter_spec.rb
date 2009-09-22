@@ -12,10 +12,10 @@ describe "initialization" do
     @ii.parser.should be_a_kind_of(NudgeLanguageParser)
   end
   
-  it "should respond to #load(listing) by parsing the listing and pushing it onto its exec stack" do
+  it "should respond to #reset(listing) by parsing the listing and pushing it onto its exec stack" do
     checker = NudgeLanguageParser.new()
     myCode = "channel x"
-    @ii.load(myCode)
+    @ii.reset(myCode)
     Stack.stacks.should include(:exec)
     Stack.stacks[:exec].should be_a_kind_of(Stack)
     Stack.stacks[:exec].depth.should == 1
@@ -26,7 +26,7 @@ describe "initialization" do
   it "should load a complex CodeBlock as a single item on the exec stack" do
     checker = NudgeLanguageParser.new()
     myCode = "block {\ninstr foo\n instr bar\n block {\ninstr baz}}"
-    @ii.load(myCode)
+    @ii.reset(myCode)
     Stack.stacks.should include(:exec)
     Stack.stacks[:exec].depth.should == 1
     whatGotPushed = Stack.stacks[:exec].peek
@@ -50,20 +50,20 @@ describe "stepping" do
   
   it "should step only until the :exec stack is empty (if the PointLimit has not been reached)" do
     myCode = "block {}"
-    @ii.load(myCode)
+    @ii.reset(myCode)
     lambda{3.times {@ii.step}}.should_not raise_error 
   end
   
   it "should step only until the stepLimit has not been reached, if the :exec stack is full" do
     myCode = "block {"*20 + "}"*20
     @ii.stepLimit = 3
-    @ii.load(myCode)
+    @ii.reset(myCode)
     lambda{15.times {@ii.step}}.should_not raise_error
   end
   
   it "should count how many steps are executed" do
     myCode = "block {"*20 + "}"*20
-    @ii.load(myCode)
+    @ii.reset(myCode)
     11.times {@ii.step}
     @ii.steps.should == 11
     11.times {@ii.step}
@@ -77,7 +77,7 @@ describe "running" do
     @ii = Interpreter.new()
     Stack.cleanup
     myCode = "block {"*20 + "}"*20
-    @ii.load(myCode)
+    @ii.reset(myCode)
   end
   
   it "should run until the stepLimit has been reached, if the :exec stack isn't empty" do
@@ -92,7 +92,7 @@ describe "running" do
   end
   
   it "should do nothing if the :exec stack starts empty" do
-    @ii.load()
+    @ii.reset()
     @ii.run
     @ii.steps.should == 0
   end

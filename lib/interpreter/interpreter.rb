@@ -6,13 +6,13 @@ module Nudge
     def initialize(initialProgram=nil)
       @parser = NudgeLanguageParser.new()
       if initialProgram
-        self.load(initialProgram)
+        self.reset(initialProgram)
       end
       @stepLimit = 3000
       @steps = 0
     end
     
-    def load(program="")
+    def reset(program="")
       Stack.cleanup
       parsed = @parser.parse(program)
       newCode = parsed.to_points if parsed

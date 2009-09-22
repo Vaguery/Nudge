@@ -28,7 +28,7 @@ describe "Literal" do
         @ii = Interpreter.new()
         Stack.cleanup
         Stack.stacks[:int] = Stack.new(:int)
-        @ii.load("literal int,999")
+        @ii.reset("literal int,999")
       end
       
       it "should pop the exec stack when a Literal is interpreted" do
