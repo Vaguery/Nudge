@@ -117,10 +117,10 @@ describe "#go" do
       @ii.step
       Stack.stacks[:exec].depth.should == 2
       item = Stack.stacks[:exec].pop
-      item.should be_a_kind_of(Literal)
+      item.should be_a_kind_of(LiteralPoint)
       item.value.should == 1
       item = Stack.stacks[:exec].pop
-      item.should be_a_kind_of(Literal)
+      item.should be_a_kind_of(LiteralPoint)
       item.value.should == false
     end
   end

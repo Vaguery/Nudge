@@ -28,7 +28,7 @@ module Nudge
   end
   
   
-  class Literal < ProgramPoint
+  class LiteralPoint < ProgramPoint
     attr_accessor :type, :value
     def initialize(type,value)
       @type = type.to_sym
@@ -52,7 +52,7 @@ module Nudge
     end
     
     def to_literal()
-      Literal.new(@type,@value)
+      LiteralPoint.new(@type,@value)
     end
     
     def go
@@ -71,7 +71,7 @@ module Nudge
     end
     
     def self.bind_variable(name,value)
-      if value.kind_of?(Literal)
+      if value.kind_of?(LiteralPoint)
         @variables[name] = value
       else
         raise ArgumentError
@@ -91,7 +91,7 @@ module Nudge
     end
     
     def self.bind_name(name,value)
-      if value.kind_of?(Literal)
+      if value.kind_of?(LiteralPoint)
         @names[name] = value
       else
         raise ArgumentError

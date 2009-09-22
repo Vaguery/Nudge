@@ -8,20 +8,20 @@ describe "Channel class attributes" do
     end
     
     it "should create a new entry when #bind_variable is called" do
-      Channel.bind_variable("x",Literal.new(:int,88))
-      Channel.variables["x"].should be_a_kind_of(Literal)
+      Channel.bind_variable("x",LiteralPoint.new(:int,88))
+      Channel.variables["x"].should be_a_kind_of(LiteralPoint)
       Channel.variables["x"].type.should == :int
       Channel.variables["x"].value.should == 88
     end
     
-    it "should raise an exception if the bound value is anything but a Literal" do
+    it "should raise an exception if the bound value is anything but a LiteralPoint" do
       lambda {Channel.bind_variable("x", 88)}.should raise_error(ArgumentError)
       lambda {Channel.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
       lambda {Channel.bind_variable("x", nil)}.should raise_error(ArgumentError)
     end
     
     it "should be resettable" do
-      Channel.bind_variable("x",Literal.new(:int,88))
+      Channel.bind_variable("x",LiteralPoint.new(:int,88))
       Channel.reset_variables
       Channel.variables.should_not include("x")
     end
@@ -33,20 +33,20 @@ describe "Channel class attributes" do
     end
     
     it "should create a new entry when #bind_name is called" do
-      Channel.bind_name("x",Literal.new(:bool,false))
-      Channel.names["x"].should be_a_kind_of(Literal)
+      Channel.bind_name("x",LiteralPoint.new(:bool,false))
+      Channel.names["x"].should be_a_kind_of(LiteralPoint)
       Channel.names["x"].type.should == :bool
       Channel.names["x"].value.should == false
     end
     
-    it "should raise an exception if the bound value is anything but a Literal" do
+    it "should raise an exception if the bound value is anything but a LiteralPoint" do
       lambda {Channel.bind_name("x", 88)}.should raise_error(ArgumentError)
       lambda {Channel.bind_name("x", [1,2])}.should raise_error(ArgumentError)
       lambda {Channel.bind_name("x", nil)}.should raise_error(ArgumentError)
     end
     
     it "should be resettable" do
-      Channel.bind_name("x",Literal.new(:int,88))
+      Channel.bind_name("x",LiteralPoint.new(:int,88))
       Channel.reset_names
       Channel.names.should_not include("x")
     end
@@ -72,8 +72,8 @@ describe "channel" do
       @ii = Interpreter.new()
       Stack.cleanup
       @ii.reset("block{\nchannel x\nchannel y\nchannel z}")
-      Channel.bind_variable("x", Literal.new("float", 1.1))
-      Channel.bind_name("y", Literal.new("int", 99999))
+      Channel.bind_variable("x", LiteralPoint.new("float", 1.1))
+      Channel.bind_name("y", LiteralPoint.new("int", 99999))
       #Channel z is unbound
     end
     

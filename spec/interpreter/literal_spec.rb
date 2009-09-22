@@ -1,20 +1,20 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-describe "Literal" do
+describe "LiteralPoint" do
   
     it "should be a kind of program point" do
-      myL = Literal.new("int", 4)
+      myL = LiteralPoint.new("int", 4)
       myL.should be_a_kind_of(ProgramPoint)
     end
     
     it "should be initialized with a type and a value, with no defaults" do
-      myL = Literal.new("int", 4)
-      myL.should be_a_kind_of(Literal)
+      myL = LiteralPoint.new("int", 4)
+      myL.should be_a_kind_of(LiteralPoint)
       myL.type.should == :int
       myL.value.should == 4
-      lambda{Literal.new()}.should raise_error(ArgumentError)
-      lambda{Literal.new("bool")}.should raise_error(ArgumentError)
+      lambda{LiteralPoint.new()}.should raise_error(ArgumentError)
+      lambda{LiteralPoint.new("bool")}.should raise_error(ArgumentError)
     end
     
     it "should move to the appropriate stack when removed from the exec stack" do
@@ -31,13 +31,13 @@ describe "Literal" do
         @ii.reset("literal int,999")
       end
       
-      it "should pop the exec stack when a Literal is interpreted" do
+      it "should pop the exec stack when a LiteralPoint is interpreted" do
         oldExec = Stack.stacks[:exec].depth
         @ii.step
         Stack.stacks[:exec].depth.should == (oldExec-1)
       end
       
-      it "should initialize the right stack for the type of the Literal if it doesn't exist" do
+      it "should initialize the right stack for the type of the LiteralPoint if it doesn't exist" do
         Stack.stacks.delete(:int)
         @ii.step
         Stack.stacks.should include(:int)
@@ -49,9 +49,9 @@ describe "Literal" do
       end
 
       it "should push the value onto the right stack" do
-        Stack.push! :exec, Literal.new("int",3)
-        Stack.push! :exec, Literal.new("float",2.2)
-        Stack.push! :exec, Literal.new("bool",false)
+        Stack.push! :exec, LiteralPoint.new("int",3)
+        Stack.push! :exec, LiteralPoint.new("float",2.2)
+        Stack.push! :exec, LiteralPoint.new("bool",false)
         
         3.times {@ii.step}
         Stack.stacks.should include(:int)
@@ -64,8 +64,8 @@ describe "Literal" do
     end
     
     describe "#tidy" do
-      it "should print 'literal type, value' for Literal#tidy" do
-        myL = Literal.new("float", -99.121001)
+      it "should print 'literal type, value' for LiteralPoint#tidy" do
+        myL = LiteralPoint.new("float", -99.121001)
         myL.tidy.should == "literal float, -99.121001"
       end
     end

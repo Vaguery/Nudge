@@ -15,11 +15,11 @@ stacks[:bool] = Stack.new(:bool)
 pp stacks
 puts "\n"
 
-i3 = Literal.new(3,:int)
-in22 = Literal.new(-22,:int)
-bf = Literal.new(false,:bool)
-bf2 = Literal.new(false,:bool)
-bt = Literal.new(true,:bool)
+i3 = LiteralPoint.new(3,:int)
+in22 = LiteralPoint.new(-22,:int)
+bf = LiteralPoint.new(false,:bool)
+bf2 = LiteralPoint.new(false,:bool)
+bt = LiteralPoint.new(true,:bool)
 
 ei = Erc.new(3, :int)
 

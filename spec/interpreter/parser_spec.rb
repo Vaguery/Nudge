@@ -82,9 +82,9 @@ describe "parser" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
           
-          it "should return a Literal for \"#{b[0]}\"" do
+          it "should return a LiteralPoint for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_points
-            asCode.should be_a_kind_of(Literal)
+            asCode.should be_a_kind_of(LiteralPoint)
             asCode.type.should == b[1]
             asCode.value.should == b[2]
           end
@@ -102,9 +102,9 @@ describe "parser" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
 
-          it "should return a Literal object for \"#{b[0]}\"" do
+          it "should return a LiteralPoint object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_points
-            asCode.should be_a_kind_of(Literal)
+            asCode.should be_a_kind_of(LiteralPoint)
             asCode.type.should == b[1]
             asCode.value.should == b[2]
           end
@@ -121,9 +121,9 @@ describe "parser" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
           end
           
-          it "should return a Literal object for \"#{b[0]}\"" do
+          it "should return a LiteralPoint object for \"#{b[0]}\"" do
             asCode = @parser.parse(b[0]).to_points
-            asCode.should be_a_kind_of(Literal)
+            asCode.should be_a_kind_of(LiteralPoint)
             asCode.type.should == b[1]
             asCode.value.should be_close(b[2],0.000001)
           end          
@@ -254,7 +254,7 @@ describe "parser" do
     end
     
     b2s = [["block {\n  instr hey_now}",InstructionPoint],
-      ["block {\n  literal int, 22 }",Literal],
+      ["block {\n  literal int, 22 }",LiteralPoint],
       ["block {\n  channel WVIZ}",Channel]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do

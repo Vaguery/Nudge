@@ -50,7 +50,7 @@ module LiteralNode
   end
   
   def to_points
-    newBlob = Literal.new(stack_name,value)
+    newBlob = LiteralPoint.new(stack_name,value)
     return newBlob
   end
   
