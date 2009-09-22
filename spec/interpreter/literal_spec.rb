@@ -60,5 +60,14 @@ describe "Literal" do
       end
       
       it "should check for CODE size limits"
+      
     end
+    
+    describe "#tidy" do
+      it "should print 'literal type, value' for Literal#tidy" do
+        myL = Literal.new("float", -99.121001)
+        myL.tidy.should == "literal float, -99.121001"
+      end
+    end
+    
 end

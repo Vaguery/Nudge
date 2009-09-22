@@ -90,8 +90,13 @@ describe "channel" do
       @ii.step
       Stack.stacks[:name].peek.name.should == "z"
     end
-
-    it "should check for CODE size limits"
+  end
+  
+  describe "#tidy" do
+    it "should return 'channel x' when the name is 'x'" do
+      myC = Channel.new("x")
+      myC.tidy.should == "channel x"
+    end
   end
   
 end

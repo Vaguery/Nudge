@@ -9,14 +9,77 @@ describe "codeblock objects" do
   
   it "should take a listing as a param, default to 'block {}'" do
     sCode = CodeBlock.new()
-    sCode.listing.should == "block {}"    
+    sCode.listing.should == "block {}"
     tCode = CodeBlock.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
   end
   
-  it "should tidy its listing to be one point per line, with indents and snug braces" 
+  it "should return an indented nested text version for #tidy" do
+    parser = NudgeLanguageParser.new()
+    myB = parser.parse("block {}").to_points
+    myB.tidy.should == "block {}"
+    
+    myB = parser.parse("block {\n\n}").to_points
+    myB.tidy.should == "block {}"
+    
+    myB = parser.parse("block {\nblock{}\n}").to_points
+    myB.tidy.should == "block {\n  block {}}"
+    
+    myB = parser.parse("block {\nblock{\nblock{}}\n}").to_points
+    myB.tidy.should == "block {\n  block {\n    block {}}}"
+    
+    myB = parser.parse("block {\nblock{}\nblock{}}").to_points
+    myB.tidy.should == "block {\n  block {}\n  block {}}"
+    
+    myB = parser.parse("block {\ninstr x\ninstr y}").to_points
+    myB.tidy.should == "block {\n  instr x\n  instr y}"
+  end
   
-  it "should print the tidy version in response to #inspect"
+  it "--no really, even for VERY complicated trees" do
+    parser = NudgeLanguageParser.new()
+    myComplicated = <<-HERE
+block {
+  instr fee
+  block {
+  block {
+  instr fie
+  
+  block {}
+  }
+  }
+  block {
+  instr foe
+  instr fum}
+    
+  literal float, -8812.1
+  channel u
+  block 
+  {}}
+  HERE
+    myExpected = <<-HERE
+block {
+  instr fee
+  block {
+    block {
+      instr fie
+      block {}}}
+  block {
+    instr foe
+    instr fum}
+  literal float, -8812.1
+  channel u
+  block {}}
+HERE
+    myB = parser.parse(myComplicated).to_points
+    myB.tidy.should == myExpected.chomp
+    
+    myDeep = "block {"* 88 + "}"*88
+    myB = parser.parse(myDeep).to_points
+    myB.tidy.split(/\n/).length.should == 88
+    
+  end
+  
+  it "should replace its listing with self#tidy"
 end
 
 describe "#go" do

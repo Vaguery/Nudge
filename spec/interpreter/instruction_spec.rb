@@ -28,4 +28,12 @@ describe "Instruction" do
     myI = Instruction.new("foo_bar")
     myI.effects.should == {}
   end
+  
+  describe "#tidy" do
+    it "should return 'instr x' when the name is 'x'" do
+      myI = Instruction.new("x")
+      myI.tidy.should == "instr x"
+    end
+  end
+  
 end

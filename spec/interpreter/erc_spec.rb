@@ -82,8 +82,11 @@ describe "erc" do
     it "should check for CODE size limits"
   end
   
-  describe "inspection" do
-    it "should print 'ERC(value,type) for Erc#inspect"
+  describe "#tidy" do
+    it "should print 'erc type, value' for Erc#tidy" do
+      myE = Erc.new("float", -99.121001)
+      myE.tidy.should == "erc float, -99.121001"
+    end
   end
   
 end

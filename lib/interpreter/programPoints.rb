@@ -11,11 +11,19 @@ module Nudge
     end
     
     def points
-      return @listing.split(/\n/).length
+      @listing.split(/\n/).length
     end
     
     def go
       @contents.reverse.each {|item| Nudge::Stack.push!(:exec,item)} 
+    end
+    
+    def tidy(level=1)
+      tt = "block {"
+      indent = level*2
+      @contents.each {|item| tt += ("\n" + (" "*indent) + item.tidy(level+1))}
+      tt += "}"
+      return tt
     end
   end
   
@@ -29,6 +37,10 @@ module Nudge
     def go
       Nudge::Stack.push!(self.type,self)
     end
+    def tidy(level=1)
+      "literal " + @type.to_s + ", " + @value.to_s
+    end
+    
   end
   
   
@@ -45,7 +57,11 @@ module Nudge
     
     def go
       self.to_literal.go
-    end  
+    end
+    
+    def tidy(level=1)
+      "erc " + @type.to_s + ", " + @value.to_s
+    end
   end
   
   
@@ -76,9 +92,9 @@ module Nudge
     
     def self.lookup(var_name)
       if @variables.include?(var_name)
-        return @variables[var_name]
+        @variables[var_name]
       elsif @names.include?(var_name)
-        return @names[var_name]
+        @names[var_name]
       end
     end
     
@@ -96,6 +112,10 @@ module Nudge
         Stack.push!(:name,self)
       end
     end
+    
+    def tidy(level=1)
+      "channel " + @name
+    end
   end
   
   
@@ -106,6 +126,11 @@ module Nudge
       @requirements = req
       @effects = eff
     end
+    
+    def tidy(level=1)
+      "instr " + @name
+    end
+    
     # def go
     #   create the className 
     #   determine if it exists or not
