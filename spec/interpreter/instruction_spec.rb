@@ -65,7 +65,6 @@ describe "InstructionPoint" do
         def self.instance
           @singleton ||= self.new
         end
-        
         def go
         end
       end
