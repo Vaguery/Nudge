@@ -2,6 +2,9 @@ class Instruction
   class NotEnoughStackItems < ArgumentError
   end
   
+  class InstructionMethodError < RuntimeError
+  end
+  
   def needs(stackName, minimum)
     if Stack.stacks[stackName].depth < minimum
       raise NotEnoughStackItems

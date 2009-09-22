@@ -3,6 +3,8 @@ require 'singleton'
 class IntAddInstruction < Instruction
   include Singleton
   
+  attr :result
+  
   def preconditions?
     needs :int, 2
   end
@@ -10,9 +12,11 @@ class IntAddInstruction < Instruction
   def go
     self.preconditions?
     
-    arg1 = Stack.stacks[:int].pop
-    arg2 = Stack.stacks[:int].pop
-    @result = LiteralPoint.new("int", arg1.value + arg2.value)
+    begin
+      arg1 = Stack.stacks[:int].pop
+      arg2 = Stack.stacks[:int].pop
+      @result = LiteralPoint.new("int", arg1.value + arg2.value)
+    end
     
     self.outcomes
   end
