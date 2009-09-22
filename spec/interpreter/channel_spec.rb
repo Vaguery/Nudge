@@ -19,6 +19,12 @@ describe "Channel class attributes" do
       lambda {Channel.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
       lambda {Channel.bind_variable("x", nil)}.should raise_error(ArgumentError)
     end
+    
+    it "should be resettable" do
+      Channel.bind_variable("x",Literal.new(:int,88))
+      Channel.reset_variables
+      Channel.variables.should_not include("x")
+    end
   end
   
   describe "names table" do
@@ -38,6 +44,13 @@ describe "Channel class attributes" do
       lambda {Channel.bind_name("x", [1,2])}.should raise_error(ArgumentError)
       lambda {Channel.bind_name("x", nil)}.should raise_error(ArgumentError)
     end
+    
+    it "should be resettable" do
+      Channel.bind_name("x",Literal.new(:int,88))
+      Channel.reset_names
+      Channel.names.should_not include("x")
+    end
+    
   end
 end
 

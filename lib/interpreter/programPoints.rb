@@ -82,6 +82,14 @@ module Nudge
       @names ||= {}
     end
     
+    def self.reset_variables
+      @variables = {}
+    end
+    
+    def self.reset_names
+      @names = {}
+    end
+    
     def self.bind_name(name,value)
       if value.kind_of?(Literal)
         @names[name] = value
