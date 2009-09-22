@@ -13,6 +13,12 @@ describe "Channel class attributes" do
       Channel.variables["x"].type.should == :int
       Channel.variables["x"].value.should == 88
     end
+    
+    it "should raise an exception if the bound value is anything but a Literal" do
+      lambda {Channel.bind_variable("x", 88)}.should raise_error(ArgumentError)
+      lambda {Channel.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
+      lambda {Channel.bind_variable("x", nil)}.should raise_error(ArgumentError)
+    end
   end
   
   describe "names table" do
@@ -27,6 +33,11 @@ describe "Channel class attributes" do
       Channel.names["x"].value.should == false
     end
     
+    it "should raise an exception if the bound value is anything but a Literal" do
+      lambda {Channel.bind_name("x", 88)}.should raise_error(ArgumentError)
+      lambda {Channel.bind_name("x", [1,2])}.should raise_error(ArgumentError)
+      lambda {Channel.bind_name("x", nil)}.should raise_error(ArgumentError)
+    end
   end
 end
 

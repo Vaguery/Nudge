@@ -2,6 +2,7 @@ module Nudge
   class ProgramPoint
   end
   
+  
   class CodeBlock < ProgramPoint
     attr_accessor :listing, :contents
     
@@ -54,7 +55,11 @@ module Nudge
     end
     
     def self.bind_variable(name,value)
-      @variables[name] = value
+      if value.kind_of?(Literal)
+        @variables[name] = value
+      else
+        raise ArgumentError
+      end
     end
     
     def self.names
@@ -62,7 +67,11 @@ module Nudge
     end
     
     def self.bind_name(name,value)
-      @names[name] = value
+      if value.kind_of?(Literal)
+        @names[name] = value
+      else
+        raise ArgumentError
+      end
     end
     
     def self.lookup(var_name)

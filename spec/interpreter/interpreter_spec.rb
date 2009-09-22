@@ -44,3 +44,9 @@ end
 
 describe "stepping" do
 end
+
+describe "running" do
+end
+
+describe "channel setup" do
+end
