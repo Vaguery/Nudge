@@ -12,4 +12,6 @@ require 'interpreter/types/pushTypes'
 require 'interpreter/stack'
 require 'interpreter/programPoints'
 
+require 'instructions/int_arithmetic'
+
 require 'activesupport'

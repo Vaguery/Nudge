@@ -135,11 +135,29 @@ module Nudge
       @effects = eff
     end
     
+    def className
+      "#{@name.camelize}Instruction"
+    end
+    
+    def classLookup
+      self.className.constantize
+    rescue NameError
+      raise InstructionNotFoundError
+    end
+    
     def tidy(level=1)
       "instr " + @name
     end
     
-    # def go
+    class InstructionNotFoundError < NameError
+    end
+    
+    def go
+      self.classLookup.instance.go
+    rescue InstructionNotFoundError
+      return
+    end
+    
     #   create the className 
     #   determine if it exists or not
     #   if it does, DO THAT
@@ -148,7 +166,6 @@ module Nudge
     #   calculate the result as a Literal
     #   push! it
     #   otherwise raise an exception of some sort
-    # end
     
   end
   
