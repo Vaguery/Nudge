@@ -47,6 +47,11 @@ describe "stack" do
       @myStack.entries.should have(3).items
     end
     
+    it "should ignore attempts to push nil" do
+      @myStack.push(nil)
+      @myStack.entries.should have(0).items
+    end
+    
     it "should return its top item when popping" do
       @myStack.push('hello')
       fellOff = @myStack.pop

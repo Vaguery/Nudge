@@ -90,6 +90,13 @@ describe "running" do
     @ii.run
     @ii.steps.should == 20
   end
+  
+  it "should do nothing if the :exec stack starts empty" do
+    @ii.load()
+    @ii.run
+    @ii.steps.should == 0
+  end
+  
 end
 
 describe "channel setup" do

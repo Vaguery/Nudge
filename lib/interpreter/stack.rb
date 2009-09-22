@@ -28,7 +28,7 @@ module Nudge
     end
     
     def push(item)
-      @entries.push(item)
+      @entries.push(item) unless item == nil
     end
     
     def pop
