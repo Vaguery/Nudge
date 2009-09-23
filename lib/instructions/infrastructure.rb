@@ -1,4 +1,6 @@
 class Instruction
+  require 'singleton'
+  include Singleton
   
   class NotEnoughStackItems < ArgumentError
   end

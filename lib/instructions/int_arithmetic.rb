@@ -1,7 +1,4 @@
-require 'singleton'
-
 class IntAddInstruction < Instruction
-  include Singleton
   def preconditions?
     needs :int, 2
   end
@@ -18,8 +15,6 @@ class IntAddInstruction < Instruction
 end
 
 class IntMultiplyInstruction < Instruction
-  include Singleton
-  
   def preconditions?
     needs :int, 2
   end
@@ -37,8 +32,6 @@ end
 
 
 class IntDivideInstruction < Instruction
-  include Singleton
-  
   def preconditions?
     needs :int, 2
   end
