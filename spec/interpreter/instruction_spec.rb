@@ -49,9 +49,9 @@ describe "InstructionPoint" do
   describe "#go" do
     describe "class lookup" do
       it "should find the appropriate class (by name) if it exists" do
-        IntAddInstruction = true
-        myI = InstructionPoint.new("int_add")
-        myI.classLookup.should == IntAddInstruction
+        MyThingInstruction = true
+        myI = InstructionPoint.new("my_thing")
+        myI.classLookup.should == MyThingInstruction
       end
 
       it "should raise a InstructionNotFoundError if the class doesn't exist" do
@@ -87,12 +87,6 @@ describe "InstructionPoint" do
     #   calculate the result as a Literal
     #   push! it
     #   otherwise raise an exception of some sort
-    
-  end
-end
-
-describe "Instruction Singletons" do
-  it "should description" do
     
   end
 end
