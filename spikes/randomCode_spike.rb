@@ -1,8 +1,9 @@
 require '../lib/nudge'
+include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc", "\nchannel", "\nname", "\ninstr"]
+  leaves = ["\nerc int, X", "\nchannel y", "\ninstr foo", "\ninstr bar"]
   
   newCode = ["*"] * points
   
@@ -32,7 +33,9 @@ def randomIndentCode(points, blocks, dice=2)
   program = ""
   newCode.each { |i| program += i}
   
-  return program
+  return "block {" + program + "}"
 end
 
-puts randomIndentCode(50,10)
+
+parser = NudgeLanguageParser.new
+puts parser.parse(randomIndentCode(30,12)).to_points.tidy
