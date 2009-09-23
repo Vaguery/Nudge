@@ -8,7 +8,7 @@ describe "IntAddInstruction" do
     i1.should === i2
   end
   
-  [:setup, :derive, :cleanup].each do |methodName|
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
     before(:each) do
       @i1 = IntAddInstruction.instance
     end
@@ -87,7 +87,7 @@ describe "IntMultiplyInstruction" do
     i1.should === i2
   end
 
-  [:setup, :derive, :cleanup].each do |methodName|
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
     before(:each) do
       @im = IntMultiplyInstruction.instance
     end
