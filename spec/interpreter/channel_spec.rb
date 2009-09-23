@@ -54,7 +54,7 @@ describe "Channel class attributes" do
   end
 end
 
-describe "channel" do
+describe "Channel Point" do
   it "should be a kind of program point" do
     myC = Channel.new("x")
     myC.should be_a_kind_of(ProgramPoint)
