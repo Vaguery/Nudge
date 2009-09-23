@@ -8,7 +8,7 @@ describe "IntAddInstruction" do
     i1.should === i2
   end
   
-  [:preconditions?, :go, :outcomes].each do |methodName|
+  [:setup, :derive, :cleanup].each do |methodName|
     before(:each) do
       @i1 = IntAddInstruction.instance
     end
@@ -39,7 +39,7 @@ describe "IntAddInstruction" do
       it "should successfully run #go only if all preconditions are met" do
         Stack.push!(:int,@int1)
         Stack.push!(:int,@int1)
-        @i1.should_receive(:outcomes)
+        @i1.should_receive(:cleanup)
         @i1.go
       end
     end
@@ -48,7 +48,7 @@ describe "IntAddInstruction" do
       it "should pop the arguments" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
-        @i1.stub!(:outcomes) # and do nothing
+        @i1.stub!(:cleanup) # and do nothing
         @i1.go
         Stack.stacks[:int].depth.should == 0
       end
@@ -56,9 +56,8 @@ describe "IntAddInstruction" do
       it "determine the result value" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
-        @i1.stub!(:outcomes) # and do nothing
-        @i1.go
-        @i1.result.value.should == 12
+        @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
+        @i1.go.should == 12
       end
       
       it "should raise the right exceptions if a bad thing happens" do
@@ -88,7 +87,7 @@ describe "IntMultiplyInstruction" do
     i1.should === i2
   end
 
-  [:preconditions?, :go, :outcomes].each do |methodName|
+  [:setup, :derive, :cleanup].each do |methodName|
     before(:each) do
       @im = IntMultiplyInstruction.instance
     end
@@ -119,7 +118,7 @@ describe "IntMultiplyInstruction" do
       it "should successfully run #go only if all preconditions are met" do
         Stack.push!(:int,@int1)
         Stack.push!(:int,@int1)
-        @im.should_receive(:outcomes)
+        @im.should_receive(:cleanup)
         @im.go
       end
     end
@@ -128,7 +127,7 @@ describe "IntMultiplyInstruction" do
       it "should pop the arguments" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
-        @im.stub!(:outcomes) # and do nothing
+        @im.stub!(:cleanup) # and do nothing
         @im.go
         Stack.stacks[:int].depth.should == 0
       end
@@ -136,9 +135,8 @@ describe "IntMultiplyInstruction" do
       it "determine the result value" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
-        @im.stub!(:outcomes) # and do nothing
-        @im.go
-        @im.result.value.should == 36
+        @im.should_receive(:cleanup).and_return(@im.instance_eval("@result.value"))
+        @im.go.should == 36
       end
 
       it "should raise the right exceptions if a bad thing happens" do
@@ -160,14 +158,3 @@ describe "IntMultiplyInstruction" do
     end
   end
 end
-
-# describe "possibly stupid integration experiment" do
-#   it "should description" do
-#     parser = NudgeLanguageParser.new
-#     biggie = "block{" + ("\nliteral int,3"*100) + ("\ninstr int_multiply"*99) + "}"
-#     ii = Interpreter.new()
-#     ii.reset(biggie)
-#     ii.run
-#     Stack.stacks[:int].peek.value.should == 3**100
-#   end
-# end

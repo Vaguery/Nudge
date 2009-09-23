@@ -1,4 +1,5 @@
 class Instruction
+  
   class NotEnoughStackItems < ArgumentError
   end
   
@@ -17,16 +18,24 @@ class Instruction
     Stack.stacks[stackName].push literal
   end
   
-  def preconditions?
-    raise "Your Instruction class should define its own #preconditions method"
-  end
-  
   def go
-    raise "Your Instruction class should define its own #go method"
+    if self.preconditions?
+      self.setup
+      self.derive
+      self.cleanup
+    end
   end
   
-  def outcomes
-    raise "Your Instruction class should define its own #effects method"
+  def setup
+    raise "Your Instruction class should define its own #setup method"
+  end
+  
+  def derive
+    raise "Your Instruction class should define its own #derive method"
+  end
+  
+  def cleanup
+    raise "Your Instruction class should define its own #cleanup method"
   end
   
 end

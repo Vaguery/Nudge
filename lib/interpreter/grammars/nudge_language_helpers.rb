@@ -30,12 +30,6 @@ module ChannelNode
 end
 
 module LiteralNode
-  # extending SyntaxNode instances created by nudge_language.treetop grammar matcher
-  # will recognize:
-  #   'literal int, 6'
-  #   'literal float, -4.3'
-  #   'literal robot, some random crap like <0xFFFFFF>'
-  
   # stack_name is an alpha+underscored string naming stack where 'what' will be pushed
   # ex: 'int', 'float', 'robot' (see above)
   def stack_name
