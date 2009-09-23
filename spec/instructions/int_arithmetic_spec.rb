@@ -44,7 +44,7 @@ describe "IntAddInstruction" do
       end
     end
 
-    describe "#go" do
+    describe "#derive" do
       it "should pop the arguments" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
@@ -53,7 +53,7 @@ describe "IntAddInstruction" do
         Stack.stacks[:int].depth.should == 0
       end
       
-      it "determine the result value" do
+      it "determine the result value before it gets consumed!" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
@@ -66,7 +66,7 @@ describe "IntAddInstruction" do
       
     end
 
-    describe "#outcomes" do
+    describe "#cleanup" do
       it "should push! the result" do
         2.times {Stack.push!(:int,@int1)}
         @i1.go
@@ -123,7 +123,7 @@ describe "IntMultiplyInstruction" do
       end
     end
 
-    describe "#go" do
+    describe "#derive" do
       it "should pop the arguments" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
@@ -132,7 +132,7 @@ describe "IntMultiplyInstruction" do
         Stack.stacks[:int].depth.should == 0
       end
 
-      it "determine the result value" do
+      it "determine the result value before it gets consumed!" do
         2.times {Stack.push!(:int,@int1)}
         Stack.stacks[:int].depth.should == 2
         @im.should_receive(:cleanup).and_return(@im.instance_eval("@result.value"))
@@ -145,13 +145,95 @@ describe "IntMultiplyInstruction" do
 
     end
 
-    describe "#outcomes" do
+    describe "#cleanup" do
       it "should push! the result" do
         2.times {Stack.push!(:int,@int1)}
         @im.go
         Stack.stacks[:int].peek.value.should == 36
       end
 
+      it "should raise the right exception if something bad happens" do
+        pending
+      end
+    end
+  end
+end
+
+
+describe "IntDivideInstruction" do
+  it "should be a singleton" do
+    i1 = IntDivideInstruction.instance
+    i2 = IntDivideInstruction.instance
+    i1.should === i2
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntDivideInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntDivideInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 6)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 2 ints" do
+        2.times {Stack.push!(:int,@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        1.times {Stack.push!(:int,@int1)}
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+
+      it "should successfully run #go only if all preconditions are met" do
+        Stack.push!(:int,@int1)
+        Stack.push!(:int,@int1)
+        @i1.should_receive(:cleanup)
+        @i1.go
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        2.times {Stack.push!(:int,@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+      
+      it "determine the result value before it gets consumed!" do
+        2.times {Stack.push!(:int,@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
+        @i1.go.should == 1
+      end
+      
+      it "should raise the right exceptions if a bad thing happens" do
+        Stack.push!(:int,@int1)
+        Stack.push!(:int,LiteralPoint.new("int",0))
+        lambda{@i1.go}.should raise_error(Instruction::InstructionMethodError)
+      end
+      
+    end
+
+    describe "#cleanup" do
+      it "should push! the result" do
+        2.times {Stack.push!(:int,@int1)}
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 1
+      end
+      
       it "should raise the right exception if something bad happens" do
         pending
       end

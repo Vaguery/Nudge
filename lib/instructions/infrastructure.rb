@@ -26,6 +26,10 @@ class Instruction
     end
   end
   
+  def preconditions?
+    raise "Your Instruction class should define its own #preconditions? method"
+  end
+  
   def setup
     raise "Your Instruction class should define its own #setup method"
   end
