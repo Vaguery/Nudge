@@ -15,6 +15,16 @@ describe "Stack class" do
     @ss = Stack.new(:boo)
     Stack.stacks.should include(:boo)
   end
+  
+  it "should automatically create an entry if an unmentioned stack is referenced" do
+    Stack.cleanup
+    lambda{Stack.stacks[:pirate].peek}.should_not raise_error
+    Stack.cleanup
+    lambda{Stack.stacks[:pirate].depth}.should_not raise_error
+    Stack.cleanup
+    lambda{Stack.stacks[:pirate].depth}.should_not raise_error
+    
+  end
 end
 
 describe "stack" do

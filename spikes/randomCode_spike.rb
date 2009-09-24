@@ -4,7 +4,7 @@ include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc int, -2","\nerc int, 11","\nerc bool, false", "\nchannel y", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide"]
+  leaves = ["\nerc int, #{rand(20)-10}","\nerc int, #{rand(10-5)}","\nerc bool, false", "\nchannel x", "\ninstr foo_bar", "\ninstr int_multiply","\ninstr int_divide"]
   
   newCode = ["*"] * points
   
@@ -40,14 +40,18 @@ end
 
 parser = NudgeLanguageParser.new
 Channel.variables
-Channel.bind_variable("y", LiteralPoint.new(:int, 9))
-myCode = randomIndentCode(20,0)
+myCode = randomIndentCode(600,6)
 puts parser.parse(myCode).to_points.tidy
 
 ii = Interpreter.new()
-ii.reset(myCode)
-puts "\n\n"
-ii.run
-puts "INT stack:\n=========="
-Stack.stacks[:int].entries.each  {|i| puts i.value}
-puts "\n\nBOOL stack depth: #{Stack.stacks[:bool].depth}"
+
+(-20..20).each do |thisX|
+  ii.reset(myCode)
+  Channel.bind_variable("x", LiteralPoint.new(:int, thisX))
+  print "#{Channel.variables["x"].value}, "
+  ii.run
+  # puts "INT stack:\n=========="
+  # Stack.stacks[:int].entries.each  {|i| puts i.value}
+  puts Stack.stacks[:int].peek.value.to_s || "nil"
+  # puts "\n\nBOOL stack depth: #{Stack.stacks[:bool].depth}"
+end

@@ -31,9 +31,9 @@ class Instruction
       self.cleanup
     end
     rescue NotEnoughStackItems
-      logError("Parameter shortage")
+      logError("NOOP: Parameter shortage")
     rescue InstructionMethodError
-       logError("Calculation error")
+       logError("NOOP: Calculation error")
     end
   end
   
