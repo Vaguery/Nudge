@@ -15,7 +15,7 @@ module Nudge
     end
     
     def go
-      @contents.reverse.each {|item| Nudge::Stack.push!(:exec,item)} 
+      @contents.reverse.each {|item| Nudge::Stack.stacks[:exec].push(item)} 
     end
     
     def tidy(level=1)
@@ -35,7 +35,7 @@ module Nudge
       @value = value
     end
     def go
-      Nudge::Stack.push!(self.type,self)
+      Nudge::Stack.stacks[self.type].push(self)
     end
     def tidy(level=1)
       "literal " + @type.to_s + ", " + @value.to_s
@@ -115,9 +115,9 @@ module Nudge
     def go
       lookedUp = Channel.lookup(@name) # returns literal
       if lookedUp
-        Stack.push!(:exec, lookedUp)
+        Stack.stacks[:exec].push(lookedUp)
       else
-        Stack.push!(:name,self)
+        Stack.stacks[:name].push(self)
       end
     end
     
@@ -164,7 +164,7 @@ module Nudge
     #     check for preconditions (stacks have stuff)
     #   if the params exist, pop them
     #   calculate the result as a Literal
-    #   push! it
+    #   push it
     #   otherwise raise an exception of some sort
     
   end

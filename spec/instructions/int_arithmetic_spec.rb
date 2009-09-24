@@ -26,20 +26,20 @@ describe "IntAddInstruction" do
     
     describe "#preconditions?" do
       it "should check that there are at least 2 ints" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.preconditions?.should == true
       end
 
       it "should raise an error if the preconditions aren't met" do
         Stack.cleanup
-        1.times {Stack.push!(:int,@int1)}
+        1.times {Stack.stacks[:int].push(@int1)}
         lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
       end
 
       it "should successfully run #go only if all preconditions are met" do
-        Stack.push!(:int,@int1)
-        Stack.push!(:int,@int1)
+        Stack.stacks[:int].push(@int1)
+        Stack.stacks[:int].push(@int1)
         @i1.should_receive(:cleanup)
         @i1.go
       end
@@ -47,7 +47,7 @@ describe "IntAddInstruction" do
 
     describe "#derive" do
       it "should pop the arguments" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.stub!(:cleanup) # and do nothing
         @i1.go
@@ -55,7 +55,7 @@ describe "IntAddInstruction" do
       end
       
       it "determine the result value before it gets consumed!" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
         @i1.go.should == 12
@@ -69,7 +69,7 @@ describe "IntAddInstruction" do
 
     describe "#cleanup" do
       it "should push! the result" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         @i1.go
         Stack.stacks[:int].peek.value.should == 12
       end
@@ -106,20 +106,20 @@ describe "IntMultiplyInstruction" do
 
     describe "#preconditions?" do
       it "should check that there are at least 2 ints" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @im.preconditions?.should == true
       end
 
       it "should raise an error if the preconditions aren't met" do
         Stack.cleanup
-        1.times {Stack.push!(:int,@int1)}
+        1.times {Stack.stacks[:int].push(@int1)}
         lambda{@im.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
       end
 
       it "should successfully run #go only if all preconditions are met" do
-        Stack.push!(:int,@int1)
-        Stack.push!(:int,@int1)
+        Stack.stacks[:int].push(@int1)
+        Stack.stacks[:int].push(@int1)
         @im.should_receive(:cleanup)
         @im.go
       end
@@ -127,7 +127,7 @@ describe "IntMultiplyInstruction" do
 
     describe "#derive" do
       it "should pop the arguments" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @im.stub!(:cleanup) # and do nothing
         @im.go
@@ -135,7 +135,7 @@ describe "IntMultiplyInstruction" do
       end
 
       it "determine the result value before it gets consumed!" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @im.should_receive(:cleanup).and_return(@im.instance_eval("@result.value"))
         @im.go.should == 36
@@ -149,7 +149,7 @@ describe "IntMultiplyInstruction" do
 
     describe "#cleanup" do
       it "should push! the result" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         @im.go
         Stack.stacks[:int].peek.value.should == 36
       end
@@ -187,20 +187,20 @@ describe "IntDivideInstruction" do
     
     describe "#preconditions?" do
       it "should check that there are at least 2 ints" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.preconditions?.should == true
       end
 
       it "should raise an error if the preconditions aren't met" do
         Stack.cleanup
-        1.times {Stack.push!(:int,@int1)}
+        1.times {Stack.stacks[:int].push(@int1)}
         lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
       end
 
       it "should successfully run #go only if all preconditions are met" do
-        Stack.push!(:int,@int1)
-        Stack.push!(:int,@int1)
+        Stack.stacks[:int].push(@int1)
+        Stack.stacks[:int].push(@int1)
         @i1.should_receive(:cleanup)
         @i1.go
       end
@@ -208,7 +208,7 @@ describe "IntDivideInstruction" do
 
     describe "#derive" do
       it "should pop the arguments" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.stub!(:cleanup) # and do nothing
         @i1.go
@@ -216,7 +216,7 @@ describe "IntDivideInstruction" do
       end
       
       it "determine the result value before it gets consumed!" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         Stack.stacks[:int].depth.should == 2
         @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
         @i1.go.should == 1
@@ -224,7 +224,7 @@ describe "IntDivideInstruction" do
       
       it "should raise the right exceptions if a bad thing happens" do
         pending "This should pass but doesn't"
-        Stack.push!(:int,@int1)
+        Stack.stacks[:int].push(@int1)
         Stack.push!(:int,LiteralPoint.new("int",0))
         lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
       end
@@ -233,7 +233,7 @@ describe "IntDivideInstruction" do
 
     describe "#cleanup" do
       it "should push! the result" do
-        2.times {Stack.push!(:int,@int1)}
+        2.times {Stack.stacks[:int].push(@int1)}
         @i1.go
         Stack.stacks[:int].peek.value.should == 1
       end

@@ -49,9 +49,9 @@ describe "LiteralPoint" do
       end
 
       it "should push the value onto the right stack" do
-        Stack.push! :exec, LiteralPoint.new("int",3)
-        Stack.push! :exec, LiteralPoint.new("float",2.2)
-        Stack.push! :exec, LiteralPoint.new("bool",false)
+        Stack.stacks[:exec].push(LiteralPoint.new("int",3))
+        Stack.stacks[:exec].push(LiteralPoint.new("float",2.2))
+        Stack.stacks[:exec].push(LiteralPoint.new("bool",false))
         
         3.times {@ii.step}
         Stack.stacks.should include(:int)

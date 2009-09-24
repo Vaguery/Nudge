@@ -69,9 +69,9 @@ describe "erc" do
     end
 
     it "should push the value onto the right stack" do
-      Stack.push! :exec, Erc.new("int",3)
-      Stack.push! :exec, Erc.new("float",2.2)
-      Stack.push! :exec, Erc.new("bool",false)
+      Stack.stacks[:exec].push(Erc.new("int",3))
+      Stack.stacks[:exec].push(Erc.new("float",2.2))
+      Stack.stacks[:exec].push(Erc.new("bool",false))
       
       3.times {@ii.step}
       Stack.stacks.should include(:int)

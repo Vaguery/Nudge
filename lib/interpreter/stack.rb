@@ -8,16 +8,6 @@ module Nudge
       @stacks = Hash.new {|hash, key| hash[key] = Stack.new(key) }
     end
     
-    def self.push!(name,item)
-      name = name.to_sym
-      if self.stacks.include?(name)
-        self.stacks[name].push item
-      else
-        self.stacks[name] = Stack.new(name)
-        self.push!(name,item)
-      end
-    end
-    
     attr_accessor :entries
     attr_reader :name
     

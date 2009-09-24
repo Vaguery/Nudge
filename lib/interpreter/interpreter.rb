@@ -16,7 +16,7 @@ module Nudge
       Stack.cleanup
       parsed = @parser.parse(program)
       newCode = parsed.to_points if parsed
-      Stack.push!(:exec,newCode)
+      Stack.stacks[:exec].push(newCode)
     end
     
     def notDone?
