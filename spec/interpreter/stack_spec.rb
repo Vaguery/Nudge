@@ -18,12 +18,9 @@ describe "Stack class" do
   
   it "should automatically create an entry if an unmentioned stack is referenced" do
     Stack.cleanup
-    lambda{Stack.stacks[:pirate].peek}.should_not raise_error
-    Stack.cleanup
-    lambda{Stack.stacks[:pirate].depth}.should_not raise_error
-    Stack.cleanup
-    lambda{Stack.stacks[:pirate].depth}.should_not raise_error
-    
+    lambda{a = Stack.stacks[:pirate].peek}.should_not raise_error
+    lambda{b = Stack.stacks[:ninja].depth}.should_not raise_error
+    lambda{c = Stack.stacks[:robot].pop}.should_not raise_error
   end
 end
 
@@ -84,6 +81,10 @@ describe "stack" do
       @myStack.peek.should == 2
       @myStack.push(3)
       @myStack.peek.should == 3
+    end
+    
+    it "should fail silently if popped when empty, returning nil" do
+      @myStack.peek.should == nil
     end
   end
   

@@ -1,11 +1,11 @@
 module Nudge
   class Stack
     def self.stacks
-      @stacks ||= Hash.new {|hash, key| hash[key] = Stack.new(key)}
+      @stacks ||= {}
     end
     
     def self.cleanup
-      @stacks = nil
+      @stacks = Hash.new {|hash, key| hash[key] = Stack.new(key) }
     end
     
     def self.push!(name,item)
