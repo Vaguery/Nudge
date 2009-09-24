@@ -14,6 +14,7 @@ module Nudge
     
     def reset(program="")
       Stack.cleanup
+      @steps = 0
       parsed = @parser.parse(program)
       newCode = parsed.to_points if parsed
       Stack.stacks[:exec].push(newCode)

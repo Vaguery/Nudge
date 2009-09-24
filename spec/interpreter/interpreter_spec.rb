@@ -23,6 +23,12 @@ describe "initialization" do
     Stack.stacks[:exec].peek.name.should == checker.parse(myCode).to_points.name
   end
   
+  it "#reset should reset the #steps counter, too" do
+    @ii.steps = 100
+    @ii.reset("channel x")
+    @ii.steps.should == 0
+  end
+  
   it "should load a complex CodeBlock as a single item on the exec stack" do
     checker = NudgeLanguageParser.new()
     myCode = "block {\ninstr foo\n instr bar\n block {\ninstr baz}}"
