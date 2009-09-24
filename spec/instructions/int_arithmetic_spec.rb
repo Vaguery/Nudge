@@ -3,9 +3,7 @@ include Nudge
 
 describe "IntAddInstruction" do
   it "should be a singleton" do
-    i1 = IntAddInstruction.instance
-    i2 = IntAddInstruction.instance
-    i1.should === i2
+    IntAddInstruction.instance.should be_a_kind_of(Singleton)
   end
   
   [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
@@ -60,11 +58,6 @@ describe "IntAddInstruction" do
         @i1.should_receive(:cleanup).and_return(@i1.instance_eval("@result.value"))
         @i1.go.should == 12
       end
-      
-      it "should raise the right exceptions if a bad thing happens" do
-        pending
-      end
-      
     end
 
     describe "#cleanup" do
@@ -72,10 +65,6 @@ describe "IntAddInstruction" do
         2.times {Stack.stacks[:int].push(@int1)}
         @i1.go
         Stack.stacks[:int].peek.value.should == 12
-      end
-      
-      it "should raise the right exception if something bad happens" do
-        pending
       end
     end
   end
@@ -140,11 +129,6 @@ describe "IntMultiplyInstruction" do
         @im.should_receive(:cleanup).and_return(@im.instance_eval("@result.value"))
         @im.go.should == 36
       end
-
-      it "should raise the right exceptions if a bad thing happens" do
-        pending
-      end
-
     end
 
     describe "#cleanup" do
@@ -152,10 +136,6 @@ describe "IntMultiplyInstruction" do
         2.times {Stack.stacks[:int].push(@int1)}
         @im.go
         Stack.stacks[:int].peek.value.should == 36
-      end
-
-      it "should raise the right exception if something bad happens" do
-        pending
       end
     end
   end
@@ -223,12 +203,13 @@ describe "IntDivideInstruction" do
       end
       
       it "should raise the right exceptions if a bad thing happens" do
-        pending "This should pass but doesn't"
-        Stack.stacks[:int].push(@int1)
-        Stack.push!(:int,LiteralPoint.new("int",0))
+        Stack.cleanup
+        @i1 = IntDivideInstruction.instance
+        Stack.stacks[:int].push(LiteralPoint.new("int",99))
+        Stack.stacks[:int].push(LiteralPoint.new("int",0))
+        @i1.setup
         lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
       end
-      
     end
 
     describe "#cleanup" do
@@ -236,10 +217,6 @@ describe "IntDivideInstruction" do
         2.times {Stack.stacks[:int].push(@int1)}
         @i1.go
         Stack.stacks[:int].peek.value.should == 1
-      end
-      
-      it "should raise the right exception if something bad happens" do
-        pending
       end
     end
   end

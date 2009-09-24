@@ -47,12 +47,6 @@ describe "codeblock objects" do
     myB.tidy.split(/\n/).length.should == 88
   end
   
-  it "should replace its listing with self#tidy" do
-    pending
-    parser = NudgeLanguageParser.new()
-    myB = parser.parse("block{\n}").to_points
-    myB.listing.should == "block {}"
-  end
 end
 
 describe "#go" do
