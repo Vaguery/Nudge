@@ -40,7 +40,7 @@ end
 
 parser = NudgeLanguageParser.new
 Channel.variables
-myCode = randomIndentCode(80,10)
+myCode = randomIndentCode(100,0)
 
 
 puts parser.parse(myCode).to_points.tidy
@@ -52,5 +52,12 @@ ii = Interpreter.new()
   Channel.bind_variable("x", LiteralPoint.new(:int, thisX))
   print "#{Channel.variables["x"].value}, "
   ii.run
-  puts Stack.stacks[:int].peek.value
+  if Stack.stacks[:int].peek != nil
+    print Stack.stacks[:int].peek.value
+  else
+    print "nil"
+  end
+  print "  |  "
+  Stack.stacks[:int].entries.each {|n| print "#{n.value},"}
+  print "\n"
 end

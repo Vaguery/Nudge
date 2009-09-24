@@ -37,49 +37,22 @@ describe "codeblock objects" do
   
   it "--no really, even for VERY complicated trees" do
     parser = NudgeLanguageParser.new()
-    myComplicated = <<-HERE
-block {
-  instr fee
-  block {
-  block {
-  instr fie
-  
-  block {}
-  }
-  }
-  block {
-  instr foe
-  instr fum}
-    
-  literal float, -8812.1
-  channel u
-  block 
-  {}}
-  HERE
-    myExpected = <<-HERE
-block {
-  instr fee
-  block {
-    block {
-      instr fie
-      block {}}}
-  block {
-    instr foe
-    instr fum}
-  literal float, -8812.1
-  channel u
-  block {}}
-HERE
+    myComplicated = fixture(:untidy1)
+    myExpected = fixture(:untidy1fixed)
     myB = parser.parse(myComplicated).to_points
     myB.tidy.should == myExpected.chomp
     
     myDeep = "block {"* 88 + "}"*88
     myB = parser.parse(myDeep).to_points
     myB.tidy.split(/\n/).length.should == 88
-    
   end
   
-  it "should replace its listing with self#tidy"
+  it "should replace its listing with self#tidy" do
+    pending
+    parser = NudgeLanguageParser.new()
+    myB = parser.parse("block{\n}").to_points
+    myB.listing.should == "block {}"
+  end
 end
 
 describe "#go" do
