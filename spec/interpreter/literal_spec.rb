@@ -58,9 +58,6 @@ describe "LiteralPoint" do
         Stack.stacks.should include(:float)
         Stack.stacks.should include(:bool)
       end
-      
-      it "should check for CODE size limits"
-      
     end
     
     describe "#tidy" do

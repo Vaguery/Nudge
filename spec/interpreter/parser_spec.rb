@@ -129,10 +129,6 @@ describe "parser" do
           end          
         end
       end
-      
-      describe "complex literals" do
-        it "use some kind of reference system for complicated literals"
-      end
     end
     
     
@@ -193,11 +189,6 @@ describe "parser" do
       end
       
     end
-    
-    describe "handling missing/unspecified value" do
-      it "should work even when there's no value specified"
-      it "should set the value once, until reset"
-    end
   end
   
   describe "should handle long lists in blocks" do
@@ -208,12 +199,6 @@ describe "parser" do
       end
     end
   end
-  
-  describe "maintain structure for manipulation" do
-    it "should fail when there are empty lines"
-    it "should fail when a nonblock follows a block without a brace between"
-  end
-  
   
   describe "should handle two-line code" do
     b2s = ["  block {}  block {}","\tblock{}\n\tblock{}","instr hey_there\ninstr now_then"]

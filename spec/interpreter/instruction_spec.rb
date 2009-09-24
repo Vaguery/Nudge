@@ -76,7 +76,7 @@ describe "InstructionPoint" do
     it "should handle an InstructionNotFoundError if the classLookup raised it" do
       pending "not really the end behavior; it should leave a hook for counting at least"
       myI = InstructionPoint.new("foo_baz")
-      lambda{myI.go}.should_not raise_error(InstructionPoint::InstructionNotFoundError)
+      lambda{myI.go}.should raise_error(InstructionPoint::InstructionNotFoundError)
     end
     
     #   create the className 
