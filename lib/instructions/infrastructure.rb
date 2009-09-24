@@ -9,8 +9,11 @@ class Instruction
   end
   
   def needs(stackName, minimum)
+    Stack.stacks[stackName] = Stack.new(stackName) if !Stack.stacks[stackName]
+    
     if Stack.stacks[stackName].depth < minimum
-      raise NotEnoughStackItems
+       raise NotEnoughStackItems
+      return false
     else
       return true
     end
@@ -21,10 +24,16 @@ class Instruction
   end
   
   def go
+    begin
     if self.preconditions?
       self.setup
       self.derive
       self.cleanup
+    end
+    rescue NotEnoughStackItems
+      logError("Parameter shortage")
+    rescue InstructionMethodError
+       logError("Calculation error")
     end
   end
   
@@ -42,6 +51,10 @@ class Instruction
   
   def cleanup
     raise "Your Instruction class should define its own #cleanup method"
+  end
+  
+  def logError(msg)
+    STDERR.puts msg
   end
   
 end

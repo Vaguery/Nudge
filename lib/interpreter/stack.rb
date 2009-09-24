@@ -40,7 +40,7 @@ module Nudge
     end
     
     def depth
-      return @entries.length
+      @entries.length
     end
     
   end

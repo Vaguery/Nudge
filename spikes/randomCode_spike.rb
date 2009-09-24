@@ -1,9 +1,10 @@
 require '../lib/nudge'
+require 'pp'
 include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc int, X", "\nchannel y", "\ninstr foo", "\ninstr bar"]
+  leaves = ["\nerc int, -2","\nerc int, 11","\nerc bool, false", "\nchannel y", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide"]
   
   newCode = ["*"] * points
   
@@ -24,7 +25,7 @@ def randomIndentCode(points, blocks, dice=2)
   
   points.times do |i| 
     if newCode[i].include? "*"
-      which = rand(4)
+      which = rand(leaves.length)
       leaf = leaves[which]
       newCode[i] = newCode[i].sub(/\*/,leaf)
     end
@@ -38,4 +39,15 @@ end
 
 
 parser = NudgeLanguageParser.new
-puts parser.parse(randomIndentCode(30,12)).to_points.tidy
+Channel.variables
+Channel.bind_variable("y", LiteralPoint.new(:int, 9))
+myCode = randomIndentCode(20,0)
+puts parser.parse(myCode).to_points.tidy
+
+ii = Interpreter.new()
+ii.reset(myCode)
+puts "\n\n"
+ii.run
+puts "INT stack:\n=========="
+Stack.stacks[:int].entries.each  {|i| puts i.value}
+puts "\n\nBOOL stack depth: #{Stack.stacks[:bool].depth}"
