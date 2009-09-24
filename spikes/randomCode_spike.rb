@@ -4,7 +4,7 @@ include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc int, #{rand(20)-10}","\nerc int, #{rand(10-5)}","\nerc bool, false", "\nchannel x", "\ninstr foo_bar", "\ninstr int_multiply","\ninstr int_divide"]
+  leaves = ["\nerc int, #{rand(20)-10}","\nerc int, #{rand(10-5)}","\nerc bool, false", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_add"]
   
   newCode = ["*"] * points
   
@@ -40,18 +40,19 @@ end
 
 parser = NudgeLanguageParser.new
 Channel.variables
-myCode = randomIndentCode(600,6)
+myCode = randomIndentCode(200,0) # BUG SOMEWHERE IN HERE 
+# this code seems to work OK when the first param is 100 or less
+# BUT it starts to get wonky when it's up around 200'
+
+
 puts parser.parse(myCode).to_points.tidy
 
 ii = Interpreter.new()
-
-(-20..20).each do |thisX|
+(-10..10).each do |thisX|
   ii.reset(myCode)
+  Channel.reset_variables
   Channel.bind_variable("x", LiteralPoint.new(:int, thisX))
   print "#{Channel.variables["x"].value}, "
   ii.run
-  # puts "INT stack:\n=========="
-  # Stack.stacks[:int].entries.each  {|i| puts i.value}
-  puts Stack.stacks[:int].peek.value.to_s || "nil"
-  # puts "\n\nBOOL stack depth: #{Stack.stacks[:bool].depth}"
+  puts Stack.stacks[:int].peek.value
 end

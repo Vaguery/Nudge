@@ -9,7 +9,7 @@ class Instruction
   end
   
   def needs(stackName, minimum)
-    Stack.stacks[stackName] = Stack.new(stackName) if !Stack.stacks[stackName]
+    iNeed = Stack.stacks[stackName]
     
     if Stack.stacks[stackName].depth < minimum
        raise NotEnoughStackItems
@@ -54,7 +54,7 @@ class Instruction
   end
   
   def logError(msg)
-    STDERR.puts msg
+    # STDERR.puts msg
   end
   
 end

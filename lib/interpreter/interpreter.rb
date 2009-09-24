@@ -25,7 +25,7 @@ module Nudge
     
     def step
       if notDone?
-        nextPoint = Stack.stacks[:exec].pop 
+        nextPoint = Stack.stacks[:exec].pop
         nextPoint.go
         @steps += 1
       end

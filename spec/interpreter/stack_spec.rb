@@ -16,11 +16,17 @@ describe "Stack class" do
     Stack.stacks.should include(:boo)
   end
   
-  it "should automatically create an entry if an unmentioned stack is referenced" do
-    Stack.cleanup
+  it "should automatically create an entry if an unmentioned stack is referenced by a method" do
     lambda{a = Stack.stacks[:pirate].peek}.should_not raise_error
+    Stack.stacks.should include(:pirate)
+    
+    Stack.stacks.should_not include(:ninja) 
     lambda{b = Stack.stacks[:ninja].depth}.should_not raise_error
+    Stack.stacks.should include(:ninja)
+    
+    Stack.stacks.should_not include(:robot)
     lambda{c = Stack.stacks[:robot].pop}.should_not raise_error
+    Stack.stacks.should include(:robot)
   end
 end
 
