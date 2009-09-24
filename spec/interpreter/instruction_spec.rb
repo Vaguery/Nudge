@@ -73,12 +73,6 @@ describe "InstructionPoint" do
       myI = InstructionPoint.new("pirate_talk").go
     end
     
-    it "should handle an InstructionNotFoundError if the classLookup raised it" do
-      pending "not really the end behavior; it should leave a hook for counting at least"
-      myI = InstructionPoint.new("foo_baz")
-      lambda{myI.go}.should raise_error(InstructionPoint::InstructionNotFoundError)
-    end
-    
     #   create the className 
     #   determine if it exists or not
     #   if it does, DO THAT

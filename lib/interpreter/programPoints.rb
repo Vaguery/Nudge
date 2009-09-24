@@ -46,7 +46,7 @@ module Nudge
   
   class Erc < ProgramPoint
     attr_accessor :type, :value
-    def initialize(type, value=nil)
+    def initialize(type, value)
       @type = type.to_sym
       @value = value
     end

@@ -53,15 +53,12 @@ end
 module ERCNode
   # just like a LiteralNode for our purposes
   #   'erc int, 6'
-  # (in future versions, value parameter may become optional and sample upon execution)
-  #   'erc int'
   def stack_name
     return where.text_value
   end
   
   def value
     # this depends on existence of class {stack_name}Erc with #build that returns the value
-    # (in future versions, #build will also resample if nil)
     "#{stack_name.capitalize}ERC".constantize.new.build(assigned_value.text_value)
   end
   

@@ -4,32 +4,26 @@ include Nudge
 describe "erc" do
   describe "initialization" do
     it "should take a type name with no default value" do
-      myE = Erc.new("int")
+      myE = Erc.new("int",11)
       myE.type.should == :int
       lambda {Erc.new()}.should raise_error(ArgumentError)
     end
     
-    it "should take an optional value, defaulting to nil" do
-      myE = Erc.new("int",12)
-      myE.value.should == 12
+    it "should take an obligatory value param, with no default" do # this is a change of the original specs
+      myE = Erc.new("int",-99999)
+      myE.value.should == -99999
+      lambda{Erc.new("int")}.should raise_error(ArgumentError)
     end
     
-    it "should be created with a default randomizer that does nothing"
-    
-    it "should allow you to set a new randomizer"
+    it "should set the value as with a LiteralPoint, if it's given" do
+      myE = Erc.new("bool",false)
+      myE.value.should == false
+    end
     
     it "should be a kind of program point" do
-      myE = Erc.new("int")
+      myE = Erc.new("bool", true)
       myE.should be_a_kind_of(ProgramPoint)
     end
-  end
-    
-  describe "randomization" do
-    it "should demand the randomizer is a Proc object that returns a value"
-    
-    it "should invoke the attribute's randomizer code when Erc#randomize is called"
-    
-    it "should be possible to temporarily override the randomize code with a block"
   end
   
   describe "converting to a literal" do
@@ -39,7 +33,6 @@ describe "erc" do
       asL.type.should == :int
       asL.value.should == 4
     end
-    it "should automatically set the value when converting, if it's not set"
   end
   
   describe "#go" do
@@ -77,8 +70,6 @@ describe "erc" do
       Stack.stacks.should include(:float)
       Stack.stacks.should include(:bool)
     end
-    
-    it "should check for CODE size limits"
   end
   
   describe "#tidy" do
