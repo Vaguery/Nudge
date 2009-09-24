@@ -2,7 +2,6 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 describe "erc" do
-  
   describe "initialization" do
     it "should take a type name with no default value" do
       myE = Erc.new("int")
