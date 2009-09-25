@@ -221,3 +221,312 @@ describe "IntDivideInstruction" do
     end
   end
 end
+
+
+describe "IntSubtractInstruction" do
+  it "should be a singleton" do
+    IntSubtractInstruction.instance.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntSubtractInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntSubtractInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 2)
+      @int2 = LiteralPoint.new("int", 4)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 2 ints" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        Stack.cleanup
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+    end
+
+    describe "#cleanup" do
+      it "should push the correct result" do
+        Stack.cleanup
+        Stack.stacks[:int].push(@int1)
+        Stack.stacks[:int].push(@int2)
+        @i1.go
+        Stack.stacks[:int].peek.value.should == -2
+      end
+    end
+  end
+end
+
+
+describe "IntModuloInstruction" do
+  it "should be a singleton" do
+    IntModuloInstruction.instance.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntModuloInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntModuloInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 3)
+      @int2 = LiteralPoint.new("int", -4)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 2 ints" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        Stack.cleanup
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+      
+      it "should raise the right exceptions if a bad thing happens" do
+        Stack.cleanup
+        @i1 = IntModuloInstruction.instance
+        Stack.stacks[:int].push(LiteralPoint.new("int",-100))
+        Stack.stacks[:int].push(LiteralPoint.new("int",0))
+        @i1.setup
+        lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
+      end
+      
+    end
+
+    describe "#cleanup" do
+      it "should push the correct result" do
+        Stack.cleanup
+        Stack.stacks[:int].push(LiteralPoint.new("int", 3))
+        Stack.stacks[:int].push(LiteralPoint.new("int", -4))
+        @i1.go
+        Stack.stacks[:int].peek.value.should == -1 # -4 % 3 = -1 (not #remainder!)
+      end
+    end
+  end
+end
+
+
+describe "IntMaxInstruction" do
+  it "should be a singleton" do
+    IntMaxInstruction.instance.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntMaxInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntMaxInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 3)
+      @int2 = LiteralPoint.new("int", -4)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 2 ints" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        Stack.cleanup
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+    end
+
+    describe "#cleanup" do
+      it "should push the correct result" do
+        Stack.cleanup
+        Stack.stacks[:int].push(LiteralPoint.new("int", 10))
+        Stack.stacks[:int].push(LiteralPoint.new("int", 3))
+        Stack.stacks[:int].push(LiteralPoint.new("int", -4))
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 3
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 10
+      end
+    end
+  end
+end
+
+
+describe "IntMinInstruction" do
+  it "should be a singleton" do
+    IntMinInstruction.instance.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntMinInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntMinInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 3)
+      @int2 = LiteralPoint.new("int", -4)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 2 ints" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        Stack.cleanup
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        2.times {Stack.stacks[:int].push(@int1)}
+        Stack.stacks[:int].depth.should == 2
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+    end
+
+    describe "#cleanup" do
+      it "should push the correct result" do
+        Stack.cleanup
+        Stack.stacks[:int].push(LiteralPoint.new("int", -10))
+        Stack.stacks[:int].push(LiteralPoint.new("int", 3))
+        Stack.stacks[:int].push(LiteralPoint.new("int", -4))
+        @i1.go
+        Stack.stacks[:int].peek.value.should == -4
+        @i1.go
+        Stack.stacks[:int].peek.value.should == -10
+      end
+    end
+  end
+end
+
+
+describe "IntAbsInstruction" do
+  it "should be a singleton" do
+    IntAbsInstruction.instance.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    before(:each) do
+      @i1 = IntAbsInstruction.instance
+    end
+    it "should respond to #{methodName}" do
+      @i1.should respond_to(methodName)
+    end 
+  end
+  
+  describe "four phases of #going" do
+    before(:each) do
+      @i1 = IntAbsInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 0)
+      @int2 = LiteralPoint.new("int", -400)
+    end
+    
+    describe "#preconditions?" do
+      it "should check that there are at least 1 ints" do
+        Stack.stacks[:int].push(@int1)
+        @i1.preconditions?.should == true
+      end
+
+      it "should raise an error if the preconditions aren't met" do
+        Stack.cleanup
+        lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+      end
+    end
+
+    describe "#derive" do
+      it "should pop the arguments" do
+        Stack.stacks[:int].push(@int1)
+        Stack.stacks[:int].depth.should == 1
+        @i1.stub!(:cleanup) # and do nothing
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+    end
+
+    describe "#cleanup" do
+      it "should push the correct result" do
+        Stack.cleanup
+        Stack.stacks[:int].push(LiteralPoint.new("int", -10))
+        Stack.stacks[:int].push(LiteralPoint.new("int", 0))
+        Stack.stacks[:int].push(LiteralPoint.new("int", 11))
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 11
+        Stack.stacks[:int].pop
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 0
+        Stack.stacks[:int].pop
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 10
+        
+      end
+    end
+  end
+end
