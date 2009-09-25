@@ -19,21 +19,24 @@ theyNeed = {
   IntModuloInstruction => 2, 
   IntMaxInstruction => 2, 
   IntMinInstruction => 2, 
-  IntAbsInstruction => 1}
+  IntAbsInstruction => 1
+  }
   
 resultTuples = {
-  IntAddInstruction => {[1,3] => 4},
-  IntMultiplyInstruction => {[-2,3] => -6}, 
-  IntDivideInstruction => {[9,3] => 3, [3,9] => 0}, 
-  IntSubtractInstruction => {[2,3] => -1}, 
-  IntModuloInstruction => {[8,3] => 2}, 
+  IntAddInstruction => {[1,3] => 4, [-3,-4] => -7},
+  IntMultiplyInstruction => {[-2,3] => -6, [9,-9] => -81}, 
+  IntDivideInstruction => {[9,3] => 3, [3,9] => 0, [-9,-3] => 3}, 
+  IntSubtractInstruction => {[2,3] => -1, [-2,-4] => 2}, 
+  IntModuloInstruction => {[8,3] => 2, [9,3] => 0, [13,-4] => -3}, 
   IntMaxInstruction => {[-2,-3] => -2}, 
   IntMinInstruction => {[-3,-2] => -3}, 
-  IntAbsInstruction => {[-3] => 3} }
+  IntAbsInstruction => {[-3] => 3,[-0] => 0 }
+  }
   
 div0 = {
   IntDivideInstruction => [9,0], 
-  IntModuloInstruction => [8,0]}
+  IntModuloInstruction => [8,0]
+  }
   
     
 theseInstructions.each do |instName|
