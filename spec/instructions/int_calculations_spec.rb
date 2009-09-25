@@ -9,9 +9,11 @@ theseInstructions = [
   IntModuloInstruction, 
   IntMaxInstruction, 
   IntMinInstruction, 
-  IntAbsInstruction]
+  IntAbsInstruction,
+  IntNegativeInstruction
+  ]
   
-theyNeed = {
+intsTheyNeed = {
   IntAddInstruction => 2,
   IntMultiplyInstruction => 2, 
   IntDivideInstruction => 2, 
@@ -19,7 +21,8 @@ theyNeed = {
   IntModuloInstruction => 2, 
   IntMaxInstruction => 2, 
   IntMinInstruction => 2, 
-  IntAbsInstruction => 1
+  IntAbsInstruction => 1,
+  IntNegativeInstruction => 1
   }
   
 resultTuples = {
@@ -30,7 +33,8 @@ resultTuples = {
   IntModuloInstruction => {[8,3] => 2, [9,3] => 0, [13,-4] => -3}, 
   IntMaxInstruction => {[-2,-3] => -2}, 
   IntMinInstruction => {[-3,-2] => -3}, 
-  IntAbsInstruction => {[-3] => 3,[-0] => 0 }
+  IntAbsInstruction => {[-3] => 3,[-0] => 0 },
+  IntNegativeInstruction => {[-2] => 2, [912] => -912}
   }
   
 div0 = {
@@ -83,7 +87,7 @@ theseInstructions.each do |instName|
       
       describe "\#derive" do
         it "should pop all the arguments" do
-          reduction = theyNeed[instName]
+          reduction = intsTheyNeed[instName]
           reduction.times {Stack.stacks[:int].push(@int1)}
           @i1.stub!(:cleanup) # and do nothing
           @i1.go

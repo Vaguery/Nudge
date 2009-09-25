@@ -143,3 +143,18 @@ class IntAbsInstruction < Instruction
     pushes :int, @result
   end
 end
+
+class IntNegativeInstruction < Instruction
+  def preconditions?
+    needs :int, 1
+  end
+  def setup
+    @arg1 = Stack.stacks[:int].pop.value
+  end
+  def derive
+      @result = LiteralPoint.new("int", -@arg1)
+  end
+  def cleanup
+    pushes :int, @result
+  end
+end
