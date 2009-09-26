@@ -4,7 +4,7 @@ include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc int, #{rand(20)-10}","\nerc int, #{rand(10-5)}","\nchannel x", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide","\ninstr int_subtract","\ninstr int_max","\ninstr int_modulo", "\ninstr int_min", "\ninstr int_abs", "\ninstr int_neg"]
+  leaves = ["\nerc int","\nchannel x", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide","\ninstr int_subtract","\ninstr int_max","\ninstr int_modulo", "\ninstr int_min", "\ninstr int_abs", "\ninstr int_neg"]
   
   newCode = ["*"] * points
   
@@ -27,6 +27,9 @@ def randomIndentCode(points, blocks, dice=2)
     if newCode[i].include? "*"
       which = rand(leaves.length)
       leaf = leaves[which]
+      if leaf == "\nerc int"
+        leaf += ", "+IntType.randomize.to_s
+      end
       newCode[i] = newCode[i].sub(/\*/,leaf)
     end
   end

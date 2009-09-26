@@ -16,6 +16,7 @@ class IntType < NudgeType
   @defaultHighest = 1000
   
   def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+    bottom, top = [bottom,top].min, [bottom,top].max
     rand(top-bottom) + bottom
   end
   
@@ -53,8 +54,9 @@ class FloatType < NudgeType
   @defaultHighest = 1000.0
   
   def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+    bottom, top = [bottom,top].min, [bottom,top].max
     range = top - bottom
-    (rand*range) - range/2
+    (rand*range) + bottom
   end
   
   def self.from_s(string_value)

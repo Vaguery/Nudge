@@ -19,9 +19,11 @@ describe "Int Type" do
     IntType.should_receive(:rand).and_return(3)
     IntType.randomize(90,100).should == 93
   end
-  it "should work for any order of lower and upper bounds"
   
-  it "should default to returning the same value the Int already has"
+  it "should work for any order of lower and upper bounds" do
+    IntType.should_receive(:rand).and_return(3)
+    IntType.randomize(100,90).should == 93
+  end
 end
 
 
@@ -34,13 +36,18 @@ describe "Bool Type" do
     lambda{BoolType.from_s()}.should raise_error
   end
   it "should return the result of self.randomize when it receives an #any_value call" do
-    BoolType.should_receive(:randomize).and_return(false)
+    BoolType.should_receive(:rand).and_return(0.1)
+    BoolType.any_value.should == true
+    BoolType.should_receive(:rand).and_return(0.9)
     BoolType.any_value.should == false
   end
   
-  it "should return a result from a given range when that range is passed in"
-  
-  it "should default to returning the same value the Int already has"
+  it "should return a result from a biased coin when the prob of true is passed in" do
+    BoolType.should_receive(:rand).and_return(0.1)
+    BoolType.any_value.should == true
+    BoolType.should_receive(:rand).and_return(0.1)
+    BoolType.randomize(0.05).should == false
+  end
 end
 
 
@@ -52,8 +59,15 @@ describe "Float Type" do
     FloatType.should_receive(:randomize).and_return(-9.2)
     FloatType.any_value.should == -9.2
   end
+  it "should return a result from a given range when that range is passed in" do
+    FloatType.should_receive(:rand).and_return(0.0)
+    FloatType.randomize(0.0,10.0).should == 0.0
+    FloatType.should_receive(:rand).and_return(0.5)
+    FloatType.randomize(-101.101,101.101).should == 0.0
+  end
   
-  it "should return a result from a given range when that range is passed in"
-  
-  it "should default to returning the same value the Int already has"
+  it "should work for any order of lower and upper bounds" do
+    FloatType.should_receive(:rand).and_return(0.5)
+    FloatType.randomize(101.101,-101.101).should == 0.0
+  end
 end
