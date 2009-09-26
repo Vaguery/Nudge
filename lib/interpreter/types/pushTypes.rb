@@ -1,22 +1,67 @@
 
+class NudgeType
+  require 'singleton'
+  include Singleton
+  
+  def self.from_s
+    raise "Your subclass of NudgeType should provide a method for parsing string values in code"
+  end
+end
 
 
-class IntPointParser
-  def build(string_value)
+
+
+class IntType < NudgeType
+  @defaultLowest = -1000
+  @defaultHighest = 1000
+  
+  def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+    rand(top-bottom) + bottom
+  end
+  
+  def self.from_s(string_value)
     return string_value.to_i
   end
-end
-
-
-class BoolPointParser
-  def build(string_value)
-    return string_value.downcase == "true"
+  
+  def self.any_value
+    self.randomize
   end
 end
 
 
-class FloatPointParser
-  def build(string_value)
+
+
+class BoolType < NudgeType
+  def self.randomize(p = 0.5)
+    rand() < p ? true : false
+  end
+  
+  def self.from_s(string_value)
+    return string_value.downcase == "true"
+  end
+  
+  def self.any_value
+    self.randomize
+  end
+end
+
+
+
+
+class FloatType < NudgeType
+  @defaultLowest = -1000.0
+  @defaultHighest = 1000.0
+  
+  def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+    range = top - bottom
+    (rand*range) - range/2
+  end
+  
+  def self.from_s(string_value)
     return string_value.to_f
+  end
+  
+  def self.any_value
+    self.randomize
   end
 end

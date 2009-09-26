@@ -40,7 +40,7 @@ module LiteralNode
   # ex: '6', '-4.3', '<WTF>' as a string
   def value
     # this depends on existence of class {stack_name}Literal with #build that returns
-    "#{stack_name.capitalize}PointParser".constantize.new.build(assigned_value.text_value)
+    "#{stack_name.capitalize}Type".constantize.from_s(assigned_value.text_value)
   end
   
   def to_points
@@ -59,7 +59,7 @@ module ERCNode
   
   def value
     # this depends on existence of class {stack_name}Erc with #build that returns the value
-    "#{stack_name.capitalize}PointParser".constantize.new.build(assigned_value.text_value)
+    "#{stack_name.capitalize}Type".constantize.from_s(assigned_value.text_value)
   end
   
   def to_points
