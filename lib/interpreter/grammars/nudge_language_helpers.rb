@@ -52,7 +52,7 @@ end
 
 module ERCNode
   # just like a LiteralNode for our purposes
-  #   'erc int, 6'
+  #   'sample int, 6'
   def stack_name
     return where.text_value
   end

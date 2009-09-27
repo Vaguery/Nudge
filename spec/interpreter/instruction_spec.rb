@@ -36,7 +36,7 @@ describe "InstructionPoint" do
     end
   end
   
-  [["int_add","IntAddInstruction"],["bool_greaterthan?", "BoolGreaterthan?Instruction"]].each do |inp|
+  [["plant_water","PlantWaterInstruction"],["opinion_greaterthan?", "OpinionGreaterthan?Instruction"]].each do |inp|
     it "should know the appropriate class name for the Instruction singleton for #{inp}" do
       pointName = inp[0]
       cName = inp[1]
@@ -68,19 +68,9 @@ describe "InstructionPoint" do
         def go
         end
       end
-      singleton = PirateTalkInstruction.instance      
+      singleton = PirateTalkInstruction.instance
       singleton.should_receive(:go)
       myI = InstructionPoint.new("pirate_talk").go
     end
-    
-    #   create the className 
-    #   determine if it exists or not
-    #   if it does, DO THAT
-    #     check for preconditions (stacks have stuff)
-    #   if the params exist, pop them
-    #   calculate the result as a Literal
-    #   push! it
-    #   otherwise raise an exception of some sort
-    
   end
 end

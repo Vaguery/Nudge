@@ -4,7 +4,7 @@ include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nerc int","\nchannel x", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide","\ninstr int_subtract","\ninstr int_max","\ninstr int_modulo", "\ninstr int_min", "\ninstr int_abs", "\ninstr int_neg"]
+  leaves = ["\nsample int","\nchannel x", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide","\ninstr int_subtract","\ninstr int_max","\ninstr int_modulo", "\ninstr int_min", "\ninstr int_abs", "\ninstr int_neg"]
   
   newCode = ["*"] * points
   
@@ -27,7 +27,7 @@ def randomIndentCode(points, blocks, dice=2)
     if newCode[i].include? "*"
       which = rand(leaves.length)
       leaf = leaves[which]
-      if leaf == "\nerc int"
+      if leaf == "\nsample int"
         leaf += ", "+IntType.randomize.to_s
       end
       newCode[i] = newCode[i].sub(/\*/,leaf)
@@ -41,26 +41,37 @@ def randomIndentCode(points, blocks, dice=2)
 end
 
 
-parser = NudgeLanguageParser.new
-Channel.variables
-myCode = randomIndentCode(100,0)
+200.times do |step|
+  parser = NudgeLanguageParser.new
+  Channel.variables
+  ptlength = rand(60)+1
+  myCode = randomIndentCode(ptlength,ptlength/10)
+  myProgram = parser.parse(myCode).to_points
+  # puts myProgram.tidy
 
-
-puts parser.parse(myCode).to_points.tidy
-
-ii = Interpreter.new()
-(-20..20).each do |thisX|
-  ii.reset(myCode)
-  Channel.reset_variables
-  Channel.bind_variable("x", LiteralPoint.new(:int, thisX))
-  print "#{Channel.variables["x"].value}, "
-  ii.run
-  if Stack.stacks[:int].peek != nil
-    print Stack.stacks[:int].peek.value
-  else
-    print "nil"
+  ii = Interpreter.new()
+  summedSquaredError = 0
+  (-20..20).each do |thisX|
+    ii.reset(myCode)
+    Channel.reset_variables
+    Channel.bind_variable("x", LiteralPoint.new(:int, thisX))
+    # print "#{Channel.variables["x"].value}, "
+    ii.run
+    if Stack.stacks[:int].peek != nil
+      observed = Stack.stacks[:int].peek.value
+      # print observed
+      error = (111*thisX*thisX / (12*thisX + 6)) - observed 
+    else
+      # print "nil"
+      error = 100000
+    end
+    summedSquaredError += error**2
+    # print "  |  "
+    # Stack.stacks[:int].entries.each {|n| print "#{n.value},"}
+    # print "\n"
   end
-  print "  |  "
-  Stack.stacks[:int].entries.each {|n| print "#{n.value},"}
-  print "\n"
+  print "#{step}\t"
+  print "#{summedSquaredError}\t"
+  print "#{myProgram.points}\t"
+  print Stack.stacks[:int].depth.to_s + "\n"
 end

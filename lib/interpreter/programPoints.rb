@@ -60,7 +60,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "erc " + @type.to_s + ", " + @value.to_s
+      "sample " + @type.to_s + ", " + @value.to_s
     end
   end
   

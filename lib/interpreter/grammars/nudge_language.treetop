@@ -28,7 +28,7 @@ grammar NudgeLanguage
   end
   
   rule erc_statement
-    "erc" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
+    "sample" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
   end
   
   
