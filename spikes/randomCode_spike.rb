@@ -41,13 +41,13 @@ def randomIndentCode(points, blocks, dice=2)
 end
 
 
-200.times do |step|
+20.times do |step|
   parser = NudgeLanguageParser.new
   Channel.variables
   ptlength = rand(60)+1
   myCode = randomIndentCode(ptlength,ptlength/10)
   myProgram = parser.parse(myCode).to_points
-  # puts myProgram.tidy
+  puts myProgram.tidy
 
   ii = Interpreter.new()
   summedSquaredError = 0

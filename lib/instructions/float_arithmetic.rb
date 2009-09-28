@@ -14,6 +14,41 @@ class FloatAddInstruction < Instruction
   end
 end
 
+
+class FloatMultiplyInstruction < Instruction
+  def preconditions?
+    needs :float, 2
+  end
+  def setup
+    @arg1 = Stack.stacks[:float].pop
+    @arg2 = Stack.stacks[:float].pop
+  end
+  def derive
+    @result = LiteralPoint.new("float", @arg1.value * @arg2.value)
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+
+
+class FloatSubtractInstruction < Instruction
+  def preconditions?
+    needs :float, 2
+  end
+  def setup
+    @arg2 = Stack.stacks[:float].pop
+    @arg1 = Stack.stacks[:float].pop
+  end
+  def derive
+    @result = LiteralPoint.new("float", @arg1.value - @arg2.value)
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+
+
 class FloatDivideInstruction < Instruction
   def preconditions?
     needs :float, 2

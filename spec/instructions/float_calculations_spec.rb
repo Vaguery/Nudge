@@ -1,17 +1,23 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-theseInstructions = [FloatAddInstruction,
-  FloatDivideInstruction
-  ]
+theseInstructions = [
+  FloatAddInstruction,
+  FloatSubtractInstruction,
+  FloatMultiplyInstruction,
+  FloatDivideInstruction]
   
 floatsTheyNeed = {
   FloatAddInstruction => 2,
+  FloatSubtractInstruction => 2,
+  FloatMultiplyInstruction => 2,
   FloatDivideInstruction => 2
   }
   
 resultTuples = {
   FloatAddInstruction => {[1.0,3.0] => 4.0, [-3.1,4.2] => 1.1},
+  FloatSubtractInstruction => {[12.2,12.2] => 0.0, [100.001,0.001] => 100.0},
+  FloatMultiplyInstruction => {[-92.1,0.0] => 0.0, [-3.3,3.0] => -9.9},
   FloatDivideInstruction => {[3.3,1.1] => 3.0, [-10.0, 2.5] => -4.0}
   }
   
@@ -90,7 +96,7 @@ theseInstructions.each do |instName|
             it "should produce #{expected} given #{params}" do
             inputs.each {|i| Stack.stacks[:float].push(LiteralPoint.new("float", i))}
             @i1.go
-            Stack.stacks[:float].peek.value.should be_close(expected,0.0000001)
+            Stack.stacks[:float].peek.value.should be_close(expected,0.000001)
           end
           end
         end
