@@ -14,5 +14,7 @@ require 'interpreter/programPoints'
 
 require 'instructions/infrastructure'
 require 'instructions/int_arithmetic'
+require 'instructions/float_arithmetic'
+
 
 require 'activesupport'
