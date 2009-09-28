@@ -86,3 +86,20 @@ class FloatMaxInstruction < Instruction
     pushes :float, @result
   end
 end
+
+
+class FloatMinInstruction < Instruction
+  def preconditions?
+    needs :float, 2
+  end
+  def setup
+    @arg2 = Stack.stacks[:float].pop.value
+    @arg1 = Stack.stacks[:float].pop.value
+  end
+  def derive
+    @result = LiteralPoint.new("float", [@arg1, @arg2].min)
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end

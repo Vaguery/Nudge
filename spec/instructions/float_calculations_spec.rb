@@ -6,7 +6,8 @@ theseInstructions = [
   FloatSubtractInstruction,
   FloatMultiplyInstruction,
   FloatDivideInstruction,
-  FloatMaxInstruction
+  FloatMaxInstruction,
+  FloatMinInstruction
   ]
   
 floatsTheyNeed = {
@@ -14,7 +15,8 @@ floatsTheyNeed = {
   FloatSubtractInstruction => 2,
   FloatMultiplyInstruction => 2,
   FloatDivideInstruction => 2,
-  FloatMaxInstruction => 2
+  FloatMaxInstruction => 2,
+  FloatMinInstruction => 2
   }
   
 resultTuples = {
@@ -22,7 +24,8 @@ resultTuples = {
   FloatSubtractInstruction => {[12.2,12.2] => 0.0, [100.001,0.001] => 100.0},
   FloatMultiplyInstruction => {[-92.1,0.0] => 0.0, [-3.3,3.0] => -9.9},
   FloatDivideInstruction => {[3.3,1.1] => 3.0, [-10.0, 2.5] => -4.0},
-  FloatMaxInstruction => {[7.7, 7.70001] => 7.70001, [-10.0, 2.5] => 2.5}
+  FloatMaxInstruction => {[7.7, 7.70001] => 7.70001, [-10.0, 2.5] => 2.5},
+  FloatMinInstruction => {[2.99,2.990001] => 2.99, [-10.0, -9.0] => -10.0}
   }
   
 div0 = {
