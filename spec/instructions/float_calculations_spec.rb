@@ -109,6 +109,5 @@ theseInstructions.each do |instName|
         end
       end
     end
-    
   end
 end
