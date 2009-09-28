@@ -3,11 +3,11 @@ class FloatAddInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop
-    @arg2 = Stack.stacks[:float].pop
+    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = Stack.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1.value + @arg2.value)
+    @result = LiteralPoint.new("float", @arg1 + @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -20,11 +20,11 @@ class FloatMultiplyInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop
-    @arg2 = Stack.stacks[:float].pop
+    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = Stack.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1.value * @arg2.value)
+    @result = LiteralPoint.new("float", @arg1 * @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -37,11 +37,11 @@ class FloatSubtractInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop
-    @arg1 = Stack.stacks[:float].pop
+    @arg2 = Stack.stacks[:float].pop.value
+    @arg1 = Stack.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1.value - @arg2.value)
+    @result = LiteralPoint.new("float", @arg1 - @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -64,6 +64,23 @@ class FloatDivideInstruction < Instruction
     else
       raise InstructionMethodError
     end
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+
+
+class FloatMaxInstruction < Instruction
+  def preconditions?
+    needs :float, 2
+  end
+  def setup
+    @arg2 = Stack.stacks[:float].pop.value
+    @arg1 = Stack.stacks[:float].pop.value
+  end
+  def derive
+    @result = LiteralPoint.new("float", [@arg1, @arg2].max)
   end
   def cleanup
     pushes :float, @result
