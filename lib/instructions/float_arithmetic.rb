@@ -103,3 +103,36 @@ class FloatMinInstruction < Instruction
     pushes :float, @result
   end
 end
+
+
+class FloatNegativeInstruction < Instruction
+  def preconditions?
+    needs :float, 1
+  end
+  def setup
+    @arg1 = Stack.stacks[:float].pop.value
+  end
+  def derive
+    @result = LiteralPoint.new("float", -@arg1)
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+
+
+class FloatAbsInstruction < Instruction
+  def preconditions?
+    needs :float, 1
+  end
+  def setup
+    @arg1 = Stack.stacks[:float].pop.value
+  end
+  def derive
+    @result = LiteralPoint.new("float", @arg1.abs)
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+

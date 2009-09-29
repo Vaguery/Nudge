@@ -62,3 +62,18 @@ class IntRotateInstruction < Instruction
     pushes :int, @arg1
   end
 end
+
+
+class IntDepthInstruction < Instruction
+  def preconditions?
+    Stack.stacks[:int].depth != nil
+  end
+  def setup
+  end
+  def derive
+    @result = LiteralPoint.new("int",Stack.stacks[:int].depth)
+  end
+  def cleanup
+    pushes :int, @result
+  end
+end

@@ -11,15 +11,13 @@ intsTheyNeed = {
   IntPopInstruction => 1,
   IntSwapInstruction => 2,
   IntDuplicateInstruction => 1,
-  IntRotateInstruction => 3
-  }
+  IntRotateInstruction => 3  }
   
 resultTuples = {
   IntPopInstruction => {[1,2]=>[1]},
   IntSwapInstruction => {[1,2]=>[2,1]},
   IntDuplicateInstruction => {[33] => [33,33]},
-  IntRotateInstruction => {[1,2,3] => [2,3,1]}
-  }
+  IntRotateInstruction => {[1,2,3] => [2,3,1]}  }
     
 theseInstructions.each do |instName|
   describe instName do
@@ -78,6 +76,46 @@ theseInstructions.each do |instName|
         end
       end
     end
+  end
+end
+
+
+describe IntDepthInstruction do
+  before(:each) do
+    @i1 = IntDepthInstruction.instance
+  end
+  
+  it "should be a singleton" do
+    @i1.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = IntDepthInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 1)
+    end
     
+    describe "\#preconditions?" do
+      it "should check that the :int stack responds to #depth" do
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      it "should count the items on the stack" do
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 0
+        7.times {Stack.stacks[:int].push @int1}
+        @i1.go
+        Stack.stacks[:int].peek.value.should == 8
+      end
+    end
   end
 end
