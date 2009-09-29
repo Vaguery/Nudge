@@ -119,3 +119,43 @@ describe IntDepthInstruction do
     end
   end
 end
+
+
+describe IntFlushInstruction do
+  before(:each) do
+    @i1 = IntFlushInstruction.instance
+  end
+  
+  it "should be a singleton" do
+    @i1.should be_a_kind_of(Singleton)
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = IntFlushInstruction.instance
+      Stack.cleanup
+      @int1 = LiteralPoint.new("int", 1)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that the :int stack responds to #depth" do
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      it "should remove all items on the stack" do
+        11.times {Stack.stacks[:int].push(@int1)}
+        Stack.stacks[:int].depth.should == 11
+        @i1.go
+        Stack.stacks[:int].depth.should == 0
+      end
+    end
+  end
+end

@@ -40,14 +40,15 @@ def randomIndentCode(points, blocks, dice=2)
   return "block {" + program + "}"
 end
 
-
-20.times do |step|
+(-20..20).each {|i| print "x=#{i},"}
+print "sumSqErr,points,stackLen\n"
+  
+100.times do |step|
   parser = NudgeLanguageParser.new
   Channel.variables
   ptlength = rand(60)+1
   myCode = randomIndentCode(ptlength,ptlength/10)
   myProgram = parser.parse(myCode).to_points
-  # puts myProgram.tidy
 
   ii = Interpreter.new()
   summedSquaredError = 0
@@ -65,13 +66,10 @@ end
       # print "nil"
       error = 100000
     end
+    print "#{error},"
     summedSquaredError += error**2
-    # print "  |  "
-    # Stack.stacks[:int].entries.each {|n| print "#{n.value},"}
-    # print "\n"
   end
-  print "#{step}\t"
-  print "#{summedSquaredError}\t\t"
-  print "#{myProgram.points}\t"
+  print "#{summedSquaredError},"
+  print "#{myProgram.points},"
   print Stack.stacks[:int].depth.to_s + "\n"
 end

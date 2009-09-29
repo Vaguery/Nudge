@@ -77,3 +77,17 @@ class IntDepthInstruction < Instruction
     pushes :int, @result
   end
 end
+
+
+class IntFlushInstruction < Instruction
+  def preconditions?
+    Stack.stacks[:int].depth != nil
+  end
+  def setup
+  end
+  def derive
+  end
+  def cleanup
+    Stack.stacks[:int] = Stack.new(:int)
+  end
+end
