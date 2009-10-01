@@ -2,7 +2,7 @@ $: << File.join(File.dirname(__FILE__), "/../lib")
 
 require "treetop"
 require "polyglot"
-
+require 'activesupport'
 
 require 'interpreter/grammars/nudge_language_helpers'
 require 'interpreter/grammars/nudge_language'
@@ -17,5 +17,4 @@ require 'instructions/int_stack'
 require 'instructions/int_arithmetic'
 require 'instructions/float_arithmetic'
 
-
-require 'activesupport'
+require 'search/individual/individual'

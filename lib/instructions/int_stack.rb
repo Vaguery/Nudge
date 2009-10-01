@@ -88,6 +88,6 @@ class IntFlushInstruction < Instruction
   def derive
   end
   def cleanup
-    Stack.stacks[:int] = Stack.new(:int)
+    Stack.stacks[:int].clear
   end
 end

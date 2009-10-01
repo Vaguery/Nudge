@@ -1,5 +1,6 @@
 module Nudge
   class Stack
+    delegate :clear, :to => :entries
     def self.stacks
       @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
     end

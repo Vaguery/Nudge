@@ -1,0 +1,287 @@
+Thinking about the structure of search operator objects:
+
+Random sampler operator:
+  Looks at the current ontology and configuration
+  Creates a new genome at random
+  Returns a new Individual with that genome
+
+
+
+Nondominated selection operator:
+  Looks at a set of Individuals
+  Makes sure they're all evaluated
+  Returns an array containing all nondominated ones
+
+
+
+Fair point mutation operator:
+  Takes one Individual
+  Picks a random point in its genome
+  Replaces it with a new (random) program point of the same depth
+  Returns a new Individual with that genome
+  
+  block {
+->  block {              depth=6
+      instr int_subtract
+      instr int_max
+      instr int_max
+      instr int_multiply
+      instr int_min}
+    sample int, 835
+    instr int_divide
+    channel x
+    channel x}
+    
+  RETURNS:
+    block {
+->    block {            depth=6
+->      channel x
+->      block {
+->        sample int, 2
+->        channel x}
+->      sample int, -3}
+      sample int, 835
+      instr int_divide
+      channel x
+      channel x}
+
+
+
+Fair crossover operator:
+  Takes two individuals ("mom" and "dad")
+  Picks a random program point in "mom" and measures its depth
+  Finds a random program point in "dad" the same depth
+    if there isn't a match, repeat (since there's always at least one match)
+  Creates a new genome which copies "mom's" genome, replacing the one point with code from "dad"
+  Returns a new Individual with that genome
+  
+  block {                     block {  
+    block {                     instr int_divide
+      instr int_subtract    ->  channel x
+      instr int_max             channel x
+->    instr int_max             instr int_subtract
+      instr int_multiply        instr int_divide
+      instr int_min}            instr int_add
+    sample int, 835             block {
+    instr int_divide              instr int_max
+    channel x                     instr int_divide
+    channel x}                    instr int_add
+                                  instr int_multiply
+                                  instr int_modulo
+                                  instr int_divide
+                                  instr int_modulo
+                                  instr int_modulo
+                                  channel x}}
+                                  
+  RETURNS:
+    block {
+      block {
+        instr int_subtract
+        instr int_max
+  ->    channel x
+        instr int_multiply
+        instr int_min}
+      sample int, 835
+      instr int_divide
+      channel x
+      channel x}
+
+
+
+Point flatten operator:
+  Takes one individual
+  Picks a random program point
+  If that point is itself a codeblock, replaces it with its contents
+  Otherwise, removes the enclosing codeblock
+  Returns an Individual with the new genome
+  [if the genome is one point, it does nothing]
+  
+    block {
+      block {
+        channel x
+->      block {
+          sample int, 2
+          channel x}
+        sample int, -3}
+      sample int, 835
+      instr int_divide
+      channel x
+      channel x}
+
+RETURNS:
+    block {
+      block {
+        channel x
+        sample int, 2
+        channel x
+        sample int, -3}
+      sample int, 835
+      instr int_divide
+      channel x
+      channel x}
+
+
+
+Deepen operator:
+  Takes one individual
+  Picks two random program points
+  Inserts a "block {" before the first one and a "}" after the second
+  Returns a new Individual with the resulting genome
+  
+  block {  
+    instr int_divide
+    channel x
+->  channel x
+    instr int_subtract
+    instr int_divide
+    instr int_add
+    block {
+      instr int_max
+      instr int_divide
+      instr int_add
+->    instr int_multiply
+      instr int_modulo
+      instr int_divide
+      instr int_modulo
+      instr int_modulo
+      channel x}}
+
+RETURNS:
+  block {  
+    instr int_divide
+    channel x
+    block {
+      channel x
+      instr int_subtract
+      instr int_divide
+      instr int_add
+      block {
+        instr int_max
+        instr int_divide
+        instr int_add
+        instr int_multiply}
+      instr int_modulo
+      instr int_divide
+      instr int_modulo
+      instr int_modulo
+      channel x}}
+
+
+
+Uniform crossover operator:
+  Takes two individuals ("mom" and "dad"), and a probability p
+  For each point in the ROOT block of a randomly chosen parent (measured at root also)
+    with probability p, copy over that program point into the ROOT of the genome from other template parent
+  Returns a new Individual with that new genome
+
+  block {                      block {  
+1    block {                1    instr int_divide
+      instr int_subtract    2    channel x
+      instr int_max         3    channel x
+      instr int_max         4    instr int_subtract
+      instr int_multiply    5    instr int_divide
+      instr int_min}        6    instr int_add
+2    sample int, 835        7    block {
+3    instr int_divide              instr int_max
+4    channel x                     instr int_divide
+5    channel x}                    instr int_add
+                                   instr int_multiply
+                                   instr int_modulo
+                                   instr int_divide
+                                   instr int_modulo
+                                   instr int_modulo
+                                   channel x}}
+
+given we choose the left one as a framework, and overwrite points 2 & 4, the result is:
+  block {
+    block {
+      instr int_subtract
+      instr int_max
+      instr int_max
+      instr int_multiply
+      instr int_min}
+    channel x
+    instr int_divide
+    instr int_subtract
+    channel x}
+
+
+
+Insert point operator:
+  Takes one individual
+  Picks one program point
+  Inserts a new program point (of any length) before that point
+  Returns a new Individual with that genome
+  [if the genome is one point only, it wraps it in "block {}" before adding the new point]
+
+  block {  
+    instr int_divide
+    channel x
+->  channel x
+    instr int_subtract
+    instr int_divide
+    instr int_add
+    block {
+      instr int_max
+      instr int_divide
+      instr int_add
+      instr int_multiply
+      instr int_modulo
+      instr int_divide
+      instr int_modulo
+      instr int_modulo
+      channel x}}
+
+RETURNS:
+  block {  
+    instr int_divide
+    channel x
+    block {
+      instr int_max}
+    channel x
+    instr int_subtract
+    instr int_divide
+    instr int_add
+    block {
+      instr int_max
+      instr int_divide
+      instr int_add
+      instr int_multiply
+      instr int_modulo
+      instr int_divide
+      instr int_modulo
+      instr int_modulo
+      channel x}}
+      
+Delete point operator:
+  Takes one individual
+  Deletes that program point
+  Returns a new Individual with the reduced genome
+  [if the genome is one point only, it returns an empty "block {}"]
+
+  block {  
+    instr int_divide
+    channel x
+    channel x
+    instr int_subtract
+    instr int_divide
+    instr int_add
+->  block {
+      instr int_max
+      instr int_divide
+      instr int_add
+      instr int_multiply
+      instr int_modulo
+      instr int_divide
+      instr int_modulo
+      instr int_modulo
+      channel x}}
+
+RETURNS:
+  block {  
+    instr int_divide
+    channel x
+    channel x
+    instr int_subtract
+    instr int_divide
+    instr int_add}
