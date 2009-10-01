@@ -168,7 +168,7 @@ RETURNS:
 
 
 
-Uniform crossover operator:
+Uniform root crossover operator:
   Takes two individuals ("mom" and "dad"), and a probability p
   For each point in the ROOT block of a randomly chosen parent (measured at root also)
     with probability p, copy over that program point into the ROOT of the genome from other template parent
