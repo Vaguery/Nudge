@@ -127,4 +127,17 @@ describe "Channel Point" do
     end
   end
   
+  describe "#any" do
+    it "should be a class method that returns a completely random instance of a Channel point" do
+      Channel.reset_variables
+      Channel.reset_names
+      Channel.bind_name("y",LiteralPoint.new("bool", false))
+      rC = Channel.any
+      rC.name.should == "y"
+      Channel.reset_names
+      Channel.bind_variable("d",LiteralPoint.new("bool", false))
+      rC = Channel.any
+      rC.name.should == "d"
+    end
+  end
 end

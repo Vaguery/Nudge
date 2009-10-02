@@ -25,7 +25,6 @@ module Nudge
       tt += "}"
       return tt
     end
-    
   end
   
   
@@ -52,6 +51,11 @@ module Nudge
       @value = newType.any_value
     end
     
+    def self.any
+      tmp = LiteralPoint.new("int", 1)
+      tmp.randomize
+      return tmp
+    end
   end
   
   
@@ -79,6 +83,12 @@ module Nudge
       newType = all[rand(all.length)]
       @type = newType.to_s.slice(0..-5).downcase
       @value = newType.any_value
+    end
+    
+    def self.any
+      tmp = Erc.new(NudgeType.all_types[0].to_s.slice(0..-5).downcase,0)
+      tmp.randomize
+      return tmp
     end
   end
   
@@ -124,6 +134,12 @@ module Nudge
       end
     end
     
+    def self.any
+      tmp = Channel.new("e")
+      tmp.randomize
+      return tmp
+    end
+    
     attr_accessor :name
     
     def initialize(var_name)
@@ -144,11 +160,10 @@ module Nudge
     end
     
     def randomize
-      all = Channel.variables.merge(Channel.names).keys
+      all = Channel.variables.keys + Channel.names.keys
       which = all[rand(all.length)]
       @name = which
     end
-    
   end
   
   
@@ -189,7 +204,11 @@ module Nudge
       @name = className.slice(0..-12).underscore
     end
     
-    
+    def self.any
+      tmp = InstructionPoint.new("int_add")
+      tmp.randomize
+      return tmp
+    end
   end
   
 end

@@ -94,4 +94,15 @@ describe "erc" do
       myErc.type.should == "int"
     end
   end
+  
+  describe "#any" do
+    it "should return a new instance, invoking #randomize" do
+      rE = Erc.any
+      rE.should be_a_kind_of(Erc)
+      NudgeType.all_types.each {|t| t.deactivate}
+      BoolType.activate
+      rE = Erc.any
+      rE.type.should == "bool"
+    end
+  end
 end

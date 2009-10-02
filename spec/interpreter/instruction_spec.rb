@@ -94,4 +94,14 @@ describe "InstructionPoint" do
     end
   end
   
+  describe "any" do
+    it "should return a new instance of an instruction, invoking randomize" do
+      someI = InstructionPoint.any
+      someI.should be_a_kind_of(InstructionPoint)
+      Instruction.all_instructions.each {|t| t.deactivate}
+      FloatSubtractInstruction.activate
+      someI = InstructionPoint.any
+      someI.name.should == "float_subtract"
+    end
+  end
 end
