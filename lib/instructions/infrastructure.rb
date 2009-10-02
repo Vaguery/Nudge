@@ -38,6 +38,9 @@ class Instruction
   class InstructionMethodError < RuntimeError
   end
   
+  class NaNResultError < RuntimeError
+  end
+  
   def needs(stackName, minimum)
     iNeed = Stack.stacks[stackName]
     

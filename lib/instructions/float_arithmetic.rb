@@ -136,3 +136,45 @@ class FloatAbsInstruction < Instruction
   end
 end
 
+
+class FloatPowerInstruction < Instruction
+  def preconditions?
+    needs :float, 2
+  end
+  def setup
+    @exp = Stack.stacks[:float].pop.value
+    @base = Stack.stacks[:float].pop.value
+  end
+  def derive
+    if !(@base**@exp).nan?
+      @result = LiteralPoint.new("float", @base**@exp)
+    else
+      raise Instruction::NaNResultError
+    end
+    
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+
+
+class FloatSqrtInstruction < Instruction
+  def preconditions?
+    needs :float, 1
+  end
+  def setup
+    @arg1 = Stack.stacks[:float].pop.value
+  end
+  def derive
+    if @arg1 >= 0.0
+      @result = LiteralPoint.new("float", Math.sqrt(@arg1))
+    else
+      raise Instruction::NaNResultError
+    end
+  end
+  def cleanup
+    pushes :float, @result
+  end
+end
+

@@ -9,7 +9,9 @@ theseInstructions = [
   FloatMaxInstruction,
   FloatMinInstruction,
   FloatAbsInstruction,
-  FloatNegativeInstruction
+  FloatNegativeInstruction,
+  FloatPowerInstruction,
+  FloatSqrtInstruction
   ]
   
 floatsTheyNeed = {
@@ -20,7 +22,9 @@ floatsTheyNeed = {
   FloatMaxInstruction => 2,
   FloatMinInstruction => 2,
   FloatAbsInstruction => 1,
-  FloatNegativeInstruction => 1
+  FloatNegativeInstruction => 1,
+  FloatPowerInstruction => 2,
+  FloatSqrtInstruction => 1
   }
   
 resultTuples = {
@@ -31,7 +35,9 @@ resultTuples = {
   FloatMaxInstruction => {[7.7, 7.70001] => 7.70001, [-10.0, 2.5] => 2.5},
   FloatMinInstruction => {[2.99,2.990001] => 2.99, [-10.0, -9.0] => -10.0},
   FloatAbsInstruction => {[1.11] => 1.11, [-55.55] => 55.55},
-  FloatNegativeInstruction => {[4.44] => -4.44, [-91.1] => 91.1}
+  FloatPowerInstruction => {[2.0,2.0] => 4.0, [8.0,0.3333333] => 2.0, [0.5,3.0] => 0.125},
+  FloatNegativeInstruction => {[4.44] => -4.44, [-91.1] => 91.1},
+  FloatSqrtInstruction => {[4.0] => 2.0, [94.09] => 9.7}
   }
   
 div0 = {
@@ -114,6 +120,22 @@ theseInstructions.each do |instName|
           end
         end
       end
+    end
+  end
+end
+
+describe "FloatPowerInstruction should raise a NaNResultError when it takes a root of a neg" do
+  it "should description" do
+    [-6.82,-0.2].each {|i| Stack.stacks[:float].push(LiteralPoint.new("float", i))}
+    lambda{FloatPowerInstruction.instance.go}.should raise_error(Instruction::NaNResultError)
+  end
+end
+
+describe "FloatSqrtInstruction should raise a NaNResultError when it takes a root of a neg" do
+  it "should description" do
+    [-6.82, -16.0].each do |i|
+      Stack.stacks[:float].push(LiteralPoint.new("float", i))
+      lambda{FloatSqrtInstruction.instance.go}.should raise_error(Instruction::NaNResultError)
     end
   end
 end
