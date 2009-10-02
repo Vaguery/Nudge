@@ -67,4 +67,19 @@ describe "LiteralPoint" do
       end
     end
     
+    describe "randomize" do
+      before(:each) do
+        NudgeType.all_types.each {|t| t.activate}
+      end
+      after(:each) do
+        NudgeType.all_types.each {|t| t.activate}
+      end
+      it "should return one of the active types (not one of the defined types!)" do
+        myL = LiteralPoint.new("int", 77)
+        NudgeType.all_types.each {|t| t.deactivate}
+        BoolType.activate
+        myL.randomize
+        myL.type.should == "bool"
+      end
+    end
 end

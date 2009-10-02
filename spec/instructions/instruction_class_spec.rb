@@ -23,4 +23,11 @@ describe "Instruction has a master list" do
     IntAddInstruction.active?.should == true
     IntSubtractInstruction.active?.should == true
   end
+  
+  it "should be possible to deactivate all instructions" do
+    Instruction.all_instructions.each {|ins| ins.deactivate}
+    Instruction.active_instructions.length.should == 0
+    Instruction.all_instructions.each {|ins| ins.activate}
+    Instruction.active_instructions.length.should > 0
+  end
 end

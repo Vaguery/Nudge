@@ -16,7 +16,7 @@ class Instruction
   end
   
   def self.active_instructions
-    @@all_instructions
+    @@active_instructions
   end
   
   def self.active?
@@ -28,7 +28,7 @@ class Instruction
   end
   
   def self.activate
-    @@active_instructions << self
+    @@active_instructions << self unless @@active_instructions.include? self
   end
   
   

@@ -72,4 +72,26 @@ describe "InstructionPoint" do
       myI = InstructionPoint.new("pirate_talk").go
     end
   end
+  
+  describe "randomize" do
+    before(:each) do
+      Instruction.all_instructions.each {|t| t.activate}
+    end
+    after(:each) do
+      Instruction.all_instructions.each {|t| t.activate}
+    end
+    
+    
+    it "should return one of the active instructions" do
+      myInstrP = InstructionPoint.new("float_multiply")
+      
+      Instruction.all_instructions.each {|t| t.deactivate}
+      
+      Instruction.active_instructions.length.should == 0
+      IntAddInstruction.activate
+      myInstrP.randomize
+      myInstrP.name.should == "int_add"
+    end
+  end
+  
 end

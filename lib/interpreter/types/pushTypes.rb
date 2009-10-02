@@ -28,7 +28,7 @@ class NudgeType
   end
   
   def self.activate
-    @@active_types << self
+    @@active_types << self unless @@active_types.include? self
   end
   
   def self.from_s
@@ -44,8 +44,8 @@ class IntType < NudgeType
   @defaultHighest = 1000
   
   def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
-    bottom, top = [bottom,top].min, [bottom,top].max
-    rand(top-bottom) + bottom
+    lowest, highest = [bottom,top].min, [bottom,top].max
+    rand(highest-lowest).to_i + lowest
   end
   
   def self.from_s(string_value)

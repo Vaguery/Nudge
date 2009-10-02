@@ -46,7 +46,10 @@ module Nudge
     end
     
     def randomize
-      
+      all = NudgeType.active_types
+      newType = all[rand(all.length)]
+      @type = newType.to_s.slice(0..-5).downcase
+      @value = newType.any_value
     end
     
   end
@@ -69,6 +72,13 @@ module Nudge
     
     def tidy(level=1)
       "sample " + @type.to_s + ", " + @value.to_s
+    end
+    
+    def randomize
+      all = NudgeType.active_types
+      newType = all[rand(all.length)]
+      @type = newType.to_s.slice(0..-5).downcase
+      @value = newType.any_value
     end
   end
   
@@ -166,17 +176,13 @@ module Nudge
       return
     end
     
-    #   create the className 
-    #   determine if it exists or not
-    #   if it does, DO THAT
-    #     check for preconditions (stacks have stuff)
-    #   if the params exist, pop them
-    #   calculate the result as a Literal
-    #   push it
-    #   otherwise raise an exception of some sort
+    def randomize
+      all = Instruction.active_instructions
+      className = all[rand(all.length)].to_s
+      @name = className.slice(0..-12).underscore
+    end
+    
     
   end
-  
-  
   
 end

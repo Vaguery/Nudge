@@ -79,4 +79,19 @@ describe "erc" do
     end
   end
   
+  describe "randomize" do
+    before(:each) do
+      NudgeType.all_types.each {|t| t.activate}
+    end
+    after(:each) do
+      NudgeType.all_types.each {|t| t.activate}
+    end
+    it "should return one of the active types (not one of the defined types!)" do
+      myErc = LiteralPoint.new("float", -77.89)
+      NudgeType.all_types.each {|t| t.deactivate}
+      IntType.activate
+      myErc.randomize
+      myErc.type.should == "int"
+    end
+  end
 end
