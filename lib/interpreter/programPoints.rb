@@ -142,6 +142,13 @@ module Nudge
     def tidy(level=1)
       "channel " + @name
     end
+    
+    def randomize
+      all = Channel.variables.merge(Channel.names).keys
+      which = all[rand(all.length)]
+      @name = which
+    end
+    
   end
   
   

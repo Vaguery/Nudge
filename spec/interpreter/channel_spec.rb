@@ -112,4 +112,19 @@ describe "Channel Point" do
     end
   end
   
+  describe "randomize" do
+    it "should set the Channel's name to a randomly selected channel or name key" do
+      Channel.reset_variables
+      Channel.reset_names
+      myC = Channel.new("a")
+      Channel.bind_name("y",LiteralPoint.new("bool", false))
+      myC.randomize
+      myC.name.should == "y"
+      Channel.reset_names
+      Channel.bind_variable("z",LiteralPoint.new("bool", false))
+      myC.randomize
+      myC.name.should == "z"
+    end
+  end
+  
 end
