@@ -2,7 +2,6 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 describe "InstructionPoint" do
-  
   it "should have a name parameter, with no default" do
     myI = InstructionPoint.new("foo_bar")
     myI.name.should == "foo_bar"

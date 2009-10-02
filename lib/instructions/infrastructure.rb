@@ -2,6 +2,35 @@ class Instruction
   require 'singleton'
   include Singleton
   
+  @@all_instructions = []
+  @@active_instructions = []
+  
+  def self.inherited(subclass)
+    @@all_instructions << subclass
+    @@active_instructions << subclass
+    super
+  end
+  
+  def self.all_instructions
+    @@all_instructions
+  end
+  
+  def self.active_instructions
+    @@all_instructions
+  end
+  
+  def self.active?
+    @@active_instructions.include? self
+  end
+  
+  def self.deactivate
+    @@active_instructions.delete self
+  end
+  
+  def self.activate
+    @@active_instructions << self
+  end
+  
   
   class NotEnoughStackItems < ArgumentError
   end

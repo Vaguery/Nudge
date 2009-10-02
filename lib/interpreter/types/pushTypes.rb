@@ -1,7 +1,35 @@
-
 class NudgeType
   require 'singleton'
   include Singleton
+  
+  @@all_types = []
+  @@active_types = []
+  
+  def self.inherited(subclass)
+    @@all_types << subclass
+    @@active_types << subclass
+    super
+  end
+  
+  def self.all_types
+    @@all_types
+  end
+  
+  def self.active_types
+    @@active_types
+  end
+  
+  def self.active?
+    @@active_types.include? self
+  end
+  
+  def self.deactivate
+    @@active_types.delete self
+  end
+  
+  def self.activate
+    @@active_types << self
+  end
   
   def self.from_s
     raise "Your subclass of NudgeType should provide a method for parsing string values in code"
@@ -15,7 +43,7 @@ class IntType < NudgeType
   @defaultLowest = -1000
   @defaultHighest = 1000
   
-  def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+  def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
     bottom, top = [bottom,top].min, [bottom,top].max
     rand(top-bottom) + bottom
   end
@@ -25,15 +53,15 @@ class IntType < NudgeType
   end
   
   def self.any_value
-    self.randomize
+    self.random_value
   end
 end
 
 
 
 
-class BoolType < NudgeType
-  def self.randomize(p = 0.5)
+class BoolType < NudgeType  
+  def self.random_value(p = 0.5)
     rand() < p ? true : false
   end
   
@@ -42,7 +70,7 @@ class BoolType < NudgeType
   end
   
   def self.any_value
-    self.randomize
+    self.random_value
   end
 end
 
@@ -53,7 +81,7 @@ class FloatType < NudgeType
   @defaultLowest = -1000.0
   @defaultHighest = 1000.0
   
-  def self.randomize(bottom = @defaultLowest, top = @defaultHighest)
+  def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
     bottom, top = [bottom,top].min, [bottom,top].max
     range = top - bottom
     (rand*range) + bottom
@@ -64,6 +92,6 @@ class FloatType < NudgeType
   end
   
   def self.any_value
-    self.randomize
+    self.random_value
   end
 end

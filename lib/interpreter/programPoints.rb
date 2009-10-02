@@ -31,15 +31,22 @@ module Nudge
   
   class LiteralPoint < ProgramPoint
     attr_accessor :type, :value
+    
     def initialize(type,value)
       @type = type.to_sym
       @value = value
     end
+    
     def go
       Nudge::Stack.stacks[self.type].push(self)
     end
+    
     def tidy(level=1)
       "literal " + @type.to_s + ", " + @value.to_s
+    end
+    
+    def randomize
+      
     end
     
   end
