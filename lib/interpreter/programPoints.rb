@@ -151,7 +151,7 @@ module Nudge
       if lookedUp
         Stack.stacks[:exec].push(lookedUp)
       else
-        Stack.stacks[:name].push(self)
+        Stack.stacks[:name].push(self) #FIXME
       end
     end
     
