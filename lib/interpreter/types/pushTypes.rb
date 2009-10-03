@@ -95,3 +95,48 @@ class FloatType < NudgeType
     self.random_value
   end
 end
+
+
+
+
+class CodeType < NudgeType
+  @defaultPoints = 20
+  @defaultBlocks = @defaultPoints/10
+  
+  def self.random_skeleton(points=@defaultPoints, blocks=@defaultBlocks)
+    blocks = [0,[points,blocks].min].max
+    if points > 1
+      skel = ["block {"]
+      (points-2).times {skel << " *"}
+      skel << " *}"
+      front = 0
+      (blocks-1).times do
+        until skel[front].include?("*") do
+          a,b = rand(points), rand(points)
+          front,back = [a,b].min, [a,b].max
+        end
+        skel[front] = skel[front].sub(/\*/,"block {")
+        skel[back] = skel[back] + "}"
+      end
+      skel = skel.join
+    else
+      if blocks>0
+        skel = "block {}"
+      else
+        skel = "*"
+      end
+    end
+    skel
+  end
+  
+  def self.random_value()
+  end
+  
+  def self.from_s(string_value)
+    string_value
+  end
+  
+  def self.any_value
+    self.random_value
+  end
+end

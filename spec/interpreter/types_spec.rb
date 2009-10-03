@@ -34,7 +34,7 @@ describe "Type list" do
     IntType.activate
     IntType.activate
     IntType.activate
-    NudgeType.active_types.length.should == 3
+    NudgeType.active_types.length.should == 4
   end
   
   it "should be possible to deactivate all types" do
@@ -114,5 +114,50 @@ describe "Float Type" do
   it "should work for any order of lower and upper bounds" do
     FloatType.should_receive(:rand).and_return(0.5)
     FloatType.random_value(101.101,-101.101).should == 0.0
+  end
+end
+
+
+describe "Code Type" do
+  it "should be a Singleton" do
+    CodeType.instance.should be_a_kind_of(Singleton)
+  end
+  
+  it "should return the result of self.randomize when it receives an #any_value call" do
+    CodeType.should_receive(:random_value).and_return("hi there!")
+    CodeType.any_value.should == "hi there!"
+  end
+  
+  describe "#random_skeleton" do    
+    it "should accept params for points and branchiness" do
+      lambda{CodeType.random_skeleton(3,1)}.should_not raise_error
+    end
+    
+    it "should return a string filled with asterisks and 'block{}'" do
+      CodeType.random_skeleton(3,0).should == "block { * *}"
+      CodeType.random_skeleton(3,1).should == "block { * *}"      
+      CodeType.random_skeleton(1,1).should == "block {}"
+      CodeType.random_skeleton(2,2).should == "block { block {}}"
+      CodeType.random_skeleton(20,3).count("}").should == 3
+    end
+    
+    it "should limit range-check the blocks parameter" do
+      CodeType.random_skeleton(1,40).should == "block {}"
+      CodeType.random_skeleton(4,20).count("}").should == 4
+      CodeType.random_skeleton(4,-20).count("}").should == 1
+      CodeType.random_skeleton(1,-20).should == "*"
+    end
+  end
+  describe "#randomize" do
+    it "should default to a random skeleton"
+    it "should allow a skeleton to be passed in as a param"
+    it "should fill in the skeleton's asterisks with random one-line points"
+    it "should default to uniform sampling of active instructions, channels, and samples of the active types"
+    it "should allow a list of instructions to be passed in as a param"
+    it "should allow a list of channel names to be passed in as a param"
+    it "should allow a list of types to be passed in as a param"
+    it "should allow a partially filled-in skeleton to be passed in"
+    it "should use '@' as a placeholder that is not replaced with code"
+    it "should be possible to iteratively build a program by shifting the '@' and '*' characters in the skeleton"
   end
 end
