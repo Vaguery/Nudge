@@ -4,7 +4,7 @@ include Nudge
 
 def randomIndentCode(points, blocks, dice=2)
   
-  leaves = ["\nsample int","\nchannel x", "\nchannel x", "\ninstr int_add", "\ninstr int_multiply","\ninstr int_divide","\ninstr int_subtract","\ninstr int_max","\ninstr int_modulo", "\ninstr int_min", "\ninstr int_abs", "\ninstr int_neg"]
+  leaves = ["\nsample int","\nref x", "\nref x", "\ndo int_add", "\ndo int_multiply","\ndo int_divide","\ndo int_subtract","\ndo int_max","\ndo int_modulo", "\ndo int_min", "\ndo int_abs", "\ndo int_neg"]
   
   newCode = ["*"] * points
   
@@ -28,7 +28,7 @@ def randomIndentCode(points, blocks, dice=2)
       which = rand(leaves.length)
       leaf = leaves[which]
       if leaf == "\nsample int"
-        leaf += ", "+IntType.randomize.to_s
+        leaf += ", "+IntType.any_value.to_s
       end
       newCode[i] = newCode[i].sub(/\*/,leaf)
     end
@@ -40,14 +40,14 @@ def randomIndentCode(points, blocks, dice=2)
   return "block {" + program + "}"
 end
 
-
-20.times do |step|
+@lowest = 100000000
+2000.times do |step|
   parser = NudgeLanguageParser.new
   Channel.variables
-  ptlength = rand(20)+1
+  ptlength = rand(40)+10
   myCode = randomIndentCode(ptlength,ptlength/10)
   myProgram = parser.parse(myCode).to_points
-  puts myProgram.tidy
+  # puts myProgram.tidy
 
   ii = Interpreter.new()
   summedSquaredError = 0
@@ -74,4 +74,8 @@ end
   print "#{summedSquaredError}\t\t"
   print "#{myProgram.points}\t"
   print Stack.stacks[:int].depth.to_s + "\n"
+  if summedSquaredError < @lowest
+    @lowest = summedSquaredError
+    puts myProgram.tidy + "\n\n"
+  end
 end
