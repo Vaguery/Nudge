@@ -94,43 +94,46 @@ module Nudge
   
   
   class Channel < ProgramPoint
+    @@variables = Hash.new
+    @@names = Hash.new
+    
     def self.variables
-      @variables ||= {}
+      @@variables
     end
     
     def self.bind_variable(name,value)
       if value.kind_of?(LiteralPoint)
-        @variables[name] = value
+        @@variables[name] = value
       else
         raise ArgumentError
       end
     end
     
     def self.names
-      @names ||= {}
+      @@names
     end
     
     def self.reset_variables
-      @variables = {}
+      @@variables = {}
     end
     
     def self.reset_names
-      @names = {}
+      @@names = {}
     end
     
     def self.bind_name(name,value)
       if value.kind_of?(LiteralPoint)
-        @names[name] = value
+        @@names[name] = value
       else
         raise ArgumentError
       end
     end
     
     def self.lookup(var_name)
-      if @variables.include?(var_name)
-        @variables[var_name]
-      elsif @names.include?(var_name)
-        @names[var_name]
+      if @@variables.include?(var_name)
+        @@variables[var_name]
+      elsif @@names.include?(var_name)
+        @@names[var_name]
       end
     end
     

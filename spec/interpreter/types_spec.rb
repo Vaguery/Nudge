@@ -148,16 +148,70 @@ describe "Code Type" do
       CodeType.random_skeleton(1,-20).should == "*"
     end
   end
-  describe "#randomize" do
-    it "should default to a random skeleton"
-    it "should allow a skeleton to be passed in as a param"
-    it "should fill in the skeleton's asterisks with random one-line points"
-    it "should default to uniform sampling of active instructions, channels, and samples of the active types"
-    it "should allow a list of instructions to be passed in as a param"
-    it "should allow a list of channel names to be passed in as a param"
-    it "should allow a list of types to be passed in as a param"
-    it "should allow a partially filled-in skeleton to be passed in"
-    it "should use '@' as a placeholder that is not replaced with code"
-    it "should be possible to iteratively build a program by shifting the '@' and '*' characters in the skeleton"
+  
+  describe "#random_value" do
+    before(:each) do
+      Channel.reset_variables
+      Channel.reset_names
+    end
+    it "should by default generate a random skeleton (and later fill it with stuff)" do
+      CodeType.should_receive(:random_skeleton).and_return("block {}")
+      c1 = CodeType.random_value
+    end
+    
+    it "should allow a skeleton to be passed in as a param" do
+      CodeType.should_not_receive(:random_skeleton)
+      c1 = CodeType.random_value(:skeleton => "block{ * * *}")
+    end
+    
+    it "should allow a list of instructions to be passed in as a param" do
+      Instruction.should_not_receive(:active_instructions)
+      c1 = CodeType.random_value(:instructions => [IntDivideInstruction])
+    end
+    
+    it "should default to a sample of active channels + names" do
+      Channel.should_receive(:variables).and_return({"foo" => nil})
+      Channel.should_receive(:names).and_return({})
+      c1 = CodeType.random_value
+    end
+    
+    it "should allow a list of channel names to be passed in as a param" do
+      Channel.should_not_receive(:variables)
+      Channel.should_not_receive(:names).and_return({})
+      c1 = CodeType.random_value(:references => ["foo"])
+    end
+    
+    it "should default to a sample of active types" do
+      NudgeType.should_receive(:active_types).and_return([BoolType])
+      c1 = CodeType.random_value
+    end
+    
+    it "should allow a list of types to be passed in as a param" do
+      NudgeType.should_not_receive(:active_types)
+      c1 = CodeType.random_value(:types => [BoolType, IntType])
+    end
+    
+    it "should replace the skeleton's asterisks with stuff" do
+      c1 = CodeType.random_value(:skeleton => "block{ * * * * * * * * block{ * *}}", :instructions => [IntAddInstruction], :types => [IntType,BoolType], :references => ["boo", "berry"])
+      c1.should_not include("*")
+    end
+    
+    it "should allow a partially filled-in skeleton to be passed in" do
+      c1 = CodeType.random_value(:skeleton => "block{ * do int_subtract}", :instructions => [IntAddInstruction])
+      c1.should == "block{ do int_add do int_subtract}"
+    end
+    
+    it "should use '@' as a placeholder that is not replaced with code" do
+      c1 = CodeType.random_value(:skeleton => "block{ * @}", :instructions => [IntAddInstruction])
+      c1.should == "block{ do int_add @}"
+    end
+    
+    it "should be possible to iteratively build a program by shifting the '@' and '*' characters in the skeleton" do
+      c0 = "block { * @ *}"
+      c1 = CodeType.random_value(:skeleton => c0, :instructions => [IntAddInstruction])
+      c1.should == "block { do int_add @ do int_add}"
+      c2 = CodeType.random_value(:skeleton => c1.gsub(/\@/, "*"), :instructions => [], :references => ["z"])
+      c2.should == "block { do int_add ref z do int_add}"
+    end
   end
 end

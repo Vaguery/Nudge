@@ -31,6 +31,9 @@ class Instruction
     @@active_instructions << self unless @@active_instructions.include? self
   end
   
+  def self.to_nudgecode
+    self.to_s.slice(0..-12).underscore
+  end
   
   class NotEnoughStackItems < ArgumentError
   end

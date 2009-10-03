@@ -31,6 +31,10 @@ class NudgeType
     @@active_types << self unless @@active_types.include? self
   end
   
+  def self.to_nudgecode
+    self.to_s.slice(0..-5).downcase
+  end
+  
   def self.from_s
     raise "Your subclass of NudgeType should provide a method for parsing string values in code"
   end
@@ -100,10 +104,9 @@ end
 
 
 class CodeType < NudgeType
-  @defaultPoints = 20
-  @defaultBlocks = @defaultPoints/10
+  @@defaultPoints = 20
   
-  def self.random_skeleton(points=@defaultPoints, blocks=@defaultBlocks)
+  def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
     blocks = [0,[points,blocks].min].max
     if points > 1
       skel = ["block {"]
@@ -129,7 +132,30 @@ class CodeType < NudgeType
     skel
   end
   
-  def self.random_value()
+  def self.random_value(params={})
+    points = params[:points] || @@defaultPoints
+    blocks = params[:blocks] || points/10
+    skeleton = params[:skeleton] || self.random_skeleton(points, blocks)
+    instructions = params[:instructions] || Instruction.active_instructions
+    references = params[:references] || (Channel.variables.keys + Channel.names.keys)
+    types = params[:types] || NudgeType.active_types
+    
+    choiceCount = instructions.length + references.length + types.length # will only return samples
+    
+    while skeleton.include?("*") do
+      which = rand(choiceCount)
+      case
+      when which < instructions.length
+        newPoint = "do " + instructions[which].to_nudgecode
+      when which < (instructions.length + references.length)
+        newPoint = "ref " + references[which-instructions.length]
+      else
+        theType = types[which - instructions.length - references.length]
+        newPoint = "sample " + theType.to_nudgecode + ", " + theType.any_value.to_s
+      end
+      skeleton = skeleton.sub(/\*/, newPoint)
+    end
+    skeleton
   end
   
   def self.from_s(string_value)
