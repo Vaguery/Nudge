@@ -71,7 +71,7 @@ describe "Channel Point" do
     before(:each) do
       @ii = Interpreter.new()
       Stack.cleanup
-      @ii.reset("block{\nchannel x\nchannel y\nchannel z}")
+      @ii.reset("block{\nref x\nref y\nref z}")
       Channel.bind_variable("x", LiteralPoint.new("float", 1.1))
       Channel.bind_name("y", LiteralPoint.new("int", 99999))
       #Channel z is unbound
@@ -106,9 +106,9 @@ describe "Channel Point" do
   end
   
   describe "#tidy" do
-    it "should return 'channel x' when the name is 'x'" do
+    it "should return 'ref x' when the name is 'x'" do
       myC = Channel.new("x")
-      myC.tidy.should == "channel x"
+      myC.tidy.should == "ref x"
     end
   end
   

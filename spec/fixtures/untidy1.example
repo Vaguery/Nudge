@@ -1,18 +1,18 @@
 block {
-instr fee
+do fee
 block {
     block
 {
 
-instr fie
+do fie
       block {
       
       }}
 block {
-      instr foe
-instr fum
+      do foe
+do fum
 } literal float, -8812.1}
-channel u
+ref u
 block {
 
 }

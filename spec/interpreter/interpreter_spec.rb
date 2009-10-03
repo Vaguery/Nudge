@@ -14,7 +14,7 @@ describe "initialization" do
   
   it "should respond to #reset(listing) by parsing the listing and pushing it onto its exec stack" do
     checker = NudgeLanguageParser.new()
-    myCode = "channel x"
+    myCode = "ref x"
     @ii.reset(myCode)
     Stack.stacks.should include(:exec)
     Stack.stacks[:exec].should be_a_kind_of(Stack)
@@ -31,7 +31,7 @@ describe "initialization" do
   
   it "should load a complex CodeBlock as a single item on the exec stack" do
     checker = NudgeLanguageParser.new()
-    myCode = "block {\ninstr foo\n instr bar\n block {\ninstr baz}}"
+    myCode = "block {\ndo foo\n do bar\n block {\ndo baz}}"
     @ii.reset(myCode)
     Stack.stacks.should include(:exec)
     Stack.stacks[:exec].depth.should == 1

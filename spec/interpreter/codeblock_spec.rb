@@ -31,8 +31,8 @@ describe "codeblock objects" do
     myB = parser.parse("block {\nblock{}\nblock{}}").to_points
     myB.tidy.should == "block {\n  block {}\n  block {}}"
     
-    myB = parser.parse("block {\ninstr x\ninstr y}").to_points
-    myB.tidy.should == "block {\n  instr x\n  instr y}"
+    myB = parser.parse("block {\ndo x\ndo y}").to_points
+    myB.tidy.should == "block {\n  do x\n  do y}"
   end
   
   it "--no really, even for VERY complicated trees" do

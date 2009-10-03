@@ -43,7 +43,7 @@ describe "parser" do
     end
     
     describe ": just one instruction line" do
-      [fixture(:one_line_instr), "instr      foo_bar", "instr\tfoo_bar"].each do |b|
+      [fixture(:one_line_instr), "do      foo_bar", "do\tfoo_bar"].each do |b|
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(InstructionNode)
         end
@@ -57,7 +57,7 @@ describe "parser" do
     end
     
     describe ": just one channel line" do
-      ["channel x", "channel\tx"].each do |b|
+      ["ref x", "ref\tx"].each do |b|
         it "should recognize \"#{b}\"" do
           @parser.parse(b).should be_a_kind_of(ChannelNode)
         end
@@ -208,7 +208,7 @@ describe "parser" do
       end
     end
     
-    b2s = ["block {\n channel x}"]
+    b2s = ["block {\n ref x}"]
     b2s.each do |b|
       it "should recognize \"#{b}\"" do
          @parser.parse(b).should_not == nil
@@ -238,9 +238,9 @@ describe "parser" do
       end
     end
     
-    b2s = [["block {\n  instr hey_now}",InstructionPoint],
+    b2s = [["block {\n  do hey_now}",InstructionPoint],
       ["block {\n  literal int, 22 }",LiteralPoint],
-      ["block {\n  channel WVIZ}",Channel]]
+      ["block {\n  ref WVIZ}",Channel]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
         asCode = @parser.parse(b[0]).to_points
@@ -252,9 +252,9 @@ describe "parser" do
   end
   
   describe "it should work for long lists of one-line points in a block" do
-    b2s = [["block {\n  instr A\n  instr B\n  instr C}",3],
-      ["block {\n  literal int, 22\n  literal int, 23 \n  literal int, 24\n channel x\nchannel y}",5],
-      ["block {\n  channel WVIZ\n  channel WAMU}",2]]
+    b2s = [["block {\n  do A\n  do B\n  do C}",3],
+      ["block {\n  literal int, 22\n  literal int, 23 \n  literal int, 24\n ref x\nref y}",5],
+      ["block {\n  ref WVIZ\n  ref WAMU}",2]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
         asCode = @parser.parse(b[0]).to_points
@@ -276,7 +276,7 @@ describe "parser" do
   end
   
   describe "should handle complex blocks" do
-    nasty = ["block{\n  channel x\n  block {\n    channel y}}","block {\n  block {}\n  channel x\n  channel y}"]
+    nasty = ["block{\n  ref x\n  block {\n    ref y}}","block {\n  block {}\n  ref x\n  ref y}"]
     nasty.each do |n|
       it "should recognize \"#{n}\"" do
         @parser.parse(n).should_not == nil

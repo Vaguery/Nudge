@@ -1,7 +1,7 @@
 block {
   literal int, 8
   literal int, 9
-  instr int_multiply
+  do int_multiply
   block {
     sample int, -2
-    instr int_divide}}
+    do int_divide}}

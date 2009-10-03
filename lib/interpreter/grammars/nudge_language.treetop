@@ -16,11 +16,11 @@ grammar NudgeLanguage
   end
   
   rule instruction_statement
-    "instr" spc opcode:alpha_or_underscore spc* <InstructionNode>
+    "do" spc opcode:alpha_or_underscore spc* <InstructionNode>
   end
   
   rule channel_statement
-    "channel" spc chan_name:alpha_or_underscore spc* <ChannelNode>
+    "ref" spc chan_name:alpha_or_underscore spc* <ChannelNode>
   end
   
   rule literal_statement

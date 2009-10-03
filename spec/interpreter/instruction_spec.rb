@@ -29,9 +29,9 @@ describe "InstructionPoint" do
   end
   
   describe "#tidy" do
-    it "should return 'instr x' when the name is 'x'" do
+    it "should return 'do x' when the name is 'x'" do
       myI = InstructionPoint.new("x")
-      myI.tidy.should == "instr x"
+      myI.tidy.should == "do x"
     end
   end
   

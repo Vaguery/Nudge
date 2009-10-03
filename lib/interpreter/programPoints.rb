@@ -156,7 +156,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "channel " + @name
+      "ref " + @name
     end
     
     def randomize
@@ -186,7 +186,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "instr " + @name
+      "do " + @name
     end
     
     class InstructionNotFoundError < NameError
