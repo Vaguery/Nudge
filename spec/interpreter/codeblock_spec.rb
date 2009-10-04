@@ -2,6 +2,8 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 describe "codeblock objects" do
+  describe "should only accept #new from a NudgeLanguageParser"
+  
   it "should be a kind of program point" do
     myB = CodeBlock.new()
     myB.should be_a_kind_of(ProgramPoint)
@@ -13,6 +15,22 @@ describe "codeblock objects" do
     tCode = CodeBlock.new("block {\n  literal int, 3}")
     tCode.listing.should == "block {\n  literal int, 3}"
   end
+  
+  it "should expose its #contents" do
+    parser = NudgeLanguageParser.new()
+    cbs = ["block {\n  literal int, 3}",
+      "block { do int_add \ndo int_subtract\n do int_divide}",
+      "block { block{}}", "block{ block{ do int_add block{ block{} block{}}} }"]
+    
+    cbs.each do |myCode|
+      handMade = CodeBlock.new(myCode)
+      generated = parser.parse(myCode).to_points
+      handMade.contents.length.should == generated.contents.length
+      handMade.contents[0].tidy.should == generated.contents[0].tidy
+      handMade.listing.should == generated.listing
+    end
+  end
+  
   
   it "should return an indented nested text version for #tidy" do
     parser = NudgeLanguageParser.new()
@@ -46,7 +64,6 @@ describe "codeblock objects" do
     myB = parser.parse(myDeep).to_points
     myB.tidy.split(/\n/).length.should == 88
   end
-  
 end
 
 describe "#go" do
@@ -96,16 +113,22 @@ end
 
 describe "codeblock methods" do
   describe "#points" do
-    it "should return the number of lines in the listing" do
-      l1 = ["block {}", "instr thing,value", "channel x1"]
-      l1.each do |ll|
-        CodeBlock.new(ll).points.should == 1
-      end
+    it "should return the number of lines in the block" do
+      myP = CodeBlock.new("block {}")
+      myP.points.should == 1
       
-      l2plus = ["block {\n  block {\n    block{}}}", "block {\n  instr thing,value\n  channel x1}"]
-      l2plus.each do |ll|
-        CodeBlock.new(ll).points.should == 3
-      end
+      myP = CodeBlock.new("block { block { block {}}}")
+      myP.points.should == 3
+      
+      myP = CodeBlock.new("block { block {} block {}}")
+      myP.points.should == 3
+      
+      myP = CodeBlock.new("block { do int_add}")
+      myP.points.should == 2
+      
+      myP = CodeBlock.new("block { do int_add ref x1\nref x2}")
+      myP.points.should == 4
+      
     end
   end
 end

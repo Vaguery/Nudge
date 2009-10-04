@@ -108,17 +108,18 @@ class CodeType < NudgeType
   
   def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
     blocks = [0,[points,blocks].min].max
+    
     if points > 1
       skel = ["block {"]
-      (points-2).times {skel << " *"}
-      skel << " *}"
+      (points-2).times {skel << "*"}
+      skel << "*}"
       front = 0
       (blocks-1).times do
         until skel[front].include?("*") do
           a,b = rand(points), rand(points)
           front,back = [a,b].min, [a,b].max
         end
-        skel[front] = skel[front].sub(/\*/,"block {")
+        skel[front] = skel[front].sub(/\*/,"\nblock {")
         skel[back] = skel[back] + "}"
       end
       skel = skel.join
@@ -129,8 +130,9 @@ class CodeType < NudgeType
         skel = "*"
       end
     end
-    skel
+    return skel
   end
+  
   
   def self.random_value(params={})
     points = params[:points] || @@defaultPoints
@@ -140,23 +142,25 @@ class CodeType < NudgeType
     references = params[:references] || (Channel.variables.keys + Channel.names.keys)
     types = params[:types] || NudgeType.active_types
     
-    choiceCount = instructions.length + references.length + types.length # will only return samples
+    iCount, rCount, tCount = instructions.length, references.length, types.length
+    allCount = iCount + rCount + tCount
     
     while skeleton.include?("*") do
-      which = rand(choiceCount)
+      whichPoint = rand(allCount)
       case
-      when which < instructions.length
-        newPoint = "do " + instructions[which].to_nudgecode
-      when which < (instructions.length + references.length)
-        newPoint = "ref " + references[which-instructions.length]
+      when whichPoint < iCount
+        newPoint = " do " + instructions[whichPoint].to_nudgecode
+      when whichPoint < (iCount + rCount)
+        newPoint = " ref " + references[whichPoint-iCount]
       else
-        theType = types[which - instructions.length - references.length]
-        newPoint = "sample " + theType.to_nudgecode + ", " + theType.any_value.to_s
+        theType = types[whichPoint - iCount - rCount]
+        newPoint = " sample " + theType.to_nudgecode + ", " + theType.any_value.to_s
       end
       skeleton = skeleton.sub(/\*/, newPoint)
     end
     skeleton
   end
+  
   
   def self.from_s(string_value)
     string_value

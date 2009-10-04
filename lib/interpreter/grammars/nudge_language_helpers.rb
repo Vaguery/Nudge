@@ -2,6 +2,7 @@ module BlockNode
   def to_points
     newBlob = CodeBlock.new(text_value)
     newBlob.contents = innards.elements.collect {|item| item.to_points}
+    newBlob.listing = newBlob.tidy
     return newBlob
   end
 end
@@ -30,14 +31,10 @@ module ChannelNode
 end
 
 module LiteralNode
-  # stack_name is an alpha+underscored string naming stack where 'what' will be pushed
-  # ex: 'int', 'float', 'robot' (see above)
   def stack_name
     return where.text_value
   end
   
-  # assigned_value.text_value is the right hand side of the literal line, as a string
-  # ex: '6', '-4.3', '<WTF>' as a string
   def value
     # this depends on existence of class {stack_name}Literal with #build that returns
     "#{stack_name.capitalize}Type".constantize.from_s(assigned_value.text_value)
@@ -47,12 +44,9 @@ module LiteralNode
     newBlob = LiteralPoint.new(stack_name,value)
     return newBlob
   end
-  
 end
 
 module ERCNode
-  # just like a LiteralNode for our purposes
-  #   'sample int, 6'
   def stack_name
     return where.text_value
   end
@@ -66,5 +60,4 @@ module ERCNode
     newBlob = Erc.new(stack_name,value)
     return newBlob
   end
-  
 end

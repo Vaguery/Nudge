@@ -1,17 +1,48 @@
 module Nudge
+  
   class ProgramPoint
+    def points
+      1
+    end
   end
   
   
   class CodeBlock < ProgramPoint
-    attr_accessor :listing, :contents
+    @@parser = NudgeLanguageParser.new
     
-    def initialize(rawCode=nil)
-      @listing = rawCode || "block {}"
+    def initialize(code = "block {}")
+      @listing = code
+    end
+    
+    def listing=(rawCode)
+      @listing = rawCode
+    end
+    
+    def listing
+      @listing ||= "block {}"
+    end
+    
+    def contents=(newArray)
+      @contents = newArray
+    end
+    
+    def contents
+      @contents ||= self.reparse
+    end
+    
+    def reparse
+      clone = @@parser.parse(@listing).to_points
+      @listing = clone.listing
+      return clone.contents
     end
     
     def points
-      @listing.split(/\n/).length
+      if @contents
+        @listing.split(/\n/).length
+      else
+        self.reparse
+        @listing.split(/\n/).length
+      end
     end
     
     def go
@@ -56,6 +87,10 @@ module Nudge
       tmp.randomize
       return tmp
     end
+    
+    def listing
+      self.tidy
+    end
   end
   
   
@@ -89,6 +124,10 @@ module Nudge
       tmp = Erc.new(NudgeType.all_types[0].to_s.slice(0..-5).downcase,0)
       tmp.randomize
       return tmp
+    end
+    
+    def listing
+      self.tidy
     end
   end
   
@@ -167,6 +206,10 @@ module Nudge
       which = all[rand(all.length)]
       @name = which
     end
+    
+    def listing
+      self.tidy
+    end
   end
   
   
@@ -211,6 +254,10 @@ module Nudge
       tmp = InstructionPoint.new("int_add")
       tmp.randomize
       return tmp
+    end
+    
+    def listing
+      self.tidy
     end
   end
   

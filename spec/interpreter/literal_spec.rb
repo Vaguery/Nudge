@@ -83,8 +83,23 @@ describe "LiteralPoint" do
       end
     end
     
+    describe "random CodeType should not be a problem" do
+      it "should description" do
+        pending "As things stand, LiteralPoint#any will return an instance of CodeType, which the parser barfs on"
+        NudgeType.all_types.each {|t| t.deactivate}
+        CodeType.activate
+        rL = LiteralPoint.any
+        rL.type.should == "code"
+        p rL.value
+      end
+    end
+    
+    
     describe "any" do
       it "should return a new instance of a Literal, invoking #randomize" do
+        pending "As things stand, LiteralPoint#any will return an instance of CodeType, which the parser barfs on"
+        NudgeType.all_types.each {|t| t.activate}
+        CodeType.deactivate
         rL = LiteralPoint.any
         rL.should be_a_kind_of(LiteralPoint)
         NudgeType.all_types.each {|t| t.deactivate}

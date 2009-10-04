@@ -284,5 +284,14 @@ describe "parser" do
     end
   end
   
+  describe "should handle one-point programs with whitespace" do
+    buggy = ["block{}", " block{}", "  do int_add", " ref x"]
+    buggy.each do |n|
+      it "should recognize \"#{n}\"" do
+        @parser.parse(n).should_not == nil
+      end
+    end
+  end
+  
   
 end

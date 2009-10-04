@@ -5,7 +5,7 @@ grammar NudgeLanguage
   end
 
   rule block_point
-    "block" spc* open_block innards:(any_point)* spc* close_block <BlockNode>
+    spc? "block" spc* open_block innards:(any_point)* spc* close_block <BlockNode>
   end
   
   rule nonblock_point
@@ -16,19 +16,19 @@ grammar NudgeLanguage
   end
   
   rule instruction_statement
-    "do" spc opcode:alpha_or_underscore spc* <InstructionNode>
+    spc? "do" spc opcode:alpha_or_underscore spc* <InstructionNode>
   end
   
   rule channel_statement
-    "ref" spc chan_name:alpha_or_underscore spc* <ChannelNode>
+    spc? "ref" spc chan_name:alpha_or_underscore spc* <ChannelNode>
   end
   
   rule literal_statement
-    "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <LiteralNode>
+    spc? "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <LiteralNode>
   end
   
   rule erc_statement
-    "sample" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
+    spc? "sample" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
   end
   
   
@@ -41,7 +41,7 @@ grammar NudgeLanguage
   end
   
   rule alpha_or_underscore
-    [a-zA-Z_]+
+    [a-zA-Z_] [a-zA-Z0-9_]*
   end
   
   rule spc

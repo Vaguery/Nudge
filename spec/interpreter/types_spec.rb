@@ -134,10 +134,10 @@ describe "Code Type" do
     end
     
     it "should return a string filled with asterisks and 'block{}'" do
-      CodeType.random_skeleton(3,0).should == "block { * *}"
-      CodeType.random_skeleton(3,1).should == "block { * *}"      
+      CodeType.random_skeleton(3,0).should == "block {**}"
+      CodeType.random_skeleton(3,1).should == "block {**}"      
       CodeType.random_skeleton(1,1).should == "block {}"
-      CodeType.random_skeleton(2,2).should == "block { block {}}"
+      CodeType.random_skeleton(2,2).should == "block {\nblock {}}"
       CodeType.random_skeleton(20,3).count("}").should == 3
     end
     
@@ -154,6 +154,7 @@ describe "Code Type" do
       Channel.reset_variables
       Channel.reset_names
     end
+    
     it "should by default generate a random skeleton (and later fill it with stuff)" do
       CodeType.should_receive(:random_skeleton).and_return("block {}")
       c1 = CodeType.random_value
@@ -192,24 +193,24 @@ describe "Code Type" do
     end
     
     it "should replace the skeleton's asterisks with stuff" do
-      c1 = CodeType.random_value(:skeleton => "block{ * * * * * * * * block{ * *}}", :instructions => [IntAddInstruction], :types => [IntType,BoolType], :references => ["boo", "berry"])
+      c1 = CodeType.random_value(:skeleton => "block{********\nblock{**}}")
       c1.should_not include("*")
     end
     
     it "should allow a partially filled-in skeleton to be passed in" do
-      c1 = CodeType.random_value(:skeleton => "block{ * do int_subtract}", :instructions => [IntAddInstruction])
-      c1.should == "block{ do int_add do int_subtract}"
+      c1 = CodeType.random_value(:skeleton => "block{*\ndo int_subtract}", :instructions => [IntAddInstruction])
+      c1.should == "block{ do int_add\ndo int_subtract}"
     end
     
     it "should use '@' as a placeholder that is not replaced with code" do
-      c1 = CodeType.random_value(:skeleton => "block{ * @}", :instructions => [IntAddInstruction])
-      c1.should == "block{ do int_add @}"
+      c1 = CodeType.random_value(:skeleton => "block{*@}", :instructions => [IntAddInstruction])
+      c1.should == "block{ do int_add@}"
     end
     
     it "should be possible to iteratively build a program by shifting the '@' and '*' characters in the skeleton" do
-      c0 = "block { * @ *}"
+      c0 = "block {*@*}"
       c1 = CodeType.random_value(:skeleton => c0, :instructions => [IntAddInstruction])
-      c1.should == "block { do int_add @ do int_add}"
+      c1.should == "block { do int_add@ do int_add}"
       c2 = CodeType.random_value(:skeleton => c1.gsub(/\@/, "*"), :instructions => [], :references => ["z"])
       c2.should == "block { do int_add ref z do int_add}"
     end
