@@ -18,7 +18,7 @@ describe "codeblock objects" do
   
   it "should expose its #contents" do
     parser = NudgeLanguageParser.new()
-    cbs = ["block {\n  literal int, 3}",
+    cbs = ["block {\n  literal int(3)}",
       "block { do int_add \ndo int_subtract\n do int_divide}",
       "block { block{}}", "block{ block{ do int_add block{ block{} block{}}} }"]
     
@@ -80,7 +80,7 @@ describe "#go" do
     end
     
     it " : if it is a long, flat Codeblock" do
-      @ii.reset("block {\nliteral int,1\nliteral int,2\nliteral int,3\nliteral int,4}")
+      @ii.reset("block {\nliteral int(1)\nliteral int(2)\nliteral int(3)\nliteral int(4)}")
       Stack.stacks[:exec].depth.should == 1
       @ii.step
       Stack.stacks[:exec].depth.should == 4
@@ -92,7 +92,7 @@ describe "#go" do
     end
     
     it " : if it is a deeply nested Codeblock" do
-      @ii.reset("block {\nblock {\n block {\nliteral int,1}\nliteral bool,false}}")
+      @ii.reset("block {\nblock {\n block {\nliteral int (1)}\nliteral bool (false)}}")
       Stack.stacks[:exec].depth.should == 1
       @ii.step
       Stack.stacks[:exec].depth.should == 1

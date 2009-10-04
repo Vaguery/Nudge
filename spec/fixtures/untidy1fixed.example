@@ -7,6 +7,6 @@ block {
     block {
       do foe
       do fum}
-    literal float, -8812.1}
+    literal float (-8812.1)}
   ref u
   block {}}

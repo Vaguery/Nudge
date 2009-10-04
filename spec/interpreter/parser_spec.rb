@@ -73,9 +73,9 @@ describe "parser" do
     describe ": just one literal line" do
       
       describe "(integer literals)" do
-        [["literal int,8",:int,8],
-          ["literal\tint , 8",:int,8],
-          ["literal int,-221",:int,-221]
+        [["literal int(8)",:int,8],
+          ["literal\tint (8)",:int,8],
+          ["literal int( -221 )",:int,-221]
           ].each do |b|
           
           it "should recognize \"#{b[0]}\"" do
@@ -92,10 +92,10 @@ describe "parser" do
       end
       
       describe "(boolean literals)" do
-        [["literal bool,true",:bool,true],
-          ["literal\t bool ,false",:bool,false],
-          ["literal bool,FALSE",:bool,false],
-          ["literal bool,True",:bool,true]
+        [["literal bool(true)",:bool,true],
+          ["literal\t bool  (false)",:bool,false],
+          ["literal bool ( FALSE )",:bool,false],
+          ["literal bool (\tTrue)",:bool,true]
           ].each do |b|
           
           it "should recognize \"#{b[0]}\"" do
@@ -112,10 +112,10 @@ describe "parser" do
       end
 
       describe "(float literals)" do
-        [["literal float,-6.2",:float,-6.2],
-          ["literal\t float ,1992.0001",:float,1992.0001],
-          ["literal\t float , 0.00010101",:float,0.00010101],
-          ["literal\t float , 2",:float,2.0]].each do |b|
+        [["literal float(-6.2)",:float,-6.2],
+          ["literal\t float  (1992.0001)",:float,1992.0001],
+          ["literal\t float  ( 0.00010101 ) ",:float,0.00010101],
+          ["literal\t float (2)",:float,2.0]].each do |b|
             
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(LiteralNode)
@@ -134,7 +134,7 @@ describe "parser" do
     
     describe ": just one ERC line" do
       describe "(integer ERCs)" do
-        [["sample int,-912",:int,-912],["sample\tint , -88",:int,-88]].each do |b|
+        [["sample int(-912)",:int,-912],["sample\tint ( -88 )",:int,-88]].each do |b|
           it "should recognize \"#{b}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
@@ -149,8 +149,8 @@ describe "parser" do
       end
       
       describe "(boolean ERCs)" do
-        [["sample bool,true",:bool, true],
-          ["sample\t bool ,false",:bool, false]].each do |b|
+        [["sample bool(true)",:bool, true],
+          ["sample\t bool ( false ) ",:bool, false]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
@@ -164,17 +164,17 @@ describe "parser" do
         end
         
         it "should ignore case" do
-          @parser.parse("literal bool,FALSE").value.should == false
-          @parser.parse("literal bool,True").value.should == true
+          @parser.parse("literal bool (FALSE)").value.should == false
+          @parser.parse("literal bool(True)").value.should == true
         end
       end
       
       
       describe "(float ERCs)" do
-        [["sample float,-9999.001",:float,-9999.001],
-          ["sample\t float ,33.3",:float,33.3],
-          ["sample\t\t  \tfloat , 12.12",:float,12.12],
-          ["sample         float , 1000",:float,1000.0]].each do |b|
+        [["sample float(-9999.001)",:float,-9999.001],
+          ["sample\t float ( 33.3 ) ",:float,33.3],
+          ["sample\t\t  \tfloat  (\t12.12\t)",:float,12.12],
+          ["sample         float (1000)",:float,1000.0]].each do |b|
           it "should recognize \"#{b[0]}\"" do
             @parser.parse(b[0]).should be_a_kind_of(ERCNode)
           end
@@ -192,7 +192,7 @@ describe "parser" do
   end
   
   describe "should handle long lists in blocks" do
-    listy = ["block {\n  literal int,1}", "block {\n  literal int,2\n  literal int,3}"]
+    listy = ["block {\n  literal int(1)}", "block {\n  literal int(2)\n  literal int(3)}"]
     listy.each do |n|
       it "should recognize \"#{n}\"" do
         @parser.parse(n).should_not == nil
@@ -239,7 +239,7 @@ describe "parser" do
     end
     
     b2s = [["block {\n  do hey_now}",InstructionPoint],
-      ["block {\n  literal int, 22 }",LiteralPoint],
+      ["block {\n  literal int (22) }",LiteralPoint],
       ["block {\n  ref WVIZ}",Channel]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
@@ -253,7 +253,7 @@ describe "parser" do
   
   describe "it should work for long lists of one-line points in a block" do
     b2s = [["block {\n  do A\n  do B\n  do C}",3],
-      ["block {\n  literal int, 22\n  literal int, 23 \n  literal int, 24\n ref x\nref y}",5],
+      ["block {\n  literal int(22)\n  literal int( 23) \n  literal int( 24 )\n ref x\nref y}",5],
       ["block {\n  ref WVIZ\n  ref WAMU}",2]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
@@ -275,12 +275,22 @@ describe "parser" do
     end
   end
   
-  describe "should handle complex blocks" do
+  describe "should handle structured blocks" do
     nasty = ["block{\n  ref x\n  block {\n    ref y}}","block {\n  block {}\n  ref x\n  ref y}"]
     nasty.each do |n|
       it "should recognize \"#{n}\"" do
         @parser.parse(n).should_not == nil
       end
+    end
+  end
+  
+  describe "handling complex literals" do
+    it "should be able to parse code literals" do
+      meta = "block { literal code(block {sample int«8»})}"
+      trickymeta = @parser.parse(meta)
+      p @parser.failure_reason
+      trickymeta.should_not == nil
+      trickymeta.to_points.contents[0].should be_a_kind_of(LiteralPoint)
     end
   end
   

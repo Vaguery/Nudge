@@ -40,7 +40,7 @@ describe "erc" do
       @ii = Interpreter.new()
       Stack.cleanup
       Stack.stacks[:int] = Stack.new(:int)
-      @ii.reset("sample int,999")
+      @ii.reset("sample int (999)")
     end
     
     it "should pop the exec stack when an Erc is interpreted" do
@@ -75,7 +75,7 @@ describe "erc" do
   describe "#tidy" do
     it "should print 'sample type, value' for Erc#tidy" do
       myE = Erc.new("float", -99.121001)
-      myE.tidy.should == "sample float, -99.121001"
+      myE.tidy.should == "sample float (-99.121001)"
     end
   end
   

@@ -43,7 +43,7 @@ describe "initialization" do
   end
   
   it "should accept a listing, which should default to an empty string" do
-    ij = Interpreter.new("literal int,7")
+    ij = Interpreter.new("literal int(7)")
     Stack.stacks[:exec].peek.should be_a_kind_of(LiteralPoint)
   end
   

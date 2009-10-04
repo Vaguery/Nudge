@@ -18,7 +18,7 @@ describe "LiteralPoint" do
     end
     
     it "should move to the appropriate stack when removed from the exec stack" do
-      ii = Interpreter.new("literal bool, true")
+      ii = Interpreter.new("literal bool (true)")
       ii.step
       Stack.stacks[:bool].peek.value.should == true
     end
@@ -28,7 +28,7 @@ describe "LiteralPoint" do
         @ii = Interpreter.new()
         Stack.cleanup
         Stack.stacks[:int] = Stack.new(:int)
-        @ii.reset("literal int,999")
+        @ii.reset("literal int (999)")
       end
       
       it "should pop the exec stack when a LiteralPoint is interpreted" do
@@ -63,7 +63,7 @@ describe "LiteralPoint" do
     describe "#tidy" do
       it "should print 'literal type, value' for LiteralPoint#tidy" do
         myL = LiteralPoint.new("float", -99.121001)
-        myL.tidy.should == "literal float, -99.121001"
+        myL.tidy.should == "literal float (-99.121001)"
       end
     end
     
@@ -84,29 +84,26 @@ describe "LiteralPoint" do
     end
     
     describe "random CodeType should not be a problem" do
-      it "should description" do
-        pending "As things stand, LiteralPoint#any will return an instance of CodeType, which the parser barfs on"
+      it "should have a valid right type and value" do
+        pending "this will only work when the parser can recognize code literals!"
         NudgeType.all_types.each {|t| t.deactivate}
         CodeType.activate
         rL = LiteralPoint.any
         rL.type.should == "code"
         p rL.value
+        myP = NudgeLanguageParser.new()
+        myP.parse(rL.value).should_not == nil
+        p myP.parse(rL.value).to_points.tidy
       end
     end
     
     
     describe "any" do
-      it "should return a new instance of a Literal, invoking #randomize" do
-        pending "As things stand, LiteralPoint#any will return an instance of CodeType, which the parser barfs on"
-        NudgeType.all_types.each {|t| t.activate}
-        CodeType.deactivate
+      it "should return a new instance of a Literal, invoking #randomize, but NOT a CodeType" do
+        pending "There needs to be a new default beahvior that eliminates 'unprintable' types from the randomizers"
         rL = LiteralPoint.any
         rL.should be_a_kind_of(LiteralPoint)
-        NudgeType.all_types.each {|t| t.deactivate}
-        BoolType.activate
-        rL = LiteralPoint.any
-        rL.type.should == "bool"
-        NudgeType.all_types.each {|t| t.activate}
+        rL.type.should_not == "code"
       end
     end
 end

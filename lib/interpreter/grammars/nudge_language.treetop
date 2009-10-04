@@ -24,20 +24,19 @@ grammar NudgeLanguage
   end
   
   rule literal_statement
-    spc? "literal" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <LiteralNode>
+    spc? "literal" spc where:alpha_or_underscore spc* open_leaf assigned_value:most_anything close_leaf <LiteralNode>
   end
   
   rule erc_statement
-    spc? "sample" spc where:alpha_or_underscore comma assigned_value:rest_of_line spc* <ERCNode>
+    spc? "sample" spc where:alpha_or_underscore spc* open_leaf assigned_value:most_anything close_leaf <ERCNode>
   end
-  
   
   rule comma
     spc? "," spc?
   end
   
-  rule rest_of_line
-    [-\w\.]*
+  rule most_anything
+    (!')' . )*
   end
   
   rule alpha_or_underscore
@@ -50,6 +49,14 @@ grammar NudgeLanguage
   
   rule open_block
     "{" spc?
+  end
+  
+  rule open_leaf
+    "(" spc?
+  end
+  
+  rule close_leaf
+    spc? ")" spc?
   end
   
   rule close_block

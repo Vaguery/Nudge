@@ -15,6 +15,10 @@ class NudgeType
     @@all_types
   end
   
+  def self.push_types_only
+    @@active_types = [IntType, BoolType, FloatType]
+  end
+  
   def self.active_types
     @@active_types
   end
@@ -106,6 +110,8 @@ end
 class CodeType < NudgeType
   @@defaultPoints = 20
   
+  
+  
   def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
     blocks = [0,[points,blocks].min].max
     
@@ -154,7 +160,7 @@ class CodeType < NudgeType
         newPoint = " ref " + references[whichPoint-iCount]
       else
         theType = types[whichPoint - iCount - rCount]
-        newPoint = " sample " + theType.to_nudgecode + ", " + theType.any_value.to_s
+        newPoint = " sample " + theType.to_nudgecode + " (" + theType.any_value.to_s + ")"
       end
       skeleton = skeleton.sub(/\*/, newPoint)
       skeleton = skeleton.sub(/\n/,'')
@@ -164,7 +170,7 @@ class CodeType < NudgeType
   
   
   def self.from_s(string_value)
-    string_value
+    return string_value.sub(/\(/,"«").sub(/\)/,"»")
   end
   
   def self.any_value

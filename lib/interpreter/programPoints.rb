@@ -72,7 +72,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "literal " + @type.to_s + ", " + @value.to_s
+      "literal " + @type.to_s + " (" + @value.to_s + ")"
     end
     
     def randomize
@@ -110,7 +110,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "sample " + @type.to_s + ", " + @value.to_s
+      "sample " + @type.to_s + " (" + @value.to_s + ")"
     end
     
     def randomize
