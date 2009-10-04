@@ -119,7 +119,7 @@ class CodeType < NudgeType
           a,b = rand(points), rand(points)
           front,back = [a,b].min, [a,b].max
         end
-        skel[front] = skel[front].sub(/\*/,"\nblock {")
+        skel[front] = skel[front].sub(/\*/," block {")
         skel[back] = skel[back] + "}"
       end
       skel = skel.join
@@ -157,6 +157,7 @@ class CodeType < NudgeType
         newPoint = " sample " + theType.to_nudgecode + ", " + theType.any_value.to_s
       end
       skeleton = skeleton.sub(/\*/, newPoint)
+      skeleton = skeleton.sub(/\n/,'')
     end
     skeleton
   end

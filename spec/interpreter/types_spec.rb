@@ -137,7 +137,7 @@ describe "Code Type" do
       CodeType.random_skeleton(3,0).should == "block {**}"
       CodeType.random_skeleton(3,1).should == "block {**}"      
       CodeType.random_skeleton(1,1).should == "block {}"
-      CodeType.random_skeleton(2,2).should == "block {\nblock {}}"
+      CodeType.random_skeleton(2,2).should == "block { block {}}"
       CodeType.random_skeleton(20,3).count("}").should == 3
     end
     
@@ -193,13 +193,18 @@ describe "Code Type" do
     end
     
     it "should replace the skeleton's asterisks with stuff" do
-      c1 = CodeType.random_value(:skeleton => "block{********\nblock{**}}")
+      c1 = CodeType.random_value(:skeleton => "block{********block{**}}")
       c1.should_not include("*")
     end
     
+    it "should always return a flat result (no linefeeds)" do
+      c1 = CodeType.random_value(:skeleton => "block{\n**\n******\n block{**}}")
+      c1.should_not include("\n")
+    end
+    
     it "should allow a partially filled-in skeleton to be passed in" do
-      c1 = CodeType.random_value(:skeleton => "block{*\ndo int_subtract}", :instructions => [IntAddInstruction])
-      c1.should == "block{ do int_add\ndo int_subtract}"
+      c1 = CodeType.random_value(:skeleton => "block{* do int_subtract}", :instructions => [IntAddInstruction])
+      c1.should == "block{ do int_add do int_subtract}"
     end
     
     it "should use '@' as a placeholder that is not replaced with code" do
