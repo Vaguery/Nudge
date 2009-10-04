@@ -13,7 +13,7 @@ module Nudge
     def initialize(listing)
       self.identify
       @genome = listing
-      @program = NudgeLanguageParser.new.parse(genome)
+      @program = NudgeLanguageParser.new.parse(genome).to_points
       @scores = Hash.new
       @timestamp = Time.now
       @age = 0

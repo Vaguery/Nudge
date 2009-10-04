@@ -102,4 +102,8 @@ describe "stack" do
       @myStack.depth.should == 2
     end
   end
+  
+  describe "inspect" do
+    it "should print the tidy version of every item"
+  end
 end

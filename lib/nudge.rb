@@ -20,3 +20,5 @@ require 'instructions/float_arithmetic'
 require 'instructions/comparisons'
 
 require 'search/individual/individual'
+
+require 'search/operators/random_guess'

@@ -84,7 +84,7 @@ describe "LiteralPoint" do
     end
     
     describe "random CodeType should not be a problem" do
-      it "should have a valid right type and value" do
+      it "should have a valid code type and a value that parses" do
         pending "this will only work when the parser can recognize code literals!"
         NudgeType.all_types.each {|t| t.deactivate}
         CodeType.activate
@@ -99,7 +99,7 @@ describe "LiteralPoint" do
     
     
     describe "any" do
-      it "should return a new instance of a Literal, invoking #randomize, but NOT a CodeType" do
+      it "should return a new instance of a Literal, invoking #randomize, but should return CodeTypes that are 'safe for listing'" do
         pending "There needs to be a new default beahvior that eliminates 'unprintable' types from the randomizers"
         rL = LiteralPoint.any
         rL.should be_a_kind_of(LiteralPoint)
