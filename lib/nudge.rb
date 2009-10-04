@@ -21,4 +21,4 @@ require 'instructions/comparisons'
 
 require 'search/individual/individual'
 
-require 'search/operators/random_guess'
+require 'search/operators/basic_operators'

@@ -11,7 +11,7 @@ describe "random_guess operator" do
     myGuesser.should be_a_kind_of(SearchOperator)
   end
   
-  it "should produce an Individual when it receives #go" do
+  it "should produce an Individual when it receives #generate" do
     myGuesser = RandomGuess.new
     newDude = myGuesser.generate
     newDude.should be_a_kind_of(Individual)
