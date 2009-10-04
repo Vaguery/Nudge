@@ -105,4 +105,22 @@ describe "erc" do
       rE.type.should == "bool"
     end
   end
+  
+  describe "#resample" do
+    it "should change the value only of the calling Erc instance, not its type" do
+      rE = Erc.new("int", 99)
+      rE.should be_a_kind_of(Erc)
+      IntType.should_receive(:any_value).and_return(2)
+      rE.value.should == 99
+      rE.resample
+      rE.value.should == 2
+      
+      rE = Erc.new("bool", false)
+      rE.should be_a_kind_of(Erc)
+      BoolType.should_receive(:any_value).and_return(true)
+      rE.value.should == false
+      rE.resample
+      rE.value.should == true
+    end      
+  end
 end

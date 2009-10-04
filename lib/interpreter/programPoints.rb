@@ -120,6 +120,10 @@ module Nudge
       @value = newType.any_value
     end
     
+    def resample
+      @value = "#{@type.to_s.capitalize}Type".constantize.any_value
+    end
+    
     def self.any
       tmp = Erc.new(NudgeType.all_types[0].to_s.slice(0..-5).downcase,0)
       tmp.randomize
