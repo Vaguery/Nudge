@@ -22,3 +22,5 @@ require 'instructions/comparisons'
 require 'search/individual/individual'
 
 require 'search/operators/basic_operators'
+
+require 'search/evaluators/structural_complexity'
