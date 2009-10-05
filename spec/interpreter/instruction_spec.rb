@@ -18,16 +18,6 @@ describe "InstructionPoint" do
     myL.should be_a_kind_of(ProgramPoint)
   end
   
-  it "should have a requirements attribute, which defaults to an empty hash" do
-    myI = InstructionPoint.new("foo_bar")
-    myI.requirements.should == {}
-  end
-  
-  it "should have an effects attribute, which defaults to an empty hash" do
-    myI = InstructionPoint.new("foo_bar")
-    myI.effects.should == {}
-  end
-  
   describe "#tidy" do
     it "should return 'do x' when the name is 'x'" do
       myI = InstructionPoint.new("x")

@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "./spec_helper")
+require File.join(File.dirname(__FILE__), "./../spec_helper")
 include Nudge
 
 describe "Individual" do
@@ -7,12 +7,7 @@ describe "Individual" do
       @i1 = Individual.new("literal bool (false)")
     end
     
-    it "should have a unique [serial] identifier" do
-      @i1 = Individual.new("literal bool(false)")
-      @i2 = Individual.new("literal bool(false)")
-      @i2 = Individual.new("literal bool(false)")
-      @i2.uniqueID.should == (@i1.uniqueID + 2)
-    end
+    it "should have a unique [serial] identifier after saving"
     
     it "should have a genome string, with no default value" do
       @i1.genome.should be_a_kind_of(String)

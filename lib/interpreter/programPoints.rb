@@ -219,10 +219,8 @@ module Nudge
   
   class InstructionPoint < ProgramPoint
     attr_accessor :name, :requirements, :effects
-    def initialize(name, req={}, eff={})
+    def initialize(name)
       @name = name
-      @requirements = req
-      @effects = eff
     end
     
     def className

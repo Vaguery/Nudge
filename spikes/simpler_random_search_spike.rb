@@ -1,10 +1,25 @@
 require '../lib/nudge'
+require 'couchrest'
 include Nudge
+
+class Individual
+  def self.connection
+    @db ||= CouchRest.database!("http://127.0.0.1:5984/nudge_spike1")
+  end
+  
+  def save()
+    response = self.class.connection.save_doc({:genome => @genome, :program => @program, :scores => @scores, :birthday => @timestamp})
+    @id = response['id']
+    return self
+  end
+end
+
 
 maker = RandomGuess.new
 runner = Interpreter.new
 
-300.times do |i|
+
+200.times do |i|
   params = {:points => rand(20)+10,
             :types => [IntType],
             :instructions => [IntAddInstruction, IntMultiplyInstruction, IntDivideInstruction, IntSubtractInstruction],
@@ -30,6 +45,9 @@ runner = Interpreter.new
     totalError += (expected-observed).abs
   end
   
-  puts "#{totalError}\t#{dude.program.points}\t#{Stack.stacks[:int].depth}"
-  # puts "\n#{dude.program.tidy}"
+  dude.scores['accuracy'] = totalError
+  dude.scores['length'] = dude.program.points
+  dude.scores['leftovers'] = Stack.stacks[:int].depth
+  puts "#{dude.scores.inspect}"
+  dude.save
 end

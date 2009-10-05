@@ -20,4 +20,9 @@ module Nudge
       return newDude
     end
   end
+  
+  class NondominatedSubset < SearchOperator
+    def generate(crowd, objectives)
+    end
+  end
 end
