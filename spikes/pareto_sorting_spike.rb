@@ -41,7 +41,7 @@ end
 end
 
 list = []
-100.times {a = []; 3.times {a << rand(30)}; list << a}
+10.times {a = []; 3.times {a << rand(30)}; list << a}
 puts "==========\nunsorted list:\n#{list.inspect}\n\nclustered by number of other points that dominate it:\n"
 sorted = list.domination_classes
 pp sorted
