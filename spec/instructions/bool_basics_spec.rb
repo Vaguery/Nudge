@@ -2,15 +2,27 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 theseInstructions = [
-  BoolAndInstruction
+  BoolAndInstruction,
+  BoolNotInstruction,
+  BoolOrInstruction,
+  BoolXorInstruction,
+  BoolEqualQInstruction
   ]
   
 boolsTheyNeed = {
-  BoolAndInstruction => 2
+  BoolAndInstruction => 2,
+  BoolNotInstruction => 1,
+  BoolOrInstruction => 2,
+  BoolEqualQInstruction => 2,
+  BoolXorInstruction => 2
   }
   
 resultTuples = {
-  BoolAndInstruction => {[true, true] => true, [true, false] => false, [false, false] => false}
+  BoolAndInstruction => {[true, true] => true, [true, false] => false, [false, false] => false},
+  BoolNotInstruction => {[true] => false, [false] => true},
+  BoolOrInstruction => {[true,true] => true, [true, false] => true, [false, false]=> false},
+  BoolEqualQInstruction => {[true,true] => true, [true, false] => false, [false, false]=> true},
+  BoolXorInstruction => {[true,true] => false, [true, false] => true, [false, true] => true, [false, false]=> false}
   }
   
   
