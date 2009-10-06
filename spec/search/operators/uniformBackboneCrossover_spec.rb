@@ -4,6 +4,7 @@ include Nudge
 describe "uniformBackboneCrossover operator" do
   before(:each) do
     newDudes = []
+    @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
     @myXover = UniformBackboneCrossover.new
     @myGuesser = RandomGuess.new
   end
@@ -13,23 +14,23 @@ describe "uniformBackboneCrossover operator" do
   end
   
   it "should produce a set of Individuals when it receives #generate" do
-    newDudes = @myXover.generate(@myGuesser.generate({:types => [IntType]},2))
+    newDudes = @myXover.generate(@myGuesser.generate(@params,2))
     newDudes.should be_a_kind_of(Array)
     newDudes.each {|dude| dude.should be_a_kind_of(Individual)}
   end
   
   it "should produce the same number of Individuals it gets as a default" do
-    newDudes = @myXover.generate(@myGuesser.generate({:types => [IntType]},17))
-    newDudes.length.should == 17
+    newDudes = @myXover.generate(@myGuesser.generate(@params,6))
+    newDudes.length.should == 6
   end
   
   it "should have an optional parameter that specifies the number of offspring to produce" do
-    newDudes = @myXover.generate(@myGuesser.generate({:types => [IntType]},2),5)
+    newDudes = @myXover.generate(@myGuesser.generate(@params,2),5)
     newDudes.length.should == 5
   end
   
   it "should only include backbone points from one of the parents in the offsprings' genomes" do
-    rents = @myGuesser.generate({:types => [IntType]},2)
+    rents = @myGuesser.generate(@params,2)
     newDudes = @myXover.generate(rents,1)
     newDudes.length.should == 1
     allParentalPoints = rents[0].program.contents + rents[1].program.contents
@@ -38,14 +39,14 @@ describe "uniformBackboneCrossover operator" do
   end
   
   it "should return an identical individual if given only one parent" do
-    rent = @myGuesser.generate({:types => [IntType]},1)
+    rent = @myGuesser.generate(@params,1)
     newDudes = @myXover.generate(rent,3)
     newDudes.each {|kid| kid.program.tidy.should == rent[0].program.tidy}
   end
   
   
   it "should not affect the original parents set in any way" do
-    rent = @myGuesser.generate({:types => [IntType]},2)
+    rent = @myGuesser.generate(@params,2)
     originalMom = rent[0].object_id
     newDudes = @myXover.generate(rent,1)
     rent[0].object_id.should == originalMom
