@@ -1,38 +1,43 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
-describe "random_sample operator" do
-  it "should be a kind of SearchOperator" do
-    mySampler = RandomSample.new
-    mySampler.should be_a_kind_of(SearchOperator)
-  end
-
-  it "should produce an Individual when it receives #generate" do
-    myGuesser = RandomGuess.new
-    pop = []
-    3.times {pop << myGuesser.generate(:types => [IntType])}
-    mySampler = RandomSample.new
-    newDude = mySampler.generate(pop)
-    newDude.should be_a_kind_of(Individual)
-    newDude.genome.should_not == nil
-    newDude.program.should_not == nil
+describe "random_resample operator" do
+  before(:each) do
+    @myGuesser = RandomGuess.new
+    @mySampler = RandomResample.new
   end
   
-  it "should produce an Individual with a genome identical to one of the passed in crowd's" do
-    myGuesser = RandomGuess.new
-    pop = [myGuesser.generate(:types => [IntType])]
-    mySampler = RandomSample.new
-    newDude = mySampler.generate(pop)
-    newDude.genome.should == pop[0].genome
+  it "should be a kind of SearchOperator" do
+    @mySampler.should be_a_kind_of(SearchOperator)
+  end
+
+  it "should produce a list of Individuals when it receives #generate" do
+    newDudes = @mySampler.generate(@myGuesser.generate({:types => [IntType]},3))
+    newDudes.should be_a_kind_of(Array)
+    newDudes[0].should be_a_kind_of(Individual)
+    newDudes[0].genome.should_not == nil
+    newDudes[0].program.should_not == nil
+  end
+  
+  it "should produce one Individual with a genome identical to one of the passed in crowd's" do
+    pop = @myGuesser.generate({:types => [IntType]})
+    newDudes = @mySampler.generate(pop)
+    newDudes[0].genome.should == pop[0].genome
+  end
+  
+  it "should return more than one individual when asked to, resampling as needed" do
+    newDudes = @mySampler.generate(@myGuesser.generate({:types => [IntType]},10))
+    newDudes.length.should == 1
+    newDudes = @mySampler.generate(@myGuesser.generate({:types => [IntType]},3),2)
+    newDudes.length.should == 2
+    newDudes = @mySampler.generate(@myGuesser.generate({:types => [IntType]},1),2)
+    newDudes.length.should == 2
+    newDudes[0].genome.should == newDudes[1].genome
   end
   
   it "should have a parsed genome as its #program attribute" do
-    myGuesser = RandomGuess.new
-    pop = []
-    3.times {pop << myGuesser.generate(:types => [IntType])}
-    
-    mySampler = RandomSample.new
-    newDude = mySampler.generate(pop)
-    newDude.program.should be_a_kind_of(CodeBlock)
+    pop = @myGuesser.generate({:types => [IntType]},3)
+    newDudes = @mySampler.generate(pop)
+    newDudes[0].program.should be_a_kind_of(CodeBlock)
   end
 end
