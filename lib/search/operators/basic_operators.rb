@@ -30,8 +30,31 @@ module Nudge
     end
   end
   
+  
   class NondominatedSubset < SearchOperator
+    def all_known_scores(crowd)
+      union = []
+      crowd.each do |dude|
+        union |= dude.known_scores
+      end
+      return union
+    end
+    
+    
+    def all_shared_scores(crowd)
+      intersection = self.all_known_scores(crowd)
+      crowd.each do |dude|
+        intersection &= dude.known_scores
+      end
+      return intersection
+    end
+    
+    
+    def generate(crowd, params = {})
+    end
   end
+  
+  
   
   class UniformBackboneCrossover < SearchOperator
     def generate(crowd, howMany = crowd.length, prob = 0.5)
