@@ -16,7 +16,7 @@ require 'interpreter/programPoints'
 
 require 'search/helpers'
 require 'instructions/infrastructure'
-require 'instructions/int_stack'
+require 'instructions/stack_manipulation'
 require 'instructions/int_arithmetic'
 require 'instructions/float_arithmetic'
 require 'instructions/float_transcendental'
