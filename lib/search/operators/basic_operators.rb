@@ -44,14 +44,26 @@ module Nudge
     def all_shared_scores(crowd)
       intersection = self.all_known_scores(crowd)
       crowd.each do |dude|
-        intersection &= dude.known_scores
+        intersection = intersection & dude.known_scores
       end
       return intersection
     end
     
     
-    def generate(crowd, params = {})
+    def generate(crowd, template = all_shared_scores(crowd))
+      result = []
+      crowd.each do |dude|
+        dominated = false
+        crowd.each do |otherDude|
+          dominated ||= dude.dominated_by?(otherDude, template)
+        end
+        if !dominated
+          result << dude
+        end
+      end
+      return result
     end
+    
   end
   
   
