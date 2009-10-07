@@ -22,6 +22,7 @@ require 'instructions/float_arithmetic'
 require 'instructions/float_transcendental'
 require 'instructions/bool_basics'
 require 'instructions/comparisons'
+require 'instructions/conditionals'
 
 
 require 'search/individual/individual'

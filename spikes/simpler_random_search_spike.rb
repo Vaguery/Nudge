@@ -21,10 +21,9 @@ runner = Interpreter.new
 
 200.times do |i|
   params = {:points => rand(20)+10,
-            :types => [IntType],
-            :instructions => [IntAddInstruction, IntMultiplyInstruction, IntDivideInstruction, IntSubtractInstruction],
+            :types => [IntType,BoolType,FloatType],
             :references => ["x1", "x2", "x3", "x4", "x5"]}
-  dude = maker.generate(params)
+  dude = maker.generate(params)[0]
   
   totalError = 0
   30.times do |sample|
