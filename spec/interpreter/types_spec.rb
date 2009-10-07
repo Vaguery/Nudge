@@ -69,6 +69,11 @@ describe "Int Type" do
     IntType.should_receive(:rand).and_return(3)
     IntType.random_value(100,90).should == 93
   end
+  
+  it "should actually work" do
+    lambda{IntType.any_value}.should_not raise_error
+  end
+  
 end
 
 
@@ -93,6 +98,10 @@ describe "Bool Type" do
     BoolType.should_receive(:rand).and_return(0.1)
     BoolType.random_value(0.05).should == false
   end
+  
+  it "should actually work" do
+    lambda{BoolType.any_value}.should_not raise_error
+  end
 end
 
 
@@ -115,6 +124,11 @@ describe "Float Type" do
     FloatType.should_receive(:rand).and_return(0.5)
     FloatType.random_value(101.101,-101.101).should == 0.0
   end
+  
+  it "should actually work" do
+    lambda{FloatType.any_value}.should_not raise_error
+  end
+  
 end
 
 
@@ -219,5 +233,10 @@ describe "Code Type" do
       c2 = CodeType.random_value(:skeleton => c1.gsub(/\@/, "*"), :instructions => [], :references => ["z"])
       c2.should == "block { do int_add ref z do int_add}"
     end
+    
+    it "should actually work" do
+      lambda{CodeType.any_value}.should_not raise_error
+    end
+    
   end
 end

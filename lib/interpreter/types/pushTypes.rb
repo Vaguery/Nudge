@@ -70,7 +70,7 @@ end
 
 class BoolType < NudgeType  
   def self.random_value(p = 0.5)
-    rand() < p ? true : false
+    rand() < p
   end
   
   def self.from_s(string_value)

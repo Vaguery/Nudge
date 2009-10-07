@@ -24,6 +24,7 @@ require 'instructions/bool_basics'
 require 'instructions/comparisons'
 require 'instructions/conditionals'
 require 'instructions/conversions'
+require 'instructions/random_value'
 
 
 require 'search/individual/individual'
