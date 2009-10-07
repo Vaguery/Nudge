@@ -25,6 +25,7 @@ require 'instructions/comparisons'
 require 'instructions/conditionals'
 require 'instructions/conversions'
 require 'instructions/random_value'
+require 'instructions/exec'
 
 
 require 'search/individual/individual'
