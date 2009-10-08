@@ -55,13 +55,16 @@ describe "Int Type" do
     lambda{IntType.from_s()}.should raise_error
   end
   it "should return the result of self.randomize when it receives an #any_value call" do
-    IntType.should_receive(:rand).and_return(1003)
-    IntType.any_value.should == 3
+    IntType.should_receive(:rand).and_return(0)
+    IntType.any_value.should == IntType.defaultLowest
+    IntType.should_receive(:rand).and_return(IntType.defaultHighest-IntType.defaultLowest)
+    IntType.any_value.should == IntType.defaultHighest
+    
   end
   it "should return a result from a given range when that range is passed in" do
-    IntType.should_receive(:rand).and_return(0)
+    IntType.should_receive(:rand).and_return(0.0)
     IntType.random_value(9,10).should == 9
-    IntType.should_receive(:rand).and_return(3)
+    IntType.should_receive(:rand).and_return(3.0)
     IntType.random_value(90,100).should == 93
   end
   

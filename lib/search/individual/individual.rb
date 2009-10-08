@@ -18,6 +18,10 @@ module Nudge
       return self.scores.keys.sort
     end
     
+    def points
+      return self.program.points
+    end
+    
     def score_vector(template = self.known_scores)
       vector = []
       template.each {|obj| vector << self.scores[obj]}

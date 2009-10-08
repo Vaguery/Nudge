@@ -63,7 +63,6 @@ module Nudge
       end
       return result
     end
-    
   end
   
   
@@ -92,5 +91,21 @@ module Nudge
       end
       return result
     end
+  end
+  
+  class SizePreservingMutation < SearchOperator
+    attr_accessor :params
+    
+    def initialize(params = {})
+      @params = params
+    end
+    
+    def generate(crowd, howMany = crowd.length)
+      result = []
+      howMany.times do
+      end
+      return result
+    end
+    
   end
 end

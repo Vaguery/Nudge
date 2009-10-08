@@ -48,8 +48,16 @@ end
 
 
 class IntType < NudgeType
-  @defaultLowest = -1000
-  @defaultHighest = 1000
+  @defaultLowest = -100
+  @defaultHighest = 100
+  
+  def self.defaultLowest
+    @defaultLowest
+  end
+  
+  def self.defaultHighest
+    @defaultHighest
+  end
   
   def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
     lowest, highest = [bottom,top].min, [bottom,top].max
