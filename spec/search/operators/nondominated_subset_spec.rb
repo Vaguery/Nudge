@@ -4,8 +4,8 @@ include Nudge
 describe "nondominated_subset operator" do
   before(:each) do
     @myNondominatedScreener = NondominatedSubset.new
-    @myGuesser = RandomGuess.new
     @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
+    @myGuesser = RandomGuess.new(@params)
     @results = []
   end
   
@@ -14,14 +14,14 @@ describe "nondominated_subset operator" do
   end
   
   it "the #all_known_scores method should return an Array with the union of all scores keys in the crowd" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x2" => 612, "y2" => 77, "x3" => 712}
     twoGuys[1].scores = {"y1" => 2, "x1" => 3, "x2" => 4}
     @myNondominatedScreener.all_known_scores(twoGuys).sort.should == ["x1","x2", "x3", "y1", "y2"].sort
   end
   
   it "the #all_shared_scores method should return an Array of the keys of the #scores hashes in the crowd" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x2" => 612, "x1" => 77, "x3" => 712}
     twoGuys[1].scores = {"x2" => 2, "x1" => 3, "x3" => 4}
     @myNondominatedScreener.all_shared_scores(twoGuys).sort.should == ["x1","x2", "x3"].sort
@@ -32,7 +32,7 @@ describe "nondominated_subset operator" do
   end
   
   it "should produce an array of Individual objects when it receives #generate; at least one" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x2" => 612, "x1" => 77, "x3" => 712}
     twoGuys[1].scores = {"x2" => 2, "x1" => 3, "x3" => 4}
     @myNondominatedScreener.generate(twoGuys).should be_a_kind_of(Array)
@@ -40,7 +40,7 @@ describe "nondominated_subset operator" do
   end
   
   it "should work, passing along references not clones to the original guys" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x2" => 612, "x1" => 77, "x3" => 712}
     twoGuys[1].scores = {"x2" => 2, "x1" => 3, "x3" => 4}
     @myNondominatedScreener.generate(twoGuys).should include(twoGuys[1])
@@ -53,7 +53,7 @@ describe "nondominated_subset operator" do
   end
   
   it "should work the same no matter what the scores hash order" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x1" => 77, "x3" => 712,"x2" => 612}
     twoGuys[1].scores = {"x2" => 2, "x1" => 3, "x3" => 4}
     @myNondominatedScreener.generate(twoGuys).should include(twoGuys[1])
@@ -61,7 +61,7 @@ describe "nondominated_subset operator" do
   end
   
   it "can use the 'template' parameter to compare individuals by a specified vector of scores" do
-    threeGuys = @myGuesser.generate(@params,3)
+    threeGuys = @myGuesser.generate(3)
     threeGuys[0].scores = {"x1" => 1, "x2" => 2, "x3" => 3}
     threeGuys[1].scores = {"x1" => 2, "x2" => 1, "x3" => 1}
     threeGuys[2].scores = {"x1" => 4, "x2" => 0, "x3" => 2}
@@ -79,7 +79,7 @@ describe "nondominated_subset operator" do
   
   
   it "should use a default 'template' parameter that's the intersection of scores keys in the crowd" do
-    twoGuys = @myGuesser.generate(@params,2)
+    twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x1" => 1, "x2" => 2, "x3" => 3}
     twoGuys[1].scores = {           "x2" => 1,           "x4" => 3}
     @myNondominatedScreener.generate(twoGuys).length.should == 1

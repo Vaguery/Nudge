@@ -5,14 +5,20 @@ module Nudge
   
   
   class RandomGuess < SearchOperator
-    def generate(params={}, howMany = 1)
+    attr_accessor :params
+    
+    def initialize(params={})
+      @params = params
+    end
+    
+    def generate(howMany = 1, tempParams ={})
       result = []
       howMany.times do
-        newGenome = CodeType.random_value(params)
+        newGenome = CodeType.random_value(@params.merge(tempParams))
         newDude = Individual.new(newGenome)
         result << newDude
       end
-      return result
+      result
     end
   end
   
@@ -103,6 +109,22 @@ module Nudge
     def generate(crowd, howMany = crowd.length)
       result = []
       howMany.times do
+        whichGuy = crowd[rand(crowd.length)]
+        whichPoint = rand(whichGuy.program.points)
+        parts = whichGuy.program.tidy.split(/\n/)
+        oldCode = parts[whichPoint]
+        if oldCode.include?("block")
+          p "block replacement"
+        else
+          closingBraces = oldCode.count "}"
+          oldCode = oldCode.delete("}")
+          newCode = CodeType.random_value(:points => 1) + "}"*closingBraces
+          parts[whichPoint] = newCode
+        end
+        puts whichGuy.genome
+        mutantGenome = parts.join
+        p mutantGenome
+        result << Individual.new(mutantGenome)
       end
       return result
     end
