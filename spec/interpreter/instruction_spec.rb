@@ -1,6 +1,17 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
+class MyThingInstruction < Instruction
+end
+
+class PirateTalkInstruction
+  def self.instance
+  end
+  def go
+  end
+end
+
+
 describe "InstructionPoint" do
   it "should have a name parameter, with no default" do
     myI = InstructionPoint.new("foo_bar")
@@ -38,7 +49,6 @@ describe "InstructionPoint" do
   describe "#go" do
     describe "class lookup" do
       it "should find the appropriate class (by name) if it exists" do
-        MyThingInstruction = true
         myI = InstructionPoint.new("my_thing")
         myI.classLookup.should == MyThingInstruction
       end
@@ -50,13 +60,6 @@ describe "InstructionPoint" do
     end
     
     it "should delegate #go to the appropriate Instruction Class" do
-      class PirateTalkInstruction
-        def self.instance
-          @singleton ||= self.new
-        end
-        def go
-        end
-      end
       singleton = PirateTalkInstruction.instance
       singleton.should_receive(:go)
       myI = InstructionPoint.new("pirate_talk").go

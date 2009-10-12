@@ -230,7 +230,7 @@ module Nudge
     def classLookup
       self.className.constantize
     rescue NameError
-      raise InstructionNotFoundError
+      raise InstructionNotFoundError, "#{self.className} not found"
     end
     
     def tidy(level=1)
