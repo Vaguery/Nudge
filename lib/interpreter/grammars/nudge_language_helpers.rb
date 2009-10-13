@@ -1,3 +1,4 @@
+# coding: utf-8
 module BlockNode
   def to_points
     newBlob = CodeBlock.new(text_value)

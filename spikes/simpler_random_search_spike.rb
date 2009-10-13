@@ -66,10 +66,11 @@ params = {:points => 30,
           :references => ["x1", "x2", "x3", "x4", "x5"]}
 popSize = 100
 
-population = maker.generate(params, popSize)
+population = maker.generate(popSize,params)
 
 population.each do |dude|
   dude.evaluate(0,runner)
+  dude.save()
 end
 
 (1..20).each do |generation|

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class NudgeType
   require 'singleton'
   include Singleton

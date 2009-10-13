@@ -1,2 +1,2 @@
-class programLength < Evaluator
+class ProgramLength < Evaluator
 end

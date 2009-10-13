@@ -1,16 +1,15 @@
 module Nudge
 
   class SearchOperator
+    attr_accessor :params
+
+     def initialize(params={})
+       @params = params
+     end
   end
   
   
   class RandomGuess < SearchOperator
-    attr_accessor :params
-    
-    def initialize(params={})
-      @params = params
-    end
-    
     def generate(howMany = 1, tempParams ={})
       result = []
       howMany.times do
@@ -99,13 +98,9 @@ module Nudge
     end
   end
   
+  
+  
   class SizePreservingMutation < SearchOperator
-    attr_accessor :params
-    
-    def initialize(params = {})
-      @params = params
-    end
-    
     def generate(crowd, howMany = crowd.length)
       result = []
       howMany.times do
@@ -113,21 +108,24 @@ module Nudge
         whichPoint = rand(whichGuy.program.points)
         parts = whichGuy.program.tidy.split(/\n/)
         oldCode = parts[whichPoint]
+        closingBraces = oldCode.count "}"
         if oldCode.include?("block")
-          p "block replacement"
+          # p "block replacement"
+          oldCode =~ /([\s]*)/
+          indent = $1
+          
+          newCode = oldCode
+          # newCode = CodeType.random_value(@params.merge({:points => 1})) + "}"*closingBraces
         else
-          closingBraces = oldCode.count "}"
           oldCode = oldCode.delete("}")
-          newCode = CodeType.random_value(:points => 1) + "}"*closingBraces
-          parts[whichPoint] = newCode
+          newCode = CodeType.random_value(@params.merge({:points => 1})) + "}"*closingBraces
         end
-        puts whichGuy.genome
+        parts[whichPoint] = newCode
         mutantGenome = parts.join
-        p mutantGenome
         result << Individual.new(mutantGenome)
       end
       return result
     end
-    
   end
+
 end

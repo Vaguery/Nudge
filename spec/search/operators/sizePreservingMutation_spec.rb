@@ -4,9 +4,11 @@ include Nudge
 describe "sizePreservingMutation operator" do
   before(:each) do
     @newDudes = []
-    @originalParams = {:points => 10, :blocks => 0, :instructions => [IntAddInstruction, IntSubtractInstruction], :types => [IntType]}
-    @replacementParams = {:points => 1, :instructions => [FloatSubtractInstruction], :types => FloatType}
-    @myMutie = SizePreservingMutation.new
+    @originalParams = {:points => 10, :blocks => 0,
+      :instructions => [IntAddInstruction, IntSubtractInstruction], :types => [IntType]}
+    @replacementParams = {:instructions => [FloatAddInstruction],
+      :types => [], :references => []}
+    @myMutie = SizePreservingMutation.new(@replacementParams)
     @myGuesser = RandomGuess.new(@originalParams)
     CodeType.deactivate #FIXME I should be unnecessary once CODE literals work
   end
@@ -40,16 +42,23 @@ describe "sizePreservingMutation operator" do
   
   describe "should work (produce mutants with the same point length with different code)" do
     it "when there are no blocks at all in original code" do
-      littleCrowd = @myGuesser.generate(1,:points => 1, :blocks => 0, :references => ["x1"],:types => [IntType])
+      littleCrowd = @myGuesser.generate(1,:points => 1,
+        :blocks => 0, :instructions => [], :references => ["x1"],:types => []) # creates only "ref x1"
       mutants = @myMutie.generate(littleCrowd)
       mutants[0].points.should == littleCrowd[0].points
-      mutants[0].program.tidy.should_not == littleCrowd[0].program.tidy
+      mutants[0].program.tidy.should == "do float_add"
     end
     
     it "when there is only one block in original code" do
-      littleCrowd = [Individual.new("block {}")]
-      mutants = @myMutie.generate(littleCrowd)
-      mutants[0].object_id.should_not == littleCrowd[0].object_id
+      empty = [Individual.new("block {}")]
+      mutants = @myMutie.generate(empty)
+      mutants[0].object_id.should_not == empty[0].object_id
+      
+      listy = [Individual.new("block {\nref x1\nref x1\nref x1}")]
+      pending "this doesn't actually mutate blocks"
+      mutants = @myMutie.generate(listy)
+      mutants[0].object_id.should_not == listy[0].object_id
+      p listy[0].genome
     end
     
     
