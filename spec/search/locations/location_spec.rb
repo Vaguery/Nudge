@@ -37,6 +37,10 @@ describe "Location" do
       l1 = Location.new("candy_mountain")
       l1.capacity.should == 100
     end
+    it "should be settable as a second parameter" do
+      l1 = Location.new("germany", 912)
+      l1.capacity.should == 912
+    end
   end
   
   
@@ -73,6 +77,31 @@ describe "Location" do
       l1.breeding_pool.should include(dude2)
       l2.breeding_pool.should_not include(dude1)
       l2.breeding_pool.should include(dude2)
+    end
+  end
+  
+  describe "cull_rule" do
+    it "should default to 'is population.length > capacity'?" do
+      l1 = Location.new("here",1)
+      dude1 = Individual.new("block {}")
+      l1.population << dude1
+      l1.population.length.should == 1
+      l1.cull_rule.call.should == false
+      l1.population << dude1
+      l1.population.length.should == 2
+      l1.cull_rule.call.should == true
+    end
+  end
+  
+  describe "cull?" do
+    it "should be a method that returns a boolean" do
+      l1 = Location.new("bree")
+      [true,false].should include(l1.cull?)
+    end
+    it "should invoke self#cull_rule" do
+      l1 = Location.new("amondul",1)
+      l1.cull_rule.should_receive(:call)
+      l1.cull?
     end
   end
 end

@@ -12,7 +12,7 @@ module Nudge
     
     
     attr_reader :name
-    attr_accessor :downstream, :population, :capacity
+    attr_accessor :downstream, :population, :capacity, :cull_rule
     
     def initialize(name, capacity = 100)
       if !Location.locations.include? name
@@ -24,6 +24,7 @@ module Nudge
       end
       @capacity = capacity
       @population = []
+      @cull_rule = Proc.new {@population.length > @capacity}
     end
     
     def flows_into(otherPlace)
@@ -37,6 +38,10 @@ module Nudge
         result += Location.locations[place].population
       end
       return result
+    end
+    
+    def cull?
+      return cull_rule.call
     end
   end
   
