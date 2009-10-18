@@ -12,7 +12,7 @@ end
 # post /?last_id=123445
 post '/' do
   <<-END
-    <svg:circle cx="#{rand(500)}" cy="#{rand(500)}" r="#{rand(4)}" stroke="black" stroke-width="1" fill="red"/>
+    <svg:circle cx="#{rand(500)}" cy="#{rand(500)}" r="#{rand(30)+30}" opacity=".02" stroke="none" stroke-width="0" fill="#{rand()<0.5 ? 'red' : 'white'}"/>
   END
   # make a couchdb request for guys since 123445
   # convert to svg data

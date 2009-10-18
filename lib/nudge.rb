@@ -32,3 +32,5 @@ require 'search/individual/individual'
 require 'search/individual/crowd'
 require 'search/operators/basic_operators'
 require 'search/evaluators/structural_complexity'
+
+require 'search/locations/location'
