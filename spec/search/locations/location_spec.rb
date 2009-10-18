@@ -2,6 +2,10 @@ require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
 describe "Location" do
+  before(:each) do
+    Location.cleanup
+  end
+  
   describe "class methods" do
     describe "#locations" do
       it "should be an empty Hash originally" do
@@ -11,10 +15,6 @@ describe "Location" do
   end
   
   describe "names" do
-    before(:each) do
-      Location.cleanup
-    end
-    
     it "should have a name" do
       l1 = Location.new("candy_mountain")
       l1.name.should == "candy_mountain"
@@ -32,17 +32,47 @@ describe "Location" do
     end
   end
   
-  describe "network" do
-    before(:each) do
-      Location.cleanup
+  describe "capacity" do
+    it "should have a #capacity attribute that defaults to 100 individuals" do
+      l1 = Location.new("candy_mountain")
+      l1.capacity.should == 100
     end
-    
+  end
+  
+  
+  describe "network" do
     it "should have a #flows_into method that adds a #downstream link" do
       l1 = Location.new("bree")
       l2 = Location.new("rivendell")
       l1.flows_into(l2)
       l1.downstream.should be_a_kind_of(Set)
       l1.downstream.should include("rivendell")
+    end
+  end
+  
+  describe "population" do
+    it "should be an Array that's empty initially" do
+      l1 = Location.new("spain")
+      l1.population.should == []
+    end
+  end
+  
+  
+  describe "breeding pool" do
+    it "should include every Individual in the Location and all downstream locations" do
+      l1 = Location.new("bree")
+      l2 = Location.new("rivendell")
+      dude1 = Individual.new("block {}")
+      dude2 = Individual.new("ref x")
+      l1.population << dude1
+      l2.population << dude2
+      l1.breeding_pool.should include(dude1)
+      l1.breeding_pool.should_not include(dude2)
+      l1.flows_into(l2)
+      l1.breeding_pool.should include(dude1)
+      l1.breeding_pool.should include(dude2)
+      l2.breeding_pool.should_not include(dude1)
+      l2.breeding_pool.should include(dude2)
     end
   end
 end

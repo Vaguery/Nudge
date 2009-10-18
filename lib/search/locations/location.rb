@@ -12,9 +12,9 @@ module Nudge
     
     
     attr_reader :name
-    attr_accessor :downstream, :upstream
+    attr_accessor :downstream, :population, :capacity
     
-    def initialize(name)
+    def initialize(name, capacity = 100)
       if !Location.locations.include? name
         @name = name
         Location.locations[name] = self
@@ -22,10 +22,21 @@ module Nudge
       else
         raise ArgumentError, "Location names must be unique"
       end
+      @capacity = capacity
+      @population = []
     end
     
     def flows_into(otherPlace)
       @downstream.add(otherPlace.name)
+    end
+    
+    def breeding_pool
+      result = []
+      result += @population
+      @downstream.each do |place|
+        result += Location.locations[place].population
+      end
+      return result
     end
   end
   
