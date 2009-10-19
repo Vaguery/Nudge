@@ -43,6 +43,11 @@ module Nudge
     def cull?
       return cull_rule.call
     end
+    
+    def cull_these
+      result = []
+      
+    end
   end
   
 end

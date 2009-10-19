@@ -91,6 +91,11 @@ describe "Location" do
       l1.population.length.should == 2
       l1.cull_rule.call.should == true
     end
+    it "should be settable to some other Proc" do
+      l1 = Location.new("here")
+      l1.cull_rule = Proc.new {77} #don't do this!
+      l1.cull_rule.call.should == 77
+    end
   end
   
   describe "cull?" do
@@ -102,6 +107,16 @@ describe "Location" do
       l1 = Location.new("amondul",1)
       l1.cull_rule.should_receive(:call)
       l1.cull?
+    end
+  end
+  
+  describe "cull_these" do
+    it "should return a set of Individuals from self#population" do
+      l1 = Location.new("amondul",1)
+      l1.population << Individual.new("block {}")
+      l1.population << Individual.new("ref x")
+      l1.cull_these.should be_a_kind_of(Array)
+      l1.cull_these[0].should be_a_kind_of(Individual)
     end
   end
 end
