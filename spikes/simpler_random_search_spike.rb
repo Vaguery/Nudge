@@ -76,6 +76,7 @@ end
 (1..20).each do |generation|
   population.each do |dude|
     puts "#{generation}\t#{dude.scores['accuracy']}\t#{dude.scores['length']}\t#{dude.scores['leftovers']}\t#{dude.scores['errors']}"
+    dude.save()
   end
   
   nextGen = []

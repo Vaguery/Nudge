@@ -80,21 +80,21 @@ describe "Location" do
     end
   end
   
-  describe "cull_rule" do
+  describe "cull_condition" do
     it "should default to 'is population.length > capacity'?" do
       l1 = Location.new("here",1)
       dude1 = Individual.new("block {}")
       l1.population << dude1
       l1.population.length.should == 1
-      l1.cull_rule.call.should == false
+      l1.cull_condition.call.should == false
       l1.population << dude1
       l1.population.length.should == 2
-      l1.cull_rule.call.should == true
+      l1.cull_condition.call.should == true
     end
     it "should be settable to some other Proc" do
       l1 = Location.new("here")
-      l1.cull_rule = Proc.new {77} #don't do this!
-      l1.cull_rule.call.should == 77
+      l1.cull_condition = Proc.new {77} #don't do this!
+      l1.cull_condition.call.should == 77
     end
   end
   
@@ -105,18 +105,27 @@ describe "Location" do
     end
     it "should invoke self#cull_rule" do
       l1 = Location.new("amondul",1)
-      l1.cull_rule.should_receive(:call)
+      l1.cull_condition.should_receive(:call)
       l1.cull?
     end
   end
   
-  describe "cull_these" do
-    it "should return a set of Individuals from self#population" do
+  describe "cull_order" do
+    it "should return an Array with the Individuals from self#population in it" do
       l1 = Location.new("amondul",1)
       l1.population << Individual.new("block {}")
       l1.population << Individual.new("ref x")
-      l1.cull_these.should be_a_kind_of(Array)
-      l1.cull_these[0].should be_a_kind_of(Individual)
+      l1.cull_order.should be_a_kind_of(Array)
+      l1.cull_order[0].should be_a_kind_of(Individual)
+      l1.cull_order.length.should == l1.population.length
+    end
+    
+    it "should default to random shuffle order" do
+      l1 = Location.new("amondul",1) # default rule
+      l1.population << Individual.new("block {}")
+      l1.population << Individual.new("ref x")
+      l1.population.should_receive(:shuffle)
+      l1.cull_order
     end
   end
 end
