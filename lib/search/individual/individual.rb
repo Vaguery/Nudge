@@ -11,7 +11,7 @@ module Nudge
       @timestamp = Time.now
       @age = 0
       @ancestors = []
-      @location = 0
+      @location = ""
     end
     
     def known_scores

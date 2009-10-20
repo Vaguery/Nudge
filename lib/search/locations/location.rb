@@ -40,6 +40,36 @@ module Nudge
       return result
     end
     
+    def add_individual(newDude)
+      newDude.location = @name
+      @population << newDude
+    end
+    
+    def transfer(popIndex, newLocationName)
+      if popIndex < 0 || popIndex > @population.length
+        raise ArgumentError, "self#transfer called with index #{popIndex}"
+      end
+      if !Location.locations.include?(newLocationName)
+        raise ArgumentError, "self#transfer called with nonexistent location \"#{newLocationName}\""
+      end
+      
+      movedDude = @population[popIndex]
+      Location.locations[newLocationName].population << movedDude
+      @population.delete_at(popIndex)
+      movedDude.location = newLocationName
+    end
+    
+    def promote(popIndex, newLocationName = nil)
+      if newLocationName
+        if !@downstream.include?(newLocationName)
+          raise ArgumentError, "\"#{@name}\" is not connected to location \"#{newLocationName}\""
+        end
+      else
+        newLocationName = @downstream.to_a.sample || self.name
+      end
+      self.transfer(popIndex,newLocationName)
+    end
+    
     def cull?
       return cull_condition.call
     end
@@ -47,6 +77,15 @@ module Nudge
     def cull_order
       result = @population.shuffle
       return result
+    end
+    
+    def cull
+      lottery = self.cull_order
+      while self.cull?
+        where = @population.find_index(lottery[0])
+        self.transfer(where, "DEAD")
+        lottery.delete_at(0)
+      end
     end
   end
   

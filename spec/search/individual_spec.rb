@@ -7,7 +7,7 @@ describe "Individual" do
       @i1 = Individual.new("literal bool (false)")
     end
     
-    it "should have a unique [serial] identifier after saving"
+    it "should have a unique [serial] identifier after saving" 
     
     it "should have a genome string, with no default value" do
       @i1.genome.should be_a_kind_of(String)
@@ -29,8 +29,8 @@ describe "Individual" do
     it "should have an age, defaulting to zero" do
       @i1.age.should == 0
     end
-    it "should have a locationID, defaulting to 0" do
-      @i1.location.should == 0
+    it "should have a locationID, defaulting to an empty string" do
+      @i1.location.should == ""
     end
     it "should have a list of ancestors, defaulting to none" do
       @i1.ancestors.should == []
