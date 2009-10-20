@@ -8,8 +8,12 @@ describe "Location" do
   
   describe "class methods" do
     describe "#locations" do
-      it "should be an empty Hash originally" do
-        Location.locations.should == {}
+      it "should be a Hash" do
+        Location.locations.should be_a_kind_of(Hash)
+      end
+      
+      it "should always include :DEAD" do
+        Location.locations.should include(:DEAD)
       end
     end
   end
@@ -210,7 +214,7 @@ describe "Location" do
   describe "actual culling" do
     it "should eventually satisfy the cull? condition" do
       l1 = Location.new("amondul",1) # will have a default cull_order
-      lDead = Location.new("DEAD")
+      lDead = Location.locations[:DEAD]
       l1.add_individual Individual.new("block {}")
       l1.cull?.should == false
       l1.add_individual Individual.new("ref x")
@@ -222,7 +226,7 @@ describe "Location" do
     
     it "should not fire unless self#cull? is true" do
       l1 = Location.new("amondul",1) # will have a default cull_order
-      lDead = Location.new("DEAD")
+      lDead = Location.locations[:DEAD]
       l1.add_individual Individual.new("block {}")
       l1.cull?.should == false
       l1.cull
@@ -242,5 +246,19 @@ describe "Location" do
     describe "description" do
       it "should run self.generate, then self.promote, then self.cull"
     end
+  end
+end
+
+
+describe "DeadLocation" do
+  it "should always exist" do
+    Location.cleanup
+    Location.locations.should include(:DEAD)
+    Location.locations[:DEAD].should be_a_kind_of(Location)
+    Location.locations[:DEAD].should be_a_kind_of(DeadLocation)
+  end
+  
+  it "should have no capacity" do
+    Location.locations[:DEAD].capacity.should == nil
   end
 end

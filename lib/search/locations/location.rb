@@ -3,13 +3,16 @@ module Nudge
     require 'set'
     
     def self.locations
-      @locations ||= Hash.new
+      if @locations
+        @locations
+      else
+        Hash[:DEAD,DeadLocation.new]
+      end
     end
     
     def self.cleanup
-      @locations = Hash.new
+      @locations = Hash[:DEAD,DeadLocation.new]
     end
-    
     
     attr_reader :name
     attr_accessor :downstream, :population, :capacity, :cull_condition
@@ -83,10 +86,19 @@ module Nudge
       lottery = self.cull_order
       while self.cull?
         where = @population.find_index(lottery[0])
-        self.transfer(where, "DEAD")
+        self.transfer(where, :DEAD)
         lottery.delete_at(0)
       end
     end
   end
+  
+  class DeadLocation < Location
+    def initialize()
+      @name = :DEAD
+      @capacity = nil
+      @population = []
+    end
+  end
+  
   
 end
