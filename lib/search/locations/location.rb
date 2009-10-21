@@ -2,6 +2,7 @@ module Nudge
   class Location
     require 'set'
     
+    
     def self.locations
       if @locations
         @locations
@@ -10,12 +11,15 @@ module Nudge
       end
     end
     
+    
     def self.cleanup
       @locations = Hash[:DEAD,DeadLocation.new]
     end
     
+    
     attr_reader :name
-    attr_accessor :downstream, :population, :capacity, :cull_condition, :generate_rule
+    attr_accessor :downstream, :population, :capacity,:cull_rule, :generate_rule, :promotion_rule
+    
     
     def initialize(name, capacity = 100)
       if !Location.locations.include? name
@@ -27,13 +31,16 @@ module Nudge
       end
       @capacity = capacity
       @population = []
-      @cull_condition = Proc.new {@population.length > @capacity}
+      @cull_rule = Proc.new {@population.length > @capacity}
       @generate_rule = Proc.new { [Individual.new(CodeType.any_value)] }
+      @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
     end
+    
     
     def flows_into(otherPlace)
       @downstream.add(otherPlace.name)
     end
+    
     
     def breeding_pool
       result = []
@@ -44,10 +51,12 @@ module Nudge
       return result
     end
     
+    
     def add_individual(newDude)
       newDude.location = @name
       @population << newDude
     end
+    
     
     def transfer(popIndex, newLocationName)
       if popIndex < 0 || popIndex > @population.length
@@ -63,6 +72,12 @@ module Nudge
       movedDude.location = newLocationName
     end
     
+    
+    def promote?(myDude)
+      return @promotion_rule.call(myDude)
+    end
+    
+    
     def promote(popIndex, newLocationName = nil)
       if newLocationName
         if !@downstream.include?(newLocationName)
@@ -74,14 +89,17 @@ module Nudge
       self.transfer(popIndex,newLocationName)
     end
     
+    
     def cull?
-      return cull_condition.call
+      return cull_rule.call
     end
+    
     
     def cull_order
       result = @population.shuffle
       return result
     end
+    
     
     def cull
       lottery = self.cull_order
@@ -91,8 +109,10 @@ module Nudge
         lottery.delete_at(0)
       end
     end
-    
   end
+  
+  
+  
   
   class DeadLocation < Location
     def initialize()
@@ -101,6 +121,4 @@ module Nudge
       @population = []
     end
   end
-  
-  
 end
