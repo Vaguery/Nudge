@@ -33,6 +33,10 @@ class NudgeType
     @@active_types.delete self
   end
   
+  def self.all_off
+    @@active_types = []
+  end
+  
   def self.activate
     @@active_types << self unless @@active_types.include? self
   end
@@ -120,8 +124,6 @@ end
 class CodeType < NudgeType
   @@defaultPoints = 20
   
-  
-  
   def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
     blocks = [0,[points,blocks].min].max
     
@@ -149,6 +151,10 @@ class CodeType < NudgeType
     return skel
   end
   
+  def self.pick_a_type(types)
+    raise ArgumentError if types.empty?
+    return types.sample
+  end
   
   def self.random_value(params={})
     points = params[:points] || @@defaultPoints
@@ -160,6 +166,9 @@ class CodeType < NudgeType
     
     iCount, rCount, tCount = instructions.length, references.length, types.length
     allCount = iCount + rCount + tCount
+    if allCount == 0 
+      raise ArgumentError, "Nothing to make random code from"
+    end
     
     while skeleton.include?("*") do
       whichPoint = rand(allCount)
@@ -170,6 +179,13 @@ class CodeType < NudgeType
         newPoint = " ref " + references[whichPoint-iCount]
       else
         theType = types[whichPoint - iCount - rCount]
+        if theType == CodeType
+          if types != [CodeType]
+            theType = self.pick_a_type(types - [CodeType])
+          else
+            raise ArgumentError
+          end
+        end
         newPoint = " sample " + theType.to_nudgecode + " (" + theType.any_value.to_s + ")"
       end
       skeleton = skeleton.sub(/\*/, newPoint)

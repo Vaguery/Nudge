@@ -170,38 +170,81 @@ describe "Code Type" do
     before(:each) do
       Channel.reset_variables
       Channel.reset_names
+      NudgeType.all_off
     end
     
+    after(:each) do
+      Channel.reset_variables
+      Channel.reset_names
+      NudgeType.all_off
+      Instruction.all_off
+    end
+    
+    it "should actually work with no types" do
+      NudgeType.all_off
+      lambda{CodeType.any_value}.should_not raise_error
+    end
+    
+    it "should raise an ArgumentError if there are no Instructions, References or Types" do
+      Channel.reset_variables
+      Channel.reset_names
+      NudgeType.all_off
+      Instruction.all_off
+      lambda{CodeType.any_value}.should raise_error
+    end
+    
+    
     it "should by default generate a random skeleton (and later fill it with stuff)" do
+      BoolType.activate
       CodeType.should_receive(:random_skeleton).and_return("block {}")
       c1 = CodeType.random_value
     end
     
     it "should allow a skeleton to be passed in as a param" do
+      BoolType.activate
+      
       CodeType.should_not_receive(:random_skeleton)
       c1 = CodeType.random_value(:skeleton => "block{ * * *}")
     end
     
     it "should allow a list of instructions to be passed in as a param" do
+      BoolType.activate
+      
       Instruction.should_not_receive(:active_instructions)
       c1 = CodeType.random_value(:instructions => [IntDivideInstruction])
     end
     
     it "should default to a sample of active channels + names" do
+      BoolType.activate
+      
       Channel.should_receive(:variables).and_return({"foo" => nil})
       Channel.should_receive(:names).and_return({})
       c1 = CodeType.random_value
     end
     
     it "should allow a list of channel names to be passed in as a param" do
+      BoolType.activate
+      
       Channel.should_not_receive(:variables)
       Channel.should_not_receive(:names).and_return({})
       c1 = CodeType.random_value(:references => ["foo"])
     end
     
+    it "should have an #all_off method that clears out all active types" do
+      BoolType.activate
+      NudgeType.all_off
+      NudgeType.active_types.should == []
+    end
+    
     it "should default to a sample of active types" do
-      NudgeType.should_receive(:active_types).and_return([BoolType])
+      BoolType.activate
       c1 = CodeType.random_value
+    end
+    
+    it "should not allow Code samples to appear inside Code samples" do
+      CodeType.activate
+      Instruction.all_off
+      lambda{CodeType.random_value(:types => [CodeType])}.should raise_error(ArgumentError) 
     end
     
     it "should allow a list of types to be passed in as a param" do
@@ -210,11 +253,14 @@ describe "Code Type" do
     end
     
     it "should replace the skeleton's asterisks with stuff" do
+      BoolType.activate
       c1 = CodeType.random_value(:skeleton => "block{********block{**}}")
       c1.should_not include("*")
     end
     
     it "should always return a flat result (no linefeeds)" do
+      BoolType.activate
+      
       c1 = CodeType.random_value(:skeleton => "block{\n**\n******\n block{**}}")
       c1.should_not include("\n")
     end
@@ -224,7 +270,7 @@ describe "Code Type" do
       c1.should == "block{ do int_add do int_subtract}"
     end
     
-    it "should use '@' as a placeholder that is not replaced with code" do
+    it "should use '@' as a placeholder that is not replaced with code" do      
       c1 = CodeType.random_value(:skeleton => "block{*@}", :instructions => [IntAddInstruction])
       c1.should == "block{ do int_add@}"
     end
@@ -237,9 +283,6 @@ describe "Code Type" do
       c2.should == "block { do int_add ref z do int_add}"
     end
     
-    it "should actually work" do
-      lambda{CodeType.any_value}.should_not raise_error
-    end
     
   end
 end
