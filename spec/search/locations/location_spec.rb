@@ -211,10 +211,6 @@ describe "Location" do
       loc1.cull_rule = Proc.new {77} #don't do this!
       loc1.cull_rule.call.should == 77
     end
-    
-    it "should be validated" do
-      pending "this should at least validate that it returns a boolean"
-    end
   end
   
   
@@ -249,10 +245,6 @@ describe "Location" do
       loc1.population.should_receive(:shuffle)
       loc1.cull_order
     end
-    
-    it "should only return Individuals from the Lcoation's population" do
-      pending "more complicated validations"
-    end
   end
   
   
@@ -277,40 +269,9 @@ describe "Location" do
       loc1.cull
       loc1.population.length.should == 1
     end
-    
-    it "should definitely change the population if it's deleting something"
   end
   
   
-  describe "generate" do
-    describe "generate_rule" do
-      before(:each) do
-        @loc1 = Location.new("place")
-      end
-      
-      it "should have a default that's a Proc 'return an array of one random dude'" do
-        CodeType.deactivate #FIXME this should not be necessary
-        @loc1.generate_rule.should be_a_kind_of(Proc)
-        gen = @loc1.generate_rule.call
-        gen.should be_a_kind_of(Array)
-        gen.length.should == 1
-        gen[0].should be_a_kind_of(Individual)
-      end
-    end
-    
-    it "should produce a list of new Individuals" do
-      pending "this will involve some complicated validations"
-    end
-  end
-  
-  
-  describe "core_cycle" do
-    describe "description" do
-      it "should run self.generate, add the results, then self.promote, then self.cull" do
-        pending
-      end
-    end
-  end
 end
 
 

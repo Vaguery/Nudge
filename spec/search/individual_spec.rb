@@ -7,8 +7,6 @@ describe "Individual" do
       @i1 = Individual.new("literal bool (false)")
     end
     
-    it "should have a unique [serial] identifier after saving" 
-    
     it "should have a genome string, with no default value" do
       @i1.genome.should be_a_kind_of(String)
       lambda{Individual.new()}.should raise_error
