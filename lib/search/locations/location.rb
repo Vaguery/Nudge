@@ -15,7 +15,7 @@ module Nudge
     end
     
     attr_reader :name
-    attr_accessor :downstream, :population, :capacity, :cull_condition
+    attr_accessor :downstream, :population, :capacity, :cull_condition, :generate_rule
     
     def initialize(name, capacity = 100)
       if !Location.locations.include? name
@@ -28,6 +28,7 @@ module Nudge
       @capacity = capacity
       @population = []
       @cull_condition = Proc.new {@population.length > @capacity}
+      @generate_rule = Proc.new { [Individual.new(CodeType.any_value)] }
     end
     
     def flows_into(otherPlace)
@@ -90,6 +91,7 @@ module Nudge
         lottery.delete_at(0)
       end
     end
+    
   end
   
   class DeadLocation < Location

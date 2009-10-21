@@ -236,8 +236,22 @@ describe "Location" do
   
   describe "generate" do
     describe "generate_rule" do
-      it "should have a default of 'doing nothing'"
-      it "should return an array of Individuals"
+      before(:each) do
+        @loc1 = Location.new("place")
+      end
+      
+      it "should have a default generate_rule that's a Proc 'return an array of one random dude'" do
+        @loc1.generate_rule.should be_a_kind_of(Proc)
+        gen = @loc1.generate_rule.call
+        gen.should be_a_kind_of(Array)
+        gen.length.should == 1
+        gen[0].should be_a_kind_of(Individual)
+      end
+      
+      it "should work no matter what happens with code generation" do
+        pending "FIX the code generation methods"
+      end
+      
       it "should be associated with each Location"
     end
   end
