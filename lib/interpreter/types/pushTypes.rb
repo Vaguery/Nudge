@@ -183,7 +183,7 @@ class CodeType < NudgeType
           if types != [CodeType]
             theType = self.pick_a_type(types - [CodeType])
           else
-            raise ArgumentError
+            raise ArgumentError, "Random code cannot be created"
           end
         end
         newPoint = " sample " + theType.to_nudgecode + " (" + theType.any_value.to_s + ")"

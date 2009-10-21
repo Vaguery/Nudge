@@ -85,25 +85,10 @@ describe "LiteralPoint" do
     
     describe "random CodeType should not be a problem" do
       it "should have a valid code type and a value that parses" do
-        pending "this will only work when the parser can recognize code literals!"
-        NudgeType.all_types.each {|t| t.deactivate}
+        NudgeType.all_off
+        Instruction.all_off
         CodeType.activate
-        rL = LiteralPoint.any
-        rL.type.should == "code"
-        p rL.value
-        myP = NudgeLanguageParser.new()
-        myP.parse(rL.value).should_not == nil
-        p myP.parse(rL.value).to_points.tidy
-      end
-    end
-    
-    
-    describe "any" do
-      it "should return a new instance of a Literal, invoking #randomize, but should return CodeTypes that are 'safe for listing'" do
-        pending "There needs to be a new default beahvior that eliminates 'unprintable' types from the randomizers"
-        rL = LiteralPoint.any
-        rL.should be_a_kind_of(LiteralPoint)
-        rL.type.should_not == "code"
+        lambda{LiteralPoint.any}.should raise_error(ArgumentError, "Random code cannot be created")
       end
     end
 end

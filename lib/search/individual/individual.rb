@@ -1,6 +1,6 @@
 module Nudge
   
-  class Individual    
+  class Individual
     attr_accessor :genome, :scores, :age, :ancestors, :location, :program
     attr_reader :timestamp, :id
     

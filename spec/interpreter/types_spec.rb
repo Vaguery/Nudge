@@ -182,6 +182,7 @@ describe "Code Type" do
     
     it "should actually work with no types" do
       NudgeType.all_off
+      IntAddInstruction.activate
       lambda{CodeType.any_value}.should_not raise_error
     end
     
