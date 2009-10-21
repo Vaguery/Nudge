@@ -1,22 +1,24 @@
 require 'rubygems'
 require 'couchrest'
 
-# db = CouchRest.database!("http://127.0.0.1:5984/nudge_spike1")
+module MethodAccess
+  def persists(*names)
+    names.each do |name|
+      define_method(name) do
+        self[name]
+      end
+      
+      define_method("#{name}=") do |arg|
+        self[name] = arg
+      end
+    end
+  end
+end
 
+CouchRest::ExtendedDocument.extend(MethodAccess)
 class Guy < CouchRest::ExtendedDocument
   use_database CouchRest.database!("http://127.0.0.1:5984/nudge_spike1")
-  # persists :name, :age, :scores
-end
-
-def name
-  self[:name]
-end
-
-def name=(name)
-  self[:name] = name
+  persists :name, :age
 end
 
 g = Guy.new
-g[:name] = 'hi'
-g[:thing2] = "also"
-g.save
