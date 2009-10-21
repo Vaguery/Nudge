@@ -97,35 +97,4 @@ module Nudge
       return result
     end
   end
-  
-  
-  
-  class SizePreservingMutation < SearchOperator
-    def generate(crowd, howMany = crowd.length)
-      result = []
-      howMany.times do
-        whichGuy = crowd[rand(crowd.length)]
-        whichPoint = rand(whichGuy.program.points)
-        parts = whichGuy.program.tidy.split(/\n/)
-        oldCode = parts[whichPoint]
-        closingBraces = oldCode.count "}"
-        if oldCode.include?("block")
-          # p "block replacement"
-          oldCode =~ /([\s]*)/
-          indent = $1
-          
-          newCode = oldCode
-          # newCode = CodeType.random_value(@params.merge({:points => 1})) + "}"*closingBraces
-        else
-          oldCode = oldCode.delete("}")
-          newCode = CodeType.random_value(@params.merge({:points => 1})) + "}"*closingBraces
-        end
-        parts[whichPoint] = newCode
-        mutantGenome = parts.join
-        result << Individual.new(mutantGenome)
-      end
-      return result
-    end
-  end
-
 end
