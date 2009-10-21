@@ -191,13 +191,6 @@ describe "Location" do
       @loc1.promotion_rule.stub(:call).and_return(999)
       @loc1.promote?(@loc1.population[0]).should == 999
     end
-    
-    it "should produce a boolean given an Individual indicating it's ready to be promoted" do
-      pending
-      @loc1.promotion_rule = Proc.new {|dude| }
-    end
-    
-    it "should only fire when instantaneous conditions indicate the promotion of one Individual"
   end
   
   
@@ -212,10 +205,15 @@ describe "Location" do
       loc1.population.length.should == 2
       loc1.cull_rule.call.should == true
     end
+    
     it "should be settable to some other Proc" do
       loc1 = Location.new("here")
       loc1.cull_rule = Proc.new {77} #don't do this!
       loc1.cull_rule.call.should == 77
+    end
+    
+    it "should be validated" do
+      pending "this should at least validate that it returns a boolean"
     end
   end
   
@@ -225,6 +223,7 @@ describe "Location" do
       loc1 = Location.new("bree")
       [true,false].should include(loc1.cull?)
     end
+    
     it "should invoke self#cull_rule" do
       loc1 = Location.new("amondul",1)
       loc1.cull_rule.should_receive(:call)
@@ -250,6 +249,10 @@ describe "Location" do
       loc1.population.should_receive(:shuffle)
       loc1.cull_order
     end
+    
+    it "should only return Individuals from the Lcoation's population" do
+      pending "more complicated validations"
+    end
   end
   
   
@@ -274,6 +277,8 @@ describe "Location" do
       loc1.cull
       loc1.population.length.should == 1
     end
+    
+    it "should definitely change the population if it's deleting something"
   end
   
   
@@ -292,12 +297,18 @@ describe "Location" do
         gen[0].should be_a_kind_of(Individual)
       end
     end
+    
+    it "should produce a list of new Individuals" do
+      pending "this will involve some complicated validations"
+    end
   end
   
   
-  describe "core cycle" do
+  describe "core_cycle" do
     describe "description" do
-      it "should run self.generate, then self.promote, then self.cull"
+      it "should run self.generate, add the results, then self.promote, then self.cull" do
+        pending
+      end
     end
   end
 end
