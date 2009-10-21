@@ -24,12 +24,29 @@ grammar NudgeLanguage
   end
   
   rule literal_statement
+    code_literal_statement / noncode_literal_statement
+  end
+  
+  rule noncode_literal_statement
     spc? "literal" spc where:alpha_or_underscore spc* open_leaf assigned_value:most_anything close_leaf <LiteralNode>
   end
   
+  rule code_literal_statement
+    spc? "literal" spc where:"code" spc* open_leaf assigned_value:most_anything close_leaf <LiteralNode>
+  end
+  
   rule erc_statement
+    code_literal_statement / noncode_erc_statement
+  end
+  
+  rule noncode_erc_statement
     spc? "sample" spc where:alpha_or_underscore spc* open_leaf assigned_value:most_anything close_leaf <ERCNode>
   end
+  
+  rule code_erc_statement
+    spc? "sample" spc where:"code" spc* open_leaf assigned_value:most_anything close_leaf <ERCNode>
+  end
+  
   
   rule comma
     spc? "," spc?
