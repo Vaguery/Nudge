@@ -3,8 +3,8 @@ include Nudge
 
 describe "random_guess operator" do
   before(:each) do
-    CodeType.deactivate #FIXME I should be unnecessary once CODE literals work
     @myGuesser = RandomGuess.new
+    BoolType.activate
   end
   
   it "should be a kind of SearchOperator" do
@@ -44,6 +44,5 @@ describe "random_guess operator" do
     @myNewGuesser.generate(3,:points => 12)[0].program.points.should_not == 7
     @myNewGuesser.generate(3,:points => 12)[0].program.points.should == 12
     @myNewGuesser.generate(1,:points => 6, :blocks => 0, :types => [], :instructions => [], :references => ["y1"])[0].genome.should include("y1")
-    
   end
 end

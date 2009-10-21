@@ -4,13 +4,10 @@ include Nudge
 class MyThingInstruction < Instruction
 end
 
-class PirateTalkInstruction
-  def self.instance
-  end
+class PirateTalkInstruction < Instruction
   def go
   end
 end
-
 
 describe "InstructionPoint" do
   it "should have a name parameter, with no default" do
@@ -62,6 +59,7 @@ describe "InstructionPoint" do
     it "should delegate #go to the appropriate Instruction Class" do
       singleton = PirateTalkInstruction.instance
       singleton.should_receive(:go)
+      # raise InstructionPoint.new("pirate_talk").inspect
       myI = InstructionPoint.new("pirate_talk").go
     end
   end

@@ -19,6 +19,10 @@ class Instruction
     @@active_instructions
   end
   
+  def self.all_off
+    @@active_instructions = []
+  end
+  
   def self.active?
     @@active_instructions.include? self
   end
