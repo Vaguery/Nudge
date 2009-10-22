@@ -272,6 +272,54 @@ describe "Location" do
   end
   
   
+  describe "Location#generate" do
+    before(:each) do
+      NudgeType.all_off
+      IntType.activate
+      @loc1 = Location.new("here",1)
+    end
+    
+    it "should access the breeding_pool when called" do
+      @loc1.should_receive(:breeding_pool).and_return(["mock filler"])
+      @loc1.generate
+    end
+    
+    it "should invoke #generate_rule" do
+      @loc1.generate_rule.should_receive(:call).and_return(["some dude"])
+      @loc1.generate
+    end
+    
+    it "should end up with the results of generate_rule merged into its population" do
+      @loc1.generate_rule.should_receive(:call).and_return(["some dude"])
+      @loc1.generate
+      @loc1.population.should include("some dude")
+      
+      @loc1.generate_rule.should_receive(:call).and_return(["other dude"])
+      @loc1.generate
+      @loc1.population.length.should == 2
+    end
+  end
+  
+  
+  describe "generate_rule" do
+    before(:each) do
+      @loc1 = Location.new("here",1)
+      NudgeType.all_off
+      IntType.activate
+    end
+    
+    it "should take one parameter" do
+      @loc1.generate_rule.arity.should == 1
+    end
+    
+    # detailed validation of inputs and output is a postponed story
+    
+    it "should return an array of individuals" do
+      newDudes = @loc1.generate_rule.call
+      newDudes.should be_a_kind_of(Array)
+      newDudes.each {|i| i.should be_a_kind_of(Individual)}
+    end
+  end
 end
 
 

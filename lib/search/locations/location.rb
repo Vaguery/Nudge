@@ -2,7 +2,6 @@ module Nudge
   class Location
     require 'set'
     
-    
     def self.locations
       if @locations
         @locations
@@ -32,7 +31,7 @@ module Nudge
       @capacity = capacity
       @population = []
       @cull_rule = Proc.new {@population.length > @capacity}
-      @generate_rule = Proc.new { [Individual.new(CodeType.any_value)] }
+      @generate_rule = Proc.new { |crowd| RandomGuess.new.generate}
       @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
     end
     
@@ -109,6 +108,14 @@ module Nudge
         lottery.delete_at(0)
       end
     end
+    
+    
+    def generate
+      prospects = self.breeding_pool
+      my_babies = self.generate_rule.call( prospects )
+      @population += my_babies
+    end
+    
   end
   
   
