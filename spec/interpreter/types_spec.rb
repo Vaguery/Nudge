@@ -135,6 +135,8 @@ describe "Float Type" do
 end
 
 
+
+
 describe "Code Type" do
   it "should be a Singleton" do
     CodeType.instance.should be_a_kind_of(Singleton)
@@ -144,6 +146,7 @@ describe "Code Type" do
     CodeType.should_receive(:random_value).and_return("hi there!")
     CodeType.any_value.should == "hi there!"
   end
+  
   
   describe "#random_skeleton" do    
     it "should accept params for points and branchiness" do
@@ -165,6 +168,7 @@ describe "Code Type" do
       CodeType.random_skeleton(1,-20).should == "*"
     end
   end
+  
   
   describe "#random_value" do
     before(:each) do
@@ -283,7 +287,5 @@ describe "Code Type" do
       c2 = CodeType.random_value(:skeleton => c1.gsub(/\@/, "*"), :instructions => [], :references => ["z"])
       c2.should == "block { do int_add ref z do int_add}"
     end
-    
-    
   end
 end

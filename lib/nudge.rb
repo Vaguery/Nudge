@@ -11,6 +11,7 @@ require 'interpreter/grammars/nudge_language'
 require 'interpreter/interpreter'
 
 require 'interpreter/types/pushTypes'
+require 'interpreter/types/codeType'
 require 'interpreter/stack'
 require 'interpreter/programPoints'
 
