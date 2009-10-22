@@ -289,7 +289,13 @@ describe "parser" do
     it "should be able to parse code literals" do
       meta = "block { literal code(block {sample int«8»})}"
       trickymeta = @parser.parse(meta)
-      p @parser.failure_reason
+      trickymeta.should_not == nil
+      trickymeta.to_points.contents[0].should be_a_kind_of(LiteralPoint)
+    end
+    
+    it "should be able to parse nested code literals (and samples)" do
+      nested = "block { literal code( sample code « sample code «do int_add»»)}"
+      trickymeta = @parser.parse(nested)
       trickymeta.should_not == nil
       trickymeta.to_points.contents[0].should be_a_kind_of(LiteralPoint)
     end

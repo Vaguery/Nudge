@@ -248,9 +248,10 @@ describe "Code Type" do
       CodeType.should_receive(:rand).and_return(6)
       CodeType.roulette_wheel([1],[2,3],[4,5,6]).should == "sample"
       
-      # OK here's the logic: if it's one higher, it'll fail because every entry gets one
-      CodeType.should_receive(:rand).and_return(7)
-      lambda{CodeType.roulette_wheel([1],[2,3],[4,5,6])}.should raise_error
+      # OK here's the logic: if it's one higher, it'll fail because every entry gets exactly one
+      CodeType.should_receive(:rand).and_return(6,7)
+      lambda{CodeType.roulette_wheel([1,2,3],[4,5],[6])}.should_not raise_error
+      lambda{CodeType.roulette_wheel([1,2,3],[4,5],[6])}.should raise_error
     end
   end
 
