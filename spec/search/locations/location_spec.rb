@@ -150,7 +150,7 @@ describe "Location" do
       
       it "should raise an exception if the new location isn't immediately downstream" do
         lambda{@loc1.promote(0,"numenor")}.should raise_error(ArgumentError,
-          '"bree" is not connected to location "numenor"')
+          '"bree" is not connected to "numenor"')
         lambda{@loc1.promote(0,"rivendell")}.should_not raise_error(ArgumentError)          
       end
       
@@ -194,22 +194,70 @@ describe "Location" do
   end
   
   
-  describe "cull_rule" do
+  describe "review_and_promote" do
+    before(:each) do
+      @loc1 = Location.new("bree")
+      @loc2 = Location.new("rivendell")
+      @loc1.flows_into(@loc2)
+      @dude1 = Individual.new("block {}")
+      @loc1.add_individual @dude1
+    end
+    
+    it "should apply self.promote? to all members of the population" do
+      @loc1.should_receive(:promote?).once
+      @loc1.review_and_promote
+      
+      @loc1.add_individual @dude1 # again! Don't actually ever do this...
+      @loc1.should_receive(:promote?).twice
+      @loc1.review_and_promote
+    end
+    
+    it "should only send the ones for whom #promote? is true" do
+      @loc1.should_not_receive(:promote)
+      @loc1.review_and_promote
+    end
+    
+    it "should however actually lose the ones for whom #promote? is true" do
+      @loc2.population.length.should == 0
+      theGuy = @loc1.population[0]
+      @loc1.promotion_rule = Proc.new {|dude| true}
+      @loc1.review_and_promote
+      @loc2.population.length.should == 1
+      @loc2.population.should include(theGuy)
+    end
+    
+    it "should only move the ones for whom #promote? is true" do
+      dude2 = Individual.new("do something")
+      @loc1.add_individual dude2
+      @loc1.promotion_rule = Proc.new {|dude| dude.genome.include?("something")}
+      @loc1.review_and_promote
+      
+      @loc1.population.length.should == 1
+      @loc2.population.length.should == 1
+      @loc2.population.should_not include(@dude1)
+      @loc1.population.should include(@dude1)
+      @loc2.population.should include(dude2)
+      @loc1.population.should_not include(dude2)
+    end
+  end
+  
+  
+  describe "cull_trigger" do
     it "should default to 'is population.length > capacity'?" do
       loc1 = Location.new("here",1)
       dude1 = Individual.new("block {}")
       loc1.add_individual dude1
       loc1.population.length.should == 1
-      loc1.cull_rule.call.should == false
+      loc1.cull_trigger.call.should == false
       loc1.add_individual dude1
       loc1.population.length.should == 2
-      loc1.cull_rule.call.should == true
+      loc1.cull_trigger.call.should == true
     end
     
     it "should be settable to some other Proc" do
       loc1 = Location.new("here")
-      loc1.cull_rule = Proc.new {77} #don't do this!
-      loc1.cull_rule.call.should == 77
+      loc1.cull_trigger = Proc.new {77} #don't do this!
+      loc1.cull_trigger.call.should == 77
     end
   end
   
@@ -220,9 +268,9 @@ describe "Location" do
       [true,false].should include(loc1.cull?)
     end
     
-    it "should invoke self#cull_rule" do
+    it "should invoke self#cull_trigger" do
       loc1 = Location.new("amondul",1)
-      loc1.cull_rule.should_receive(:call)
+      loc1.cull_trigger.should_receive(:call)
       loc1.cull?
     end
   end
@@ -318,6 +366,54 @@ describe "Location" do
       newDudes = @loc1.generate_rule.call
       newDudes.should be_a_kind_of(Array)
       newDudes.each {|i| i.should be_a_kind_of(Individual)}
+    end
+  end
+  
+  
+  describe "core_cycle" do
+    before(:each) do
+      @loc1 = Location.new("here",1)
+      @loc2 = Location.new("there",1)
+      @loc1.flows_into(@loc2)
+      NudgeType.all_off
+      IntType.activate
+    end
+    
+    it "should invoke #generate once" do
+      @loc1.should_receive(:generate)
+      @loc1.core_cycle
+    end
+    
+    it "should invoke #review_and_promote" do
+      @loc1.should_receive(:review_and_promote)
+      @loc1.core_cycle
+    end
+    
+    it "should invoke #cull once" do
+      @loc1.should_receive(:cull).once
+      @loc1.core_cycle
+      # there is one random guy here with the default generate rule
+    end
+    
+    it "should cull only enough to make the cull_trigger false" do
+      @loc1.add_individual(Individual.new("do die"))
+      @loc1.population.length.should == 1
+      
+      @loc1.core_cycle #this adds a new random dude AND CULLS HIM (capacity = 1)
+      @loc1.population.length.should == 1
+      Location.locations[:DEAD].population.length.should == 1
+      
+      @loc1.capacity = 2
+      @loc1.core_cycle #this adds a new random dude AND HE'S FINE (capacity = 2)
+      @loc1.population.length.should == 2
+      Location.locations[:DEAD].population.length.should == 1
+      
+      
+      @loc1.cull_trigger.should_receive(:call).and_return(true, true, false)
+      @loc1.should_receive(:cull_order).and_return(@loc1.population)
+      @loc1.core_cycle  #now we have three dudes, two of which will die
+      @loc1.population.length.should == 1
+      Location.locations[:DEAD].population.length.should == 3
     end
   end
 end

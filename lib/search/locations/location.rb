@@ -17,7 +17,7 @@ module Nudge
     
     
     attr_reader :name
-    attr_accessor :downstream, :population, :capacity,:cull_rule, :generate_rule, :promotion_rule
+    attr_accessor :downstream, :population, :capacity,:cull_trigger, :generate_rule, :promotion_rule
     
     
     def initialize(name, capacity = 100)
@@ -30,7 +30,7 @@ module Nudge
       end
       @capacity = capacity
       @population = []
-      @cull_rule = Proc.new {@population.length > @capacity}
+      @cull_trigger = Proc.new {@population.length > @capacity}
       @generate_rule = Proc.new { |crowd| RandomGuess.new.generate}
       @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
     end
@@ -77,20 +77,25 @@ module Nudge
     end
     
     
-    def promote(popIndex, newLocationName = nil)
-      if newLocationName
-        if !@downstream.include?(newLocationName)
-          raise ArgumentError, "\"#{@name}\" is not connected to location \"#{newLocationName}\""
-        end
+    def promote(popIndex, newLoc = nil)
+      if newLoc
+        raise(ArgumentError,
+          "\"#{@name}\" is not connected to \"#{newLoc}\"") if !@downstream.include?(newLoc)
       else
-        newLocationName = @downstream.to_a.sample || self.name
+        newLoc = @downstream.to_a.sample || self.name
       end
-      self.transfer(popIndex,newLocationName)
+      self.transfer(popIndex,newLoc)
+    end
+    
+    
+    def review_and_promote
+      up_for_promotion = @population.find_all {|dude| self.promote?(dude) }
+      up_for_promotion.each {|dude| self.promote(@population.find_index(dude)) }
     end
     
     
     def cull?
-      return cull_rule.call
+      return cull_trigger.call
     end
     
     
@@ -114,6 +119,13 @@ module Nudge
       prospects = self.breeding_pool
       my_babies = self.generate_rule.call( prospects )
       @population += my_babies
+    end
+    
+    
+    def core_cycle
+      self.generate
+      self.review_and_promote
+      self.cull
     end
     
   end
