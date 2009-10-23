@@ -40,6 +40,12 @@ describe "stack" do
     it "should have a name" do
       @myStack.name.should == :int
     end
+    
+    it "should only accept a symbol as a name" do
+      lambda{ Stack.new("hi")}.should raise_error(ArgumentError,"Stack name must be a Symbol")
+      lambda{ Stack.new(88)}.should raise_error(ArgumentError)
+      lambda{ Stack.new(:caprica)}.should_not raise_error
+    end
 
     it "should have no entries" do
       @myStack.entries.should have(0).items
