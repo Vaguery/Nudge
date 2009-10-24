@@ -70,14 +70,17 @@ describe "Int Type" do
   end
   it "should return a result from a given range when that range is passed in" do
     IntType.should_receive(:rand).and_return(0.0)
-    IntType.random_value(9,10).should == 9
+    param1 = {:randomIntegerLowerBound => 9, :randomIntegerUpperBound =>10}
+    IntType.random_value(param1).should == 9
     IntType.should_receive(:rand).and_return(3.0)
-    IntType.random_value(90,100).should == 93
+    param2 = {:randomIntegerLowerBound => 90, :randomIntegerUpperBound =>100}
+    IntType.random_value(param2).should == 93
   end
   
   it "should work for any order of lower and upper bounds" do
     IntType.should_receive(:rand).and_return(3)
-    IntType.random_value(100,90).should == 93
+    backwards = {:randomIntegerLowerBound => 100, :randomIntegerUpperBound =>90}
+    IntType.random_value(backwards).should == 93
   end
   
   it "should actually work" do
@@ -106,7 +109,7 @@ describe "Bool Type" do
     BoolType.should_receive(:rand).and_return(0.1)
     BoolType.any_value.should == true
     BoolType.should_receive(:rand).and_return(0.1)
-    BoolType.random_value(0.05).should == false
+    BoolType.random_value(:randomBooleanTruthProb => 0.05).should == false
   end
   
   it "should actually work" do
@@ -125,14 +128,15 @@ describe "Float Type" do
   end
   it "should return a result from a given range when that range is passed in" do
     FloatType.should_receive(:rand).and_return(0.0)
-    FloatType.random_value(0.0,10.0).should == 0.0
+    FloatType.random_value(:randomFloatLowerBound=>0.0, :randomFloatUpperBound=>10.0).should == 0.0
     FloatType.should_receive(:rand).and_return(0.5)
-    FloatType.random_value(-101.101,101.101).should == 0.0
+    FloatType.random_value(:randomFloatLowerBound=>-101.101,:randomFloatUpperBound=>101.101).should == 0.0
   end
   
   it "should work for any order of lower and upper bounds" do
     FloatType.should_receive(:rand).and_return(0.5)
-    FloatType.random_value(101.101,-101.101).should == 0.0
+    backwards = {:randomFloatLowerBound=>101.101, :randomFloatUpperBound=>-101.101}
+    FloatType.random_value(backwards).should == 0.0
   end
   
   it "should actually work" do

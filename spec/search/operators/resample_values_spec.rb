@@ -8,7 +8,7 @@ describe "ResampleValues search operator" do
   end
   
   it "should be possible to pass in stored parameters" do
-    lambda{ResampleValues.new(:int_min => 12, :int_max => 33)}.should_not raise_error
+    lambda{ResampleValues.new(:randomIntegerLowerBound => 12)}.should_not raise_error
     rs = ResampleValues.new({:boolTrueProbability => 0.2})
     rs.params.should include(:boolTrueProbability)
   end
@@ -70,12 +70,53 @@ describe "ResampleValues search operator" do
       newGuys = @rs.generate([@intDude, @intDude],2)
     end
     
-    it "should be using the Operator's saved parameters as a default behavior" # do
-     #      IntType.should_receive(:random_value).with(10,15)
-     #      newGuys = @rs.generate([@intDude])
-     #    end
+    it "should be using the Operator's saved parameters as a default behavior" do
+      wholeLottaParams = {
+        :randomIntegerLowerBound => 1000,
+        :randomIntegerUpperBound => 1005,
+        :randomBooleanTruthProb => 0.2,
+        :randomFloatLowerBound => 112.0,
+        :randomFloatUpperBound => 112.5}
+      
+      resampleLimited = ResampleValues.new(wholeLottaParams)
+      
+      IntType.should_receive(:random_value).with(wholeLottaParams)
+      newGuys = resampleLimited.generate([@intDude])
+      
+      BoolType.should_receive(:random_value).with(wholeLottaParams)
+      newGuys = resampleLimited.generate([@boolDude])
+      
+      FloatType.should_receive(:random_value).with(wholeLottaParams)
+      newGuys = resampleLimited.generate([@floatDude])
+    end
     
-    it "should be possible to temporarily override the Operator's parameters"
+    it "should return Individuals who (probably) differ from the originals passed in" do
+      outOfRangeParams = {
+        :randomIntegerLowerBound => 1000,
+        :randomIntegerUpperBound => 1005,
+        :randomBooleanTruthProb => 1.0,
+        :randomFloatLowerBound => 112.0,
+        :randomFloatUpperBound => 112.5}
+      resampleFarAway = ResampleValues.new(outOfRangeParams)
+      newGuys = resampleFarAway.generate([@intDude])
+      newGuys[0].genome.should =~ /100[0-5]/
+      newGuys = resampleFarAway.generate([@boolDude])
+      newGuys[0].genome.should =~ /true/
+      newGuys = resampleFarAway.generate([@floatDude])
+      newGuys[0].genome.should =~ /112\.[0-5]/
+    end
+    
+    it "should be possible to temporarily override some or all of the preset @params" do
+      bigInt = {:randomIntegerLowerBound => 90000,:randomIntegerUpperBound => 91000}
+      toBeOverridden = ResampleValues.new(bigInt)
+      defaults = toBeOverridden.generate([@intDude],5)
+      defaults.each {|dude| dude.genome.should =~ /9\d\d\d\d/}
+      
+      littler = toBeOverridden.generate([@intDude],5,
+        :randomIntegerLowerBound => -19, :randomIntegerUpperBound => -10)
+      littler.each {|dude| dude.genome.should =~ /-1\d/}
+    end
+    
   end
   
 end

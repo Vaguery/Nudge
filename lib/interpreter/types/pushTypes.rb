@@ -65,7 +65,9 @@ class IntType < NudgeType
     @defaultHighest
   end
   
-  def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
+  def self.random_value(params={})
+    bottom = params[:randomIntegerLowerBound] || @defaultLowest
+    top = params[:randomIntegerUpperBound] || @defaultHighest
     lowest, highest = [bottom,top].min, [bottom,top].max
     rand(highest-lowest).to_i + lowest
   end
@@ -83,7 +85,8 @@ end
 
 
 class BoolType < NudgeType  
-  def self.random_value(p = 0.5)
+  def self.random_value(params = {})
+    p = params[:randomBooleanTruthProb] || 0.5
     rand() < p
   end
   
@@ -103,7 +106,9 @@ class FloatType < NudgeType
   @defaultLowest = -1000.0
   @defaultHighest = 1000.0
   
-  def self.random_value(bottom = @defaultLowest, top = @defaultHighest)
+  def self.random_value(params = {})
+    bottom = params[:randomFloatLowerBound] || @defaultLowest
+    top = params[:randomFloatUpperBound] || @defaultHighest
     bottom, top = [bottom,top].min, [bottom,top].max
     range = top - bottom
     (rand*range) + bottom
