@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>random_skeleton (CodeType)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/interpreter/types/codeType.rb, line 6</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">random_skeleton</span>(<span class="ruby-identifier">points</span>=<span class="ruby-ivar">@@defaultPoints</span>, <span class="ruby-identifier">blocks</span>=<span class="ruby-identifier">points</span><span class="ruby-operator">/</span><span class="ruby-value">10</span>)
+    <span class="ruby-identifier">blocks</span> = [<span class="ruby-value">0</span>,[<span class="ruby-identifier">points</span>,<span class="ruby-identifier">blocks</span>].<span class="ruby-identifier">min</span>].<span class="ruby-identifier">max</span>
+    
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">points</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">skel</span> = [<span class="ruby-value str">&quot;block {&quot;</span>]
+      (<span class="ruby-identifier">points</span><span class="ruby-operator">-</span><span class="ruby-value">2</span>).<span class="ruby-identifier">times</span> {<span class="ruby-identifier">skel</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;*&quot;</span>}
+      <span class="ruby-identifier">skel</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;*}&quot;</span>
+      <span class="ruby-identifier">front</span> = <span class="ruby-value">0</span>
+      (<span class="ruby-identifier">blocks</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>).<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-keyword kw">until</span> <span class="ruby-identifier">skel</span>[<span class="ruby-identifier">front</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;*&quot;</span>) <span class="ruby-keyword kw">do</span>
+          <span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span> = <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">points</span>), <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">points</span>)
+          <span class="ruby-identifier">front</span>,<span class="ruby-identifier">back</span> = [<span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>].<span class="ruby-identifier">min</span>, [<span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>].<span class="ruby-identifier">max</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">skel</span>[<span class="ruby-identifier">front</span>] = <span class="ruby-identifier">skel</span>[<span class="ruby-identifier">front</span>].<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">/\*/</span>,<span class="ruby-value str">&quot; block {&quot;</span>)
+        <span class="ruby-identifier">skel</span>[<span class="ruby-identifier">back</span>] = <span class="ruby-identifier">skel</span>[<span class="ruby-identifier">back</span>] <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">skel</span> = <span class="ruby-identifier">skel</span>.<span class="ruby-identifier">join</span>
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">blocks</span><span class="ruby-operator">&gt;</span><span class="ruby-value">0</span>
+        <span class="ruby-identifier">skel</span> = <span class="ruby-value str">&quot;block {}&quot;</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">skel</span> = <span class="ruby-value str">&quot;*&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">skel</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

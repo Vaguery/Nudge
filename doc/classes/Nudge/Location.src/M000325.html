@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>transfer (Nudge::Location)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/search/locations/location.rb, line 60</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">transfer</span>(<span class="ruby-identifier">popIndex</span>, <span class="ruby-identifier">newLocationName</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">popIndex</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">popIndex</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@population</span>.<span class="ruby-identifier">length</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;self#transfer called with index #{popIndex}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">Location</span>.<span class="ruby-identifier">locations</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">newLocationName</span>)
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;self#transfer called with nonexistent location \&quot;#{newLocationName}\&quot;&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      
+      <span class="ruby-identifier">movedDude</span> = <span class="ruby-ivar">@population</span>[<span class="ruby-identifier">popIndex</span>]
+      <span class="ruby-constant">Location</span>.<span class="ruby-identifier">locations</span>[<span class="ruby-identifier">newLocationName</span>].<span class="ruby-identifier">population</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">movedDude</span>
+      <span class="ruby-ivar">@population</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-identifier">popIndex</span>)
+      <span class="ruby-identifier">movedDude</span>.<span class="ruby-identifier">location</span> = <span class="ruby-identifier">newLocationName</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

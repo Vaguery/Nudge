@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>random_value (CodeType)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/interpreter/types/codeType.rb, line 66</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">random_value</span>(<span class="ruby-identifier">params</span> = {})
+    <span class="ruby-identifier">points</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:points</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@@defaultPoints</span>
+    <span class="ruby-identifier">blocks</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:blocks</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">points</span><span class="ruby-operator">/</span><span class="ruby-value">10</span>
+    <span class="ruby-identifier">skeleton</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:skeleton</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">random_skeleton</span>(<span class="ruby-identifier">points</span>, <span class="ruby-identifier">blocks</span>)
+    <span class="ruby-identifier">instructions</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:instructions</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Instruction</span>.<span class="ruby-identifier">active_instructions</span>
+    <span class="ruby-identifier">references</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:references</span>] <span class="ruby-operator">||</span> (<span class="ruby-constant">Channel</span>.<span class="ruby-identifier">variables</span>.<span class="ruby-identifier">keys</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Channel</span>.<span class="ruby-identifier">names</span>.<span class="ruby-identifier">keys</span>)
+    <span class="ruby-identifier">types</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:types</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">NudgeType</span>.<span class="ruby-identifier">active_types</span>
+    
+    <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">skeleton</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;*&quot;</span>) <span class="ruby-keyword kw">do</span>
+      <span class="ruby-keyword kw">case</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">roulette_wheel</span>(<span class="ruby-identifier">references</span>,<span class="ruby-identifier">instructions</span>,<span class="ruby-identifier">types</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;instruction&quot;</span>
+        <span class="ruby-identifier">newPoint</span> = <span class="ruby-value str">&quot; do &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">any_instruction</span>(<span class="ruby-identifier">instructions</span>).<span class="ruby-identifier">to_nudgecode</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;reference&quot;</span>
+        <span class="ruby-identifier">newPoint</span> = <span class="ruby-value str">&quot; ref &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">any_reference</span>(<span class="ruby-identifier">references</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">&quot;sample&quot;</span>
+        <span class="ruby-identifier">theType</span> = <span class="ruby-identifier">any_type</span>(<span class="ruby-identifier">types</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">theType</span> <span class="ruby-operator">==</span> <span class="ruby-constant">CodeType</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span> <span class="ruby-operator">!=</span> [<span class="ruby-constant">CodeType</span>]
+            <span class="ruby-identifier">theType</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">any_type</span>(<span class="ruby-identifier">types</span> <span class="ruby-operator">-</span> [<span class="ruby-constant">CodeType</span>])
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Random code cannot be created&quot;</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">newPoint</span> = <span class="ruby-value str">&quot; sample &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">theType</span>.<span class="ruby-identifier">to_nudgecode</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; (&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">theType</span>.<span class="ruby-identifier">any_value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;)&quot;</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Nothing to make random code from&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">skeleton</span> = <span class="ruby-identifier">skeleton</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">/\*/</span>, <span class="ruby-identifier">newPoint</span>)
+      <span class="ruby-identifier">skeleton</span> = <span class="ruby-identifier">skeleton</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">/\n/</span>,<span class="ruby-value str">''</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

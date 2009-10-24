@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>roulette_wheel (CodeType)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/interpreter/types/codeType.rb, line 52</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">roulette_wheel</span>(<span class="ruby-identifier">references</span>, <span class="ruby-identifier">instructions</span>, <span class="ruby-identifier">types</span>)
+    <span class="ruby-identifier">basis</span> = <span class="ruby-constant">Hash</span>[<span class="ruby-value str">&quot;reference&quot;</span>, <span class="ruby-identifier">references</span>.<span class="ruby-identifier">length</span>,
+      <span class="ruby-value str">&quot;instruction&quot;</span>, <span class="ruby-identifier">instructions</span>.<span class="ruby-identifier">length</span>,
+      <span class="ruby-value str">&quot;sample&quot;</span>, <span class="ruby-identifier">types</span>.<span class="ruby-identifier">length</span>]
+    <span class="ruby-identifier">sum</span> = <span class="ruby-identifier">basis</span>.<span class="ruby-identifier">values</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-identifier">:+</span>)
+    <span class="ruby-identifier">spin</span> = <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">sum</span>)
+    <span class="ruby-identifier">basis</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">result</span>,<span class="ruby-identifier">weight</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">spin</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">weight</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">weight</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">spin</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">weight</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;A problem occurred when executing CodeType#roulette_wheel&quot;</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

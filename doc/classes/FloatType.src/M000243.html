@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>random_value (FloatType)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/interpreter/types/pushTypes.rb, line 109</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">random_value</span>(<span class="ruby-identifier">params</span> = {})
+    <span class="ruby-identifier">bottom</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:randomFloatLowerBound</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@defaultLowest</span>
+    <span class="ruby-identifier">top</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:randomFloatUpperBound</span>] <span class="ruby-operator">||</span> <span class="ruby-ivar">@defaultHighest</span>
+    <span class="ruby-identifier">bottom</span>, <span class="ruby-identifier">top</span> = [<span class="ruby-identifier">bottom</span>,<span class="ruby-identifier">top</span>].<span class="ruby-identifier">min</span>, [<span class="ruby-identifier">bottom</span>,<span class="ruby-identifier">top</span>].<span class="ruby-identifier">max</span>
+    <span class="ruby-identifier">range</span> = <span class="ruby-identifier">top</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">bottom</span>
+    (<span class="ruby-identifier">rand</span><span class="ruby-operator">*</span><span class="ruby-identifier">range</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">bottom</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

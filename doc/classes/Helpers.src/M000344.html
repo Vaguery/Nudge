@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>domination_classes (Helpers)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/search/helpers.rb, line 12</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">domination_classes</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>()
+    <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">dominatedBy</span> = <span class="ruby-value">0</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">j</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">dominatedBy</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">dominated_by?</span>(<span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">j</span>])
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">result</span>[<span class="ruby-identifier">dominatedBy</span>] <span class="ruby-operator">||=</span> []
+      <span class="ruby-identifier">result</span>[<span class="ruby-identifier">dominatedBy</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">i</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
