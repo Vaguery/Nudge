@@ -4,7 +4,7 @@ include Nudge
 describe "random_resample operator" do
   before(:each) do
     @myGuesser = RandomGuess.new(:types => [IntType])
-    @mySampler = RandomResample.new
+    @mySampler = PopulationResample.new
   end
   
   it "should be a kind of SearchOperator" do

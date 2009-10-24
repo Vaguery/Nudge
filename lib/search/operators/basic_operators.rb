@@ -22,7 +22,7 @@ module Nudge
   end
   
   
-  class RandomResample < SearchOperator
+  class PopulationResample < SearchOperator
     def generate(crowd, howMany = 1)
       result = []
       howMany.times do
@@ -34,6 +34,31 @@ module Nudge
       return result
     end
   end
+  
+  
+  class ResampleValues < SearchOperator
+    def generate(crowd, howManyCopies = 1)
+      crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
+      
+      result = []
+      crowd.each do |dude|
+        wildtype = dude.program.listing
+        howManyCopies.times do
+          novelty = ""
+          wildtype.each_line do |line|
+            line = line.sub(/\((.*)\)/,"(#{IntType.random_value})") if line.include?("sample int")
+            line = line.sub(/\((.*)\)/,"(#{BoolType.random_value})") if line.include?("sample bool")
+            line = line.sub(/\((.*)\)/,"(#{FloatType.random_value})") if line.include?("sample float")
+            novelty << line
+          end
+          mutant = Individual.new(novelty)
+          result << mutant
+        end
+      end
+      result
+    end
+  end
+  
   
   
   class NondominatedSubset < SearchOperator

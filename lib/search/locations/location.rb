@@ -127,7 +127,6 @@ module Nudge
       self.review_and_promote
       self.cull
     end
-    
   end
   
   

@@ -56,7 +56,7 @@ end
 
 
 maker = RandomGuess.new
-sampler = RandomResample.new
+sampler = PopulationResample.new
 runner = Interpreter.new
 winners = NondominatedSubset.new
 mater = UniformBackboneCrossover.new
