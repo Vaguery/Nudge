@@ -1,5 +1,4 @@
 .hg*
-*.tex
 *.pdf
 *.aux
 *.dvi

@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>all_shared_scores (Nudge::NondominatedSubset)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/search/operators/basic_operators.rb, line 123</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">all_shared_scores</span>(<span class="ruby-identifier">crowd</span>)
+      <span class="ruby-identifier">intersection</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">all_known_scores</span>(<span class="ruby-identifier">crowd</span>)
+      <span class="ruby-identifier">crowd</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dude</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">intersection</span> = <span class="ruby-identifier">intersection</span> <span class="ruby-operator">&amp;</span> <span class="ruby-identifier">dude</span>.<span class="ruby-identifier">known_scores</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">intersection</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,5 +1,7 @@
 module Nudge
 
+  # Abstract class that from which specific SearchOperator subclasses inherit initialization
+  
   class SearchOperator
     attr_accessor :params
 
@@ -9,7 +11,23 @@ module Nudge
   end
   
   
+  
   class RandomGuess < SearchOperator
+    # returns an Array of random Individuals
+    #
+    # the first (optional) parameter specifies how many to make, and defaults to 1
+    # the second (also optional) parameter is a hash or set of hash bindings that
+    # temporarily override those set in the initialization
+    #
+    # For example, if
+    # <tt>myRandomGuesser = RandomGuess.new(:randomIntegerLowerBound => -90000)</tt>
+    #
+    # [<tt>myRandomGuesser.generate()</tt>]
+    #   produces a list of 1 Individual, and if it has any IntType samples they will be in [-90000,100]
+    #   (since the default +:randomIntegerLowerBound+ is 100)
+    # [<tt>myRandomGuesser.generate(1,:randomIntegerLowerBound => 0)</tt>]
+    #   makes one Individual whose IntType samples (if any) will be between [0,100]
+    
     def generate(howMany = 1, tempParams ={})
       result = []
       howMany.times do
@@ -23,6 +41,20 @@ module Nudge
   
   
   class PopulationResample < SearchOperator
+    # returns an Array of clones of Individuals randomly selected from the crowd passed in
+    # 
+    # the first (required) parameter is an Array of Individuals
+    # the second (optional) parameter is how many samples to take, and defaults to 1
+    #
+    # For example, if
+    # <tt>@currentPopulation = [a list of 300 Individuals]</tt> and
+    # <tt>myRandomSampler = PopulationResample.new(@currentPopulation)</tt>
+    # [<tt>myRandomSampler.generate()</tt>]
+    #   produces a list of 1 Individual, which is a clone of somebody from <tt>@currentPopulation</tt>
+    # [<tt>myRandomGuesser.generate(11)</tt>]
+    #   returns a list of 11 Individuals cloned from <tt>@currentPopulation</tt>,
+    #   possibly including repeats
+    
     def generate(crowd, howMany = 1)
       result = []
       howMany.times do
@@ -37,6 +69,19 @@ module Nudge
   
   
   class ResampleValues < SearchOperator
+    
+    # returns an Array of clones of Individuals randomly selected from the crowd passed in
+    #   the first (required) parameter is an Array of Individuals
+    #   the second (optional) parameter is how many samples to take, and defaults to 1
+    #
+    #   For example, if
+    #     @currentPopulation = [a list of 300 Individuals]
+    #     myRandomSampler = PopulationResample.new(@currentPopulation)
+    #     myRandomSampler.generate()::
+    #       produces a list of 1 Individual, which is a clone of somebody from @currentPopulation
+    #     myRandomGuesser.generate(11)::
+    #       returns a list of 11 Individuals cloned from @currentPopulation, possibly including repeats
+    
     def generate(crowd, howManyCopies = 1, parameter_overrides = {})
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
