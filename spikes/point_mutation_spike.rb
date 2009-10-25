@@ -6,7 +6,7 @@ class Array
   def isolate_point(pos)
     workingCopy = self.clone
     
-    # if a block, pull in items from the right until they balance
+    # if a block, pull in items from the right until the braces balance
     if workingCopy[pos].include?("block")
       leftCount = workingCopy[pos].count("{")
       rightCount = workingCopy[pos].count("}")
@@ -33,10 +33,10 @@ class Array
 end
 
 myParser = NudgeLanguageParser.new
-rs = RandomGuess.new(:points => 3, :blocks => 30)
+rs = RandomGuess.new(:points => 30, :blocks => 15)
 parent = rs.generate
 wt = parent[0].program.listing
-puts wt
+puts "wildtype genome:\n#{wt}"
 
 pts = wt.count("\n")+1
 puts "\n#{pts} program points"
@@ -48,7 +48,7 @@ newCode = myParser.parse(CodeType.random_value(:points => 1, :blocks => 0)).to_p
   puts "\n#{lineNum}:\n"
   collapsed = chunks.isolate_point(lineNum)
   puts "replacing: #{myParser.parse(collapsed[lineNum]).to_points.tidy}\n\n"
-  collapsed[lineNum] = "do NOTHING"
+  collapsed[lineNum] = "do MUTANT_POWER"
   puts "-> #{myParser.parse(collapsed.join("\n")).to_points.tidy}"
 end
 

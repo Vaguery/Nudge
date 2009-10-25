@@ -12,11 +12,15 @@ describe "parser" do
   after(:each) do
     Stack.cleanup
   end
-    
+  
+  
+  
   it "should fail for an empty program" do
     empty = ""
     @parser.parse(empty).should == nil
   end
+  
+  
   
   describe "works for single-line code" do
     it "should recognize 'block {}'" do
@@ -133,6 +137,7 @@ describe "parser" do
     end
     
     
+    
     describe ": just one ERC line" do
       describe "(integer ERCs)" do
         [["sample int(-912)",:int,-912],["sample\tint ( -88 )",:int,-88]].each do |b|
@@ -192,6 +197,8 @@ describe "parser" do
     end
   end
   
+  
+  
   describe "should handle long lists in blocks" do
     listy = ["block {\n  literal int(1)}", "block {\n  literal int(2)\n  literal int(3)}"]
     listy.each do |n|
@@ -200,6 +207,8 @@ describe "parser" do
       end
     end
   end
+  
+  
   
   describe "should handle two-line code" do
     b2s = ["  block {}  block {}","\tblock{}\n\tblock{}","instr hey_there\ninstr now_then"]
@@ -252,6 +261,8 @@ describe "parser" do
     end
   end
   
+  
+  
   describe "it should work for long lists of one-line points in a block" do
     b2s = [["block {\n  do A\n  do B\n  do C}",3],
       ["block {\n  literal int(22)\n  literal int( 23) \n  literal int( 24 )\n ref x\nref y}",5],
@@ -267,6 +278,7 @@ describe "parser" do
   end
   
   
+  
   describe "should handle nested blocks" do
     nesty = ["block{\n  block {\n    block {}}}","block {\n  block {}\n  block {\n    block {\n      block {}}}}"]
     nesty.each do |n|
@@ -276,6 +288,8 @@ describe "parser" do
     end
   end
   
+  
+  
   describe "should handle structured blocks" do
     nasty = ["block{\n  ref x\n  block {\n    ref y}}","block {\n  block {}\n  ref x\n  ref y}"]
     nasty.each do |n|
@@ -284,6 +298,8 @@ describe "parser" do
       end
     end
   end
+  
+  
   
   describe "handling complex literals" do
     it "should be able to parse code literals" do
@@ -301,6 +317,8 @@ describe "parser" do
     end
   end
   
+  
+  
   describe "should handle one-point programs with whitespace" do
     buggy = ["block{}", " block{}", "  do int_add", " ref x"]
     buggy.each do |n|
@@ -309,6 +327,4 @@ describe "parser" do
       end
     end
   end
-  
-  
 end

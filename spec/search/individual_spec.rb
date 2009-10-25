@@ -2,6 +2,14 @@ require File.join(File.dirname(__FILE__), "./../spec_helper")
 include Nudge
 
 describe "Individual" do
+  describe "class methods" do
+    it "should have a class attribute Parser for validating code" do
+      Individual.helperParser.should be_a_kind_of(NudgeLanguageParser)
+    end
+  end
+  
+  
+  
   describe "initialization" do
     before(:each) do
       @i1 = Individual.new("literal bool (false)")
@@ -16,6 +24,15 @@ describe "Individual" do
       @par = NudgeLanguageParser.new
       expected = @par.parse(@i1.genome).to_points
       @i1.program.tidy.should == expected.tidy
+    end
+    
+    it "should raise an ArgumentError if the genome doesn't parse" do
+      lambda{Individual.new("bad stuff happens")}.should raise_error(ArgumentError)
+      lambda{Individual.new("block {")}.should raise_error(ArgumentError)
+      lambda{Individual.new("}")}.should raise_error(ArgumentError)
+      
+      lambda{Individual.new("")}.should raise_error(ArgumentError)
+      lambda{Individual.new("block {}")}.should_not raise_error(ArgumentError)
     end
     
     it "should have a scores hash, which is empty" do
@@ -35,6 +52,8 @@ describe "Individual" do
     end
   end
   
+  
+  
   describe "runnable?" do
     it "should have a genome that an interpreter can understand" do
       @i1 = Individual.new(fixture(:long_arithmetic))
@@ -44,6 +63,8 @@ describe "Individual" do
       Stack.stacks[:int].peek.value.should == -36
     end
   end
+  
+  
   
   describe "#known_scores and #score_vector" do
     before(:each) do
@@ -55,11 +76,13 @@ describe "Individual" do
       @oneGuy.known_scores.should == ["alpha", "beta", "zeta"]
     end
     
-    it "should return an Array of the values of his #scores, in order based on a template w/default known_scores" do
+    it "should return an Array of his #scores, in order based on a template w/default known_scores" do
       @oneGuy.score_vector.should == [100,-100,22]
       @oneGuy.score_vector(["alpha"]).should == [100]
     end
   end
+  
+  
   
   describe "#dominated_by?" do
     before(:each) do
@@ -92,7 +115,109 @@ describe "Individual" do
       @oneGuy.dominated_by?(@extraGuy,["delta"]).should == false # because self has no "delta" score
       @extraGuy.dominated_by?(@oneGuy).should == false # because they're incomparible on "delta"
     end
-    
   end
+  
+  
+  
+  describe "isolate_point" do
+    before(:each) do
+      @snipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
+    end
+    
+    it "should raise an ArgumentError if the integer param referring to a particular point is OOB" do
+      lambda{@snipper.isolate_point()}.should raise_error(ArgumentError)
+      lambda{@snipper.isolate_point(-12)}.should raise_error(ArgumentError)
+      lambda{@snipper.isolate_point(912)}.should raise_error(ArgumentError)
+      
+      lambda{@snipper.isolate_point(2)}.should_not raise_error(ArgumentError)
+    end
+    
+    it "should return a Hash containing up to three items" do
+      works = @snipper.isolate_point(2)
+      works.should be_a_kind_of(Hash)
+      works.length.should == 3
+      works.each_value {|chunk| chunk.should be_a_kind_of(String)}
+      
+      @snipper.isolate_point(1).length.should == 1
+      @snipper.isolate_point(5).length.should == 3
+    end
+    
+    it "should include the material in the genome before the point in the first string" do
+      works = @snipper.isolate_point(2)
+      works[:left].should include("block {")
+      works[:left].should_not include("}")
+      
+      whole = @snipper.isolate_point(1)
+      whole[:left].should == nil
+    end
+    
+    it "should include the material in the genome after the point in the third string" do
+      works = @snipper.isolate_point(2)
+      works[:right].should include("do some2")
+      works[:right].should_not include("do some1")
+      
+      whole = @snipper.isolate_point(1)
+      whole[:right].should == nil
+      
+      bracesLeft = @snipper.isolate_point(5)
+      bracesLeft[:right].should == "}}"
+    end
+    
+    it "should include the isolated point in the middle string" do
+      works = @snipper.isolate_point(2)
+      works[:middle].strip.should == "do some1"
+      
+      @snipper.isolate_point(3)[:middle].strip.should == "do some2"
+      @snipper.isolate_point(4)[:middle].gsub(/([\s]+)/," ").should == "block { do some3}"
+      @snipper.isolate_point(5)[:middle].strip.should == "do some3"
+    end
+  end
+  
+  
+  
+  describe "delete_point" do
+    before(:each) do
+      @clipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
+      @parser = NudgeLanguageParser.new()
+    end
+    
+    it "should return Individual#genome if[f] the position param is out of bounds" do
+      @clipper.delete_point(-12).should == @clipper.program.listing
+      @clipper.delete_point(933).should == @clipper.program.listing
+      @clipper.delete_point(2).should_not == @clipper.program.listing
+    end
+    
+    it "should call self#isolate_point to slice the wildtype genome" do
+      @clipper.should_receive(:isolate_point).with(2).and_return(
+        {:left => "so",:middle=>"it",:right=>"works"})
+      @clipper.delete_point(2)
+    end
+    
+    it "should produce a parsable genome" do
+      (0..5).each do |where|
+        @parser.parse(@clipper.delete_point(2)).should_not == nil
+      end
+    end
+    
+    it "should return a genome with at least one fewer program points" do
+      startPoints = @clipper.points
+      (0..5).each do |where|
+        @parser.parse(@clipper.delete_point(2)).to_points.points.should < startPoints
+      end
+    end
+        
+    it "should delete the expected specific point (and any subpoints it has)" do
+      @parser.parse(@clipper.delete_point(2)).to_points.points.should == 4
+      @parser.parse(@clipper.delete_point(3)).to_points.points.should == 4
+      @parser.parse(@clipper.delete_point(4)).to_points.points.should == 3
+      @parser.parse(@clipper.delete_point(5)).to_points.points.should == 4
+    end
+    
+    it "should return 'block {}' when the entire program is deleted" do
+      @clipper.delete_point(1).should == "block {}"
+    end
+  end
+  
+  
   
 end
