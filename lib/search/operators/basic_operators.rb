@@ -171,4 +171,23 @@ module Nudge
       return result
     end
   end
+  
+  
+  
+  class PointDeleteOperator < SearchOperator    
+    def generate(crowd, howManyCopies = 1)
+      raise(ArgumentError) if !crowd.kind_of?(Array)
+      crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
+      
+      result = []
+      crowd.each do |dude|
+        howManyCopies.times do
+          where = rand(dude.points)+1
+          variant = dude.delete_point(where)
+          result << Individual.new(variant)
+        end
+      end
+      return result
+    end
+  end
 end
