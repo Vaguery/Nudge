@@ -12,7 +12,7 @@ module Nudge
   
   
   
-  class RandomGuess < SearchOperator
+  class RandomGuessOperator < SearchOperator
     # returns an Array of random Individuals
     #
     # the first (optional) parameter specifies how many to make, and defaults to 1
@@ -20,7 +20,7 @@ module Nudge
     # temporarily override those set in the initialization
     #
     # For example, if
-    # <tt>myRandomGuesser = RandomGuess.new(:randomIntegerLowerBound => -90000)</tt>
+    # <tt>myRandomGuesser = RandomGuessOperator.new(:randomIntegerLowerBound => -90000)</tt>
     #
     # [<tt>myRandomGuesser.generate()</tt>]
     #   produces a list of 1 Individual, and if it has any IntType samples they will be in [-90000,100]
@@ -40,7 +40,7 @@ module Nudge
   end
   
   
-  class PopulationResample < SearchOperator
+  class PopulationResampleOperator < SearchOperator
     # returns an Array of clones of Individuals randomly selected from the crowd passed in
     # 
     # the first (required) parameter is an Array of Individuals
@@ -48,7 +48,7 @@ module Nudge
     #
     # For example, if
     # <tt>@currentPopulation = [a list of 300 Individuals]</tt> and
-    # <tt>myRandomSampler = PopulationResample.new(@currentPopulation)</tt>
+    # <tt>myRandomSampler = PopulationResampleOperator.new(@currentPopulation)</tt>
     # [<tt>myRandomSampler.generate()</tt>]
     #   produces a list of 1 Individual, which is a clone of somebody from <tt>@currentPopulation</tt>
     # [<tt>myRandomGuesser.generate(11)</tt>]
@@ -68,7 +68,7 @@ module Nudge
   end
   
   
-  class ResampleValues < SearchOperator
+  class ResampleValuesOperator < SearchOperator
     
     # returns an Array of clones of Individuals randomly selected from the crowd passed in
     #   the first (required) parameter is an Array of Individuals
@@ -76,7 +76,7 @@ module Nudge
     #
     #   For example, if
     #     @currentPopulation = [a list of 300 Individuals]
-    #     myRandomSampler = PopulationResample.new(@currentPopulation)
+    #     myRandomSampler = PopulationResampleOperator.new(@currentPopulation)
     #     myRandomSampler.generate()::
     #       produces a list of 1 Individual, which is a clone of somebody from @currentPopulation
     #     myRandomGuesser.generate(11)::
@@ -110,7 +110,7 @@ module Nudge
   
   
   
-  class NondominatedSubset < SearchOperator
+  class NondominatedSubsetOperator < SearchOperator
     def all_known_scores(crowd)
       union = []
       crowd.each do |dude|
@@ -146,7 +146,7 @@ module Nudge
   
   
   
-  class UniformBackboneCrossover < SearchOperator
+  class UniformBackboneCrossoverOperator < SearchOperator
     def generate(crowd, howMany = crowd.length, prob = 0.5)
       result = []
       howMany.times do
@@ -189,5 +189,28 @@ module Nudge
       end
       return result
     end
+  end
+  
+  
+  
+  class PointMutationOperator < SearchOperator
+    def generate(crowd, howManyCopies = 1, tempParams ={})
+      raise(ArgumentError) if !crowd.kind_of?(Array)
+      raise(ArgumentError) if crowd.empty?
+      crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
+      
+      result = []
+      crowd.each do |dude|
+        howManyCopies.times do
+          where = rand(dude.points)+1
+          newCode = CodeType.random_value(@params.merge(tempParams))
+          variant = dude.replace_point(where,newCode)
+          result << Individual.new(variant)
+        end
+      end
+      return result
+    end
+    
+    
   end
 end

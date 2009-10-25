@@ -1,21 +1,21 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
-describe "ResampleValues search operator" do
+describe "ResampleValuesOperator search operator" do
   
   it "should not need any initial parameters" do
-    lambda{ResampleValues.new()}.should_not raise_error
+    lambda{ResampleValuesOperator.new()}.should_not raise_error
   end
   
   it "should be possible to pass in stored parameters" do
-    lambda{ResampleValues.new(:randomIntegerLowerBound => 12)}.should_not raise_error
-    rs = ResampleValues.new({:boolTrueProbability => 0.2})
+    lambda{ResampleValuesOperator.new(:randomIntegerLowerBound => 12)}.should_not raise_error
+    rs = ResampleValuesOperator.new({:boolTrueProbability => 0.2})
     rs.params.should include(:boolTrueProbability)
   end
   
   describe "generate" do
     before(:each) do
-      @rs = ResampleValues.new({:boolTrueProbability => 0.2})
+      @rs = ResampleValuesOperator.new({:boolTrueProbability => 0.2})
       @intDude = Individual.new("block {sample int(3)}")
       @boolDude = Individual.new("block {sample bool(false)}")
       @floatDude = Individual.new("block {sample float(-991.2213)}")
@@ -78,7 +78,7 @@ describe "ResampleValues search operator" do
         :randomFloatLowerBound => 112.0,
         :randomFloatUpperBound => 112.5}
       
-      resampleLimited = ResampleValues.new(wholeLottaParams)
+      resampleLimited = ResampleValuesOperator.new(wholeLottaParams)
       
       IntType.should_receive(:random_value).with(wholeLottaParams)
       newGuys = resampleLimited.generate([@intDude])
@@ -97,7 +97,7 @@ describe "ResampleValues search operator" do
         :randomBooleanTruthProb => 1.0,
         :randomFloatLowerBound => 112.0,
         :randomFloatUpperBound => 112.5}
-      resampleFarAway = ResampleValues.new(outOfRangeParams)
+      resampleFarAway = ResampleValuesOperator.new(outOfRangeParams)
       newGuys = resampleFarAway.generate([@intDude])
       newGuys[0].genome.should =~ /100[0-5]/
       newGuys = resampleFarAway.generate([@boolDude])
@@ -108,7 +108,7 @@ describe "ResampleValues search operator" do
     
     it "should be possible to temporarily override some or all of the preset @params" do
       bigInt = {:randomIntegerLowerBound => 90000,:randomIntegerUpperBound => 91000}
-      toBeOverridden = ResampleValues.new(bigInt)
+      toBeOverridden = ResampleValuesOperator.new(bigInt)
       defaults = toBeOverridden.generate([@intDude],5)
       defaults.each {|dude| dude.genome.should =~ /9\d\d\d\d/}
       

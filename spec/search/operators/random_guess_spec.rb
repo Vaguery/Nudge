@@ -3,7 +3,7 @@ include Nudge
 
 describe "random_guess operator" do
   before(:each) do
-    @myGuesser = RandomGuess.new
+    @myGuesser = RandomGuessOperator.new
     BoolType.activate
   end
   
@@ -12,8 +12,8 @@ describe "random_guess operator" do
   end
   
   it "should have a params attribute when created that sets basic values for code generation" do
-    RandomGuess.new.params.should == {}
-    thisGuesser = RandomGuess.new(:points => 3, :blocks => 1)
+    RandomGuessOperator.new.params.should == {}
+    thisGuesser = RandomGuessOperator.new(:points => 3, :blocks => 1)
     thisGuesser.params.should_not == {}
     thisGuesser.params[:points].should == 3
   end
@@ -37,7 +37,7 @@ describe "random_guess operator" do
   end
   
   it "should accept temporarily overriding params to pass into CodeType.random_value" do
-    @myNewGuesser = RandomGuess.new(
+    @myNewGuesser = RandomGuessOperator.new(
       :points => 7, :instructions => [IntAddInstruction, IntSubtractInstruction],
       :references => ["x1", "x2", "x3"])
     lambda{@myNewGuesser.generate(3,:points => 12, :references => ["y1"])}.should_not raise_error

@@ -31,7 +31,7 @@ module Nudge
       @capacity = capacity
       @population = []
       @cull_trigger = Proc.new {@population.length > @capacity}
-      @generate_rule = Proc.new { |crowd| RandomGuess.new.generate}
+      @generate_rule = Proc.new { |crowd| RandomGuessOperator.new.generate}
       @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
     end
     

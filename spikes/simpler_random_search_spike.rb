@@ -56,10 +56,10 @@ end
 
 
 maker = RandomGuess.new
-sampler = PopulationResample.new
+sampler = PopulationResampleOperator.new
 runner = Interpreter.new
-winners = NondominatedSubset.new
-mater = UniformBackboneCrossover.new
+winners = NondominatedSubsetOperator.new
+mater = UniformBackboneCrossoverOperator.new
 params = {:points => 30,
           :types => [IntType, FloatType],
           :instructions => [IntAddInstruction, IntMultiplyInstruction, IntNegativeInstruction, IntSubtractInstruction, IntDivideInstruction, FloatAddInstruction, FloatMultiplyInstruction,FloatSubtractInstruction, FloatDivideInstruction, IntFromFloatInstruction, FloatFromIntInstruction],

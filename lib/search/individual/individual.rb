@@ -61,6 +61,15 @@ module Nudge
     end
     
     
+    def replace_point(which, newCode = "")
+      raise(ArgumentError, "program points can only be replaced by nonempty strings") if newCode == ""
+      return self.program.listing if (which < 1 || which > self.program.points)
+      chunks = isolate_point(which)
+      variant =  (chunks[:left] || "") + " #{newCode} " + (chunks[:right] || "")
+      return variant
+    end
+    
+    
     def isolate_point(which)
       raise(ArgumentError, "point specified is out of range in this genome") if
         (which < 1 || which > self.program.points)

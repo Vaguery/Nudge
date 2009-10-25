@@ -219,5 +219,49 @@ describe "Individual" do
   end
   
   
+  describe "replace_point" do
+    before(:each) do
+      @receiver = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
+      @parser = NudgeLanguageParser.new()
+      @mutant = "do NOTHING"
+    end
+    
+    it "should return Individual#genome if[f] the position param is out of bounds" do
+      @receiver.replace_point(-1,@mutant).should == @receiver.program.listing
+      @receiver.replace_point(132,@mutant).should == @receiver.program.listing
+      @receiver.replace_point(2,@mutant).should_not == @receiver.program.listing
+    end
+    
+    it "should raise an ArgumentError if passed an empty replacement" do
+      lambda{@receiver.replace_point(1,"")}.should raise_error(ArgumentError)
+    end
+    
+    
+    it "should call self#isolate_point to slice the wildtype genome" do
+      @receiver.should_receive(:isolate_point).with(2).and_return(
+        {:left => "so ",:middle=>"it",:right=>" works"})
+      @receiver.replace_point(2,"this")
+    end
+    
+    it "should produce a parsable genome" do
+      @parser.parse(@receiver.replace_point(2,@mutant)).should_not == nil
+      @parser.parse(@receiver.replace_point(1,@mutant)).should_not == nil
+    end
+    
+    it "should replace the expected specific point (and any subpoints it has)" do
+      @receiver.replace_point(2,@mutant).should_not include("some1")
+      @receiver.replace_point(3,@mutant).should_not include("some2")
+      @receiver.replace_point(4,@mutant).should_not include("some3")
+      @receiver.replace_point(5,@mutant).should_not include("some3")
+      @receiver.replace_point(1,@mutant).should_not include("block")
+    end
+
+    it "should replace the entire program if it replaces point 0" do
+      @receiver.replace_point(1,@mutant).should == " do NOTHING "
+    end
+    
+  end
+  
+  
   
 end

@@ -1,12 +1,12 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
-describe "uniformBackboneCrossover operator" do
+describe "UniformBackboneCrossoverOperator" do
   before(:each) do
     @newDudes = []
     @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
-    @myXover = UniformBackboneCrossover.new
-    @myGuesser = RandomGuess.new(@params)
+    @myXover = UniformBackboneCrossoverOperator.new
+    @myGuesser = RandomGuessOperator.new(@params)
   end
   
   it "should be a kind of SearchOperator" do
