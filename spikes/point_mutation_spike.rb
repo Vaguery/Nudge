@@ -33,7 +33,7 @@ class Array
 end
 
 myParser = NudgeLanguageParser.new
-rs = RandomGuess.new(:points => 50, :blocks => 30)
+rs = RandomGuess.new(:points => 3, :blocks => 30)
 parent = rs.generate
 wt = parent[0].program.listing
 puts wt
