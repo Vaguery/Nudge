@@ -174,6 +174,29 @@ module Nudge
   
   
   
+  class PointCrossoverOperator < SearchOperator
+    def generate(crowd, howManyBabies = 1)
+      raise(ArgumentError) if !crowd.kind_of?(Array)
+      raise(ArgumentError) if crowd.empty?
+      crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
+      
+      result = []
+      production = crowd.length*howManyBabies
+      production.times do
+        mom = crowd[rand(crowd.length)]
+        dad = crowd[rand(crowd.length)]
+        momSplit = mom.isolate_point(rand(mom.points)+1)
+        dadSplit = dad.isolate_point(rand(dad.points)+1)
+        babyGenome = (momSplit[:left] || "") + " #{dadSplit[:middle]} " + (momSplit[:right] || "")
+        result << Individual.new(babyGenome)
+      end
+      return result
+    end
+  end
+  
+  
+  
+  
   class PointDeleteOperator < SearchOperator    
     def generate(crowd, howManyCopies = 1)
       raise(ArgumentError) if !crowd.kind_of?(Array)
@@ -210,7 +233,5 @@ module Nudge
       end
       return result
     end
-    
-    
   end
 end
