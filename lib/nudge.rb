@@ -33,6 +33,8 @@ require 'search/individual/individual'
 require 'search/operators/basic_operators'
 require 'search/evaluators/evaluator_infrastructure'
 require 'search/evaluators/structural_complexity'
+require 'search/evaluators/learning_from_data'
+
 
 
 require 'search/locations/location'
