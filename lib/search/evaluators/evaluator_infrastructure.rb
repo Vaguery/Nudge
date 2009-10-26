@@ -9,4 +9,13 @@ module Nudge
     end
   end
   
+  
+  class Result
+    attr_accessor :expected, :observed
+    
+    def initialize(expected, observed = nil)
+      @expected = expected
+      @observed = observed
+    end
+  end
 end

@@ -1,31 +1,27 @@
 module Nudge
   
-  class Expectation
-    attr_accessor :setup, :expected, :observers
-    
-    def initialize(setup = {}, expected = {}, observers = {})
-      @setup = setup
-      @expected = expected
-      @observers = observers
-    end
-    
-  end
-  
-  
-  
-  class SummedAbsoluteError < Evaluator
-    attr_accessor :name, :training_cases
-    
-    def initialize(examples = [])
-      @name = :summed_absolute_error
-      @training_cases = examples
-    end
-    
-    def evaluate(dude, silent=false)
-      raise(ArgumentError, "Can only evaluate an Individual") if dude.class != Individual
+    class SummedSquaredError < Evaluator
+      @@defaultPenalty = 1000000
       
+      attr_accessor :name, :penalty
+
+      def initialize(penalty = nil)
+        @name = :summed_squared_error
+        @penalty = (penalty || @@defaultPenalty)
+      end
+      
+      def aggregate(resultsList)
+        raise ArgumentError if !resultsList.kind_of?(Array)
+        sse = resultsList.inject(0) do |sum,r|
+          if r.observed
+            sum + (r.expected - r.observed)**2
+          else
+            sum + @penalty
+          end
+        end
+        return sse
+      end
+
     end
-  end
-  
-  
+    
 end

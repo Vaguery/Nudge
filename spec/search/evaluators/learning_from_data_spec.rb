@@ -1,77 +1,48 @@
 require File.join(File.dirname(__FILE__), "../../spec_helper")
 include Nudge
 
-describe "Expectations" do
-  it "should have a #setup Hash" do
-    Expectation.new.setup.should be_a_kind_of(Hash)
-  end
-  it "should have an #expected Hash" do
-    Expectation.new.expected.should be_a_kind_of(Hash)
-  end
-  it "should have a #observers Hash" do
-    Expectation.new.observers.should be_a_kind_of(Hash)
+describe "SummedSquaredError evaluator" do
+  before(:each) do
+    @myMistake = SummedSquaredError.new
   end
   
-  describe "create_bindings" do
-    it "should iterate through #setup and bind all variables in the #setup Hash"
-    # so if setup = {"x1" => "literal int(0)", "x2" => "literal bool(false)"}
-    # the create_bindings method will make two variables, pointing to those specified literals
+  describe "initialization" do
+    it "should have the name :summed_squared_error" do
+      @myMistake.name.should == :summed_squared_error
+    end
+    
+    it "should have an optional #penalty value, set by default to 100000" do
+      @myMistake.penalty.should == 1000000
+      SummedSquaredError.new(999).penalty.should == 999
+    end
   end
-  
-  describe "match_outcomes" do
-    it "should look at each key in #expected for the name of a variable"
-    it "should look up the correct Proc (with the same variable name key) in #observers"
-    it "should apply each Proc to the current state after the run"
-    ## the Procs should use #peek to examine the state of the stacks
-    it "should return a hash {'expected' => X, 'observed' => x}"
-    # for each output variable of interest
-  end
-  
-end
 
-
-
-describe "SummedAbsoluteError" do
-  describe "evaluate method" do
-    before(:all) do
-      @accuracy = SummedAbsoluteError.new
-      @dude1 = Individual.new("block { sample int(7) ref x1 do int_add}")
+  describe "#aggregate" do
+    before(:each) do
+      @greatResults = [Result.new(10,10)]
+      @dumbResults = [Result.new(0,100)]
+      @nilResults = [Result.new(10,nil)]
     end
     
-    it "should have a #name attribute that is a Symbol, which it'll use to record scores" do
-      @accuracy.name.should == :summed_absolute_error
+    it "should accept a list of Result objects" do
+      lambda{@myMistake.aggregate}.should raise_error(ArgumentError)
+      lambda{@myMistake.aggregate(121)}.should raise_error(ArgumentError)
+      lambda{@myMistake.aggregate(@dumbResults)}.should_not raise_error(ArgumentError)
     end
     
-    describe "expectations" do
-      it "should have a set of #expectations, established during initialization" 
-
-      it "should be an Array"
-      
-      it "should default to an Array containing zero or more Expectations"
+    it "should iterate over the Results" do
+      @greatResults.should_receive(:inject)
+      @myMistake.aggregate(@greatResults)
     end
     
-    
-    it "should take an Individual as a parameter" do
-      lambda{@accuracy.evaluate()}.should raise_error(ArgumentError)
-      lambda{@accuracy.evaluate(22)}.should raise_error(ArgumentError)
-      lambda{@accuracy.evaluate([])}.should raise_error(ArgumentError)
-      
-      lambda{@accuracy.evaluate(@dude1)}.should_not raise_error(ArgumentError)
+    it "should return the actual SSE" do
+      @myMistake.aggregate(@greatResults).should == 0
+      @myMistake.aggregate(@dumbResults).should == 10000
+      @myMistake.aggregate(@dumbResults+@greatResults).should == 10000
     end
     
-    it "should run the Individual using each of its training cases"
-    
-    it "should use #observe to measure (or calculate) the salient value in one training case"
-    
-    it "should be able to run #observe even when no value is generated"
-    
-    it "should return the summed absolute error over all training cases"
-    
-    it "should by default write the result into the Individual's #scores hash using its #name"
-    
-    it "should take an optional Boolean parameter that tells not to bother writing the score"
-    
-    it "should be able to handle training cases in which there are unassigned bindings"
-    
+    it "should use its #penalty value for missing observations" do
+      @myMistake.aggregate(@nilResults).should == 1000000
+    end
   end
 end
