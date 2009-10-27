@@ -4,6 +4,10 @@ include Nudge
 describe "SummedSquaredError evaluator" do
   before(:each) do
     @myMistake = SummedSquaredError.new
+    @greatResults = [Result.new(10,10)]
+    @dumbResults = [Result.new(0,100)]
+    @nilResults = [Result.new(10,nil)]
+    @sandbox = Interpreter.new("sample int(8812)")
   end
   
   describe "initialization" do
@@ -15,15 +19,30 @@ describe "SummedSquaredError evaluator" do
       @myMistake.penalty.should == 1000000
       SummedSquaredError.new(999).penalty.should == 999
     end
+    
+    it "should have an interpreter"
+    it "should have a #probe attribute, which is a Proc with one param"
   end
-
-  describe "#aggregate" do
-    before(:each) do
-      @greatResults = [Result.new(10,10)]
-      @dumbResults = [Result.new(0,100)]
-      @nilResults = [Result.new(10,nil)]
+  
+  
+  describe "#analyze" do
+    it "should take a Result instance and an Interpreter (which has probably already been run)" do
+      lambda{@myMistake.analyze()}.should raise_error(ArgumentError)
+      lambda{@myMistake.analyze(false)}.should raise_error(ArgumentError)
+      lambda{@myMistake.analyze(@nilresults[0],@sandbox)}.should_not raise_error(ArgumentError)
+      lambda{@myMistake.analyze(@nilresults[0],@sandbox.run)}.should_not raise_error(ArgumentError)
     end
     
+    it "should call the #probe Proc attribute" do
+      @myMistake.probe.should_receive(:call)
+      @myMistake.analyze(@greatResults[0],@sandbox)
+    end
+    
+    it "should fill in the #observed attribute of the Result it got, and return that" 
+  end
+  
+  
+  describe "#aggregate" do
     it "should accept a list of Result objects" do
       lambda{@myMistake.aggregate}.should raise_error(ArgumentError)
       lambda{@myMistake.aggregate(121)}.should raise_error(ArgumentError)
@@ -31,7 +50,7 @@ describe "SummedSquaredError evaluator" do
     end
     
     it "should iterate over the Results" do
-      @greatResults.should_receive(:inject)
+      @greatResults.should_receive(:each)
       @myMistake.aggregate(@greatResults)
     end
     
