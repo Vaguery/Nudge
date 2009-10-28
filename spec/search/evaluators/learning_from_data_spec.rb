@@ -20,8 +20,6 @@ describe "SummedSquaredError evaluator" do
       SummedSquaredError.new(999).penalty.should == 999
     end
     
-    it "should have an interpreter"
-    it "should have a #probe attribute, which is a Proc with one param"
   end
   
   
@@ -38,7 +36,6 @@ describe "SummedSquaredError evaluator" do
       @myMistake.analyze(@greatResults[0],@sandbox)
     end
     
-    it "should fill in the #observed attribute of the Result it got, and return that" 
   end
   
   
