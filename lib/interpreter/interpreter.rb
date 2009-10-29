@@ -11,11 +11,12 @@ module Nudge
   #    * ... CodeBlock, push its #contents (in the same order) back onto the <b>:exec</b> Stack
   
   class Interpreter
-    attr_accessor :parser, :stepLimit, :steps
+    attr_accessor :parser, :stepLimit, :steps, :stacks
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(initialProgram=nil)
       @parser = NudgeLanguageParser.new()
+      @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
       if initialProgram
         self.reset(initialProgram)
       end
@@ -30,20 +31,24 @@ module Nudge
     #    * if it parses, pushes it onto the <b>:exec</b> Stack
     #    * (and if it doesn't parse, leaves all stacks empty)
     # * resets the @step counter.
-    
     def reset(program="")
-      Stack.cleanup
+      self.clear_stacks
       @steps = 0
       parsed = @parser.parse(program)
       newCode = parsed.to_points if parsed
-      Stack.stacks[:exec].push(newCode)
+      @stacks[:exec].push(newCode)
+    end
+    
+    
+    def clear_stacks
+      @stacks = Hash.new {|hash, key| hash[key] = Stack.new(key) }
     end
     
     # Checks to see if either stopping condition applies:
     # 1. Is the <b>:exec</b> stack empty?
     # 2. Are the number of steps greater than self.stepLimit?
     def notDone?
-      Stack.stacks[:exec].depth > 0 && @steps < @stepLimit
+      @stacks[:exec].depth > 0 && @steps < @stepLimit
     end
     
     # Execute one cycle of the Push3 interpreter rule:
@@ -53,7 +58,7 @@ module Nudge
     # 4. increment the step counter self#steps
     def step
       if notDone?
-        nextPoint = Stack.stacks[:exec].pop
+        nextPoint = @stacks[:exec].pop
         nextPoint.go
         @steps += 1
       end
