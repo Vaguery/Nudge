@@ -11,12 +11,16 @@ module Nudge
   #    * ... CodeBlock, push its #contents (in the same order) back onto the <b>:exec</b> Stack
   
   class Interpreter
-    attr_accessor :parser, :stepLimit, :steps, :stacks
+    attr_accessor :parser, :stepLimit, :steps
+    attr_accessor :stacks, :instructions, :variables, :names
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(initialProgram=nil)
       @parser = NudgeLanguageParser.new()
+      @variables = Hash.new
+      @names = Hash.new
       @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
+      @instructions = Hash.new
       if initialProgram
         self.reset(initialProgram)
       end
@@ -70,6 +74,63 @@ module Nudge
         self.step
       end
     end
+    
+    def lookup(name)
+      @variables[name] || @names[name]
+    end
+    
+    def enable(item)
+      if item.superclass == Instruction
+        @instructions[item] = item.new(self)
+      end
+    end
+    
+    def bind_variable(name, value)
+      raise(ArgumentError, "Variables can only be bound to Literals") unless value.kind_of?(LiteralPoint)
+      @variables[name] = value
+    end
+    
+    def bind_name(name, value)
+      raise(ArgumentError, "Names can only be bound to Literals") unless value.kind_of?(LiteralPoint)
+      @names[name] = value
+    end
+    
+    
+    def unbind_variable(name)
+      @variables.delete(name)
+    end
+    
+    def unbind_name(name)
+      @names.delete(name)
+    end
+    
+    
+    def reset_variables
+      @variables = Hash.new
+    end
+    
+    def reset_names
+      @names = Hash.new
+    end
+    
+    
+    def enable_all_instructions
+      Instruction.all_instructions.each do |i|
+        @instructions[i] = i.new(self)
+      end
+    end
+    
+    def disable(item)
+      if item.superclass == Instruction
+        @instructions.delete(item)
+      end
+    end
+    
+    def disable_all_instructions
+      @instructions = Hash.new
+    end
+    
+    
     
   end
 end

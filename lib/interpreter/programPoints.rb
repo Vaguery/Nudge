@@ -241,7 +241,8 @@ module Nudge
     end
     
     def go(context)
-      self.classLookup.new(context).go(context)
+      className = self.classLookup
+      context.instructions[className].go
     rescue InstructionNotFoundError
       return
     end

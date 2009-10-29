@@ -16,6 +16,10 @@ describe "initialization" do
     @ii.stacks.should == {}
   end
   
+  it "should keep have an empty instructions attribute, a Hash" do
+    @ii.instructions.should == Hash.new
+  end
+  
   it "should automatically create an entry if an unmentioned stack is referenced by a method" do
     lambda{@ii.stacks[:pirate].peek}.should_not raise_error
     @ii.stacks.should include(:pirate)
@@ -28,7 +32,6 @@ describe "initialization" do
     lambda{@ii.stacks[:robot].pop}.should_not raise_error
     @ii.stacks.should include(:robot)
   end
-  
   
   it "should respond to #reset(listing) by parsing the listing and pushing it onto its exec stack" do
     checker = NudgeLanguageParser.new()
@@ -65,6 +68,97 @@ describe "initialization" do
     ij.stacks[:exec].peek.should be_a_kind_of(LiteralPoint)
   end
   
+  it "should have an #enable method that works for Instructions, adding them to the #instructions hash" do
+    @ii.instructions.should == {}
+    @ii.enable(IntAddInstruction)
+    @ii.instructions[IntAddInstruction].should_not== nil
+    @ii.instructions[IntAddInstruction].should be_a_kind_of(IntAddInstruction)
+    @ii.instructions[IntAddInstruction].context.should == @ii
+  end
+  
+  it "should have an #enable_all_instructions method" do
+    @ii.instructions.should == {}
+    @ii.enable_all_instructions
+    @ii.instructions.keys.should == Instruction.all_instructions
+  end
+  
+  it "should have a #disable_all_instructions method" do
+    @ii.enable_all_instructions
+    @ii.instructions.should_not == {}
+    @ii.disable_all_instructions
+    @ii.instructions.should == {}
+  end
+  
+  it "should have a #disable method that removes Instructions from the #instructions hash" do
+    @ii.enable(IntAddInstruction)
+    @ii.instructions[IntAddInstruction].should_not == nil
+    @ii.disable(IntAddInstruction)
+    @ii.instructions.should_not include(IntAddInstruction)
+  end
+  
+  describe "variables table" do
+    it "should be an empty hash initially (by deafult)" do
+      @ii.variables.should == {}
+    end
+
+    it "should create a new entry when #bind_variable is called" do
+      @ii.bind_variable("x",LiteralPoint.new(:int,88))
+      @ii.variables["x"].should be_a_kind_of(LiteralPoint)
+      @ii.variables["x"].type.should == :int
+      @ii.variables["x"].value.should == 88
+    end
+    
+    it "should raise an exception if the bound value is anything but a LiteralPoint" do
+      lambda {@ii.bind_variable("x", 88)}.should raise_error(ArgumentError)
+      lambda {@ii.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
+      lambda {@ii.bind_variable("x", nil)}.should raise_error(ArgumentError)
+    end
+    
+    it "should remove an new entry when #unbind_variable is called" do
+      @ii.bind_variable("x",LiteralPoint.new(:int,88))
+      @ii.variables["x"].value.should == 88
+      @ii.unbind_variable("x")
+      @ii.variables["x"].should == nil
+    end
+    
+    it "should be resettable" do
+      @ii.bind_variable("x",LiteralPoint.new(:int,88))
+      @ii.reset_variables
+      @ii.variables.should_not include("x")
+    end
+  end
+  
+  describe "names table" do
+    it "should be an empty hash initially" do
+      @ii.names.should == {}
+    end
+  
+    it "should create a new entry when #bind_name is called" do
+      @ii.bind_name("x",LiteralPoint.new(:bool,false))
+      @ii.names["x"].should be_a_kind_of(LiteralPoint)
+      @ii.names["x"].type.should == :bool
+      @ii.names["x"].value.should == false
+    end
+
+    it "should raise an exception if the bound value is anything but a LiteralPoint" do
+      lambda {@ii.bind_name("x", 88)}.should raise_error(ArgumentError)
+      lambda {@ii.bind_name("x", [1,2])}.should raise_error(ArgumentError)
+      lambda {@ii.bind_name("x", nil)}.should raise_error(ArgumentError)
+    end
+    
+    it "should remove an new entry when #unbind_name is called" do
+      @ii.bind_name("x",LiteralPoint.new(:int,88))
+      @ii.names["x"].value.should == 88
+      @ii.unbind_name("x")
+      @ii.names["x"].should == nil
+    end
+    
+    it "should be resettable" do
+      @ii.bind_name("x",LiteralPoint.new(:int,88))
+      @ii.reset_names
+      @ii.names.should_not include("x")
+    end
+  end
 end
 
 describe "stepping" do

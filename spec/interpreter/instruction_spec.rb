@@ -45,7 +45,7 @@ describe "InstructionPoint" do
   
   describe "#go" do
     describe "class lookup" do
-      it "should find the appropriate class (by name) if it exists" do
+      it "should find the appropriate class (by name), if it exists, in an Interpreter context" do
         myI = InstructionPoint.new("my_thing")
         myI.classLookup.should == MyThingInstruction
       end
@@ -57,10 +57,10 @@ describe "InstructionPoint" do
     end
     
     it "should delegate #go to the appropriate Instruction Class" do
-      pending "This will take some manipulation of InstructionPoint.go to use contexts"
-      inst = PirateTalkInstruction.new(Interpreter.new)
-      # inst.should_receive(:go)
-      myI = InstructionPoint.new("pirate_talk").go
+      context = Interpreter.new
+      context.enable(IntAddInstruction)
+      context.instructions[IntAddInstruction].should_receive(:go)
+      myI = InstructionPoint.new("int_add").go(context)
     end
   end
   
