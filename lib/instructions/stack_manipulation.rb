@@ -3,7 +3,7 @@ class IntPopInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @result = Stack.stacks[:int].pop
+    @result = @context.stacks[:int].pop
   end
   def derive
   end
@@ -17,8 +17,8 @@ class IntSwapInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @result1 = Stack.stacks[:int].pop
-    @result2 = Stack.stacks[:int].pop
+    @result1 = @context.stacks[:int].pop
+    @result2 = @context.stacks[:int].pop
   end
   def derive
   end
@@ -34,7 +34,7 @@ class IntDuplicateInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg1 = Stack.stacks[:int].peek.value
+    @arg1 = @context.stacks[:int].peek.value
   end
   def derive
     @result = LiteralPoint.new("int",@arg1)
@@ -50,9 +50,9 @@ class IntRotateInstruction < Instruction
     needs :int, 3
   end
   def setup
-    @arg3 = Stack.stacks[:int].pop
-    @arg2 = Stack.stacks[:int].pop
-    @arg1 = Stack.stacks[:int].pop
+    @arg3 = @context.stacks[:int].pop
+    @arg2 = @context.stacks[:int].pop
+    @arg1 = @context.stacks[:int].pop
   end
   def derive
   end
@@ -66,12 +66,12 @@ end
 
 class IntDepthInstruction < Instruction
   def preconditions?
-    Stack.stacks[:int].depth != nil
+    @context.stacks[:int].depth != nil
   end
   def setup
   end
   def derive
-    @result = LiteralPoint.new("int",Stack.stacks[:int].depth)
+    @result = LiteralPoint.new("int",@context.stacks[:int].depth)
   end
   def cleanup
     pushes :int, @result
@@ -81,13 +81,13 @@ end
 
 class IntFlushInstruction < Instruction
   def preconditions?
-    Stack.stacks[:int].depth != nil
+    @context.stacks[:int].depth != nil
   end
   def setup
   end
   def derive
   end
   def cleanup
-    Stack.stacks[:int].clear
+    @context.stacks[:int].clear
   end
 end

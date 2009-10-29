@@ -3,7 +3,7 @@ class FloatSineInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", Math.sin(@arg1))
@@ -19,7 +19,7 @@ class FloatCosineInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", Math.cos(@arg1))
@@ -35,7 +35,7 @@ class FloatTangentInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", Math.tan(@arg1))

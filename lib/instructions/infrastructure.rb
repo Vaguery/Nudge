@@ -1,6 +1,5 @@
 class Instruction
-  require 'singleton'
-  include Singleton
+  attr_reader :context
   
   @@all_instructions = []
   @@active_instructions = []
@@ -48,10 +47,14 @@ class Instruction
   class NaNResultError < RuntimeError
   end
   
+  def initialize(context)
+    @context = context
+  end
+  
   def needs(stackName, minimum)
-    iNeed = Stack.stacks[stackName]
+    iNeed = @context.stacks[stackName]
     
-    if Stack.stacks[stackName].depth < minimum
+    if @context.stacks[stackName].depth < minimum
        raise NotEnoughStackItems
       return false
     else
@@ -60,7 +63,7 @@ class Instruction
   end
 
   def pushes(stackName, literal)
-    Stack.stacks[stackName].push literal
+    @context.stacks[stackName].push literal
   end
   
   def go

@@ -5,7 +5,7 @@ class ExecPopInstruction < Instruction
   def setup
   end
   def derive
-    @goAway = Stack.stacks[:exec].pop
+    @goAway = @context.stacks[:exec].pop
   end
   def cleanup
   end

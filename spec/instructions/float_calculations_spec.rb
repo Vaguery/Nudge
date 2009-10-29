@@ -48,40 +48,41 @@ div0 = {
 theseInstructions.each do |instName|
   describe instName do
     before(:each) do
-      @i1 = instName.instance
+      @context = Interpreter.new
+      @i1 = instName.new(@context)
     end
     
-    it "should be a singleton" do
-      @i1.should be_a_kind_of(Singleton)
+    it "should have the right context" do
+      @i1.context.should == @context
     end
     
     [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
       it "should respond to \##{methodName}" do
-        @i1 = instName.instance
+        @i1 = instName.new(@context)
         @i1.should respond_to(methodName)
       end   
     end
     
     describe "\#go" do
       before(:each) do
-        @i1 = instName.instance
-        Stack.cleanup
+        @i1 = instName.new(@context)
+        @context.clear_stacks
         @float1 = LiteralPoint.new("float", 12.12)
       end
 
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          10.times {Stack.stacks[:float].push(@float1)}
+          10.times {@context.stacks[:float].push(@float1)}
           @i1.preconditions?.should == true
         end
         
         it "should raise an error if the preconditions aren't met" do
-          Stack.cleanup # there are no params at all
+          @context.clear_stacks # there are no params at all
           lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          5.times {Stack.stacks[:float].push(@float1)}
+          5.times {@context.stacks[:float].push(@float1)}
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -90,17 +91,17 @@ theseInstructions.each do |instName|
       describe "\#derive" do
         it "should pop all the arguments" do
           reduction = floatsTheyNeed[instName]
-          reduction.times {Stack.stacks[:float].push(@float1)}
+          reduction.times {@context.stacks[:float].push(@float1)}
           @i1.stub!(:cleanup) # and do nothing
           @i1.go
-          Stack.stacks[:float].depth.should == 0
+          @context.stacks[:float].depth.should == 0
         end
         
         if div0.include? instName
           it "should raise the right exceptions if it tries to divide by zero" do
-            Stack.cleanup
-            @i1 = instName.instance
-            div0[instName].each {|i| Stack.stacks[:float].push(LiteralPoint.new("float", i))}
+            @context.clear_stacks
+            @i1 = instName.new(@context)
+            div0[instName].each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
             @i1.setup
             lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
           end
@@ -113,9 +114,9 @@ theseInstructions.each do |instName|
           examples.each do |inputs, expected|
             params = inputs.inspect
             it "should produce #{expected} given #{params}" do
-            inputs.each {|i| Stack.stacks[:float].push(LiteralPoint.new("float", i))}
+            inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
             @i1.go
-            Stack.stacks[:float].peek.value.should be_close(expected,0.000001)
+            @context.stacks[:float].peek.value.should be_close(expected,0.000001)
           end
           end
         end
@@ -126,16 +127,18 @@ end
 
 describe "FloatPowerInstruction should raise a NaNResultError when it takes a root of a neg" do
   it "should description" do
-    [-6.82,-0.2].each {|i| Stack.stacks[:float].push(LiteralPoint.new("float", i))}
-    lambda{FloatPowerInstruction.instance.go}.should raise_error(Instruction::NaNResultError)
+    @context = Interpreter.new
+    [-6.82,-0.2].each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+    lambda{FloatPowerInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
   end
 end
 
 describe "FloatSqrtInstruction should raise a NaNResultError when it takes a root of a neg" do
   it "should description" do
+    @context = Interpreter.new
     [-6.82, -16.0].each do |i|
-      Stack.stacks[:float].push(LiteralPoint.new("float", i))
-      lambda{FloatSqrtInstruction.instance.go}.should raise_error(Instruction::NaNResultError)
+      @context.stacks[:float].push(LiteralPoint.new("float", i))
+      lambda{FloatSqrtInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
     end
   end
 end

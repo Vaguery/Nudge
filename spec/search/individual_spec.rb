@@ -57,7 +57,7 @@ describe "Individual" do
   describe "runnable?" do
     it "should have a genome that an interpreter can understand" do
       @i1 = Individual.new(fixture(:long_arithmetic))
-      @interp = Interpreter.new()
+      @interp = Interpreter.new
       @interp.reset(@i1.genome)
       @interp.run
       Stack.stacks[:int].peek.value.should == -36

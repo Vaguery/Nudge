@@ -3,7 +3,7 @@ class IntFromBoolInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg = Stack.stacks[:bool].pop.value
+    @arg = @context.stacks[:bool].pop.value
   end
   def derive
     @result = LiteralPoint.new("int", @arg ? 1 : 0)
@@ -19,7 +19,7 @@ class FloatFromBoolInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg = Stack.stacks[:bool].pop.value
+    @arg = @context.stacks[:bool].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg ? 1.0 : 0.0)
@@ -35,7 +35,7 @@ class IntFromFloatInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg = Stack.stacks[:float].pop.value
+    @arg = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("int", @arg.to_i)
@@ -51,7 +51,7 @@ class FloatFromIntInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg = Stack.stacks[:int].pop.value
+    @arg = @context.stacks[:int].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg.to_f)
@@ -67,7 +67,7 @@ class BoolFromIntInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg = Stack.stacks[:int].pop.value
+    @arg = @context.stacks[:int].pop.value
   end
   def derive
     @result = LiteralPoint.new("bool", @arg != 0)
@@ -83,7 +83,7 @@ class BoolFromFloatInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg = Stack.stacks[:float].pop.value
+    @arg = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("bool", @arg != 0.0)

@@ -3,8 +3,8 @@ class IntEqualQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = Stack.stacks[:int].pop.value
-    @arg1 = Stack.stacks[:int].pop.value
+    @arg2 = @context.stacks[:int].pop.value
+    @arg1 = @context.stacks[:int].pop.value
   end
   def derive
       @result = LiteralPoint.new("bool", @arg1 == @arg2)
@@ -20,8 +20,8 @@ class IntLessThanQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = Stack.stacks[:int].pop.value
-    @arg1 = Stack.stacks[:int].pop.value
+    @arg2 = @context.stacks[:int].pop.value
+    @arg1 = @context.stacks[:int].pop.value
   end
   def derive
       @result = LiteralPoint.new("bool", @arg1 < @arg2)
@@ -37,8 +37,8 @@ class IntGreaterThanQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = Stack.stacks[:int].pop.value
-    @arg1 = Stack.stacks[:int].pop.value
+    @arg2 = @context.stacks[:int].pop.value
+    @arg1 = @context.stacks[:int].pop.value
   end
   def derive
       @result = LiteralPoint.new("bool", @arg1 > @arg2)
@@ -54,8 +54,8 @@ class FloatGreaterThanQInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
       @result = LiteralPoint.new("bool", @arg1 > @arg2)
@@ -71,8 +71,8 @@ class FloatLessThanQInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
       @result = LiteralPoint.new("bool", @arg1 < @arg2)

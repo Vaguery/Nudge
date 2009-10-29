@@ -45,8 +45,8 @@ module Nudge
       end
     end
     
-    def go
-      @contents.reverse.each {|item| Nudge::Stack.stacks[:exec].push(item)} 
+    def go(context)
+      @contents.reverse.each {|item| context.stacks[:exec].push(item)} 
     end
     
     def tidy(level=1)
@@ -67,8 +67,8 @@ module Nudge
       @value = value
     end
     
-    def go
-      Nudge::Stack.stacks[self.type].push(self)
+    def go(context)
+      context.stacks[self.type].push(self)
     end
     
     def tidy(level=1)
@@ -105,8 +105,8 @@ module Nudge
       LiteralPoint.new(@type,@value)
     end
     
-    def go
-      self.to_literal.go
+    def go(context)
+      self.to_literal.go(context)
     end
     
     def tidy(level=1)
@@ -192,12 +192,12 @@ module Nudge
       @name = var_name
     end
     
-    def go
-      lookedUp = Channel.lookup(@name) # returns literal
+    def go(context)
+      lookedUp = context.lookup(@name) # returns literal
       if lookedUp
-        Stack.stacks[:exec].push(lookedUp)
+        context.stacks[:exec].push(lookedUp)
       else
-        Stack.stacks[:name].push(self) #FIXME
+        context.stacks[:name].push(self) #FIXME
       end
     end
     
@@ -240,8 +240,8 @@ module Nudge
     class InstructionNotFoundError < NameError
     end
     
-    def go
-      self.classLookup.instance.go
+    def go(context)
+      self.classLookup.new(context).go(context)
     rescue InstructionNotFoundError
       return
     end

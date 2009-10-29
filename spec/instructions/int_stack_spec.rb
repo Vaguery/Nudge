@@ -22,40 +22,41 @@ resultTuples = {
 theseInstructions.each do |instName|
   describe instName do
     before(:each) do
-      @i1 = instName.instance
+      @context = Interpreter.new
+      @i1 = instName.new(@context)
     end
     
-    it "should be a singleton" do
-      @i1.should be_a_kind_of(Singleton)
+    it "should have its context right" do
+      @i1.context.should == @context
     end
     
     [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
       it "should respond to \##{methodName}" do
-        @i1 = instName.instance
+        @i1 = instName.new(@context)
         @i1.should respond_to(methodName)
       end   
     end
     
     describe "\#go" do
       before(:each) do
-        @i1 = instName.instance
-        Stack.cleanup
+        @i1 = instName.new(@context)
+        @context.clear_stacks
         @int1 = LiteralPoint.new("int", 1)
       end
     
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          10.times {Stack.stacks[:int].push(@int1)}
+          10.times {@context.stacks[:int].push(@int1)}
           @i1.preconditions?.should == true
         end
         
         it "should raise an error if the preconditions aren't met" do
-          Stack.cleanup # there are no params at all
+          @context.clear_stacks # there are no params at all
           lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          5.times {Stack.stacks[:int].push(@int1)}
+          5.times {@context.stacks[:int].push(@int1)}
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -68,9 +69,9 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:int stack, starting with #{params}" do
-              inputs.each {|i| Stack.stacks[:int].push(LiteralPoint.new("int", i))}
+              inputs.each {|i| @context.stacks[:int].push(LiteralPoint.new("int", i))}
               @i1.go
-              finalStackState.reverse.each {|i| Stack.stacks[:int].pop.value.should == i}
+              finalStackState.reverse.each {|i| @context.stacks[:int].pop.value.should == i}
             end
           end
         end
@@ -82,11 +83,12 @@ end
 
 describe IntDepthInstruction do
   before(:each) do
-    @i1 = IntDepthInstruction.instance
+    @context = Interpreter.new
+    @i1 = IntDepthInstruction.new(@context)
   end
   
-  it "should be a singleton" do
-    @i1.should be_a_kind_of(Singleton)
+  it "should have its context set" do
+    @i1.context.should == @context
   end
   
   [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
@@ -97,8 +99,8 @@ describe IntDepthInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = IntDepthInstruction.instance
-      Stack.cleanup
+      @i1 = IntDepthInstruction.new(@context)
+      @context.clear_stacks
       @int1 = LiteralPoint.new("int", 1)
     end
     
@@ -111,10 +113,10 @@ describe IntDepthInstruction do
     describe "\#cleanup" do
       it "should count the items on the stack" do
         @i1.go
-        Stack.stacks[:int].peek.value.should == 0
-        7.times {Stack.stacks[:int].push @int1}
+        @context.stacks[:int].peek.value.should == 0
+        7.times {@context.stacks[:int].push @int1}
         @i1.go
-        Stack.stacks[:int].peek.value.should == 8
+        @context.stacks[:int].peek.value.should == 8
       end
     end
   end
@@ -123,11 +125,12 @@ end
 
 describe IntFlushInstruction do
   before(:each) do
-    @i1 = IntFlushInstruction.instance
+    @context = Interpreter.new
+    @i1 = IntFlushInstruction.new(@context)
   end
   
-  it "should be a singleton" do
-    @i1.should be_a_kind_of(Singleton)
+  it "should behave its context set right" do
+    @i1.context.should == @context
   end
   
   [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
@@ -138,8 +141,8 @@ describe IntFlushInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = IntFlushInstruction.instance
-      Stack.cleanup
+      @i1 = IntFlushInstruction.new(@context)
+      @context.clear_stacks
       @int1 = LiteralPoint.new("int", 1)
     end
     
@@ -151,10 +154,10 @@ describe IntFlushInstruction do
     
     describe "\#cleanup" do
       it "should remove all items on the stack" do
-        11.times {Stack.stacks[:int].push(@int1)}
-        Stack.stacks[:int].depth.should == 11
+        11.times {@context.stacks[:int].push(@int1)}
+        @context.stacks[:int].depth.should == 11
         @i1.go
-        Stack.stacks[:int].depth.should == 0
+        @context.stacks[:int].depth.should == 0
       end
     end
   end

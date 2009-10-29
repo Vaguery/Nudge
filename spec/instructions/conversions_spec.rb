@@ -32,24 +32,25 @@ whatHappens = {
 theseInstructions.each do |instName|
   describe instName do
     before(:each) do
-      @i1 = instName.instance
+      @context = Interpreter.new
+      @i1 = instName.new(@context)
     end
     
-    it "should be a singleton" do
-      @i1.should be_a_kind_of(Singleton)
+    it "should have the right context" do
+      @i1.context.should == @context
     end
     
     [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
       it "should respond to \##{methodName}" do
-        @i1 = instName.instance
+        @i1 = instName.new(@context)
         @i1.should respond_to(methodName)
       end   
     end
     
     describe "\#go" do
       before(:each) do
-        @i1 = instName.instance
-        Stack.cleanup
+        @i1 = instName.new(@context)
+        @context.clear_stacks
         @stackSymbol = itNeeds[instName]["stack"]
         @stackName = itNeeds[instName]["stackname"]
         @someValue = itNeeds[instName]["type"].any_value
@@ -58,17 +59,17 @@ theseInstructions.each do |instName|
       
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          Stack.stacks[@stackSymbol].push(@myStarter)
+          @context.stacks[@stackSymbol].push(@myStarter)
           @i1.preconditions?.should == true
         end
         
         it "should raise an error if the preconditions aren't met" do
-          Stack.cleanup # there are no params at all
+          @context.clear_stacks # there are no params at all
           lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          Stack.stacks[@stackSymbol].push(@myStarter)
+          @context.stacks[@stackSymbol].push(@myStarter)
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -76,11 +77,11 @@ theseInstructions.each do |instName|
         describe "\#cleanup" do
           describe "should create and push the new (expected) value to the right place" do
             before(:each) do
-              Stack.cleanup
+              @context.clear_stacks
             end
             whatHappens[instName].each do |k,v|
               it "\'#{k}\' becomes #{itNeeds[instName]["becomes"]} \'#{v}\'" do
-                Stack.stacks[@stackSymbol].push(LiteralPoint.new(@stackName,k))
+                @context.stacks[@stackSymbol].push(LiteralPoint.new(@stackName,k))
               end
             end
           end

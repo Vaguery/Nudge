@@ -3,8 +3,8 @@ class FloatAddInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
-    @arg2 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg1 + @arg2)
@@ -20,8 +20,8 @@ class FloatMultiplyInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
-    @arg2 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg1 * @arg2)
@@ -37,8 +37,8 @@ class FloatSubtractInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg1 - @arg2)
@@ -54,8 +54,8 @@ class FloatDivideInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     if @arg2 != 0.0
@@ -76,8 +76,8 @@ class FloatMaxInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", [@arg1, @arg2].max)
@@ -93,8 +93,8 @@ class FloatMinInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = Stack.stacks[:float].pop.value
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg2 = @context.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", [@arg1, @arg2].min)
@@ -110,7 +110,7 @@ class FloatNegativeInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", -@arg1)
@@ -126,7 +126,7 @@ class FloatAbsInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     @result = LiteralPoint.new("float", @arg1.abs)
@@ -142,8 +142,8 @@ class FloatPowerInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @exp = Stack.stacks[:float].pop.value
-    @base = Stack.stacks[:float].pop.value
+    @exp = @context.stacks[:float].pop.value
+    @base = @context.stacks[:float].pop.value
   end
   def derive
     if !(@base**@exp).nan?
@@ -164,7 +164,7 @@ class FloatSqrtInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg1 = Stack.stacks[:float].pop.value
+    @arg1 = @context.stacks[:float].pop.value
   end
   def derive
     if @arg1 >= 0.0

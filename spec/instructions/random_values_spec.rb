@@ -18,24 +18,25 @@ whatItMakes = {
 theseInstructions.each do |instName|
   describe instName do
     before(:each) do
-      @i1 = instName.instance
+      @context = Interpreter.new
+      @i1 = instName.new(@context)
     end
     
-    it "should be a singleton" do
-      @i1.should be_a_kind_of(Singleton)
+    it "should have the right context" do
+      @i1.context.should == @context
     end
     
     [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
       it "should respond to \##{methodName}" do
-        @i1 = instName.instance
+        @i1 = instName.new(@context)
         @i1.should respond_to(methodName)
       end   
     end
     
     describe "\#go" do
       before(:each) do
-        @i1 = instName.instance
-        Stack.cleanup
+        @i1 = instName.new(@context)
+        @context.clear_stacks
         @stackName = whatItMakes[instName][:where]
       end
       
@@ -48,16 +49,16 @@ theseInstructions.each do |instName|
         
       describe "\#cleanup" do
         it "should invoke Type#any_value" do
-          Stack.cleanup
+          @context.clear_stacks
           whatItMakes[instName][:what].should_receive(:any_value)
           @i1.go
         end
         
         it "should have a created a new instance of the right type and pushed it" do
-          Stack.cleanup
+          @context.clear_stacks
           @i1.go
-          Stack.stacks[@stackName].depth.should == 1
-          result = Stack.stacks[@stackName].peek
+          @context.stacks[@stackName].depth.should == 1
+          result = @context.stacks[@stackName].peek
           result.value.should_not == nil
           result.type.should == @stackName
         end

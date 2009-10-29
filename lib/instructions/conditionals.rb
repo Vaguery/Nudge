@@ -4,13 +4,13 @@ class IntIfInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @stay = Stack.stacks[:bool].pop.value
+    @stay = @context.stacks[:bool].pop.value
   end
   def derive
   end
   def cleanup
     if !@stay
-      Stack.stacks[:int].pop
+      @context.stacks[:int].pop
     end
   end
 end
@@ -28,7 +28,7 @@ class FloatIfInstruction < Instruction
   end
   def cleanup
     if !@stay
-      Stack.stacks[:float].pop
+      @context.stacks[:float].pop
     end
   end
 end
