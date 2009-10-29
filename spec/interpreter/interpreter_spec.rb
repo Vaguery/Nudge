@@ -5,7 +5,7 @@ include Nudge
 describe "initialization" do
   before(:each) do
     @ii = Interpreter.new()
-    Stack.cleanup
+    @ii.clear_stacks
   end
   
   it "should have a #parser, which defaults to a new NudgeLanguageParser" do
