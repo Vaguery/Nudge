@@ -69,7 +69,7 @@ describe "parser" do
       
         it "should return a Channel object for \"#{b}\"" do
           asCode = @parser.parse(b).to_points
-          asCode.should be_a_kind_of(Channel)
+          asCode.should be_a_kind_of(ChannelPoint)
           asCode.name.should == "x"
         end
       end
@@ -228,7 +228,7 @@ describe "parser" do
         asCode = @parser.parse(b).to_points
         asCode.should be_a_kind_of(CodeBlock)
         asCode.contents.should be_a_kind_of(Array)
-        asCode.contents[0].should be_a_kind_of(Channel)
+        asCode.contents[0].should be_a_kind_of(ChannelPoint)
         asCode.contents[0].name.should == "x"
       end
     end
@@ -250,7 +250,7 @@ describe "parser" do
     
     b2s = [["block {\n  do hey_now}",InstructionPoint],
       ["block {\n  literal int (22) }",LiteralPoint],
-      ["block {\n  ref WVIZ}",Channel]]
+      ["block {\n  ref WVIZ}",ChannelPoint]]
     b2s.each do |b|
       it "should have the correct inner node type for \"#{b[0]}\"" do
         asCode = @parser.parse(b[0]).to_points

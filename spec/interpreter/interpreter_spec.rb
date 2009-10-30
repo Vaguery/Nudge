@@ -40,7 +40,7 @@ describe "initialization" do
     @ii.stacks.should include(:exec)
     @ii.stacks[:exec].should be_a_kind_of(Stack)
     @ii.stacks[:exec].depth.should == 1
-    @ii.stacks[:exec].peek.should be_a_kind_of(Channel)
+    @ii.stacks[:exec].peek.should be_a_kind_of(ChannelPoint)
     @ii.stacks[:exec].peek.name.should == checker.parse(myCode).to_points.name
   end
   
@@ -159,6 +159,50 @@ describe "initialization" do
       @ii.names.should_not include("x")
     end
   end
+  
+  describe "references" do
+    it "should return an Array of keys obtained by mergine variables into names (not vice versa)" do
+      @ii.bind_name("x",LiteralPoint.new(:int,88))
+      @ii.bind_variable("y",LiteralPoint.new(:int,88))
+      @ii.bind_name("y",LiteralPoint.new(:bool,false))
+      @ii.references.should == @ii.names.merge(@ii.variables).keys
+      @ii.references.should_not == @ii.variables.merge(@ii.names).keys
+    end
+  end
+  
+  describe "Type list" do
+    it "should have a #types attribute whis defaults to NudgeType.all_types" do
+      @ii.types.should == NudgeType.all_types
+    end
+    
+    it "should have a #enable_all_types/#disable_all_types methods that turn on and off all active types" do
+      @ii.enable(BoolType)
+      @ii.disable_all_types
+      @ii.types.should_not include(BoolType)
+      @ii.enable_all_types
+      @ii.types.should == NudgeType.all_types
+    end
+
+    it "should have #enable/#disable methods that add and remove the types from #types list" do
+      @ii.enable(IntType)
+      @ii.enable(BoolType)
+      @ii.disable(IntType)
+      @ii.active?(IntType).should == false
+      @ii.active?(BoolType).should == true
+      @ii.enable(IntType)
+      @ii.active?(IntType).should == true
+      @ii.active?(BoolType).should == true
+    end
+
+    it "should only ever have one copy of a type on the list at once" do
+      @ii.disable_all_types
+      @ii.enable(IntType)
+      @ii.enable(IntType)
+      @ii.enable(IntType)
+      @ii.types.length.should == 1
+    end
+  end
+  
 end
 
 describe "stepping" do

@@ -1,35 +1,6 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-# describe "Stack class" do
-#   
-#   # after(:each) do
-#   #   Stack.cleanup
-#   # end
-#   
-#   # it "should keep have an empty stacks attribute, empty to begin" do
-#   #   Stack.stacks.should == {}
-#   # end
-#   # 
-#   # it "should include a new stack when a new Stack instance is made" do
-#   #   @ss = Stack.new(:boo)
-#   #   Stack.stacks.should include(:boo)
-#   # end
-#   # 
-#   # it "should automatically create an entry if an unmentioned stack is referenced by a method" do
-#   #   lambda{a = Stack.stacks[:pirate].peek}.should_not raise_error
-#   #   Stack.stacks.should include(:pirate)
-#   #   
-#   #   Stack.stacks.should_not include(:ninja) 
-#   #   lambda{b = Stack.stacks[:ninja].depth}.should_not raise_error
-#   #   Stack.stacks.should include(:ninja)
-#   #   
-#   #   Stack.stacks.should_not include(:robot)
-#   #   lambda{c = Stack.stacks[:robot].pop}.should_not raise_error
-#   #   Stack.stacks.should include(:robot)
-#   # end
-# end
-
 describe "stack" do
   before(:each) do
     @myStack = Stack.new(:int)

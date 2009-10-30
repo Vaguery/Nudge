@@ -136,53 +136,11 @@ module Nudge
   end
   
   
-  class Channel < ProgramPoint
-    @@variables = Hash.new
-    @@names = Hash.new
+  class ChannelPoint < ProgramPoint
     
-    def self.variables
-      @@variables
-    end
-    
-    def self.bind_variable(name,value)
-      if value.kind_of?(LiteralPoint)
-        @@variables[name] = value
-      else
-        raise ArgumentError
-      end
-    end
-    
-    def self.names
-      @@names
-    end
-    
-    def self.reset_variables
-      @@variables = {}
-    end
-    
-    def self.reset_names
-      @@names = {}
-    end
-    
-    def self.bind_name(name,value)
-      if value.kind_of?(LiteralPoint)
-        @@names[name] = value
-      else
-        raise ArgumentError
-      end
-    end
-    
-    def self.lookup(var_name)
-      if @@variables.include?(var_name)
-        @@variables[var_name]
-      elsif @@names.include?(var_name)
-        @@names[var_name]
-      end
-    end
-    
-    def self.any
-      tmp = Channel.new("e")
-      tmp.randomize
+    def self.any(context)
+      tmp = ChannelPoint.new("e")
+      tmp.randomize(context)
       return tmp
     end
     
@@ -205,9 +163,8 @@ module Nudge
       "ref " + @name
     end
     
-    def randomize
-      all = Channel.variables.keys + Channel.names.keys
-      which = all[rand(all.length)]
+    def randomize(context)
+      which = context.references.sample
       @name = which
     end
     

@@ -2,53 +2,9 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 describe "Type list" do
-  before(:each) do
-    NudgeType.all_types.each {|t| t.activate}
-  end
-  
   it "should have an #all_types [getter] method to return a list of every defined type" do
     # will be a list of every type subclassed from NudgeType
     NudgeType.all_types.should include(IntType)
-  end
-  
-  it "should have an #active_types [getter] method to return the obvious list" do
-    now = NudgeType.active_types.sort_by {|k| k.to_s}
-    all = NudgeType.all_types.sort_by {|k| k.to_s}
-    now.should == all
-  end
-  
-  it "should have an #active? method that checks the current list" do
-    IntType.active?.should == true
-  end
-  
-  it "should have an #all_off method that clears out all active types" do
-    BoolType.activate
-    NudgeType.all_off
-    NudgeType.active_types.should == []
-  end
-  
-  
-  it "should have a #deactivate/#activate methods that remove and add the class from the active_types" do
-    IntType.deactivate
-    IntType.active?.should == false
-    BoolType.active?.should == true
-    IntType.activate
-    IntType.active?.should == true
-    BoolType.active?.should == true
-  end
-  
-  it "should only ever have one copy of a type on the list at once" do
-    IntType.activate
-    IntType.activate
-    IntType.activate
-    NudgeType.active_types.length.should == 4
-  end
-  
-  it "should be possible to deactivate all types" do
-    NudgeType.all_types.each {|tt| tt.activate}
-    NudgeType.active_types.length.should > 0
-    NudgeType.all_types.each {|tt| tt.deactivate}
-    NudgeType.active_types.length.should == 0
   end
 end
 

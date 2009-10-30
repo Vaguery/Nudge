@@ -12,13 +12,14 @@ module Nudge
   
   class Interpreter
     attr_accessor :parser, :stepLimit, :steps
-    attr_accessor :stacks, :instructions, :variables, :names
+    attr_accessor :stacks, :instructions, :variables, :names, :types
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(initialProgram=nil)
       @parser = NudgeLanguageParser.new()
       @variables = Hash.new
       @names = Hash.new
+      @types = NudgeType.all_types
       @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
       @instructions = Hash.new
       if initialProgram
@@ -79,11 +80,26 @@ module Nudge
       @variables[name] || @names[name]
     end
     
+    def references
+      @names.merge(@variables).keys
+    end
+    
     def enable(item)
       if item.superclass == Instruction
         @instructions[item] = item.new(self)
+      elsif item.superclass == NudgeType
+        @types |= [item]
       end
     end
+    
+    def active?(item)
+      if item.superclass == Instruction
+        @instructions.include?(item)
+      elsif item.superclass == NudgeType
+        @types.include?(item)
+      end
+    end
+    
     
     def bind_variable(name, value)
       raise(ArgumentError, "Variables can only be bound to Literals") unless value.kind_of?(LiteralPoint)
@@ -104,7 +120,6 @@ module Nudge
       @names.delete(name)
     end
     
-    
     def reset_variables
       @variables = Hash.new
     end
@@ -113,22 +128,33 @@ module Nudge
       @names = Hash.new
     end
     
-    
     def enable_all_instructions
       Instruction.all_instructions.each do |i|
         @instructions[i] = i.new(self)
       end
     end
     
+    def enable_all_types
+      @types = NudgeType.all_types
+    end
+    
+    
     def disable(item)
       if item.superclass == Instruction
         @instructions.delete(item)
+      elsif item.superclass == NudgeType
+        @types.delete(item)
       end
     end
     
     def disable_all_instructions
       @instructions = Hash.new
     end
+    
+    def disable_all_types
+      @types = []
+    end
+    
     
     
     

@@ -7,7 +7,6 @@ describe "Code Type" do
   end
   
   
-  
   it "should return the result of self.randomize when it receives an #any_value call" do
     CodeType.should_receive(:random_value).and_return("hi there!")
     CodeType.any_value.should == "hi there!"
@@ -39,8 +38,11 @@ describe "Code Type" do
   
   
   describe "any_type" do
-    it "should return a single sample from the list of items passed in (no implied validation)" do
-      CodeType.any_type([1]).should == 1
+    it "should return a single sample from the #types method of the context passed in" do
+      context = Interpreter.new
+      context.disable_all_types
+      context.enable(IntType)
+      CodeType.any_type(context).should == IntType
     end
     
     it "should default to the list of ActiveTypes" do

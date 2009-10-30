@@ -25,7 +25,7 @@ module ChannelNode
   end
   
   def to_points
-    newBlob = Channel.new(channel_name)
+    newBlob = ChannelPoint.new(channel_name)
     return newBlob
   end
   
