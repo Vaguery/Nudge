@@ -59,8 +59,9 @@ describe "Individual" do
       @i1 = Individual.new(fixture(:long_arithmetic))
       @interp = Interpreter.new
       @interp.reset(@i1.genome)
+      @interp.enable_all_instructions
       @interp.run
-      Stack.stacks[:int].peek.value.should == -36
+      @interp.stacks[:int].peek.value.should == -36
     end
   end
   

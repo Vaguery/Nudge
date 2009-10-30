@@ -66,32 +66,31 @@ describe "InstructionPoint" do
   
   describe "randomize" do
     before(:each) do
-      Instruction.all_instructions.each {|t| t.activate}
+      @context = Interpreter.new
+      @context.enable_all_instructions
     end
-    after(:each) do
-      Instruction.all_instructions.each {|t| t.activate}
-    end
-    
     
     it "should return one of the active instructions" do
       myInstrP = InstructionPoint.new("float_multiply")
-      
-      Instruction.all_instructions.each {|t| t.deactivate}
-      
-      Instruction.active_instructions.length.should == 0
-      IntAddInstruction.activate
-      myInstrP.randomize
+      @context.disable_all_instructions
+      @context.enable(IntAddInstruction)
+      myInstrP.randomize(@context)
       myInstrP.name.should == "int_add"
     end
   end
   
   describe "any" do
+    before(:each) do
+      @context = Interpreter.new
+      @context.enable_all_instructions
+    end
+    
     it "should return a new instance of an instruction, invoking randomize" do
-      someI = InstructionPoint.any
+      someI = InstructionPoint.any(@context)
       someI.should be_a_kind_of(InstructionPoint)
-      Instruction.all_instructions.each {|t| t.deactivate}
-      FloatSubtractInstruction.activate
-      someI = InstructionPoint.any
+      @context.disable_all_instructions
+      @context.enable(FloatSubtractInstruction)
+      someI = InstructionPoint.any(@context)
       someI.name.should == "float_subtract"
     end
   end

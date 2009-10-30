@@ -9,7 +9,7 @@ describe "Code Type" do
   
   it "should return the result of self.randomize when it receives an #any_value call" do
     CodeType.should_receive(:random_value).and_return("hi there!")
-    CodeType.any_value.should == "hi there!"
+    CodeType.any_value(Interpreter.new).should == "hi there!"
   end
   
   

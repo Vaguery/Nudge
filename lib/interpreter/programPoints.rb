@@ -76,9 +76,14 @@ module Nudge
     end
     
     def randomize(context)
+      raise(ArgumentError,"Random code cannot be created") if context.types == [CodeType]
       newType = context.types.sample
       @type = newType.to_s.slice(0..-5).downcase
-      @value = newType.any_value
+      if newType != CodeType
+        @value = newType.any_value
+      else
+        @value = newType.any_value(context)
+      end
     end
     
     def self.any(context)
@@ -115,7 +120,11 @@ module Nudge
     def randomize(context)
       newType = context.types.sample
       @type = newType.to_s.slice(0..-5).downcase
-      @value = newType.any_value
+      if newType != CodeType
+        @value = newType.any_value
+      else
+        @value = newType.any_value(context)
+      end
     end
     
     def resample
@@ -202,15 +211,14 @@ module Nudge
       return
     end
     
-    def randomize
-      all = Instruction.active_instructions
-      className = all[rand(all.length)].to_s
-      @name = className.slice(0..-12).underscore
+    def randomize(context)
+      instructionName = context.instructions.keys.sample.to_s
+      @name = instructionName.slice(0..-12).underscore
     end
     
-    def self.any
+    def self.any(context)
       tmp = InstructionPoint.new("int_add")
-      tmp.randomize
+      tmp.randomize(context)
       return tmp
     end
     

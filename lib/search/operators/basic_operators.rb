@@ -197,7 +197,7 @@ module Nudge
   
   
   
-  class PointDeleteOperator < SearchOperator    
+  class PointDeleteOperator < SearchOperator
     def generate(crowd, howManyCopies = 1)
       raise(ArgumentError) if !crowd.kind_of?(Array)
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }

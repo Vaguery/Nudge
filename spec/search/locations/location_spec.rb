@@ -322,8 +322,6 @@ describe "Location" do
   
   describe "Location#generate" do
     before(:each) do
-      NudgeType.all_off
-      IntType.activate
       @loc1 = Location.new("here",1)
     end
     

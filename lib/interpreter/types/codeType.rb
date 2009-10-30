@@ -102,7 +102,7 @@ class CodeType < NudgeType
     return string_value.sub(/\(/,"«").sub(/\)/,"»")
   end
   
-  def self.any_value
-    self.random_value
+  def self.any_value(context)
+    self.random_value(context)
   end
 end
