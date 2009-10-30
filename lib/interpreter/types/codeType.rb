@@ -31,21 +31,21 @@ class CodeType < NudgeType
   end
   
   
-  def self.any_type(types = NudgeType.active_types)
+  def self.any_type(types)
     raise(ArgumentError,"no available NudgeTypes") if types.empty?
     return types.sample
   end
   
   
-  def self.any_instruction(instructions = Instruction.active_instructions)
+  def self.any_instruction(instructions)
     raise(ArgumentError,"no available Instructions") if instructions.empty?
     return instructions.sample
   end
   
   
-  def self.any_reference(refs = (Channel.variables.keys + Channel.names.keys))
-    raise(ArgumentError,"no available references") if refs.empty?
-    return refs.sample
+  def self.any_reference(references)
+    raise(ArgumentError,"no available references") if references.empty?
+    return references.sample
   end
   
   
@@ -63,13 +63,13 @@ class CodeType < NudgeType
   end
   
   
-  def self.random_value(params = {})
+  def self.random_value(context, params = {})
     points = params[:points] || @@defaultPoints
     blocks = params[:blocks] || points/10
     skeleton = params[:skeleton] || self.random_skeleton(points, blocks)
-    instructions = params[:instructions] || Instruction.active_instructions
-    references = params[:references] || (Channel.variables.keys + Channel.names.keys)
-    types = params[:types] || NudgeType.active_types
+    instructions = params[:instructions] || context.instructions.keys
+    references = params[:references] || context.references
+    types = params[:types] || context.types
     
     while skeleton.include?("*") do
       case self.roulette_wheel(references,instructions,types)

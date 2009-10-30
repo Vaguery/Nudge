@@ -7,13 +7,7 @@ include Nudge
 describe "parser" do
   before(:all) do
     @parser = NudgeLanguageParser.new
-  end
-  
-  after(:each) do
-    Stack.cleanup
-  end
-  
-  
+  end  
   
   it "should fail for an empty program" do
     empty = ""

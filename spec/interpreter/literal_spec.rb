@@ -20,43 +20,43 @@ describe "LiteralPoint" do
     it "should move to the appropriate stack when removed from the exec stack" do
       ii = Interpreter.new("literal bool (true)")
       ii.step
-      Stack.stacks[:bool].peek.value.should == true
+      ii.stacks[:bool].peek.value.should == true
     end
     
     describe "#go" do
       before(:each) do
         @ii = Interpreter.new()
-        Stack.cleanup
-        Stack.stacks[:int] = Stack.new(:int)
+        @ii.clear_stacks
+        @ii.stacks[:int] = Stack.new(:int)
         @ii.reset("literal int (999)")
       end
       
       it "should pop the exec stack when a LiteralPoint is interpreted" do
-        oldExec = Stack.stacks[:exec].depth
+        oldExec = @ii.stacks[:exec].depth
         @ii.step
-        Stack.stacks[:exec].depth.should == (oldExec-1)
+        @ii.stacks[:exec].depth.should == (oldExec-1)
       end
       
       it "should initialize the right stack for the type of the LiteralPoint if it doesn't exist" do
-        Stack.stacks.delete(:int)
+        @ii.stacks.delete(:int)
         @ii.step
-        Stack.stacks.should include(:int)
+        @ii.stacks.should include(:int)
       end
       
       it "should use the existing stack if it does exist" do
         @ii.step
-        Stack.stacks[:int].depth.should == 1
+        @ii.stacks[:int].depth.should == 1
       end
 
       it "should push the value onto the right stack" do
-        Stack.stacks[:exec].push(LiteralPoint.new("int",3))
-        Stack.stacks[:exec].push(LiteralPoint.new("float",2.2))
-        Stack.stacks[:exec].push(LiteralPoint.new("bool",false))
+        @ii.stacks[:exec].push(LiteralPoint.new("int",3))
+        @ii.stacks[:exec].push(LiteralPoint.new("float",2.2))
+        @ii.stacks[:exec].push(LiteralPoint.new("bool",false))
         
         3.times {@ii.step}
-        Stack.stacks.should include(:int)
-        Stack.stacks.should include(:float)
-        Stack.stacks.should include(:bool)
+        @ii.stacks.should include(:int)
+        @ii.stacks.should include(:float)
+        @ii.stacks.should include(:bool)
       end
     end
     
@@ -69,26 +69,26 @@ describe "LiteralPoint" do
     
     describe "randomize" do
       before(:each) do
-        NudgeType.all_types.each {|t| t.activate}
+        @ii = Interpreter.new()
+        @ii.enable_all_types
       end
-      after(:each) do
-        NudgeType.all_types.each {|t| t.activate}
-      end
+      
       it "should return one of the active types (not one of the defined types!)" do
         myL = LiteralPoint.new("int", 77)
-        NudgeType.all_types.each {|t| t.deactivate}
-        BoolType.activate
-        myL.randomize
+        @ii.disable_all_types
+        @ii.enable(BoolType)
+        myL.randomize(@ii)
         myL.type.should == "bool"
       end
     end
     
     describe "random CodeType should not be a problem" do
       it "should have a valid code type and a value that parses" do
-        NudgeType.all_off
-        Instruction.all_off
-        CodeType.activate
-        lambda{LiteralPoint.any}.should raise_error(ArgumentError, "Random code cannot be created")
+        @ii = Interpreter.new()
+        @ii.disable_all_types
+        @ii.disable_all_instructions
+        @ii.enable(CodeType)
+        lambda{LiteralPoint.any(@ii)}.should raise_error(ArgumentError, "Random code cannot be created")
       end
     end
 end

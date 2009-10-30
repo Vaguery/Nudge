@@ -38,73 +38,75 @@ describe "Code Type" do
   
   
   describe "any_type" do
-    it "should return a single sample from the #types method of the context passed in" do
-      context = Interpreter.new
-      context.disable_all_types
-      context.enable(IntType)
-      CodeType.any_type(context).should == IntType
+    before(:each) do
+      @context = Interpreter.new
     end
     
-    it "should default to the list of ActiveTypes" do
-      NudgeType.all_off
-      IntType.activate
-      CodeType.any_type.should == IntType
+    it "should return a single sample from the #types method of the context passed in" do
+      @context = Interpreter.new
+      @context.disable_all_types
+      @context.enable(IntType)
+      CodeType.any_type(@context.types).should == IntType
     end
+    
+    it "should default to the list of active types in the context" do
+      @context.disable_all_types
+      @context.enable(IntType)
+      CodeType.any_type(@context.types).should == IntType
+    end
+    
+    it "should be possible to override the types in the context"
     
     it "should raise an error if the list of active_types is empty and none is passed in" do
-      NudgeType.all_off
-      lambda{CodeType.any_type}.should raise_error(ArgumentError)
+      @context.disable_all_types
+      lambda{CodeType.any_type(@context.types)}.should raise_error(ArgumentError)
     end
     
     it "should raise an error if the list of types passed in is empty" do
-      lambda{CodeType.any_type([])}.should raise_error(ArgumentError)
+      @context.disable_all_types
+      lambda{CodeType.any_type(@context.types)}.should raise_error(ArgumentError)
     end
   end
   
   
   
   describe "any_instruction" do
-    it "should return a single sample from the list of items passed in (no implied validation)" do
-      CodeType.any_instruction([1]).should == 1
+    before(:each) do
+      @context = Interpreter.new
     end
     
-    it "should default to the list of active instructions" do
-      Instruction.all_off
-      IntAddInstruction.activate
-      CodeType.any_instruction.should == IntAddInstruction
+    it "should return a single sample from the context passed in (no implied validation)" do
+      @context.disable_all_instructions
+      @context.enable(IntAddInstruction)
+      CodeType.any_instruction(@context.instructions.keys).should == IntAddInstruction
     end
     
-    it "should raise an error if the list of active instructions is empty and none is passed in" do
-      Instruction.all_off
-      lambda{CodeType.any_instruction}.should raise_error(ArgumentError)
-    end
+    it "should be possible to override the instructions in the context"
     
-    it "should raise an error if the list of instructions passed in is empty" do
-      lambda{CodeType.any_instruction([])}.should raise_error(ArgumentError)
+    it "should raise an error if the no instructions are active in the context and none are passed in" do
+      @context.disable_all_instructions
+      lambda{CodeType.any_instruction(@context.instructions.keys)}.should raise_error(ArgumentError)
     end
   end
   
-  
-  
   describe "any_reference" do
-    it "should return a single sample from the list of items passed in (no implied validation)" do
-      CodeType.any_reference([1]).should == 1
+    before(:each) do
+      @context = Interpreter.new
+    end
+  
+    it "should return a random reference from the context" do
+      @context.reset_variables
+      @context.bind_variable("x",LiteralPoint.new(:int,12))
+      CodeType.any_reference(@context.references).should == "x"
+      
     end
     
-    it "should default to the list of active references" do
-      Channel.reset_variables
-      Channel.bind_variable("x",LiteralPoint.new(:int,12))
-      CodeType.any_reference.should == "x"
-    end
+    it "should be possible to override the references in the context"
     
-    it "should raise an error if the list of active references is empty and none is passed in" do
-      Channel.reset_variables
-      Channel.reset_names
-      lambda{CodeType.any_reference}.should raise_error(ArgumentError)
-    end
-    
-    it "should raise an error if the list of references passed in is empty" do
-      lambda{CodeType.any_reference([])}.should raise_error(ArgumentError)
+    it "should raise an error if the list of active references is empty" do
+      @context.reset_variables
+      @context.reset_names
+      lambda{CodeType.any_reference(@context.references)}.should raise_error(ArgumentError)
     end
   end
   
@@ -112,107 +114,109 @@ describe "Code Type" do
   
   describe "#random_value" do
     before(:each) do
-      Channel.reset_variables
-      Channel.reset_names
-      Instruction.all_off
-      NudgeType.all_off
+      @context = Interpreter.new
+      @context.reset_variables
+      @context.reset_names
+      @context.disable_all_instructions
+      @context.disable_all_types
     end
     
     describe "skeletons" do
       before(:each) do
-        IntType.activate
+        @context.enable(IntType)
       end
+      
       it "should use a points parameter to set the length" do
-        rp = CodeType.random_value(:points => 3)
+        rp = CodeType.random_value(@context,:points => 3)
       end
       
       it "should by default generate a random skeleton" do
         CodeType.should_receive(:random_skeleton).and_return("**")
-        rp = CodeType.random_value(:points => 2)
+        rp = CodeType.random_value(@context,:points => 2)
       end
       
       it "should allow a skeleton to be passed in as a param" do
         CodeType.should_not_receive(:random_skeleton)
-        rp = CodeType.random_value(:skeleton => "**")
+        rp = CodeType.random_value(@context,:skeleton => "**")
       end
       
       it "should allow a partially filled-in skeleton to be passed in" do
-        rp = CodeType.random_value(:skeleton => "* do thing")
+        rp = CodeType.random_value(@context,:skeleton => "* do thing")
         rp.should include(" do thing")
         rp.should_not include("*")
       end
       
       it "should always return a one-line program listing (no linefeeds)" do
-        rp = CodeType.random_value(:points => 10, :blocks => 5)
+        rp = CodeType.random_value(@context, :points => 10, :blocks => 5)
         rp.should_not include("\n")
       end
       
       it "should use '@' as a placeholder that is not replaced with code" do
-        rp = CodeType.random_value(:skeleton => "@ do thing")
+        rp = CodeType.random_value(@context, :skeleton => "@ do thing")
         rp.should == "@ do thing"
       end
     end
     
     describe "argument checking" do
       it "should raise an ArgumentError if there are no Instructions, References or Types" do
-        Channel.reset_variables
-        Channel.reset_names
-        Instruction.all_off
-        NudgeType.all_off
-        lambda{CodeType.random_value}.should raise_error
+        @context.reset_variables
+        @context.reset_names
+        @context.disable_all_types
+        @context.disable_all_instructions
+        lambda{CodeType.random_value(@context)}.should raise_error
       end
     end
     
     describe "program leaves" do
       describe "instructions" do
         it "should work when there are no active instructions" do
-          Channel.bind_variable("x",LiteralPoint.new(:int,12))
-          IntType.activate
-          lambda{CodeType.random_value}.should_not raise_error
+          @context.bind_variable("x",LiteralPoint.new(:int,12))
+          @context.enable(IntType)
+          lambda{CodeType.random_value(@context)}.should_not raise_error
         end
         
         it "should default to a sample of the active instructions" do
-          Instruction.should_receive(:active_instructions).and_return([IntAddInstruction])
-          CodeType.random_value
+          @context.should_receive(:instructions).and_return(
+            {IntAddInstruction => IntAddInstruction.new(@context)})
+          CodeType.random_value(@context)
         end
         
         it "should allow a list of instructions to be passed in as a param" do
-          lambda{CodeType.random_value(:instructions => [IntAddInstruction])}.should_not raise_error
+          lambda{CodeType.random_value(@context,:instructions => [IntAddInstruction])}.should_not raise_error
         end
       end
       
       describe "channels" do
         it "should work when there are no active channels" do
-          IntAddInstruction.activate
-          IntType.activate
-          lambda{CodeType.random_value}.should_not raise_error
+          @context.enable(IntAddInstruction)
+          @context.enable(IntType)
+          lambda{CodeType.random_value(@context)}.should_not raise_error
         end
         
         it "should default to a sample of active variables and names" do
-          faked = {"x" => LiteralPoint.new(:int,12)}
-          Channel.should_receive(:variables).and_return(faked)
-          CodeType.random_value
+          @context.should_receive(:references).and_return(["x"])
+          CodeType.random_value(@context)
         end
         
         it "should allow a list of channel names to be passed in as a param" do
-          lambda{CodeType.random_value(:references => ["x"])}.should_not raise_error
+          lambda{CodeType.random_value(@context,:references => ["x"])}.should_not raise_error
         end
       end
       
       describe "types" do
         it "should work when there are no active types" do
-          Channel.bind_variable("x",LiteralPoint.new(:int,12))
-          IntAddInstruction.activate
-          lambda{CodeType.random_value}.should_not raise_error
+          @context.bind_variable("x",LiteralPoint.new(:int,12))
+          @context.enable(IntAddInstruction)
+          lambda{CodeType.random_value(@context)}.should_not raise_error
         end
         
         it "should default to a sample of active types" do
-          NudgeType.should_receive(:active_types).and_return([IntType])
-          CodeType.random_value
+          @context.should_receive(:types).and_return([IntType])
+          CodeType.random_value(@context)
         end
         
         it "should allow a list of types to be passed in as a param" do
-          lambda{CodeType.random_value(:types => [BoolType])}.should_not raise_error
+          lambda{CodeType.random_value(@context,:types => [BoolType])}.should_not raise_error
         end
       end
     end

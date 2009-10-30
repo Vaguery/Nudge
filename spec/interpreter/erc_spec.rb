@@ -38,37 +38,37 @@ describe "erc" do
   describe "#go" do
     before(:each) do
       @ii = Interpreter.new()
-      Stack.cleanup
-      Stack.stacks[:int] = Stack.new(:int)
+      @ii.clear_stacks
+      @ii.stacks[:int] = Stack.new(:int)
       @ii.reset("sample int (999)")
     end
     
     it "should pop the exec stack when an Erc is interpreted" do
-      oldExec = Stack.stacks[:exec].depth
+      oldExec = @ii.stacks[:exec].depth
       @ii.step
-      Stack.stacks[:exec].depth.should == (oldExec-1)
+      @ii.stacks[:exec].depth.should == (oldExec-1)
     end
     
     it "should initialize the right stack for the type of the Erc if it doesn't exist" do
-      Stack.stacks.delete(:int)
+      @ii.stacks.delete(:int)
       @ii.step
-      Stack.stacks.should include(:int)
+      @ii.stacks.should include(:int)
     end
     
     it "should use the existing stack if it does exist" do
       @ii.step
-      Stack.stacks[:int].depth.should == 1
+      @ii.stacks[:int].depth.should == 1
     end
 
     it "should push the value onto the right stack" do
-      Stack.stacks[:exec].push(Erc.new("int",3))
-      Stack.stacks[:exec].push(Erc.new("float",2.2))
-      Stack.stacks[:exec].push(Erc.new("bool",false))
+      @ii.stacks[:exec].push(Erc.new("int",3))
+      @ii.stacks[:exec].push(Erc.new("float",2.2))
+      @ii.stacks[:exec].push(Erc.new("bool",false))
       
       3.times {@ii.step}
-      Stack.stacks.should include(:int)
-      Stack.stacks.should include(:float)
-      Stack.stacks.should include(:bool)
+      @ii.stacks.should include(:int)
+      @ii.stacks.should include(:float)
+      @ii.stacks.should include(:bool)
     end
   end
   
@@ -81,27 +81,31 @@ describe "erc" do
   
   describe "randomize" do
     before(:each) do
-      NudgeType.all_types.each {|t| t.activate}
+      @ii = Interpreter.new()
+      @ii.enable_all_types
     end
-    after(:each) do
-      NudgeType.all_types.each {|t| t.activate}
-    end
+    
     it "should return one of the active types (not one of the defined types!)" do
       myErc = LiteralPoint.new("float", -77.89)
-      NudgeType.all_types.each {|t| t.deactivate}
-      IntType.activate
-      myErc.randomize
+      @ii.disable_all_types
+      @ii.enable(IntType)
+      myErc.randomize(@ii)
       myErc.type.should == "int"
     end
   end
   
   describe "#any" do
+    before(:each) do
+      @ii = Interpreter.new()
+      @ii.enable_all_types
+    end
+    
     it "should return a new instance, invoking #randomize" do
-      rE = Erc.any
+      rE = Erc.any(@ii)
       rE.should be_a_kind_of(Erc)
-      NudgeType.all_types.each {|t| t.deactivate}
-      BoolType.activate
-      rE = Erc.any
+      @ii.disable_all_types
+      @ii.enable(BoolType)
+      rE = Erc.any(@ii)
       rE.type.should == "bool"
     end
   end

@@ -22,7 +22,7 @@ class FloatIfInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @stay = Stack.stacks[:bool].pop.value
+    @stay = @context.stacks[:bool].pop.value
   end
   def derive
   end

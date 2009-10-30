@@ -75,16 +75,15 @@ module Nudge
       "literal " + @type.to_s + " (" + @value.to_s + ")"
     end
     
-    def randomize
-      all = NudgeType.active_types
-      newType = all[rand(all.length)]
+    def randomize(context)
+      newType = context.types.sample
       @type = newType.to_s.slice(0..-5).downcase
       @value = newType.any_value
     end
     
-    def self.any
+    def self.any(context)
       tmp = LiteralPoint.new("int", 1)
-      tmp.randomize
+      tmp.randomize(context)
       return tmp
     end
     
@@ -113,9 +112,8 @@ module Nudge
       "sample " + @type.to_s + " (" + @value.to_s + ")"
     end
     
-    def randomize
-      all = NudgeType.active_types
-      newType = all[rand(all.length)]
+    def randomize(context)
+      newType = context.types.sample
       @type = newType.to_s.slice(0..-5).downcase
       @value = newType.any_value
     end
@@ -124,9 +122,9 @@ module Nudge
       @value = "#{@type.to_s.capitalize}Type".constantize.any_value
     end
     
-    def self.any
-      tmp = Erc.new(NudgeType.all_types[0].to_s.slice(0..-5).downcase,0)
-      tmp.randomize
+    def self.any(context)
+      tmp = Erc.new(context.types[0].to_s.slice(0..-5).downcase,0)
+      tmp.randomize(context)
       return tmp
     end
     

@@ -5,11 +5,9 @@ class NudgeType
   include Singleton
   
   @@all_types = []
-  # @@active_types = []
   
   def self.inherited(subclass)
     @@all_types << subclass
-    # @@active_types << subclass
     super
   end
   
@@ -17,29 +15,9 @@ class NudgeType
     @@all_types
   end
   
-  def self.push_types_only
-    @@active_types = [IntType, BoolType, FloatType]
+  def self.push_types
+    [IntType, BoolType, FloatType]
   end
-  
-  # def self.active_types
-  #   @@active_types
-  # end
-  
-  # def self.active?
-  #   @@active_types.include? self
-  # end
-  
-  # def self.deactivate
-  #   @@active_types.delete self
-  # end
-  # 
-  # def self.all_off
-  #   @@active_types = []
-  # end
-  # 
-  # def self.activate
-  #   @@active_types << self unless @@active_types.include? self
-  # end
   
   def self.to_nudgecode
     self.to_s.slice(0..-5).downcase
