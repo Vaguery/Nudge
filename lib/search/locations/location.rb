@@ -10,17 +10,18 @@ module Nudge
       end
     end
     
-    
     def self.cleanup
       @locations = Hash[:DEAD,DeadLocation.new]
     end
     
     
     attr_reader :name
-    attr_accessor :downstream, :population, :capacity,:cull_trigger, :generate_rule, :promotion_rule
+    attr_accessor :downstream, :population, :capacity
+    attr_accessor :settings
+    attr_accessor :cull_trigger, :generate_rule, :promotion_rule
     
     
-    def initialize(name, capacity = 100)
+    def initialize(name, capacity = 100, params = {})
       if !Location.locations.include? name
         @name = name
         Location.locations[name] = self
@@ -29,6 +30,7 @@ module Nudge
         raise ArgumentError, "Location names must be unique"
       end
       @capacity = capacity
+      @settings = Settings.new(params)
       @population = []
       @cull_trigger = Proc.new {@population.length > @capacity}
       @generate_rule = Proc.new { |crowd| RandomGuessOperator.new.generate}

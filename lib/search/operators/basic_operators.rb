@@ -3,7 +3,7 @@ module Nudge
   # Abstract class that from which specific SearchOperator subclasses inherit initialization
   
   class SearchOperator
-    attr_accessor :params
+    attr_accessor :params, :context
 
      def initialize(params={})
        @params = params

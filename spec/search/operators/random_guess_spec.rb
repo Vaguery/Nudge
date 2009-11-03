@@ -4,7 +4,6 @@ include Nudge
 describe "random_guess operator" do
   before(:each) do
     @myGuesser = RandomGuessOperator.new
-    BoolType.activate
   end
   
   it "should be a kind of SearchOperator" do

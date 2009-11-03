@@ -51,6 +51,35 @@ describe "Location" do
   end
   
   
+  describe "settings" do
+    it "should have a #settings attribute, where active instructions, variable names and types are listed" do
+      loc1 = Location.new("place")
+      loc1.settings.should_not == nil
+      loc1.settings.should be_a_kind_of(Settings)
+    end
+    
+    it "should default to all defined Instructions" do
+      Location.new("place").settings.instructions.should == Instruction.all_instructions
+    end
+    
+    it "should default to no variables defined" do
+      Location.new("place").settings.references.should == []
+    end
+    
+    it "should default to the Push types (not all types)" do
+      Location.new("place").settings.types.should == NudgeType.push_types
+    end
+    
+    it "should be possible to pass in initial Array of active Instructions" do
+      loc = Location.new("p1", 4, :instructions => [IntAddInstruction])
+      loc.settings.instructions.should == [IntAddInstruction]
+      Location.new("p2", 4, :types => [IntType]).settings.types.should == [IntType]
+      Location.new("p3", 4, :references => ["x1"]).settings.references.should == ["x1"]
+      lambda{Location.new("p4", 4, :random_crap => ["whatever"])}.should_not raise_error
+    end
+  end
+  
+  
   describe "network" do
     it "should have a #flows_into method that adds a #downstream link" do
       loc1 = Location.new("bree")
@@ -327,7 +356,7 @@ describe "Location" do
     
     it "should access the breeding_pool when called" do
       @loc1.should_receive(:breeding_pool).and_return(["mock filler"])
-      @loc1.generate
+      @loc1.generate()
     end
     
     it "should invoke #generate_rule" do
