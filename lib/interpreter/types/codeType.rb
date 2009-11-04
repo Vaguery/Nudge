@@ -67,7 +67,7 @@ class CodeType < NudgeType
     points = params[:points] || @@defaultPoints
     blocks = params[:blocks] || points/10
     skeleton = params[:skeleton] || self.random_skeleton(points, blocks)
-    instructions = params[:instructions] || context.instructions.keys
+    instructions = params[:instructions] || context.instructions
     references = params[:references] || context.references
     types = params[:types] || context.types
     

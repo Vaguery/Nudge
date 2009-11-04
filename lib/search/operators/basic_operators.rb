@@ -3,7 +3,7 @@ module Nudge
   # Abstract class that from which specific SearchOperator subclasses inherit initialization
   
   class SearchOperator
-    attr_accessor :params, :context
+    attr_accessor :params
 
      def initialize(params={})
        @params = params
@@ -13,6 +13,13 @@ module Nudge
   
   
   class RandomGuessOperator < SearchOperator
+    attr_accessor :context
+    
+    def initialize(params ={})
+      @context = Settings.new(:instructions => params[:instructions], :references => params[:references], :types => params[:types])
+      super
+    end
+    
     # returns an Array of random Individuals
     #
     # the first (optional) parameter specifies how many to make, and defaults to 1
@@ -31,7 +38,7 @@ module Nudge
     def generate(howMany = 1, tempParams ={})
       result = []
       howMany.times do
-        newGenome = CodeType.random_value(@params.merge(tempParams))
+        newGenome = CodeType.random_value(@context, @params.merge(tempParams))
         newDude = Individual.new(newGenome)
         result << newDude
       end
@@ -217,6 +224,14 @@ module Nudge
   
   
   class PointMutationOperator < SearchOperator
+    attr_accessor :context
+    
+    def initialize(params ={})
+      @context = Settings.new(:instructions => params[:instructions],
+        :references => params[:references], :types => params[:types])
+      super
+    end
+    
     def generate(crowd, howManyCopies = 1, tempParams ={})
       raise(ArgumentError) if !crowd.kind_of?(Array)
       raise(ArgumentError) if crowd.empty?
@@ -226,7 +241,7 @@ module Nudge
       crowd.each do |dude|
         howManyCopies.times do
           where = rand(dude.points)+1
-          newCode = CodeType.random_value(@params.merge(tempParams))
+          newCode = CodeType.random_value(@context, @params.merge(tempParams))
           variant = dude.replace_point(where,newCode)
           result << Individual.new(variant)
         end

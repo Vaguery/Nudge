@@ -59,7 +59,7 @@ describe "InstructionPoint" do
     it "should delegate #go to the appropriate Instruction Class" do
       context = Interpreter.new
       context.enable(IntAddInstruction)
-      context.instructions[IntAddInstruction].should_receive(:go)
+      context.instructions_library[IntAddInstruction].should_receive(:go)
       myI = InstructionPoint.new("int_add").go(context)
     end
   end

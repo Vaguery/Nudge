@@ -78,14 +78,14 @@ describe "Code Type" do
     it "should return a single sample from the context passed in (no implied validation)" do
       @context.disable_all_instructions
       @context.enable(IntAddInstruction)
-      CodeType.any_instruction(@context.instructions.keys).should == IntAddInstruction
+      CodeType.any_instruction(@context.instructions).should == IntAddInstruction
     end
     
     it "should be possible to override the instructions in the context"
     
     it "should raise an error if the no instructions are active in the context and none are passed in" do
       @context.disable_all_instructions
-      lambda{CodeType.any_instruction(@context.instructions.keys)}.should raise_error(ArgumentError)
+      lambda{CodeType.any_instruction(@context.instructions)}.should raise_error(ArgumentError)
     end
   end
   
@@ -176,8 +176,7 @@ describe "Code Type" do
         end
         
         it "should default to a sample of the active instructions" do
-          @context.should_receive(:instructions).and_return(
-            {IntAddInstruction => IntAddInstruction.new(@context)})
+          @context.should_receive(:instructions).and_return([IntAddInstruction])
           CodeType.random_value(@context)
         end
         

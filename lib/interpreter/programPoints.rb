@@ -206,13 +206,13 @@ module Nudge
     
     def go(context)
       className = self.classLookup
-      context.instructions[className].go
+      context.instructions_library[className].go
     rescue InstructionNotFoundError
       return
     end
     
     def randomize(context)
-      instructionName = context.instructions.keys.sample.to_s
+      instructionName = context.instructions.sample.to_s
       @name = instructionName.slice(0..-12).underscore
     end
     

@@ -17,7 +17,7 @@ describe "initialization" do
   end
   
   it "should keep have an empty instructions attribute, a Hash" do
-    @ii.instructions.should == Hash.new
+    @ii.instructions_library.should == Hash.new
   end
   
   it "should automatically create an entry if an unmentioned stack is referenced by a method" do
@@ -69,31 +69,31 @@ describe "initialization" do
   end
   
   it "should have an #enable method that works for Instructions, adding them to the #instructions hash" do
-    @ii.instructions.should == {}
+    @ii.instructions_library.should == {}
     @ii.enable(IntAddInstruction)
-    @ii.instructions[IntAddInstruction].should_not== nil
-    @ii.instructions[IntAddInstruction].should be_a_kind_of(IntAddInstruction)
-    @ii.instructions[IntAddInstruction].context.should == @ii
+    @ii.instructions_library[IntAddInstruction].should_not== nil
+    @ii.instructions_library[IntAddInstruction].should be_a_kind_of(IntAddInstruction)
+    @ii.instructions_library[IntAddInstruction].context.should == @ii
   end
   
   it "should have an #enable_all_instructions method" do
-    @ii.instructions.should == {}
+    @ii.instructions_library.should == {}
     @ii.enable_all_instructions
-    @ii.instructions.keys.should == Instruction.all_instructions
+    @ii.instructions_library.keys.should == Instruction.all_instructions
   end
   
   it "should have a #disable_all_instructions method" do
     @ii.enable_all_instructions
-    @ii.instructions.should_not == {}
+    @ii.instructions_library.should_not == {}
     @ii.disable_all_instructions
-    @ii.instructions.should == {}
+    @ii.instructions_library.should == {}
   end
   
   it "should have a #disable method that removes Instructions from the #instructions hash" do
     @ii.enable(IntAddInstruction)
-    @ii.instructions[IntAddInstruction].should_not == nil
+    @ii.instructions_library[IntAddInstruction].should_not == nil
     @ii.disable(IntAddInstruction)
-    @ii.instructions.should_not include(IntAddInstruction)
+    @ii.instructions_library.should_not include(IntAddInstruction)
   end
   
   describe "variables table" do

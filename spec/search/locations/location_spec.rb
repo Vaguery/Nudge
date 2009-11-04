@@ -379,8 +379,7 @@ describe "Location" do
   describe "generate_rule" do
     before(:each) do
       @loc1 = Location.new("here",1)
-      NudgeType.all_off
-      IntType.activate
+      @loc1.settings.types = [IntType]
     end
     
     it "should take one parameter" do
@@ -402,8 +401,8 @@ describe "Location" do
       @loc1 = Location.new("here",1)
       @loc2 = Location.new("there",1)
       @loc1.flows_into(@loc2)
-      NudgeType.all_off
-      IntType.activate
+      @loc1.settings.types = [IntType]
+      @loc2.settings.types = [IntType]
     end
     
     it "should invoke #generate once" do

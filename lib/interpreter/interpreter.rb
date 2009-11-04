@@ -12,7 +12,7 @@ module Nudge
   
   class Interpreter
     attr_accessor :parser, :stepLimit, :steps
-    attr_accessor :stacks, :instructions, :variables, :names, :types
+    attr_accessor :stacks, :instructions_library, :variables, :names, :types
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(initialProgram=nil)
@@ -21,7 +21,8 @@ module Nudge
       @names = Hash.new
       @types = NudgeType.all_types
       @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
-      @instructions = Hash.new
+      @instructions_library = Hash.new
+      @instructions = []
       if initialProgram
         self.reset(initialProgram)
       end
@@ -69,6 +70,10 @@ module Nudge
       end
     end
     
+    def instructions
+      @instructions_library.keys
+    end
+    
     # invoke self.step() until a termination condition is true
     def run
       while notDone?
@@ -86,7 +91,7 @@ module Nudge
     
     def enable(item)
       if item.superclass == Instruction
-        @instructions[item] = item.new(self)
+        @instructions_library[item] = item.new(self)
       elsif item.superclass == NudgeType
         @types |= [item]
       end
@@ -94,7 +99,7 @@ module Nudge
     
     def active?(item)
       if item.superclass == Instruction
-        @instructions.include?(item)
+        @instructions_library.include?(item)
       elsif item.superclass == NudgeType
         @types.include?(item)
       end
@@ -130,7 +135,7 @@ module Nudge
     
     def enable_all_instructions
       Instruction.all_instructions.each do |i|
-        @instructions[i] = i.new(self)
+        @instructions_library[i] = i.new(self)
       end
     end
     
@@ -141,14 +146,14 @@ module Nudge
     
     def disable(item)
       if item.superclass == Instruction
-        @instructions.delete(item)
+        @instructions_library.delete(item)
       elsif item.superclass == NudgeType
         @types.delete(item)
       end
     end
     
     def disable_all_instructions
-      @instructions = Hash.new
+      @instructions_library = Hash.new
     end
     
     def disable_all_types
