@@ -107,7 +107,7 @@ module Nudge
     end
     
     
-    def cull
+    def review_and_cull
       lottery = self.cull_order
       while self.cull?
         where = @population.find_index(lottery[0])
@@ -127,7 +127,7 @@ module Nudge
     def core_cycle
       self.generate
       self.review_and_promote
-      self.cull
+      self.review_and_cull
     end
   end
   

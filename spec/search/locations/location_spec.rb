@@ -193,7 +193,9 @@ describe "Location" do
       it "should fail silently if there are no downstream locations" do
         dude2 = Individual.new("do int_add")
         @loc4.add_individual(dude2)
+        lambda{@loc4.promote(0)}.should_not raise_error
         @loc4.promote(0)
+        @loc4.population.length.should == 1
       end
     end
   end
@@ -333,7 +335,7 @@ describe "Location" do
       loc1.cull?.should == false
       loc1.add_individual Individual.new("ref x")
       loc1.cull?.should == true
-      loc1.cull
+      loc1.review_and_cull
       loc1.cull?.should == false
       lDead.population.length.should == 1
     end
@@ -343,7 +345,7 @@ describe "Location" do
       lDead = Location.locations[:DEAD]
       loc1.add_individual Individual.new("block {}")
       loc1.cull?.should == false
-      loc1.cull
+      loc1.review_and_cull
       loc1.population.length.should == 1
     end
   end
@@ -416,7 +418,7 @@ describe "Location" do
     end
     
     it "should invoke #cull once" do
-      @loc1.should_receive(:cull).once
+      @loc1.should_receive(:review_and_cull).once
       @loc1.core_cycle
       # there is one random guy here with the default generate rule
     end
@@ -433,7 +435,6 @@ describe "Location" do
       @loc1.core_cycle #this adds a new random dude AND HE'S FINE (capacity = 2)
       @loc1.population.length.should == 2
       Location.locations[:DEAD].population.length.should == 1
-      
       
       @loc1.cull_trigger.should_receive(:call).and_return(true, true, false)
       @loc1.should_receive(:cull_order).and_return(@loc1.population)

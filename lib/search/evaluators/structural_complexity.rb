@@ -1,7 +1,6 @@
 module Nudge
 
   class ProgramPointsEvaluator < Evaluator
-    
     def initialize
       @name = :program_points
     end
@@ -22,5 +21,5 @@ module Nudge
       return result
     end
   end
-
+  
 end
