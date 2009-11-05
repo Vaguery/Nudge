@@ -5,7 +5,7 @@ module Nudge
       @helperParser ||= NudgeLanguageParser.new()
     end
       
-    attr_accessor :genome, :scores, :age, :ancestors, :location, :program
+    attr_accessor :genome, :scores, :age, :ancestors, :station, :program
     attr_reader :timestamp, :id
     
     def initialize(listing)
@@ -18,7 +18,7 @@ module Nudge
       @timestamp = Time.now
       @age = 0
       @ancestors = []
-      @location = ""
+      @station = ""
       
     end
     

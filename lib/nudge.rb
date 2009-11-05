@@ -37,4 +37,4 @@ require 'search/evaluators/learning_from_data'
 
 
 
-require 'search/locations/location'
+require 'search/stations/station'

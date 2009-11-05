@@ -1,17 +1,17 @@
 module Nudge
-  class Location
+  class Station
     require 'set'
     
-    def self.locations
-      if @locations
-        @locations
+    def self.stations
+      if @stations
+        @stations
       else
-        Hash[:DEAD,DeadLocation.new]
+        Hash[:DEAD,DeadStation.new]
       end
     end
     
     def self.cleanup
-      @locations = Hash[:DEAD,DeadLocation.new]
+      @stations = Hash[:DEAD,DeadStation.new]
     end
     
     
@@ -22,12 +22,12 @@ module Nudge
     
     
     def initialize(name, capacity = 100, params = {})
-      if !Location.locations.include? name
+      if !Station.stations.include? name
         @name = name
-        Location.locations[name] = self
+        Station.stations[name] = self
         @downstream = Set.new
       else
-        raise ArgumentError, "Location names must be unique"
+        raise ArgumentError, "Station names must be unique"
       end
       @capacity = capacity
       @settings = Settings.new(params)
@@ -47,30 +47,30 @@ module Nudge
       result = []
       result += @population
       @downstream.each do |place|
-        result += Location.locations[place].population
+        result += Station.stations[place].population
       end
       return result
     end
     
     
     def add_individual(newDude)
-      newDude.location = @name
+      newDude.station = @name
       @population << newDude
     end
     
     
-    def transfer(popIndex, newLocationName)
+    def transfer(popIndex, newStationName)
       if popIndex < 0 || popIndex > @population.length
         raise ArgumentError, "self#transfer called with index #{popIndex}"
       end
-      if !Location.locations.include?(newLocationName)
-        raise ArgumentError, "self#transfer called with nonexistent location \"#{newLocationName}\""
+      if !Station.stations.include?(newStationName)
+        raise ArgumentError, "self#transfer called with nonexistent station \"#{newStationName}\""
       end
       
       movedDude = @population[popIndex]
-      Location.locations[newLocationName].population << movedDude
+      Station.stations[newStationName].population << movedDude
       @population.delete_at(popIndex)
-      movedDude.location = newLocationName
+      movedDude.station = newStationName
     end
     
     
@@ -134,7 +134,7 @@ module Nudge
   
   
   
-  class DeadLocation < Location
+  class DeadStation < Station
     def initialize()
       @name = :DEAD
       @capacity = nil

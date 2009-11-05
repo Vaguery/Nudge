@@ -45,7 +45,7 @@ describe "Individual" do
       @i1.age.should == 0
     end
     it "should have a locationID, defaulting to an empty string" do
-      @i1.location.should == ""
+      @i1.station.should == ""
     end
     it "should have a list of ancestors, defaulting to none" do
       @i1.ancestors.should == []

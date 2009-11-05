@@ -1,20 +1,20 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
-describe "Location" do
+describe "Station" do
   before(:each) do
-    Location.cleanup
+    Station.cleanup
   end
   
   
   describe "class methods" do
-    describe "#locations" do
+    describe "#stations" do
       it "should be a Hash" do
-        Location.locations.should be_a_kind_of(Hash)
+        Station.stations.should be_a_kind_of(Hash)
       end
       
       it "should always include :DEAD" do
-        Location.locations.should include(:DEAD)
+        Station.stations.should include(:DEAD)
       end
     end
   end
@@ -22,30 +22,30 @@ describe "Location" do
   
   describe "names" do
     it "should have a name" do
-      loc1 = Location.new("candy_mountain")
+      loc1 = Station.new("candy_mountain")
       loc1.name.should == "candy_mountain"
     end
     it "needs to have a name" do
-      lambda{loc1 = Location.new}.should raise_error
+      lambda{loc1 = Station.new}.should raise_error
     end
     it "needs to be a unique name" do
-      loc1 = Location.new("california")
-      lambda{loc2 = Location.new("california")}.should raise_error
+      loc1 = Station.new("california")
+      lambda{loc2 = Station.new("california")}.should raise_error
     end
-    it "should register its name in Location#locations upon creation" do
-      loc1 = Location.new("neverland")
-      Location.locations["neverland"].should == loc1
+    it "should register its name in Station#stations upon creation" do
+      loc1 = Station.new("neverland")
+      Station.stations["neverland"].should == loc1
     end
   end
   
   
   describe "capacity" do
     it "should have a #capacity attribute that defaults to 100 individuals" do
-      loc1 = Location.new("candy_mountain")
+      loc1 = Station.new("candy_mountain")
       loc1.capacity.should == 100
     end
     it "should be settable as a second parameter" do
-      loc1 = Location.new("germany", 912)
+      loc1 = Station.new("germany", 912)
       loc1.capacity.should == 912
     end
   end
@@ -53,37 +53,37 @@ describe "Location" do
   
   describe "settings" do
     it "should have a #settings attribute, where active instructions, variable names and types are listed" do
-      loc1 = Location.new("place")
+      loc1 = Station.new("place")
       loc1.settings.should_not == nil
       loc1.settings.should be_a_kind_of(Settings)
     end
     
     it "should default to all defined Instructions" do
-      Location.new("place").settings.instructions.should == Instruction.all_instructions
+      Station.new("place").settings.instructions.should == Instruction.all_instructions
     end
     
     it "should default to no variables defined" do
-      Location.new("place").settings.references.should == []
+      Station.new("place").settings.references.should == []
     end
     
     it "should default to the Push types (not all types)" do
-      Location.new("place").settings.types.should == NudgeType.push_types
+      Station.new("place").settings.types.should == NudgeType.push_types
     end
     
     it "should be possible to pass in initial Array of active Instructions" do
-      loc = Location.new("p1", 4, :instructions => [IntAddInstruction])
+      loc = Station.new("p1", 4, :instructions => [IntAddInstruction])
       loc.settings.instructions.should == [IntAddInstruction]
-      Location.new("p2", 4, :types => [IntType]).settings.types.should == [IntType]
-      Location.new("p3", 4, :references => ["x1"]).settings.references.should == ["x1"]
-      lambda{Location.new("p4", 4, :random_crap => ["whatever"])}.should_not raise_error
+      Station.new("p2", 4, :types => [IntType]).settings.types.should == [IntType]
+      Station.new("p3", 4, :references => ["x1"]).settings.references.should == ["x1"]
+      lambda{Station.new("p4", 4, :random_crap => ["whatever"])}.should_not raise_error
     end
   end
   
   
   describe "network" do
     it "should have a #flows_into method that adds a #downstream link" do
-      loc1 = Location.new("bree")
-      loc2 = Location.new("rivendell")
+      loc1 = Station.new("bree")
+      loc2 = Station.new("rivendell")
       loc1.flows_into(loc2)
       loc1.downstream.should be_a_kind_of(Set)
       loc1.downstream.should include("rivendell")
@@ -93,16 +93,16 @@ describe "Location" do
   
   describe "population" do
     it "should be an Array that's empty initially" do
-      loc1 = Location.new("spain")
+      loc1 = Station.new("spain")
       loc1.population.should == []
     end
   end
   
   
   describe "breeding pool" do
-    it "should include every Individual in the Location and all downstream locations" do
-      loc1 = Location.new("bree")
-      loc2 = Location.new("rivendell")
+    it "should include every Individual in the Station and all downstream stations" do
+      loc1 = Station.new("bree")
+      loc2 = Station.new("rivendell")
       dude1 = Individual.new("block {}")
       dude2 = Individual.new("ref x")
       loc1.population << dude1
@@ -119,33 +119,33 @@ describe "Location" do
   
   
   describe "add_individual" do
-    it "should set the location of the Individual being added to the population to the Location name" do
-      loc1 = Location.new("mordor")
+    it "should set the station of the Individual being added to the population to the Station name" do
+      loc1 = Station.new("mordor")
       dude1 = Individual.new("ref f")
       loc1.add_individual dude1
-      dude1.location.should == "mordor"
+      dude1.station.should == "mordor"
     end
   end
   
   
   describe "transfer" do
     before(:each) do
-      @loc1 = Location.new("bree")
-      @loc2 = Location.new("rivendell")
+      @loc1 = Station.new("bree")
+      @loc2 = Station.new("rivendell")
       @dude1 = Individual.new("block {}")
       @loc1.add_individual @dude1
     end
     
-    it "should send an Individual from self.population to a different Location" do
+    it "should send an Individual from self.population to a different Station" do
       @loc1.transfer(0,"rivendell")
       @loc1.population.length.should == 0
       @loc2.population.should include(@dude1)
     end
     
-    it "should change the #location attribute of the moved Individual" do
-      @dude1.location.should == "bree"
+    it "should change the #station attribute of the moved Individual" do
+      @dude1.station.should == "bree"
       @loc1.transfer(0,"rivendell")
-      @dude1.location.should == "rivendell"
+      @dude1.station.should == "rivendell"
     end
     
     it "should bounds check the popIndex parameter and raise an error if impossible" do
@@ -155,21 +155,21 @@ describe "Location" do
       lambda{@loc1.transfer(1,"rivendell")}.should_not raise_error(ArgumentError)
     end
     
-    it "should name-check the location parameter" do
+    it "should name-check the station parameter" do
       lambda{@loc1.transfer(1,"nowhere")}.should raise_error(ArgumentError,
-        'self#transfer called with nonexistent location "nowhere"')
+        'self#transfer called with nonexistent station "nowhere"')
       lambda{@loc1.transfer(1,"rivendell")}.should_not raise_error(ArgumentError)
     end
   end
   
   
   describe "promote" do    
-    describe "to a specific location" do
+    describe "to a specific station" do
       before(:each) do
-        @loc1 = Location.new("bree")
-        @loc2 = Location.new("rivendell")
-        @loc3 = Location.new("numenor")
-        @loc4 = Location.new("washington")
+        @loc1 = Station.new("bree")
+        @loc2 = Station.new("rivendell")
+        @loc3 = Station.new("numenor")
+        @loc4 = Station.new("washington")
         @loc1.flows_into(@loc2)
         @loc2.flows_into(@loc3)
         @loc2.flows_into(@loc4)
@@ -177,7 +177,7 @@ describe "Location" do
         @loc1.add_individual @dude1
       end
       
-      it "should raise an exception if the new location isn't immediately downstream" do
+      it "should raise an exception if the new station isn't immediately downstream" do
         lambda{@loc1.promote(0,"numenor")}.should raise_error(ArgumentError,
           '"bree" is not connected to "numenor"')
         lambda{@loc1.promote(0,"rivendell")}.should_not raise_error(ArgumentError)          
@@ -190,7 +190,7 @@ describe "Location" do
         (@loc3.population + @loc4.population).should include(@dude1)
       end
       
-      it "should fail silently if there are no downstream locations" do
+      it "should fail silently if there are no downstream stations" do
         dude2 = Individual.new("do int_add")
         @loc4.add_individual(dude2)
         lambda{@loc4.promote(0)}.should_not raise_error
@@ -203,10 +203,10 @@ describe "Location" do
   
   describe "promote?" do
     before(:each) do
-      @loc1 = Location.new("bree")
-      @loc2 = Location.new("rivendell")
-      @loc3 = Location.new("numenor")
-      @loc4 = Location.new("washington")
+      @loc1 = Station.new("bree")
+      @loc2 = Station.new("rivendell")
+      @loc3 = Station.new("numenor")
+      @loc4 = Station.new("washington")
       @loc1.flows_into(@loc2)
       @loc2.flows_into(@loc3)
       @loc2.flows_into(@loc4)
@@ -227,8 +227,8 @@ describe "Location" do
   
   describe "review_and_promote" do
     before(:each) do
-      @loc1 = Location.new("bree")
-      @loc2 = Location.new("rivendell")
+      @loc1 = Station.new("bree")
+      @loc2 = Station.new("rivendell")
       @loc1.flows_into(@loc2)
       @dude1 = Individual.new("block {}")
       @loc1.add_individual @dude1
@@ -275,7 +275,7 @@ describe "Location" do
   
   describe "cull_trigger" do
     it "should default to 'is population.length > capacity'?" do
-      loc1 = Location.new("here",1)
+      loc1 = Station.new("here",1)
       dude1 = Individual.new("block {}")
       loc1.add_individual dude1
       loc1.population.length.should == 1
@@ -286,7 +286,7 @@ describe "Location" do
     end
     
     it "should be settable to some other Proc" do
-      loc1 = Location.new("here")
+      loc1 = Station.new("here")
       loc1.cull_trigger = Proc.new {77} #don't do this!
       loc1.cull_trigger.call.should == 77
     end
@@ -295,12 +295,12 @@ describe "Location" do
   
   describe "cull?" do
     it "should be a method that returns a boolean" do
-      loc1 = Location.new("bree")
+      loc1 = Station.new("bree")
       [true,false].should include(loc1.cull?)
     end
     
     it "should invoke self#cull_trigger" do
-      loc1 = Location.new("amondul",1)
+      loc1 = Station.new("amondul",1)
       loc1.cull_trigger.should_receive(:call)
       loc1.cull?
     end
@@ -309,7 +309,7 @@ describe "Location" do
   
   describe "cull_order" do
     it "should return an Array with the Individuals from self#population in it" do
-      loc1 = Location.new("amondul",1)
+      loc1 = Station.new("amondul",1)
       loc1.add_individual Individual.new("block {}")
       loc1.add_individual Individual.new("ref x")
       loc1.cull_order.should be_a_kind_of(Array)
@@ -318,7 +318,7 @@ describe "Location" do
     end
     
     it "should default to random shuffle order" do
-      loc1 = Location.new("amondul",1) # default rule
+      loc1 = Station.new("amondul",1) # default rule
       loc1.add_individual Individual.new("block {}")
       loc1.add_individual Individual.new("ref x")
       loc1.population.should_receive(:shuffle)
@@ -329,8 +329,8 @@ describe "Location" do
   
   describe "actual culling" do
     it "should eventually satisfy the cull? condition" do
-      loc1 = Location.new("amondul",1) # will have a default cull_order
-      lDead = Location.locations[:DEAD]
+      loc1 = Station.new("amondul",1) # will have a default cull_order
+      lDead = Station.stations[:DEAD]
       loc1.add_individual Individual.new("block {}")
       loc1.cull?.should == false
       loc1.add_individual Individual.new("ref x")
@@ -341,8 +341,8 @@ describe "Location" do
     end
     
     it "should not fire unless self#cull? is true" do
-      loc1 = Location.new("amondul",1) # will have a default cull_order
-      lDead = Location.locations[:DEAD]
+      loc1 = Station.new("amondul",1) # will have a default cull_order
+      lDead = Station.stations[:DEAD]
       loc1.add_individual Individual.new("block {}")
       loc1.cull?.should == false
       loc1.review_and_cull
@@ -351,9 +351,9 @@ describe "Location" do
   end
   
   
-  describe "Location#generate" do
+  describe "Station#generate" do
     before(:each) do
-      @loc1 = Location.new("here",1)
+      @loc1 = Station.new("here",1)
     end
     
     it "should access the breeding_pool when called" do
@@ -380,7 +380,7 @@ describe "Location" do
   
   describe "generate_rule" do
     before(:each) do
-      @loc1 = Location.new("here",1)
+      @loc1 = Station.new("here",1)
       @loc1.settings.types = [IntType]
     end
     
@@ -400,8 +400,8 @@ describe "Location" do
   
   describe "core_cycle" do
     before(:each) do
-      @loc1 = Location.new("here",1)
-      @loc2 = Location.new("there",1)
+      @loc1 = Station.new("here",1)
+      @loc2 = Station.new("there",1)
       @loc1.flows_into(@loc2)
       @loc1.settings.types = [IntType]
       @loc2.settings.types = [IntType]
@@ -429,18 +429,18 @@ describe "Location" do
       
       @loc1.core_cycle #this adds a new random dude AND CULLS HIM (capacity = 1)
       @loc1.population.length.should == 1
-      Location.locations[:DEAD].population.length.should == 1
+      Station.stations[:DEAD].population.length.should == 1
       
       @loc1.capacity = 2
       @loc1.core_cycle #this adds a new random dude AND HE'S FINE (capacity = 2)
       @loc1.population.length.should == 2
-      Location.locations[:DEAD].population.length.should == 1
+      Station.stations[:DEAD].population.length.should == 1
       
       @loc1.cull_trigger.should_receive(:call).and_return(true, true, false)
       @loc1.should_receive(:cull_order).and_return(@loc1.population)
       @loc1.core_cycle  #now we have three dudes, two of which will die
       @loc1.population.length.should == 1
-      Location.locations[:DEAD].population.length.should == 3
+      Station.stations[:DEAD].population.length.should == 3
     end
   end
 end
@@ -448,15 +448,15 @@ end
 
 
 
-describe "DeadLocation" do
+describe "DeadStation" do
   it "should always exist" do
-    Location.cleanup
-    Location.locations.should include(:DEAD)
-    Location.locations[:DEAD].should be_a_kind_of(Location)
-    Location.locations[:DEAD].should be_a_kind_of(DeadLocation)
+    Station.cleanup
+    Station.stations.should include(:DEAD)
+    Station.stations[:DEAD].should be_a_kind_of(Station)
+    Station.stations[:DEAD].should be_a_kind_of(DeadStation)
   end
   
   it "should have no capacity" do
-    Location.locations[:DEAD].capacity.should == nil
+    Station.stations[:DEAD].capacity.should == nil
   end
 end
