@@ -1,10 +1,18 @@
 module Nudge
 
   class ProgramPointsEvaluator < Evaluator
-    attr_accessor :name
     
     def initialize
       @name = :program_points
+    end
+    
+    def name
+      @name
+    end
+    
+    def name=(newName)
+      raise(ArgumentError, "Evaluator name must be a Symbol") if !newName.kind_of?(Symbol)
+      @name = newName
     end
     
     def evaluate(dude, silent=false)

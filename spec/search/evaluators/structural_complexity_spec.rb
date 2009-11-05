@@ -9,8 +9,13 @@ describe "ProgramPointsEvaluator" do
       @longy = Individual.new("block { block { block {} block { block { block {}}}}}")
     end
     
-    it "should have an attribute that is a Symbol, which it'll use to record scores" do
+    it "should have a name attribute that is a Symbol, which it'll use to record scores" do
       @myCounter.name.should == :program_points
+    end
+    
+    it "should complain if you try to set the #name to anything but a Symbol" do
+      lambda{@myCounter.name = "hi there"}.should raise_error(ArgumentError)
+      lambda{@myCounter.name = :othello}.should_not raise_error
     end
     
     it "should take an Individual as a parameter" do

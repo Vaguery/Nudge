@@ -98,10 +98,10 @@ describe "Code Type" do
       @context.reset_variables
       @context.bind_variable("x",LiteralPoint.new(:int,12))
       CodeType.any_reference(@context.references).should == "x"
-      
     end
     
-    it "should be possible to override the references in the context"
+    it "should be possible to override the references in the context" 
+    
     
     it "should raise an error if the list of active references is empty" do
       @context.reset_variables
