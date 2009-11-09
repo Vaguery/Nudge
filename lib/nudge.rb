@@ -4,17 +4,13 @@ require 'rubygems'
 require 'treetop'
 require 'polyglot'
 require 'activesupport'
-
-
 require 'interpreter/grammars/nudge_language_helpers'
 require 'interpreter/grammars/nudge_language'
 require 'interpreter/interpreter'
-
 require 'interpreter/types/pushTypes'
 require 'interpreter/types/codeType'
 require 'interpreter/stack'
 require 'interpreter/programPoints'
-
 require 'search/helpers'
 require 'instructions/infrastructure'
 require 'instructions/stack_manipulation'
@@ -27,14 +23,10 @@ require 'instructions/conditionals'
 require 'instructions/conversions'
 require 'instructions/random_value'
 require 'instructions/exec'
-
-
 require 'search/individual/individual'
 require 'search/operators/basic_operators'
 require 'search/evaluators/evaluator_infrastructure'
 require 'search/evaluators/structural_complexity'
 require 'search/evaluators/learning_from_data'
-
-
-
 require 'search/stations/station'
+require 'search/experiments/experiment'
