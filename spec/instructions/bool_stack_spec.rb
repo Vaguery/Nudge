@@ -315,3 +315,77 @@ describe BoolYankInstruction do
     end
   end
 end
+
+
+describe BoolYankdupInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = BoolYankdupInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = BoolYankdupInstruction.new(@context)
+      @context.clear_stacks
+      @int1 = LiteralPoint.new("int", 3)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there is one :int and at least one :bool" do
+        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @context.stacks[:int].push(@int1)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.clear_stacks
+        (1..4).each {|i| @context.stacks[:bool].push(LiteralPoint.new("bool",i.even?))}
+      end
+      
+      it "should duplicate the top item if the position integer is negative" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @i1.go
+        and_now = @context.stacks[:bool].entries.collect {|i| i.value}
+        and_now.should == [false, true, false, true, true]
+      end
+      
+      it "should duplicate the top item if the position integer is zero" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @i1.go
+        and_now = @context.stacks[:bool].entries.collect {|i| i.value}
+        and_now.should == [false, true, false, true, true]
+      end
+      
+      it "should clone the bottom item and push it if the position is more than the stackdepth" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @i1.go
+        and_now = @context.stacks[:bool].entries.collect {|i| i.value}
+        and_now.should == [false, true, false, true, false]
+      end
+      
+      it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @i1.go
+        and_now = @context.stacks[:bool].entries.collect {|i| i.value}
+        and_now.should == [false, true, false, true, true]
+        
+        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @i1.go
+        and_now = @context.stacks[:bool].entries.collect {|i| i.value}
+        and_now.should == [false, true, false, true, true, false]
+      end
+    end
+  end
+end

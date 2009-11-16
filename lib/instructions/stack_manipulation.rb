@@ -435,3 +435,70 @@ class BoolYankInstruction < Instruction
     super(context, :bool)
   end
 end
+
+
+
+
+
+module YankdupInstruction
+  attr_reader :target_stack
+  
+  def initialize(context, target_stack)
+    @target_stack = target_stack
+    super(context)
+  end
+  
+  def preconditions?
+    if @target_stack != :int
+      needs :int, 1
+      needs @target_stack, 1
+    else
+      needs :int, 2
+    end
+  end
+  
+  def setup
+    @from_where = @context.stacks[:int].pop.value
+  end
+  
+  def derive
+    max = @context.stacks[@target_stack].depth-1
+    case 
+    when @from_where < 0
+      @which = max
+    when @from_where > max
+      @which = 0
+    else
+      @which = max - @from_where 
+    end
+  end
+  
+  def cleanup
+    moved_value = @context.stacks[@target_stack].entries[@which].dup
+    @context.stacks[@target_stack].push(moved_value)
+  end
+end
+
+
+class IntYankdupInstruction < Instruction
+  include YankdupInstruction
+  def initialize(context)
+    super(context, :int)
+  end
+end
+
+
+class FloatYankdupInstruction < Instruction
+  include YankdupInstruction
+  def initialize(context)
+    super(context, :float)
+  end
+end
+
+
+class BoolYankdupInstruction < Instruction
+  include YankdupInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
