@@ -127,7 +127,7 @@ describe "IntGreaterThanQInstruction" do
     @int2 = LiteralPoint.new("int", 2)
   end
   
-  it "should behave its #context set correctly" do
+  it "should have its #context set correctly" do
     @i1.context.should == @context
   end
   

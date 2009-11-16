@@ -301,3 +301,69 @@ class BoolFlushInstruction < Instruction
   end
 end
 
+
+
+
+
+module ShoveInstruction
+  attr_reader :target_stack
+  
+  def initialize(context, target_stack)
+    @target_stack = target_stack
+    super(context)
+  end
+  
+  def preconditions?
+    if @target_stack != :int
+      needs :int, 1
+      needs @target_stack, 1
+    else
+      needs :int, 2
+    end
+  end
+  
+  def setup
+    @how_far = @context.stacks[:int].pop.value
+    @result = @context.stacks[@target_stack].pop
+  end
+  
+  def derive
+    max = @context.stacks[@target_stack].depth
+    case 
+    when @how_far <= 0
+      @new_depth = max
+    when @how_far > max
+      @new_depth = 0
+    else
+      @new_depth = max - @how_far
+    end
+  end
+  
+  def cleanup
+    @context.stacks[@target_stack].entries.insert(@new_depth,@result)
+  end
+end
+
+
+class IntShoveInstruction < Instruction
+  include ShoveInstruction
+  def initialize(context)
+    super(context, :int)
+  end
+end
+
+
+class BoolShoveInstruction < Instruction
+  include ShoveInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
+
+class FloatShoveInstruction < Instruction
+  include ShoveInstruction
+  def initialize(context)
+    super(context, :float)
+  end
+end
