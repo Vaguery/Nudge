@@ -418,3 +418,20 @@ class IntYankInstruction < Instruction
     super(context, :int)
   end
 end
+
+
+class FloatYankInstruction < Instruction
+  include YankInstruction
+  def initialize(context)
+    super(context, :float)
+  end
+end
+
+
+
+class BoolYankInstruction < Instruction
+  include YankInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
