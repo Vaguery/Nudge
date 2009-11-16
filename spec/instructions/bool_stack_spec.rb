@@ -2,24 +2,24 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 theseInstructions = [
-  FloatPopInstruction,
-  FloatSwapInstruction,
-  FloatDuplicateInstruction,
-  FloatRotateInstruction
+  BoolPopInstruction,
+  BoolSwapInstruction,
+  BoolDuplicateInstruction,
+  BoolRotateInstruction
   ]
   
-floatsTheyNeed = {
-  FloatPopInstruction => 1,
-  FloatSwapInstruction => 2,
-  FloatDuplicateInstruction => 1,
-  FloatRotateInstruction => 3
+boolsTheyNeed = {
+  BoolPopInstruction => 1,
+  BoolSwapInstruction => 2,
+  BoolDuplicateInstruction => 1,
+  BoolRotateInstruction => 3
   }
   
 resultTuples = {
-  FloatPopInstruction => {[1.0,2.0]=>[1.0]},
-  FloatSwapInstruction => {[1.1,2.2]=>[2.2,1.1]},
-  FloatDuplicateInstruction => {[33.3] => [33.3,33.3]},
-  FloatRotateInstruction => {[1.1,2.2,3.3] => [2.2,3.3,1.1]}
+  BoolPopInstruction => {[false, true]=>[false]},
+  BoolSwapInstruction => {[false, true]=>[true, false]},
+  BoolDuplicateInstruction => {[true] => [true, true]},
+  BoolRotateInstruction => {[true, false, false] => [false, false, true]}
   }
     
 theseInstructions.each do |instName|
@@ -44,12 +44,12 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @float1 = LiteralPoint.new("float", 1.0)
+        @bool1 = LiteralPoint.new("bool", true)
       end
     
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          10.times {@context.stacks[:float].push(@float1)}
+          10.times {@context.stacks[:bool].push(@bool1)}
           @i1.preconditions?.should == true
         end
         
@@ -59,7 +59,7 @@ theseInstructions.each do |instName|
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          5.times {@context.stacks[:float].push(@float1)}
+          5.times {@context.stacks[:bool].push(@bool1)}
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -71,10 +71,10 @@ theseInstructions.each do |instName|
           examples.each do |inputs, finalStackState|
             params = inputs.inspect
             expected = finalStackState.inspect
-            it "should end up with #{expected} on the \:float stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+            it "should end up with #{expected} on the \:bool stack, starting with #{params}" do
+              inputs.each {|i| @context.stacks[:bool].push(LiteralPoint.new("bool", i))}
               @i1.go
-              finalStackState.reverse.each {|i| @context.stacks[:float].pop.value.should == i}
+              finalStackState.reverse.each {|i| @context.stacks[:bool].pop.value.should == i}
             end
           end
         end
@@ -84,7 +84,7 @@ theseInstructions.each do |instName|
 end
 
 
-describe FloatDepthInstruction do
+describe BoolDepthInstruction do
   before(:each) do
     @context = Interpreter.new
     @i1 = IntDepthInstruction.new(@context)
@@ -102,13 +102,13 @@ describe FloatDepthInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatDepthInstruction.new(@context)
+      @i1 = BoolDepthInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @bool1 = LiteralPoint.new("bool", false)
     end
     
     describe "\#preconditions?" do
-      it "should check that the :float stack responds to #depth" do
+      it "should check that the :bool stack responds to #depth" do
         @i1.preconditions?.should == true
       end
     end
@@ -116,9 +116,9 @@ describe FloatDepthInstruction do
     describe "\#cleanup" do
       it "should count the items on the stack and push it onto the :int stack" do
         @context.stacks[:int].depth.should == 0
-        @i1.go # there are no floats
+        @i1.go # there are no bools
         @context.stacks[:int].peek.value.should == 0
-        7.times {@context.stacks[:float].push @float1}
+        7.times {@context.stacks[:bool].push @bool1}
         @i1.go
         @context.stacks[:int].peek.value.should == 7
       end
@@ -127,10 +127,10 @@ describe FloatDepthInstruction do
 end
 
 
-describe FloatFlushInstruction do
+describe BoolFlushInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatFlushInstruction.new(@context)
+    @i1 = BoolFlushInstruction.new(@context)
   end
   
   it "should behave its context set right" do
@@ -145,9 +145,9 @@ describe FloatFlushInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatFlushInstruction.new(@context)
+      @i1 = BoolFlushInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @bool1 = LiteralPoint.new("bool", true)
     end
     
     describe "\#preconditions?" do
@@ -158,10 +158,10 @@ describe FloatFlushInstruction do
     
     describe "\#cleanup" do
       it "should remove all items on the stack" do
-        11.times {@context.stacks[:float].push(@float1)}
-        @context.stacks[:float].depth.should == 11
+        11.times {@context.stacks[:bool].push(@bool1)}
+        @context.stacks[:bool].depth.should == 11
         @i1.go
-        @context.stacks[:float].depth.should == 0
+        @context.stacks[:bool].depth.should == 0
       end
     end
   end

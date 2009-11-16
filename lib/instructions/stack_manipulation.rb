@@ -35,6 +35,15 @@ class FloatPopInstruction < Instruction
 end
 
 
+class BoolPopInstruction < Instruction
+  include PopInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
+
+
 
 
 
@@ -78,6 +87,15 @@ class FloatSwapInstruction < Instruction
 end
 
 
+class BoolSwapInstruction < Instruction
+  include SwapInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
+
+
 
 
 
@@ -118,6 +136,15 @@ class FloatDuplicateInstruction < Instruction
     super(context, :float)
   end
 end
+
+
+class BoolDuplicateInstruction < Instruction
+  include DuplicateInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
 
 
 
@@ -165,6 +192,15 @@ class FloatRotateInstruction < Instruction
 end
 
 
+class BoolRotateInstruction < Instruction
+  include RotateInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
+
+
 
 
 
@@ -204,6 +240,16 @@ class FloatDepthInstruction < Instruction
     super(context, :float)
   end
 end
+
+
+class BoolDepthInstruction < Instruction
+  include DepthInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
+
 
 
 
@@ -246,3 +292,12 @@ class FloatFlushInstruction < Instruction
     super(context, :float)
   end
 end
+
+
+class BoolFlushInstruction < Instruction
+  include FlushInstruction
+  def initialize(context)
+    super(context, :bool)
+  end
+end
+
