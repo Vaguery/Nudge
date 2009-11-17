@@ -3,7 +3,7 @@ module Nudge
   class Experiment
     attr_reader :name
     attr_accessor :config_path, :data_path
-    attr_accessor :stations
+    attr_accessor :stations, :objectives
     
     def initialize(options = {})
       @name = options[:name] || 'default_experiment'
@@ -14,6 +14,8 @@ module Nudge
       
       # infrastructure
       @stations = []
+      @objectives = {}
+      
       
       # Config.block.instance_eval(self)
       # vs. Config.stored.instance_eval(self)

@@ -24,6 +24,11 @@ describe "Experiment" do
     end
   end
   
+  describe "objectives" do
+    it "should have a library of 'permitted' objectives, an empty hash to begin with" do
+      @exp.objectives.should == {}
+    end
+  end
   
   describe "databases" do
     it "should have a couchDB path" do
