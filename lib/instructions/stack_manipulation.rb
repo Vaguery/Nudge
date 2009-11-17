@@ -95,6 +95,15 @@ class BoolSwapInstruction < Instruction
 end
 
 
+class ExecSwapInstruction < Instruction
+  include SwapInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
+
+
 
 
 
@@ -144,6 +153,15 @@ class BoolDuplicateInstruction < Instruction
     super(context, :bool)
   end
 end
+
+
+class ExecDuplicateInstruction < Instruction
+  include DuplicateInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
 
 
 
@@ -248,6 +266,15 @@ class BoolDepthInstruction < Instruction
     super(context, :bool)
   end
 end
+
+
+class ExecDepthInstruction < Instruction
+  include DepthInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
 
 
 

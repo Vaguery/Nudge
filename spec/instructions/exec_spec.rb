@@ -40,3 +40,136 @@ describe ExecPopInstruction do
     end
   end
 end
+
+
+describe ExecDuplicateInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecDuplicateInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @myInterpreter = Interpreter.new
+      @i1 = ExecDuplicateInstruction.new(@myInterpreter)
+      @myInterpreter.reset("literal bool(false)")
+    end
+
+    describe "\#preconditions?" do
+      it "should check that the :exec stack has at least one item" do
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should push a copy of the top item onto the :exec stack" do
+        @i1.go
+        @myInterpreter.stacks[:exec].depth.should == 2
+        @myInterpreter.stacks[:exec].entries[0].value.should == @myInterpreter.stacks[:exec].entries[1].value
+      end
+      
+      it "should not be the same objectID, just in case" do
+        @i1.go
+        id1 = @myInterpreter.stacks[:exec].entries[0].object_id
+        id2 = @myInterpreter.stacks[:exec].entries[1].object_id
+        id1.should_not == id2
+      end
+    end
+  end
+end
+
+
+describe ExecSwapInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecSwapInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @myInterpreter = Interpreter.new
+      @i1 = ExecSwapInstruction.new(@myInterpreter)
+      @myInterpreter.reset("block{literal bool(false) literal int(88)}")
+      @myInterpreter.step # [pushing the two points]
+    end
+
+    describe "\#preconditions?" do
+      it "should check that the :exec stack has at least one item" do
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should push a copy of the top item onto the :exec stack" do
+        @myInterpreter.stacks[:exec].entries[0].value.should == 88
+        @myInterpreter.stacks[:exec].entries[1].value.should == false
+        @i1.go
+        @myInterpreter.stacks[:exec].depth.should == 2
+        @myInterpreter.stacks[:exec].entries[0].value.should == false
+        @myInterpreter.stacks[:exec].entries[1].value.should == 88
+      end
+    end
+  end
+end
+
+
+describe ExecDepthInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecDepthInstruction.new(@context)
+  end
+  
+  it "should have its context set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecDepthInstruction.new(@context)
+      @context.reset("block{literal bool(false) literal int(88) block {}}")
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that the :bool stack responds to #depth" do
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      it "should count the items on the stack and push it onto the :int stack" do
+        @context.stacks[:int].depth.should == 0
+        @i1.go
+        @context.stacks[:int].peek.value.should == 1
+        @context.step # unpacking the three points onto :exec
+        @i1.go
+        @context.stacks[:int].peek.value.should == 3
+      end
+    end
+  end
+end

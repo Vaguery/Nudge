@@ -87,7 +87,7 @@ end
 describe BoolDepthInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = IntDepthInstruction.new(@context)
+    @i1 = BoolDepthInstruction.new(@context)
   end
   
   it "should have its context set" do
