@@ -8,4 +8,15 @@ module Nudge
       @types = params[:types] || NudgeType.push_types
     end
   end
+  
+  
+  class Config
+    def self.block
+      @block
+    end
+    
+    def self.setup(&block)
+      @block = block
+    end
+  end
 end

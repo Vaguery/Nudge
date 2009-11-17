@@ -12,9 +12,15 @@ module Nudge
       @config_path = options[:config_path] || '../config'
       @data_path = options[:data_path] || '../data'
       
-      
       # infrastructure
       @stations = []
+      
+      # Config.block.instance_eval(self)
+      # vs. Config.stored.instance_eval(self)
+    end
+    
+    def start_search
+      
     end
     
   end
