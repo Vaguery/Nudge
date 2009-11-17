@@ -11,7 +11,8 @@ theseInstructions = [
   FloatAbsInstruction,
   FloatNegativeInstruction,
   FloatPowerInstruction,
-  FloatSqrtInstruction
+  FloatSqrtInstruction,
+  FloatModuloInstruction
   ]
   
 floatsTheyNeed = {
@@ -24,7 +25,8 @@ floatsTheyNeed = {
   FloatAbsInstruction => 1,
   FloatNegativeInstruction => 1,
   FloatPowerInstruction => 2,
-  FloatSqrtInstruction => 1
+  FloatSqrtInstruction => 1,
+  FloatModuloInstruction => 2
   }
   
 resultTuples = {
@@ -37,11 +39,13 @@ resultTuples = {
   FloatAbsInstruction => {[1.11] => 1.11, [-55.55] => 55.55},
   FloatPowerInstruction => {[2.0,2.0] => 4.0, [8.0,0.3333333] => 2.0, [0.5,3.0] => 0.125},
   FloatNegativeInstruction => {[4.44] => -4.44, [-91.1] => 91.1},
-  FloatSqrtInstruction => {[4.0] => 2.0, [94.09] => 9.7}
+  FloatSqrtInstruction => {[4.0] => 2.0, [94.09] => 9.7},
+  FloatModuloInstruction => {[1.1, 0.2] => 0.1, [-99.5 % 4.75] => 0.25, [-99.5 % -4.75] => -4.5}
   }
   
 div0 = {
-  FloatDivideInstruction => [8.12,0.0]
+  FloatDivideInstruction => [8.12,0.0],
+  FloatModuloInstruction => [12.12,0.0]
   }
   
     
