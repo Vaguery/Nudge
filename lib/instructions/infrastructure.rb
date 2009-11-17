@@ -33,7 +33,7 @@ class Instruction
     iNeed = @context.stacks[stackName]
     
     if @context.stacks[stackName].depth < minimum
-       raise NotEnoughStackItems, "missing #{stackName}"
+       raise NotEnoughStackItems, "Stack #{stackName} too small: needs at least #{minimum} items"
       return false
     else
       return true

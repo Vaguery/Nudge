@@ -414,6 +414,15 @@ class FloatShoveInstruction < Instruction
 end
 
 
+class ExecShoveInstruction < Instruction
+  include ShoveInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
+
+
 
 
 
@@ -473,11 +482,18 @@ class FloatYankInstruction < Instruction
 end
 
 
-
 class BoolYankInstruction < Instruction
   include YankInstruction
   def initialize(context)
     super(context, :bool)
+  end
+end
+
+
+class ExecYankInstruction < Instruction
+  include YankInstruction
+  def initialize(context)
+    super(context, :exec)
   end
 end
 
@@ -545,5 +561,13 @@ class BoolYankdupInstruction < Instruction
   include YankdupInstruction
   def initialize(context)
     super(context, :bool)
+  end
+end
+
+
+class ExecYankdupInstruction < Instruction
+  include YankdupInstruction
+  def initialize(context)
+    super(context, :exec)
   end
 end

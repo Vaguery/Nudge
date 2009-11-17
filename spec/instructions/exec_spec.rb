@@ -257,3 +257,216 @@ describe ExecRotateInstruction do
     end
   end
 end
+
+
+describe ExecYankdupInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecYankdupInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context.clear_stacks
+      @i1 = ExecYankdupInstruction.new(@context)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there is one :int and at least one :exec item" do
+        @context.reset("block {}")
+        @context.stacks[:int].push(LiteralPoint.new("int",2))
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.clear_stacks
+        (1..3).each {|i| @context.stacks[:exec].push(LiteralPoint.new("float",i*1.0))}
+      end
+      
+      it "should duplicate the top item if the position integer is negative" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,2.0,3.0,3.0]
+      end
+      
+      it "should duplicate the top item if the position integer is zero" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,2.0,3.0, 3.0]
+      end
+      
+      it "should clone the bottom item and push it if the position is more than the stackdepth" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,2.0,3.0, 1.0]
+      end
+      
+      it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,2.0,3.0, 1.0]
+        
+        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,2.0,3.0, 1.0, 2.0]
+      end
+    end
+  end
+end
+
+
+describe ExecYankInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecYankInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecYankInstruction.new(@context)
+      @context.clear_stacks
+      @int1 = LiteralPoint.new("int", 3)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there is one :int and at least one more :int" do
+        @context.stacks[:exec].push(LiteralPoint.new("float", -99.99))
+        @context.stacks[:int].push(@int1)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.clear_stacks
+        (1..3).each {|i| @context.stacks[:exec].push(LiteralPoint.new("float",i*0.5))}
+      end
+      
+      it "should not change anything if the position integer is negative" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [0.5,1.0,1.5]
+      end
+      
+      it "should not change anything if the position integer is zero" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [0.5,1.0,1.5]
+      end
+      
+      it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [1.0,1.5, 0.5]
+      end
+      
+      it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @i1.go
+        and_now = @context.stacks[:exec].entries.collect {|i| i.value}
+        and_now.should == [0.5,1.5, 1.0]
+      end
+    end
+  end
+end
+
+
+describe ExecShoveInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecShoveInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecShoveInstruction.new(@context)
+      @context.clear_stacks
+      @float1 = LiteralPoint.new("float", 9.9)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there is one :int and at least one :float" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:exec].push(@float1)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.clear_stacks
+        11.times {@context.stacks[:exec].push(@float1)}
+        @context.stacks[:exec].push(LiteralPoint.new("float", 1.1)) # making it 12 deep
+      end
+      
+      it "should not move the top item if the integer is negative" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @i1.go
+        @context.stacks[:exec].depth.should == 12
+        @context.stacks[:exec].peek.value.should == 1.1
+      end
+      
+      it "should not move the top item if the integer is zero" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @i1.go
+        @context.stacks[:exec].depth.should == 12
+        @context.stacks[:exec].peek.value.should == 1.1
+      end
+      
+      it "should move the top item farther down if the value is less than the depth" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @i1.go
+        @context.stacks[:exec].depth.should == 12
+        @context.stacks[:exec].entries[0].value.should == 1.1
+      end
+      
+      it "should move the top item to the bottom if the value is more than the depth" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @i1.go
+        @context.stacks[:exec].depth.should == 12
+        @context.stacks[:exec].entries[11].value.should == 9.9
+        @context.stacks[:exec].entries[7].value.should == 1.1
+      end
+    end
+  end
+end
