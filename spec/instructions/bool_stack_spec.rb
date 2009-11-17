@@ -151,7 +151,7 @@ describe BoolFlushInstruction do
     end
     
     describe "\#preconditions?" do
-      it "should check that the :int stack responds to #depth" do
+      it "should check that the :bool stack responds to #depth" do
         @i1.preconditions?.should == true
       end
     end

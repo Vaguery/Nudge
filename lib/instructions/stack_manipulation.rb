@@ -218,6 +218,15 @@ class BoolRotateInstruction < Instruction
 end
 
 
+class ExecRotateInstruction < Instruction
+  include RotateInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
+
+
 
 
 
@@ -327,6 +336,15 @@ class BoolFlushInstruction < Instruction
     super(context, :bool)
   end
 end
+
+
+class ExecFlushInstruction < Instruction
+  include FlushInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+
 
 
 

@@ -112,16 +112,16 @@ EXEC.DEFINE:
 EXEC.DO*COUNT: 
 EXEC.DO*RANGE: 
 EXEC.DO*TIMES:
-EXEC.DUP: 
-EXEC.FLUSH: 
+EXEC.DUP:        ExecDuplicateInstruction
+EXEC.FLUSH:      ExecFlushInstruction
 EXEC.IF: 
 EXEC.K: 
-EXEC.POP: 
-EXEC.ROT: 
+EXEC.POP:        ExecPopInstruction
+EXEC.ROT:        ExecRotateInstruction
 EXEC.S: 
 EXEC.SHOVE: 
-EXEC.STACKDEPTH: 
-EXEC.SWAP: 
+EXEC.STACKDEPTH: ExecDepthInstruction
+EXEC.SWAP:       ExecSwapInstruction
 EXEC.Y: 
 EXEC.YANK: 
 EXEC.YANKDUP: 
