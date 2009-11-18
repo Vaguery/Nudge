@@ -115,3 +115,20 @@ class ExecEqualQInstruction < Instruction
     pushes :bool, @result
   end
 end
+
+
+class NameEqualQInstruction < Instruction
+  def preconditions?
+    needs :name, 2
+  end
+  def setup
+    @arg2 = @context.stacks[:name].pop.value
+    @arg1 = @context.stacks[:name].pop.value
+  end
+  def derive
+    @result = LiteralPoint.new("bool", @arg1 == @arg2)
+  end
+  def cleanup
+    pushes :bool, @result
+  end
+end
