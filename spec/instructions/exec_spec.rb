@@ -602,3 +602,104 @@ describe ExecShoveInstruction do
     end
   end
 end
+
+
+describe ExecDoRangeInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecDoRangeInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecDoRangeInstruction.new(@context)
+      @context.reset("block {}")
+      @context.enable(ExecDoRangeInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there are two :ints and at least one :exec item" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset("block {}")
+      end
+      
+      it "should finish if the :ints are identical, pushing an :int and a copy of the codeblock" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.go
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 3
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "block {}"
+      end
+      
+      it "should increment the counter if the counter < destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 1
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (2)\n  literal int (3)\n  do exec_do_range\n  block {}}"
+        
+        5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
+        
+        @context.stacks[:int].depth.should == 2
+        @context.stacks[:int].peek.value.should == 2
+        
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (3)\n  literal int (3)\n  do exec_do_range\n  block {}}"
+      end
+      
+      it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -2))
+        @context.stacks[:int].push(LiteralPoint.new("int", -19))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == -2
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-3)\n  literal int (-19)\n  do exec_do_range\n  block {}}"
+        
+        5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
+        
+        @context.stacks[:int].depth.should == 2
+        @context.stacks[:int].peek.value.should == -3
+        
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-4)\n  literal int (-19)\n  do exec_do_range\n  block {}}"
+      end
+      
+      it "should 'continue' until counter and destination are the same value" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(LiteralPoint.new("int", 100))
+        @i1.go
+        @context.run # finish it off
+        @context.stacks[:int].depth.should == 100
+        @context.stacks[:exec].depth.should == 0
+      end
+    end
+  end
+end

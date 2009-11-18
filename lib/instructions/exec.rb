@@ -49,3 +49,41 @@ class ExecSInstruction < Instruction
     pushes :exec, @argA
   end
 end
+
+
+class ExecDoRangeInstruction < Instruction
+  def preconditions?
+    needs :exec, 1
+    needs :int, 2
+  end
+  
+  def setup
+    @destination = @context.stacks[:int].pop
+    @counter = @context.stacks[:int].pop
+    @code = @context.stacks[:exec].pop
+  end
+  
+  def derive
+    @finished = false
+    if @counter.value == @destination.value
+      @finished = true
+    elsif @counter.value < @destination.value
+      @new_counter = LiteralPoint.new("int", @counter.value + 1)
+    else
+      @new_counter = LiteralPoint.new("int", @counter.value - 1)
+    end
+  end
+  
+  def cleanup
+    if @finished
+      pushes :int, @counter
+      pushes :exec, @code
+    else
+      recursor = @context.parser.parse(
+        "block {#{@new_counter.listing} #{@destination.listing} do exec_do_range #{@code.listing}}")
+      pushes :int, @counter
+      pushes :exec, recursor.to_points
+      pushes :exec, @code
+    end
+  end
+end
