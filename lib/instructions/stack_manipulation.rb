@@ -51,6 +51,15 @@ class ExecPopInstruction < Instruction
 end
 
 
+class NamePopInstruction < Instruction
+  include PopInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
+
+
 
 
 
@@ -112,6 +121,15 @@ class ExecSwapInstruction < Instruction
 end
 
 
+class NameSwapInstruction < Instruction
+  include SwapInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
+
+
 
 
 
@@ -170,6 +188,15 @@ class ExecDuplicateInstruction < Instruction
     super(context, :exec)
   end
 end
+
+
+class NameDuplicateInstruction < Instruction
+  include DuplicateInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
 
 
 
@@ -235,6 +262,15 @@ class ExecRotateInstruction < Instruction
 end
 
 
+class NameRotateInstruction < Instruction
+  include RotateInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
+
+
 
 
 
@@ -292,6 +328,15 @@ class ExecDepthInstruction < Instruction
     super(context, :exec)
   end
 end
+
+
+class NameDepthInstruction < Instruction
+  include DepthInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
 
 
 
@@ -353,6 +398,15 @@ class ExecFlushInstruction < Instruction
     super(context, :exec)
   end
 end
+
+
+class NameFlushInstruction < Instruction
+  include FlushInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
 
 
 
@@ -431,6 +485,15 @@ class ExecShoveInstruction < Instruction
 end
 
 
+class NameShoveInstruction < Instruction
+  include ShoveInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
+
+
 
 
 
@@ -507,6 +570,15 @@ class ExecYankInstruction < Instruction
 end
 
 
+class NameYankInstruction < Instruction
+  include YankInstruction
+  def initialize(context)
+    super(context, :name)
+  end
+end
+
+
+
 
 
 
@@ -578,5 +650,13 @@ class ExecYankdupInstruction < Instruction
   include YankdupInstruction
   def initialize(context)
     super(context, :exec)
+  end
+end
+
+
+class NameYankdupInstruction < Instruction
+  include YankdupInstruction
+  def initialize(context)
+    super(context, :name)
   end
 end

@@ -159,9 +159,5 @@ module Nudge
     def disable_all_types
       @types = []
     end
-    
-    
-    
-    
   end
 end

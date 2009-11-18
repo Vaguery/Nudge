@@ -2,24 +2,24 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 theseInstructions = [
-  FloatPopInstruction,
-  FloatSwapInstruction,
-  FloatDuplicateInstruction,
-  FloatRotateInstruction
+  NamePopInstruction,
+  NameSwapInstruction,
+  NameDuplicateInstruction,
+  NameRotateInstruction
   ]
   
-floatsTheyNeed = {
-  FloatPopInstruction => 1,
-  FloatSwapInstruction => 2,
-  FloatDuplicateInstruction => 1,
-  FloatRotateInstruction => 3
+namesTheyNeed = {
+  NamePopInstruction => 1,
+  NameSwapInstruction => 2,
+  NameDuplicateInstruction => 1,
+  NameRotateInstruction => 3
   }
   
 resultTuples = {
-  FloatPopInstruction => {[1.0,2.0]=>[1.0]},
-  FloatSwapInstruction => {[1.1,2.2]=>[2.2,1.1]},
-  FloatDuplicateInstruction => {[33.3] => [33.3,33.3]},
-  FloatRotateInstruction => {[1.1,2.2,3.3] => [2.2,3.3,1.1]}
+  NamePopInstruction => {["a", "b"]=>["a"]},
+  NameSwapInstruction => {["a", "b"]=>["b", "a"]},
+  NameDuplicateInstruction => {["a"] => ["a", "a"]},
+  NameRotateInstruction => {["a", "b", "c"] => ["b", "c", "a"]}
   }
     
 theseInstructions.each do |instName|
@@ -44,12 +44,12 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @float1 = LiteralPoint.new("float", 1.0)
+        @name1 = LiteralPoint.new("name", "a")
       end
     
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          10.times {@context.stacks[:float].push(@float1)}
+          8.times {@context.stacks[:name].push(@name1)}
           @i1.preconditions?.should == true
         end
         
@@ -59,7 +59,7 @@ theseInstructions.each do |instName|
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          5.times {@context.stacks[:float].push(@float1)}
+          7.times {@context.stacks[:name].push(@name1)}
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -71,10 +71,10 @@ theseInstructions.each do |instName|
           examples.each do |inputs, finalStackState|
             params = inputs.inspect
             expected = finalStackState.inspect
-            it "should end up with #{expected} on the \:float stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+            it "should end up with #{expected} on the \:name stack, starting with #{params}" do
+              inputs.each {|i| @context.stacks[:name].push(LiteralPoint.new("name", i))}
               @i1.go
-              finalStackState.reverse.each {|i| @context.stacks[:float].pop.value.should == i}
+              finalStackState.reverse.each {|i| @context.stacks[:name].pop.value.should == i}
             end
           end
         end
@@ -84,10 +84,10 @@ theseInstructions.each do |instName|
 end
 
 
-describe FloatDepthInstruction do
+describe NameDepthInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatDepthInstruction.new(@context)
+    @i1 = NameDepthInstruction.new(@context)
   end
   
   it "should have its context set" do
@@ -102,9 +102,9 @@ describe FloatDepthInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatDepthInstruction.new(@context)
+      @i1 = NameDepthInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @name1 = LiteralPoint.new("name", "d")
     end
     
     describe "\#preconditions?" do
@@ -116,9 +116,9 @@ describe FloatDepthInstruction do
     describe "\#cleanup" do
       it "should count the items on the stack and push it onto the :int stack" do
         @context.stacks[:int].depth.should == 0
-        @i1.go # there are no floats
+        @i1.go # there are no names
         @context.stacks[:int].peek.value.should == 0
-        7.times {@context.stacks[:float].push @float1}
+        7.times {@context.stacks[:name].push @name1}
         @i1.go
         @context.stacks[:int].peek.value.should == 7
       end
@@ -127,10 +127,10 @@ describe FloatDepthInstruction do
 end
 
 
-describe FloatFlushInstruction do
+describe NameFlushInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatFlushInstruction.new(@context)
+    @i1 = NameFlushInstruction.new(@context)
   end
   
   it "should have its context set right" do
@@ -145,9 +145,9 @@ describe FloatFlushInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatFlushInstruction.new(@context)
+      @i1 = NameFlushInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @name1 = LiteralPoint.new("name", "xx")
     end
     
     describe "\#preconditions?" do
@@ -158,20 +158,20 @@ describe FloatFlushInstruction do
     
     describe "\#cleanup" do
       it "should remove all items on the stack" do
-        11.times {@context.stacks[:float].push(@float1)}
-        @context.stacks[:float].depth.should == 11
+        11.times {@context.stacks[:name].push(@name1)}
+        @context.stacks[:name].depth.should == 11
         @i1.go
-        @context.stacks[:float].depth.should == 0
+        @context.stacks[:name].depth.should == 0
       end
     end
   end
 end
 
 
-describe FloatShoveInstruction do
+describe NameShoveInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatShoveInstruction.new(@context)
+    @i1 = NameShoveInstruction.new(@context)
   end
   
   it "should check its context is set" do
@@ -186,15 +186,15 @@ describe FloatShoveInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatShoveInstruction.new(@context)
+      @i1 = NameShoveInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 9.9)
+      @name1 = LiteralPoint.new("name", "abc")
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :int and at least one :float" do
+      it "should check that there is one :int and at least one :name" do
         @context.stacks[:int].push(LiteralPoint.new("int", 4))
-        @context.stacks[:float].push(@float1)
+        @context.stacks[:name].push(@name1)
         @i1.preconditions?.should == true
       end
     end
@@ -202,47 +202,47 @@ describe FloatShoveInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        11.times {@context.stacks[:float].push(@float1)}
-        @context.stacks[:float].push(LiteralPoint.new("float", 1.1)) # making it 12 deep
+        11.times {@context.stacks[:name].push(@name1)}
+        @context.stacks[:name].push(LiteralPoint.new("name", "xyz")) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
         @context.stacks[:int].push(LiteralPoint.new("int", -99))
         @i1.go
-        @context.stacks[:float].depth.should == 12
-        @context.stacks[:float].peek.value.should == 1.1
+        @context.stacks[:name].depth.should == 12
+        @context.stacks[:name].peek.value.should == "xyz"
       end
       
       it "should not move the top item if the integer is zero" do
         @context.stacks[:int].push(LiteralPoint.new("int", 0))
         @i1.go
-        @context.stacks[:float].depth.should == 12
-        @context.stacks[:float].peek.value.should == 1.1
+        @context.stacks[:name].depth.should == 12
+        @context.stacks[:name].peek.value.should == "xyz"
       end
       
       it "should move the top item farther down if the value is less than the depth" do
         @context.stacks[:int].push(LiteralPoint.new("int", 1000))
         @i1.go
-        @context.stacks[:float].depth.should == 12
-        @context.stacks[:float].entries[0].value.should == 1.1
+        @context.stacks[:name].depth.should == 12
+        @context.stacks[:name].entries[0].value.should == "xyz"
       end
       
       it "should move the top item to the bottom if the value is more than the depth" do
         @context.stacks[:int].push(LiteralPoint.new("int", 4))
         @i1.go
-        @context.stacks[:float].depth.should == 12
-        @context.stacks[:float].entries[11].value.should == 9.9
-        @context.stacks[:float].entries[7].value.should == 1.1
+        @context.stacks[:name].depth.should == 12
+        @context.stacks[:name].entries[11].value.should == "abc"
+        @context.stacks[:name].entries[7].value.should == "xyz"
       end
     end
   end
 end
 
 
-describe FloatYankInstruction do
+describe NameYankInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatYankInstruction.new(@context)
+    @i1 = NameYankInstruction.new(@context)
   end
   
   it "should check its context is set" do
@@ -257,14 +257,14 @@ describe FloatYankInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatYankInstruction.new(@context)
+      @i1 = NameYankInstruction.new(@context)
       @context.clear_stacks
       @int1 = LiteralPoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :float and at least one :int" do
-        @context.stacks[:float].push(LiteralPoint.new("float", -99.99))
+      it "should check that there is one :name and at least one :int" do
+        @context.stacks[:name].push(LiteralPoint.new("name", "g"))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -273,45 +273,45 @@ describe FloatYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:float].push(LiteralPoint.new("float",i*0.5))}
+        ('d'..'f').each {|i| @context.stacks[:name].push(LiteralPoint.new("name",i))}
       end
       
       it "should not change anything if the position integer is negative" do
         @context.stacks[:int].push(LiteralPoint.new("int", -99))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [0.5,1.0,1.5]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['d', 'e', 'f']
       end
       
       it "should not change anything if the position integer is zero" do
         @context.stacks[:int].push(LiteralPoint.new("int", 0))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [0.5,1.0,1.5]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['d', 'e', 'f']
       end
       
       it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
         @context.stacks[:int].push(LiteralPoint.new("int", 1000))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,1.5, 0.5]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['e', 'f', 'd']
       end
       
       it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
         @context.stacks[:int].push(LiteralPoint.new("int", 1))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [0.5,1.5, 1.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['d', 'f', 'e']
       end
     end
   end
 end
 
 
-describe FloatYankdupInstruction do
+describe NameYankdupInstruction do
   before(:each) do
     @context = Interpreter.new
-    @i1 = FloatYankdupInstruction.new(@context)
+    @i1 = NameYankdupInstruction.new(@context)
   end
   
   it "should check its context is set" do
@@ -326,14 +326,14 @@ describe FloatYankdupInstruction do
   
   describe "\#go" do
     before(:each) do
-      @i1 = FloatYankdupInstruction.new(@context)
+      @i1 = NameYankdupInstruction.new(@context)
       @context.clear_stacks
       @int1 = LiteralPoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :int and at least one :float" do
-        @context.stacks[:float].push(LiteralPoint.new("float", 1.1))
+      it "should check that there is one :int and at least one :name" do
+        @context.stacks[:name].push(LiteralPoint.new("name", 'x'))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -342,40 +342,40 @@ describe FloatYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:float].push(LiteralPoint.new("float",i*1.0))}
+        ('m'..'q').each {|i| @context.stacks[:name].push(LiteralPoint.new("name",i))}
       end
       
       it "should duplicate the top item if the position integer is negative" do
         @context.stacks[:int].push(LiteralPoint.new("int", -99))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,2.0,3.0, 3.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['m', 'n', 'o', 'p', 'q', 'q']
       end
       
       it "should duplicate the top item if the position integer is zero" do
         @context.stacks[:int].push(LiteralPoint.new("int", 0))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,2.0,3.0, 3.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['m', 'n', 'o', 'p', 'q', 'q']
       end
       
       it "should clone the bottom item and push it if the position is more than the stackdepth" do
         @context.stacks[:int].push(LiteralPoint.new("int", 1000))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,2.0,3.0, 1.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['m', 'n', 'o', 'p', 'q', 'm']
       end
       
       it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
         @context.stacks[:int].push(LiteralPoint.new("int", 2))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,2.0,3.0, 1.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['m', 'n', 'o', 'p', 'q', 'o']
         
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(LiteralPoint.new("int", 4))
         @i1.go
-        and_now = @context.stacks[:float].entries.collect {|i| i.value}
-        and_now.should == [1.0,2.0,3.0, 1.0, 2.0]
+        and_now = @context.stacks[:name].entries.collect {|i| i.value}
+        and_now.should == ['m', 'n', 'o', 'p', 'q', 'o', 'n']
       end
     end
   end

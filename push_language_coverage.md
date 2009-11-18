@@ -89,19 +89,19 @@ BOOLEAN.YANKDUP:     BoolYankdupInstruction
 
 NAME instructions
 
-NAME.=: 
-NAME.DUP: 
-NAME.FLUSH: 
-NAME.POP: 
+NAME.=:              
+NAME.DUP:            NameDupInstruction
+NAME.FLUSH:          NameFlushInstruction
+NAME.POP:            NamePopInstruction
 NAME.QUOTE: 
 NAME.RAND: 
 NAME.RANDBOUNDNAME: 
-NAME.ROT: 
-NAME.SHOVE: 
-NAME.STACKDEPTH: 
-NAME.SWAP: 
-NAME.YANK: 
-NAME.YANKDUP: 
+NAME.ROT:            NameRotInstruction
+NAME.SHOVE:          NameShoveInstruction
+NAME.STACKDEPTH:     NameDepthInstruction
+NAME.SWAP:           NameSwapInstruction
+NAME.YANK:           NameYankInstruction
+NAME.YANKDUP:        NameYankdupInstruction
 
 
 
@@ -109,9 +109,9 @@ EXEC instructions
 
 EXEC.=:              ExecEqualQInstruction
 EXEC.DEFINE:         ExecDefineInstruction
-EXEC.DO*COUNT:       
-EXEC.DO*RANGE:       
-EXEC.DO*TIMES:       
+EXEC.DO*COUNT:       ExecDoCountInstruction
+EXEC.DO*RANGE:       ExecDoRangeInstruction
+EXEC.DO*TIMES:       ExecDoTimesInstruction
 EXEC.DUP:            ExecDuplicateInstruction
 EXEC.FLUSH:          ExecFlushInstruction
 EXEC.IF:             ExecIfInstruction
