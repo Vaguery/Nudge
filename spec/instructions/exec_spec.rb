@@ -46,6 +46,92 @@ describe ExecYInstruction do
 end
 
 
+describe ExecKInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecKInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = ExecKInstruction.new(@context)
+      @context.reset("block { do int_add do int_subtract }")
+      @context.step # unwrapping the two instructions
+    end
+
+    describe "\#preconditions?" do
+      it "should check that the :exec stack has at least two items" do
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should delete the item from the second position on the :exec stack" do
+        @context.stacks[:exec].depth.should == 2
+        @i1.go
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "do int_add"
+      end
+    end
+  end
+end
+
+
+describe ExecSInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecSInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = ExecSInstruction.new(@context)
+      @context.reset("block { do int_add do int_subtract do int_multiply}")
+      @context.step # unwrapping the three instructions
+    end
+
+    describe "\#preconditions?" do
+      it "should check that the :exec stack has at least three items" do
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should result in the top one [replaced], the old 3rd one, then a block with the 2nd and 3rd" do
+        @context.stacks[:exec].depth.should == 3
+        @i1.go
+        @context.stacks[:exec].depth.should == 3
+        @context.stacks[:exec].entries[2].listing.should == "do int_add" # old top one
+        @context.stacks[:exec].entries[1].listing.should == "do int_multiply" # old 3rd one
+        @context.stacks[:exec].entries[0].listing.should == "block {do int_subtract do int_multiply}"
+      end
+    end
+  end
+end
+
+
 
 describe ExecPopInstruction do
   before(:each) do
@@ -65,9 +151,9 @@ describe ExecPopInstruction do
   
   describe "\#go" do
     before(:each) do
-      @myInterpreter = Interpreter.new
-      @i1 = ExecPopInstruction.new(@myInterpreter)
-      @myInterpreter.reset("block {literal float(-2.1)\nliteral float(-2.1)}")
+      @context = Interpreter.new
+      @i1 = ExecPopInstruction.new(@context)
+      @context.reset("block {literal float(-2.1)\nliteral float(-2.1)}")
     end
 
     describe "\#preconditions?" do
@@ -78,10 +164,10 @@ describe ExecPopInstruction do
 
     describe "\#cleanup" do
       it "should remove one item from the stack" do
-        @myInterpreter.step
-        @myInterpreter.stacks[:exec].depth.should == 2
+        @context.step
+        @context.stacks[:exec].depth.should == 2
         @i1.go
-        @myInterpreter.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].depth.should == 1
       end
     end
   end
