@@ -1,34 +1,44 @@
-class IntIfInstruction < Instruction
+module IfInstruction
+  attr_reader :target_stack
+  
+  def initialize(context, target_stack)
+    @target_stack = target_stack
+    super(context)
+  end
+  
   def preconditions?
-    needs :int, 1
+    needs @target_stack, 2
     needs :bool, 1
   end
   def setup
     @stay = @context.stacks[:bool].pop.value
+    @ifFalse = @context.stacks[@target_stack].pop
+    @ifTrue = @context.stacks[@target_stack].pop
   end
   def derive
   end
   def cleanup
-    if !@stay
-      @context.stacks[:int].pop
-    end
+    @stay ? @context.stacks[@target_stack].push(@ifTrue) : @context.stacks[@target_stack].push(@ifFalse)
   end
 end
 
+class IntIfInstruction < Instruction
+  include IfInstruction
+  def initialize(context)
+    super(context, :int)
+  end
+end
 
 class FloatIfInstruction < Instruction
-  def preconditions?
-    needs :float, 1
-    needs :bool, 1
+  include IfInstruction
+  def initialize(context)
+    super(context, :float)
   end
-  def setup
-    @stay = @context.stacks[:bool].pop.value
-  end
-  def derive
-  end
-  def cleanup
-    if !@stay
-      @context.stacks[:float].pop
-    end
+end
+
+class ExecIfInstruction < Instruction
+  include IfInstruction
+  def initialize(context)
+    super(context, :exec)
   end
 end

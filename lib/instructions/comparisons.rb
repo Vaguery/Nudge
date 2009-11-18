@@ -98,3 +98,20 @@ class FloatLessThanQInstruction < Instruction
     pushes :bool, @result
   end
 end
+
+
+class ExecEqualQInstruction < Instruction
+  def preconditions?
+    needs :exec, 2
+  end
+  def setup
+    @arg2 = @context.stacks[:exec].pop.tidy
+    @arg1 = @context.stacks[:exec].pop.tidy
+  end
+  def derive
+      @result = LiteralPoint.new("bool", @arg1 == @arg2)
+  end
+  def cleanup
+    pushes :bool, @result
+  end
+end

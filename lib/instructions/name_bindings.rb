@@ -16,13 +16,6 @@ module DefineInstruction
     else
       needs :name, 2
     end
-    # 
-    # if @context.respond_to?(:bind_name)
-    #   return true
-    # else
-    #   raise NamesNotEnabled
-    #   return false
-    # end
   end
   
   def setup
@@ -61,3 +54,12 @@ class FloatDefineInstruction < Instruction
     super(context, :float)
   end
 end
+
+
+class ExecDefineInstruction < Instruction
+  include DefineInstruction
+  def initialize(context)
+    super(context, :exec)
+  end
+end
+

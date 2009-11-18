@@ -1,81 +1,159 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-theseInstructions = [
-  IntIfInstruction,
-  FloatIfInstruction
-  ]
+describe IntIfInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = IntIfInstruction.new(@context)
+  end
   
-addressesStack = {
-  IntIfInstruction => ["int", IntType],
-  FloatIfInstruction => ["float", FloatType]
-}
-
-
-theseInstructions.each do |instName|
-  describe instName do
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
     before(:each) do
       @context = Interpreter.new
-      @i1 = instName.new(@context)
+      @i1 = IntIfInstruction.new(@context)
+      @v1 = LiteralPoint.new("int",  1)
+      @v2 = LiteralPoint.new("int", -100)
     end
-    
-    it "should have the right context" do
-      @i1.context.should == @context
-    end
-    
-    [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-      it "should respond to \##{methodName}" do
-        @i1 = instName.new(@context)
-        @i1.should respond_to(methodName)
-      end   
-    end
-    
-    describe "\#go" do
-      before(:each) do
-        @i1 = instName.new(@context)
-        @context.clear_stacks
-        @stackName = addressesStack[instName][0]
-        @someValue = addressesStack[instName][1].any_value
-        @myThing = LiteralPoint.new(@stackName,@someValue)
+
+    describe "\#preconditions?" do
+      it "should check that there are two items on the target stack and at least one :bool" do
+        @context.stacks[:int].push(@v1)
+        @context.stacks[:int].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.preconditions?.should == true
       end
-    
-      describe "\#preconditions?" do
-        it "should check that there are enough parameters" do
-          10.times {@context.stacks[@stackName.to_sym].push(@myThing)}
-          @context.stacks[:bool].push(LiteralPoint.new("bool",true))
-          @i1.preconditions?.should == true
-        end
+    end
+
+    describe "\#cleanup" do
+      it "should keep the top :int if the :bool is true, otherwise the second" do
+        @context.stacks[:int].push(@v1)
+        @context.stacks[:int].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.go
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 1
         
-        it "should raise an error if the preconditions aren't met" do
-          @context.clear_stacks # there are no params at all
-          lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
-          @context.stacks[:bool].push(LiteralPoint.new("bool",false))
-          lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
-          @context.clear_stacks # there are no params at all
-          @context.stacks[@stackName.to_sym].push(@someValue)
-          lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
-        end
+        @context.stacks[:int].push(@v1)
+        @context.stacks[:int].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @i1.go
+        @context.stacks[:int].peek.value.should == -100
+      end
+    end
+  end
+end
+
+
+describe FloatIfInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = FloatIfInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = FloatIfInstruction.new(@context)
+      @v1 = LiteralPoint.new("float",  1.0)
+      @v2 = LiteralPoint.new("float", -9.5)
+    end
+
+    describe "\#preconditions?" do
+      it "should check that there are two items on the target stack and at least one :bool" do
+        @context.stacks[:float].push(@v1)
+        @context.stacks[:float].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should keep the top :int if the :bool is true, otherwise the second" do
+        @context.stacks[:float].push(@v1)
+        @context.stacks[:float].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.go
+        @context.stacks[:float].depth.should == 1
+        @context.stacks[:float].peek.value.should == 1.0
         
-        it "should successfully run #go only if all preconditions are met" do
-          5.times {@context.stacks[@stackName.to_sym].push(@someValue)}
-          @context.stacks[:bool].push(LiteralPoint.new("bool",true))
-          @i1.should_receive(:cleanup)
-          @i1.go
-        end
+        @context.stacks[:float].push(@v1)
+        @context.stacks[:float].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @i1.go
+        @context.stacks[:float].peek.value.should == -9.5
+      end
+    end
+  end
+end
+
+
+describe ExecIfInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecIfInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = ExecIfInstruction.new(@context)
+      @v1 = LiteralPoint.new("float",  1.0)
+      @v2 = LiteralPoint.new("float", -9.5)
+    end
+
+    describe "\#preconditions?" do
+      it "should check that there are two items on the target stack and at least one :bool" do
+        @context.stacks[:exec].push(@v1)
+        @context.stacks[:exec].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.preconditions?.should == true
+      end
+    end
+
+    describe "\#cleanup" do
+      it "should keep the top :exec item if the :bool is true, otherwise the second" do
+        @context.stacks[:exec].push(@v1)
+        @context.stacks[:exec].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", true))
+        @i1.go
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.value.should == 1.0
         
-        describe "\#cleanup" do
-          it "should only keep the value if :bool is true, delete if false" do
-            @context.clear_stacks
-            @context.stacks[@stackName.to_sym].push(@someValue)
-            @context.stacks[:bool].push(LiteralPoint.new("bool",false))
-            @i1.go
-            @context.stacks[@stackName.to_sym].depth.should == 0
-            @context.stacks[@stackName.to_sym].push(@someValue)
-            @context.stacks[:bool].push(LiteralPoint.new("bool",true))
-            @i1.go
-            @context.stacks[@stackName.to_sym].depth.should == 1
-          end
-        end
+        @context.stacks[:exec].push(@v1)
+        @context.stacks[:exec].push(@v2)
+        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @i1.go
+        @context.stacks[:exec].peek.value.should == -9.5
       end
     end
   end

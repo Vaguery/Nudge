@@ -359,3 +359,42 @@ describe "FloatEqualQInstruction" do
     @context.stacks[:bool].peek.value.should == true
   end
 end
+
+
+describe "ExecEqualQInstruction" do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecEqualQInstruction.new(@context)
+    @thing1 = "block { do int_add  sample float(0.5) block { } }"
+    @thing2 = "block {do int_add sample float(0.5) block {}}"
+    @thing3 = "block {do int_add sample float(0.25) block {}}"
+    @context.reset("block {#{@thing1} #{@thing2} #{@thing3} #{@thing2}}")
+    @context.step
+  end
+  
+  it "should have its #context set to that Interpreter instance it's in" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end 
+  
+  it "should check that there are enough parameters" do
+    @i1.preconditions?.should == true
+  end
+  
+  it "should raise an error if the preconditions aren't met" do
+    @context.clear_stacks # there are no params at all
+    lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+  end
+  
+  it "should push the correct result to the :bool stack" do
+    @i1.go
+    @context.stacks[:bool].peek.value.should == true
+    @i1.go
+    @context.stacks[:bool].peek.value.should == false
+  end
+end
