@@ -107,24 +107,24 @@ NAME.YANKDUP:
 
 EXEC instructions
 
-EXEC.=: 
-EXEC.DEFINE: 
-EXEC.DO*COUNT: 
-EXEC.DO*RANGE: 
-EXEC.DO*TIMES:
-EXEC.DUP:        ExecDuplicateInstruction
-EXEC.FLUSH:      ExecFlushInstruction
-EXEC.IF: 
-EXEC.K: 
-EXEC.POP:        ExecPopInstruction
-EXEC.ROT:        ExecRotateInstruction
-EXEC.S: 
-EXEC.SHOVE: 
-EXEC.STACKDEPTH: ExecDepthInstruction
-EXEC.SWAP:       ExecSwapInstruction
-EXEC.Y: 
-EXEC.YANK: 
-EXEC.YANKDUP: 
+EXEC.=:              ExecEqualQInstruction
+EXEC.DEFINE:         ExecDefineInstruction
+EXEC.DO*COUNT:       
+EXEC.DO*RANGE:       
+EXEC.DO*TIMES:       
+EXEC.DUP:            ExecDuplicateInstruction
+EXEC.FLUSH:          ExecFlushInstruction
+EXEC.IF:             ExecIfInstruction
+EXEC.K:              ExecKInstruction
+EXEC.POP:            ExecPopInstruction
+EXEC.ROT:            ExecRotateInstruction
+EXEC.S:              ExecSInstruction
+EXEC.SHOVE:          ExecShoveInstruction
+EXEC.STACKDEPTH:     ExecDepthInstruction
+EXEC.SWAP:           ExecSwapInstruction
+EXEC.Y:              ExecYInstruction
+EXEC.YANK:           ExecYankInstruction
+EXEC.YANKDUP:        ExecYankdupInstruction
 
 
 
