@@ -703,3 +703,181 @@ describe ExecDoRangeInstruction do
     end
   end
 end
+
+
+# EXEC.DO*TIMES: Like EXEC.DO*COUNT but does not push the loop counter. This should be implemented as a macro that expands into EXEC.DO*RANGE, similarly to the implementation of EXEC.DO*COUNT, except that a call to INTEGER.POP should be tacked on to the front of the loop body code in the call to EXEC.DO*RANGE. This call to INTEGER.POP will remove the loop counter, which will have been pushed by EXEC.DO*RANGE, prior to the execution of the loop body.
+
+
+describe ExecDoTimesInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecDoTimesInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecDoTimesInstruction.new(@context)
+      @context.reset("block {}")
+      @context.enable(ExecDoTimesInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there are two :ints and at least one :exec item" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset("block {}")
+      end
+      
+      it "should finish if the :ints are identical, leaving only a copy of the codeblock" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.go
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "block {}"
+      end
+      
+      it "should increment the counter if the counter < destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (2)\n  literal int (3)\n  do exec_do_times\n  block {}}"
+        
+        5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "block {}"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (3)\n  literal int (3)\n  do exec_do_times\n  block {}}"
+      end
+      
+      it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
+        @context.reset("literal float (0.1)")
+        @context.stacks[:int].push(LiteralPoint.new("int", -2))
+        @context.stacks[:int].push(LiteralPoint.new("int", -19))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "literal float (0.1)"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-3)\n  literal int (-19)\n  do exec_do_times\n  literal float (0.1)}"
+        
+        5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_times
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:float].depth.should == 1
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "literal float (0.1)"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-4)\n  literal int (-19)\n  do exec_do_times\n  literal float (0.1)}"
+      end
+      
+      it "should 'continue' until counter and destination are the same value" do
+        @context.reset("literal float (0.1)")
+        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(LiteralPoint.new("int", 100))
+        @i1.go
+        @context.run # finish it off
+        @context.stacks[:float].depth.should == 100
+        @context.stacks[:exec].depth.should == 0
+      end
+    end
+  end
+end
+
+
+# EXEC.DO*COUNT: An iteration instruction that performs a loop (the body of which is taken from the EXEC stack) the number of times indicated by the INTEGER argument, pushing an index (which runs from zero to one less than the number of iterations) onto the INTEGER stack prior to each execution of the loop body. This is similar to CODE.DO*COUNT except that it takes its code argument from the EXEC stack. This should be implemented as a macro that expands into a call to EXEC.DO*RANGE. EXEC.DO*COUNT takes a single INTEGER argument (the number of times that the loop will be executed) and a single EXEC argument (the body of the loop). If the provided INTEGER argument is negative or zero then this becomes a NOOP. Otherwise it expands into: ( 0 <1 - IntegerArg> EXEC.DO*RANGE <ExecArg> )
+
+
+describe ExecDoCountInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = ExecDoCountInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = ExecDoCountInstruction.new(@context)
+      @context.reset("block {}")
+      @context.enable(ExecDoCountInstruction)
+      @context.enable(ExecDoRangeInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there are two :ints and at least one :exec item" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.enable(ExecDoRangeInstruction)
+        @i1.preconditions?.should == true
+      end
+      
+      it "should check that the @context knows about exec_do_range" do
+        @context.disable(ExecDoRangeInstruction)
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        lambda{@i1.preconditions?}.should raise_error
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset("block {}")
+        @context.enable(ExecDoRangeInstruction)
+      end
+      
+      it "should not work if the int is negative or zero" do
+        @context.stacks[:int].push(LiteralPoint.new("int", -213))
+        @i1.go
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "block {}"
+        
+        @context.reset("block {}")
+        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @i1.go
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "block {}"
+      end
+      
+      it "should push a 0 onto :int, and an exec_do_range block onto :exec" do
+        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 1
+        res = "block {\n  literal int (0)\n  literal int (2)\n  do exec_do_range\n  block {}}"
+        @context.stacks[:exec].entries[0].listing.should == res
+      end
+    end
+  end
+end

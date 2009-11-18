@@ -25,6 +25,9 @@ class Instruction
   class NaNResultError < RuntimeError
   end
   
+  class MissingInstructionError < RuntimeError
+  end
+  
   def initialize(context)
     @context = context
   end

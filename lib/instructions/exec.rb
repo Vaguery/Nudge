@@ -87,3 +87,68 @@ class ExecDoRangeInstruction < Instruction
     end
   end
 end
+
+
+class ExecDoTimesInstruction < Instruction
+  def preconditions?
+    needs :exec, 1
+    needs :int, 2
+  end
+  
+  def setup
+    @destination = @context.stacks[:int].pop
+    @counter = @context.stacks[:int].pop
+    @code = @context.stacks[:exec].pop
+  end
+  
+  def derive
+    @finished = false
+    if @counter.value == @destination.value
+      @finished = true
+    elsif @counter.value < @destination.value
+      @new_counter = LiteralPoint.new("int", @counter.value + 1)
+    else
+      @new_counter = LiteralPoint.new("int", @counter.value - 1)
+    end
+  end
+  
+  def cleanup
+    if @finished
+      pushes :exec, @code
+    else
+      recursor = @context.parser.parse(
+        "block {#{@new_counter.listing} #{@destination.listing} do exec_do_times #{@code.listing}}")
+      pushes :exec, recursor.to_points
+      pushes :exec, @code
+    end
+  end
+end
+
+
+class ExecDoCountInstruction < Instruction
+  def preconditions?
+    unless @context.instructions.include?(ExecDoRangeInstruction)
+      raise(MissingInstructionError, "exec_do_range must be active to use exec_do_count") 
+    end
+    needs :exec, 1
+    needs :int, 1
+  end
+  
+  def setup
+    if @context.stacks[:int].peek.value < 1
+      raise InstructionMethodError
+    end
+    @destination = @context.stacks[:int].pop
+    @code = @context.stacks[:exec].pop
+  end
+  
+  def derive
+    @one_less = LiteralPoint.new("int",@destination.value-1)
+  end
+  
+  def cleanup
+    recursor = @context.parser.parse(
+      "block {literal int (0) #{@one_less.listing} do exec_do_range #{@code.listing}}")
+    pushes :exec, recursor.to_points
+  end
+end
