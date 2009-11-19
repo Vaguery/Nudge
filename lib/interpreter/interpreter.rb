@@ -13,6 +13,7 @@ module Nudge
   class Interpreter
     attr_accessor :parser, :stepLimit, :steps
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
+    attr_accessor :last_name, :evaluate_channels
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(initialProgram=nil)
@@ -28,6 +29,8 @@ module Nudge
       end
       @stepLimit = 3000
       @steps = 0
+      @last_name = "refAAAAA"
+      @evaluate_channels = true
     end
     
     # Resets the Interpreter state:
@@ -114,6 +117,10 @@ module Nudge
     def bind_name(name, value)
       raise(ArgumentError, "Names can only be bound to Literals") unless value.kind_of?(LiteralPoint)
       @names[name] = value
+    end
+    
+    def next_name
+      @last_name = @last_name.next
     end
     
     

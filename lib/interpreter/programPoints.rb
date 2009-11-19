@@ -159,11 +159,12 @@ module Nudge
     end
     
     def go(context)
-      lookedUp = context.lookup(@name) # returns literal
+      lookedUp = context.lookup(@name) if context.evaluate_channels
       if lookedUp
         context.stacks[:exec].push(lookedUp)
       else
         context.stacks[:name].push(self)
+        context.evaluate_channels = true
       end
     end
     

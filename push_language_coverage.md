@@ -89,13 +89,13 @@ BOOLEAN.YANKDUP:     BoolYankdupInstruction
 
 NAME instructions
 
-NAME.=:              
+NAME.=:              NameEqualQInstruction
 NAME.DUP:            NameDupInstruction
 NAME.FLUSH:          NameFlushInstruction
 NAME.POP:            NamePopInstruction
-NAME.QUOTE: 
-NAME.RAND: 
-NAME.RANDBOUNDNAME: 
+NAME.QUOTE:          NameDisableLookupInstruction
+NAME.RAND:           NameNextInstruction
+NAME.RANDBOUNDNAME:  NameRandomBoundInstruction
 NAME.ROT:            NameRotInstruction
 NAME.SHOVE:          NameShoveInstruction
 NAME.STACKDEPTH:     NameDepthInstruction
