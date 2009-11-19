@@ -44,7 +44,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @name1 = LiteralPoint.new("name", "a")
+        @name1 = ChannelPoint.new("a")
       end
     
       describe "\#preconditions?" do
@@ -72,7 +72,7 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:name stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:name].push(LiteralPoint.new("name", i))}
+              inputs.each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
               @i1.go
               finalStackState.reverse.each {|i| @context.stacks[:name].pop.value.should == i}
             end
@@ -104,7 +104,7 @@ describe NameDepthInstruction do
     before(:each) do
       @i1 = NameDepthInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "d")
+      @name1 = ChannelPoint.new("d")
     end
     
     describe "\#preconditions?" do
@@ -147,7 +147,7 @@ describe NameFlushInstruction do
     before(:each) do
       @i1 = NameFlushInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "xx")
+      @name1 = ChannelPoint.new("xx")
     end
     
     describe "\#preconditions?" do
@@ -188,7 +188,7 @@ describe NameShoveInstruction do
     before(:each) do
       @i1 = NameShoveInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "abc")
+      @name1 = ChannelPoint.new("abc")
     end
     
     describe "\#preconditions?" do
@@ -203,7 +203,7 @@ describe NameShoveInstruction do
       before(:each) do
         @context.clear_stacks
         11.times {@context.stacks[:name].push(@name1)}
-        @context.stacks[:name].push(LiteralPoint.new("name", "xyz")) # making it 12 deep
+        @context.stacks[:name].push(ChannelPoint.new("xyz")) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
@@ -264,7 +264,7 @@ describe NameYankInstruction do
     
     describe "\#preconditions?" do
       it "should check that there is one :name and at least one :int" do
-        @context.stacks[:name].push(LiteralPoint.new("name", "g"))
+        @context.stacks[:name].push(ChannelPoint.new("g"))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -273,7 +273,7 @@ describe NameYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        ('d'..'f').each {|i| @context.stacks[:name].push(LiteralPoint.new("name",i))}
+        ('d'..'f').each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
       end
       
       it "should not change anything if the position integer is negative" do
@@ -333,7 +333,7 @@ describe NameYankdupInstruction do
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :name" do
-        @context.stacks[:name].push(LiteralPoint.new("name", 'x'))
+        @context.stacks[:name].push(ChannelPoint.new('x'))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -342,7 +342,7 @@ describe NameYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        ('m'..'q').each {|i| @context.stacks[:name].push(LiteralPoint.new("name",i))}
+        ('m'..'q').each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
       end
       
       it "should duplicate the top item if the position integer is negative" do

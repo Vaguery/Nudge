@@ -21,7 +21,7 @@ describe IntDefineInstruction do
     before(:each) do
       @i1 = IntDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "xyz")
+      @name1 = ChannelPoint.new("xyz")
     end
     
     describe "\#preconditions?" do
@@ -85,7 +85,7 @@ describe BoolDefineInstruction do
     before(:each) do
       @i1 = BoolDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "xyz")
+      @name1 = ChannelPoint.new("xyz")
     end
     
     describe "\#preconditions?" do
@@ -149,7 +149,7 @@ describe FloatDefineInstruction do
     before(:each) do
       @i1 = FloatDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "xyz")
+      @name1 = ChannelPoint.new("xyz")
     end
     
     describe "\#preconditions?" do
@@ -213,7 +213,7 @@ describe ExecDefineInstruction do
     before(:each) do
       @i1 = ExecDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = LiteralPoint.new("name", "xyz")
+      @name1 = ChannelPoint.new("xyz")
     end
     
     describe "\#preconditions?" do

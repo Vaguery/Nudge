@@ -404,9 +404,9 @@ describe "NameEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = NameEqualQInstruction.new(@context)
-    @thing1 = LiteralPoint.new("name", "x")
-    @thing2 = LiteralPoint.new("name", "x")
-    @thing3 = LiteralPoint.new("name", "not_x")
+    @thing1 = ChannelPoint.new("x")
+    @thing2 = ChannelPoint.new("x")
+    @thing3 = ChannelPoint.new("not_x")
     @thing1.go(@context)
     @thing2.go(@context)
     @thing3.go(@context)

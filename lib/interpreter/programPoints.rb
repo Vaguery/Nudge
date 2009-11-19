@@ -152,6 +152,7 @@ module Nudge
     end
     
     attr_accessor :name
+    alias value name
     
     def initialize(var_name)
       @name = var_name
@@ -162,7 +163,7 @@ module Nudge
       if lookedUp
         context.stacks[:exec].push(lookedUp)
       else
-        context.stacks[:name].push(self) #FIXME
+        context.stacks[:name].push(self)
       end
     end
     
