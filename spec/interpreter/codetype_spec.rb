@@ -55,8 +55,6 @@ describe "Code Type" do
       CodeType.any_type(@context.types).should == IntType
     end
     
-    it "should be possible to override the types in the context"
-    
     it "should raise an error if the list of active_types is empty and none is passed in" do
       @context.disable_all_types
       lambda{CodeType.any_type(@context.types)}.should raise_error(ArgumentError)
@@ -81,8 +79,6 @@ describe "Code Type" do
       CodeType.any_instruction(@context.instructions).should == IntAddInstruction
     end
     
-    it "should be possible to override the instructions in the context"
-    
     it "should raise an error if the no instructions are active in the context and none are passed in" do
       @context.disable_all_instructions
       lambda{CodeType.any_instruction(@context.instructions)}.should raise_error(ArgumentError)
@@ -99,8 +95,6 @@ describe "Code Type" do
       @context.bind_variable("x",LiteralPoint.new(:int,12))
       CodeType.any_reference(@context.references).should == "x"
     end
-    
-    it "should be possible to override the references in the context" 
     
     
     it "should raise an error if the list of active references is empty" do
