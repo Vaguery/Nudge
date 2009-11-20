@@ -3,11 +3,7 @@ module Nudge
     require 'set'
     
     def self.stations
-      if @stations
-        @stations
-      else
-        Hash[:DEAD,DeadStation.new]
-      end
+      @stations ||= self.cleanup
     end
     
     def self.cleanup
@@ -24,17 +20,20 @@ module Nudge
     def initialize(name, capacity = 100, params = {})
       if !Station.stations.include? name
         @name = name
-        Station.stations[name] = self
-        @downstream = Set.new
       else
         raise ArgumentError, "Station names must be unique"
       end
       @capacity = capacity
       @settings = Settings.new(params)
       @population = []
+      @downstream = Set.new
+      
       @cull_trigger = Proc.new {@population.length > @capacity}
       @generate_rule = Proc.new { |crowd| RandomGuessOperator.new.generate}
       @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
+      
+      Station.stations[@name] = self
+      puts "added station #{name}"
     end
     
     
@@ -139,6 +138,9 @@ module Nudge
       @name = :DEAD
       @capacity = nil
       @population = []
+    end
+    
+    def core_cycle
     end
   end
 end

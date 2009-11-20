@@ -36,6 +36,15 @@ describe "Station" do
       loc1 = Station.new("neverland")
       Station.stations["neverland"].should == loc1
     end
+    
+    it "should collect all created stations" do
+      Station.stations.length.should == 1
+      alpha = Station.new("alpha")
+      Station.stations.length.should == 2
+      beta = Station.new("beta")
+      Station.stations.length.should == 3
+      Station.stations.keys.should == [:DEAD,"alpha", "beta"]
+    end
   end
   
   

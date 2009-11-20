@@ -13,10 +13,21 @@ describe "Experiment" do
     Experiment.new(:name => "regress").name.should == "regress"
   end
   
-  it "should have a #config_path attribute that defaults to ../config" do
-    @exp.config_path.should == "../config"
-    Experiment.new(:config_path => "../somewhere_else").config_path.should == '../somewhere_else'
+  describe "#config object" do
+    it "should have a #config attribute, of class Config" do
+      @exp.config.should_not == nil
+      @exp.config.should be_a_kind_of(Nudge::Config)
+    end
   end
+  
+  it "should have an #instructions Array, defaulting to all of them" do
+    (@exp.instructions.sort_by {|i| i.to_s}).should == (Instruction.all_instructions.sort_by {|i| i.to_s})
+  end
+  
+  it "should have a #types Array, defaulting to [BoolType, FloatType, IntType]" do
+    @exp.types.should == [BoolType, FloatType, IntType]
+  end
+  
   
   describe "stations" do
     it "should have an empty array of Stations" do
