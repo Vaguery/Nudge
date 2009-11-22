@@ -4,7 +4,11 @@ require '../../lib/nudge'
 include Nudge
 
 Spike = Experiment.new(name:"spiker")
-CurrentCount = 871
+
+Spike.instructions = []
+Spike.types = []
+Spike.stations = []
+
 
 get '/' do
   erb :main
@@ -16,9 +20,12 @@ get '/instructions' do
 end
 
 get '/types' do
+  Spike.types = [IntType, BoolType, FloatType]
+  redirect '/'
 end
 
 get '/stations' do
+  redirect '/'
 end
 
 get '/go' do
@@ -26,4 +33,12 @@ get '/go' do
   10.times do
     Station.stations.each {|name, station| puts "running #{name}"; station.core_cycle}
   end
+  redirect '/'
+end
+
+get '/reset' do
+  Spike.instructions = []
+  Spike.types = []
+  Spike.stations = []
+  redirect '/'
 end

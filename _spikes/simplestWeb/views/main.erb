@@ -2,21 +2,18 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Don't expect too much</title>
+  </head>
 
-<body id="main" onload="">
-  
-</body>
-
-<head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-  <title>HI THERE</title>
-
-<ul>
-  <li><a href="/instructions">Instructions</a> : <%= Spike.instructions %></li>
-  <li><a href="/types">Types</a></li>
-  <li><a href="/stations">Stations</a></li>
-  <li><a href="/go">Go</a></li>
-</ul>
-
-</head>
+  <body id="main" onload="">
+    <table border="1" width="100%" cellspacing="5" cellpadding="5">
+      <tr><td><a href="/instructions">Instructions</a></td><td><%= Spike.instructions %></td></tr>
+      <tr><td><a href="/types">Types</a></td><td><%= Spike.types %></td></tr>
+      <tr><td><a href="/stations">Stations</a></td><td><%= Spike.stations %></td></tr>
+      <tr><td><a href="/go">Go</a></td></tr>
+      <tr><a href="/reset">RESET</a></tr>
+    </table>
+  </body>
 </html>

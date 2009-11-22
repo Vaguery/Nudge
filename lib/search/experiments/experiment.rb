@@ -21,8 +21,7 @@ module Nudge
       @stations = []
       @objectives = {}
       
-      Nudge::Config.block.call(self) unless !Config.block
-      
+      Nudge::Config.stored_state.call(self) unless !Config.stored_state
     end
     
     def start_search

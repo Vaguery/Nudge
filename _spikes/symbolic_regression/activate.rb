@@ -11,10 +11,6 @@ spike_experiment = Experiment.new(name:"spike")
 @gen1 = Station.new("generator1", 10) 
 @gen2 = Station.new("generator2", 10) 
 
-
-p Station.stations
-
-
 # couchDB crap
 
 # launch web server

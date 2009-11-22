@@ -10,7 +10,7 @@ describe "Experiment" do
   
   it "should have a name defaulting to 'default_experiment'" do
     @exp.name.should == 'default_experiment'
-    Experiment.new(:name => "regress").name.should == "regress"
+    Experiment.new(name: "regress").name.should == "regress"
   end
   
   describe "#config object" do

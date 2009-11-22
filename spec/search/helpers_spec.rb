@@ -1,6 +1,17 @@
 require File.join(File.dirname(__FILE__), "./../spec_helper")
 include Nudge
 
+describe "Config" do
+  it "should have a class #setup method that stores a block" do
+    Nudge::Config.should respond_to(:setup)
+    Nudge::Config.setup {:foo}
+    Nudge::Config.stored_state.should be_a_kind_of(Proc)
+    Nudge::Config.stored_state.call.should == :foo
+  end
+  
+end
+
+
 describe "Settings" do
   before(:each) do
     @s1 = Settings.new

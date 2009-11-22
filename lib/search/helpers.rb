@@ -11,12 +11,12 @@ module Nudge
   
   
   class Config
-    def self.block
-      @block
+    def self.stored_state
+      @stored_state
     end
     
     def self.setup(&block)
-      @block = block
+      @stored_state = block
     end
   end
 end
