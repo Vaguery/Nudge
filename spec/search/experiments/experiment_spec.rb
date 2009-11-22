@@ -30,8 +30,45 @@ describe "Experiment" do
   
   
   describe "stations" do
-    it "should have an empty array of Stations" do
-      @exp.stations.should == []
+    before(:each) do
+      @exp = Experiment.new
+      Station.cleanup
+    end
+    
+    it "should have an empty hash of Station names" do
+      @exp.station_names.should == []
+    end
+    
+    describe "build_station" do
+      it "should create a new Station instance, and add it to its own #stations list" do
+        @exp.build_station("wondrous")
+        @exp.station_names.should include("wondrous")
+        Station.stations.keys.should include("wondrous")
+      end
+      
+      it "should use the parameters passed in" do
+        @exp.build_station("wondrous", capacity:12)
+        Station.stations["wondrous"].capacity.should == 12
+      end
+    end
+    
+    describe "connect_stations" do
+      it "should create a #flows_into connection between two Stations when called" do
+        @exp.build_station("alphaville")
+        @exp.build_station("beta_2")
+        Station.stations["alphaville"].downstream.should be_empty
+        Station.stations["beta_2"].downstream.should be_empty
+        @exp.connect_stations("alphaville", "beta_2")
+        Station.stations["alphaville"].downstream.should include("beta_2")
+      end
+      
+      it "should raise an ArgumentError if either name does not yet exist in the Experiment" do
+        @exp.build_station("alphaville")
+        @exp.build_station("beta_2")
+        lambda{@exp.connect_stations("alphaville", "beta_2")}.should_not raise_error(ArgumentError)
+        lambda{@exp.connect_stations("cygnus", "beta_2")}.should raise_error(ArgumentError)
+        lambda{@exp.connect_stations("alphaville", "cygnus")}.should raise_error(ArgumentError)
+      end
     end
   end
   

@@ -17,23 +17,23 @@ module Nudge
     attr_accessor :cull_trigger, :generate_rule, :promotion_rule
     
     
-    def initialize(name, capacity = 100, params = {})
+    def initialize(name, params = {})
       if !Station.stations.include? name
         @name = name
       else
         raise ArgumentError, "Station names must be unique"
       end
-      @capacity = capacity
+      
+      @capacity = params[:capacity] || 100
       @settings = Settings.new(params)
       @population = []
       @downstream = Set.new
       
-      @cull_trigger = Proc.new {@population.length > @capacity}
+      @cull_trigger = params[:cull_trigger] || Proc.new {@population.length > @capacity}
       @generate_rule = Proc.new { |crowd| RandomGuessOperator.new.generate}
       @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
       
       Station.stations[@name] = self
-      puts "added station #{name}"
     end
     
     

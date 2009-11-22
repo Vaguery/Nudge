@@ -49,12 +49,12 @@ describe "Station" do
   
   
   describe "capacity" do
-    it "should have a #capacity attribute that defaults to 100 individuals" do
+    it "should have a #capacity parameter that defaults to 100 individuals" do
       loc1 = Station.new("candy_mountain")
       loc1.capacity.should == 100
     end
     it "should be settable as a second parameter" do
-      loc1 = Station.new("germany", 912)
+      loc1 = Station.new("germany", capacity:912)
       loc1.capacity.should == 912
     end
   end
@@ -80,11 +80,11 @@ describe "Station" do
     end
     
     it "should be possible to pass in initial Array of active Instructions" do
-      loc = Station.new("p1", 4, :instructions => [IntAddInstruction])
+      loc = Station.new("p1", instructions: [IntAddInstruction])
       loc.settings.instructions.should == [IntAddInstruction]
-      Station.new("p2", 4, :types => [IntType]).settings.types.should == [IntType]
-      Station.new("p3", 4, :references => ["x1"]).settings.references.should == ["x1"]
-      lambda{Station.new("p4", 4, :random_crap => ["whatever"])}.should_not raise_error
+      Station.new("p2", capacity: 4, :types => [IntType]).settings.types.should == [IntType]
+      Station.new("p3", capacity: 4, :references => ["x1"]).settings.references.should == ["x1"]
+      lambda{Station.new("p4", capacity: 4, :random_crap => ["whatever"])}.should_not raise_error
     end
   end
   
@@ -284,7 +284,7 @@ describe "Station" do
   
   describe "cull_trigger" do
     it "should default to 'is population.length > capacity'?" do
-      loc1 = Station.new("here",1)
+      loc1 = Station.new("here", capacity: 1)
       dude1 = Individual.new("block {}")
       loc1.add_individual dude1
       loc1.population.length.should == 1
@@ -295,8 +295,7 @@ describe "Station" do
     end
     
     it "should be settable to some other Proc" do
-      loc1 = Station.new("here")
-      loc1.cull_trigger = Proc.new {77} #don't do this!
+      loc1 = Station.new("here", cull_trigger: Proc.new {77})
       loc1.cull_trigger.call.should == 77
     end
   end
@@ -309,7 +308,7 @@ describe "Station" do
     end
     
     it "should invoke self#cull_trigger" do
-      loc1 = Station.new("amondul",1)
+      loc1 = Station.new("amondul", capacity:1)
       loc1.cull_trigger.should_receive(:call)
       loc1.cull?
     end
@@ -318,7 +317,7 @@ describe "Station" do
   
   describe "cull_order" do
     it "should return an Array with the Individuals from self#population in it" do
-      loc1 = Station.new("amondul",1)
+      loc1 = Station.new("amondul", capacity:1)
       loc1.add_individual Individual.new("block {}")
       loc1.add_individual Individual.new("ref x")
       loc1.cull_order.should be_a_kind_of(Array)
@@ -327,7 +326,7 @@ describe "Station" do
     end
     
     it "should default to random shuffle order" do
-      loc1 = Station.new("amondul",1) # default rule
+      loc1 = Station.new("amondul", capacity:1) # default rule
       loc1.add_individual Individual.new("block {}")
       loc1.add_individual Individual.new("ref x")
       loc1.population.should_receive(:shuffle)
@@ -338,7 +337,7 @@ describe "Station" do
   
   describe "actual culling" do
     it "should eventually satisfy the cull? condition" do
-      loc1 = Station.new("amondul",1) # will have a default cull_order
+      loc1 = Station.new("amondul",capacity:1) # will have a default cull_order
       lDead = Station.stations[:DEAD]
       loc1.add_individual Individual.new("block {}")
       loc1.cull?.should == false
@@ -350,7 +349,7 @@ describe "Station" do
     end
     
     it "should not fire unless self#cull? is true" do
-      loc1 = Station.new("amondul",1) # will have a default cull_order
+      loc1 = Station.new("amondul",capacity:1) # will have a default cull_order
       lDead = Station.stations[:DEAD]
       loc1.add_individual Individual.new("block {}")
       loc1.cull?.should == false
@@ -362,7 +361,7 @@ describe "Station" do
   
   describe "Station#generate" do
     before(:each) do
-      @loc1 = Station.new("here",1)
+      @loc1 = Station.new("here",capacity:1)
     end
     
     it "should access the breeding_pool when called" do
@@ -389,7 +388,7 @@ describe "Station" do
   
   describe "generate_rule" do
     before(:each) do
-      @loc1 = Station.new("here",1)
+      @loc1 = Station.new("here",capacity:1)
       @loc1.settings.types = [IntType]
     end
     
@@ -409,8 +408,8 @@ describe "Station" do
   
   describe "core_cycle" do
     before(:each) do
-      @loc1 = Station.new("here",1)
-      @loc2 = Station.new("there",1)
+      @loc1 = Station.new("here",capacity:1)
+      @loc2 = Station.new("there",capacity:1)
       @loc1.flows_into(@loc2)
       @loc1.settings.types = [IntType]
       @loc2.settings.types = [IntType]
