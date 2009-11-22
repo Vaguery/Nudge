@@ -209,6 +209,11 @@ describe "Station" do
     end
   end
   
+  describe "promotion_rule" do
+    it "should default to false"
+    it "should be settable via a parameter with that name"
+  end
+  
   
   describe "promote?" do
     before(:each) do
@@ -391,6 +396,8 @@ describe "Station" do
       @loc1 = Station.new("here",capacity:1)
       @loc1.settings.types = [IntType]
     end
+    
+    it "should be possible to override the default by passing a param"
     
     it "should take one parameter" do
       @loc1.generate_rule.arity.should == 1

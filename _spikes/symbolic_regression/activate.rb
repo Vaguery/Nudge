@@ -13,5 +13,8 @@ spike_experiment = Experiment.new(name:"spike")
 
 # run forever, checking config now and then
 10.times do
-  Station.stations.each {|name, station| puts "activating #{name}"; station.core_cycle}
+  Station.stations.each {|name, station| puts "#{name}"; station.core_cycle}
 end
+
+
+Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}

@@ -30,8 +30,8 @@ module Nudge
       @downstream = Set.new
       
       @cull_trigger = params[:cull_trigger] || Proc.new {@population.length > @capacity}
-      @generate_rule = Proc.new { |crowd| RandomGuessOperator.new.generate}
-      @promotion_rule = Proc.new { |indiv| false } # will need to take an Individual as a param
+      @generate_rule = params[:generate_rule] || Proc.new { |crowd| RandomGuessOperator.new.generate}
+      @promotion_rule = params[:promotion_rule] || Proc.new { |indiv| false }
       
       Station.stations[@name] = self
     end

@@ -76,6 +76,13 @@ describe "Experiment" do
     it "should have a library of 'permitted' objectives, an empty hash to begin with" do
       @exp.objectives.should == {}
     end
+    
+    describe "build_objective" do
+      it "should create a new Evaluator instance, and add it to its own #stations list" do
+        
+      end
+    end
+    
   end
   
   describe "databases" do
