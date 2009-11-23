@@ -32,11 +32,11 @@ Nudge::Config.setup do |experiment|
       },
     :promotion_rule => Proc.new {|anybody| puts "  gen1 promotion_rule"; true}
   )
-    
+  
   experiment.build_station("level1",
     :capacity => 100,
     :cull_trigger => Proc.new {puts "  lvl1 cull_trigger"; false},
-    :promotion_rule => Proc.new {|anybody| false}    
+    :promotion_rule => Proc.new {|anybody| false}
   )
   
   experiment.connect_stations("generator1", "level1")

@@ -26,6 +26,8 @@ require 'instructions/random_value'
 require 'instructions/exec'
 require 'instructions/name_bindings'
 require 'instructions/name_basics'
+require 'instructions/code_basics'
+
 
 require 'search/individual/individual'
 require 'search/operators/basic_operators'

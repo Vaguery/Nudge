@@ -12,7 +12,7 @@ describe "random_guess operator" do
   
   it "should have a params attribute when created that sets basic values for code generation" do
     RandomGuessOperator.new.params.should == {}
-    thisGuesser = RandomGuessOperator.new(:points => 3, :blocks => 1)
+    thisGuesser = RandomGuessOperator.new(:points => 3, :blocks => 1, :types => [IntType])
     thisGuesser.params.should_not == {}
     thisGuesser.params[:points].should == 3
   end

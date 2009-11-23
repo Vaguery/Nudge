@@ -3,7 +3,7 @@ include Nudge
 
 describe "random_resample operator" do
   before(:each) do
-    @myGuesser = RandomGuessOperator.new(:types => [IntType])
+    @myGuesser = RandomGuessOperator.new(:types => [IntType], :instructions => [IntAddInstruction])
     @mySampler = PopulationResampleOperator.new
   end
   
