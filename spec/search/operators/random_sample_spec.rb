@@ -13,7 +13,7 @@ describe "random_resample operator" do
 
   it "should produce a list of Individuals when it receives #generate" do
     newDudes = @mySampler.generate(@myGuesser.generate(3))
-    newDudes.should be_a_kind_of(Array)
+    newDudes.should be_a_kind_of(Batch)
     newDudes[0].should be_a_kind_of(Individual)
     newDudes[0].genome.should_not == nil
     newDudes[0].program.should_not == nil

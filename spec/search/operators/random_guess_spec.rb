@@ -17,9 +17,9 @@ describe "random_guess operator" do
     thisGuesser.params[:points].should == 3
   end
   
-  it "should produce a set of Individuals when it receives #generate" do
+  it "should produce a Batch of Individuals when it receives #generate" do
     newDudes = @myGuesser.generate
-    newDudes.should be_a_kind_of(Array)
+    newDudes.should be_a_kind_of(Batch)
     newDudes[0].should be_a_kind_of(Individual)
     newDudes[0].genome.should_not == nil
     newDudes[0].program.should_not == nil
@@ -45,7 +45,7 @@ describe "random_guess operator" do
     @myNewGuesser.generate(1,:points => 6, :blocks => 0, :types => [], :instructions => [], :references => ["y1"])[0].genome.should include("y1")
   end
   
-  it "should produce a crowd that contains Individuals with progress=0 only" do
+  it "should produce a Batch that contains Individuals with progress=0 only" do
     @myGuesser.generate(12).each {|dude| dude.progress.should == 0}
   end
 end

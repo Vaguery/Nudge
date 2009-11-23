@@ -30,7 +30,7 @@ describe "PointCrossoverOperator" do
     end
           
     it "should have an optional parameter that specifies the number of offspring to produce per parent" do
-      babies = @myXover.generate([@dude1, @dude2])
+      babies = @myXover.generate(Batch.[](@dude1, @dude2))
       babies.length.should == 2
       babies = @myXover.generate([@dude1, @dude2],4)
       babies.length.should == 8

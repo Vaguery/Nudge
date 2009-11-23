@@ -8,11 +8,11 @@ describe "PointDeleteOperator search operator" do
       @dude1 = Individual.new("block { do thing1 \n do thing2 \n do thing3}")
     end
     
-    it "should accept an Array as a param" do
+    it "should accept a Batch as a param" do
       lambda{@zapper.generate()}.should raise_error(ArgumentError)
       lambda{@zapper.generate(812)}.should raise_error(ArgumentError)
-      lambda{@zapper.generate([])}.should_not raise_error(ArgumentError)
-      lambda{@zapper.generate([@dude1])}.should_not raise_error(ArgumentError)
+      lambda{@zapper.generate(Batch.new)}.should_not raise_error(ArgumentError)
+      lambda{@zapper.generate(Batch[@dude1])}.should_not raise_error(ArgumentError)
     end
     
     it "should raise an Argument error if all contents of the crowd aren't Individuals" do
@@ -21,8 +21,8 @@ describe "PointDeleteOperator search operator" do
       lambda{@zapper.generate([ @dude1, 77 ])}.should raise_error(ArgumentError)
     end
     
-    it "should return an array as a result" do
-      @zapper.generate([@dude1]).should be_a_kind_of(Array)
+    it "should return a Batch as a result" do
+      @zapper.generate([@dude1]).should be_a_kind_of(Batch)
     end
     
     it "should use Individual#delete_point to produce the variants" do

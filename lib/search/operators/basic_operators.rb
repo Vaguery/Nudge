@@ -37,7 +37,7 @@ module Nudge
     #   makes one Individual whose IntType samples (if any) will be between [0,100]
     
     def generate(howMany = 1, tempParams ={})
-      result = []
+      result = Batch.new
       howMany.times do
         newGenome = CodeType.random_value(@context, @params.merge(tempParams))
         newDude = Individual.new(newGenome)
@@ -65,7 +65,7 @@ module Nudge
     #   possibly including repeats
     
     def generate(crowd, howMany = 1)
-      result = []
+      result = Batch.new
       howMany.times do
         donor = crowd.sample
         newGenome = donor.genome.clone
@@ -95,7 +95,7 @@ module Nudge
     def generate(crowd, howManyCopies = 1, parameter_overrides = {})
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
-      result = []
+      result = Batch.new
       tempParams = @params.merge(parameter_overrides)
       crowd.each do |dude|
         wildtype = dude.program.listing
@@ -141,7 +141,7 @@ module Nudge
     
     
     def generate(crowd, template = all_shared_scores(crowd))
-      result = []
+      result = Batch.new
       crowd.each do |dude|
         dominated = false
         crowd.each do |otherDude|
@@ -159,7 +159,7 @@ module Nudge
   
   class UniformBackboneCrossoverOperator < SearchOperator
     def generate(crowd, howMany = crowd.length, prob = 0.5)
-      result = []
+      result = Batch.new
       howMany.times do
         where = rand(crowd.length)
         mom = crowd[where]
@@ -194,7 +194,7 @@ module Nudge
       raise(ArgumentError) if crowd.empty?
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
-      result = []
+      result = Batch.new
       production = crowd.length*howManyBabies
       production.times do
         mom = crowd.sample
@@ -218,7 +218,7 @@ module Nudge
       raise(ArgumentError) if !crowd.kind_of?(Array)
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
-      result = []
+      result = Batch.new
       crowd.each do |dude|
         howManyCopies.times do
           where = rand(dude.points)+1
@@ -248,7 +248,7 @@ module Nudge
       raise(ArgumentError) if crowd.empty?
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
-      result = []
+      result = Batch.new
       crowd.each do |dude|
         howManyCopies.times do
           where = rand(dude.points)+1

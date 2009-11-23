@@ -26,8 +26,8 @@ describe "PointMutationOperator" do
       lambda{@gammaray.generate([@dude1])}.should_not raise_error(ArgumentError)
     end
     
-    it "should return an array as a result" do
-      @gammaray.generate([@dude1]).should be_a_kind_of(Array)
+    it "should return a Batch as a result" do
+      @gammaray.generate([@dude1]).should be_a_kind_of(Batch)
     end
     
     it "should use Individual#replace_point to produce the variants" do

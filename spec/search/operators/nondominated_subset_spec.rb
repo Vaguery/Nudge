@@ -7,7 +7,6 @@ describe "nondominated_subset operator" do
     @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
     @myGuesser = RandomGuessOperator.new(@params)
     @twoGuys = @myGuesser.generate(2)
-    @results = []
   end
   
   it "should be a kind of SearchOperator" do
@@ -31,11 +30,11 @@ describe "nondominated_subset operator" do
     @myNondominatedScreener.all_shared_scores(twoGuys).sort.should == ["x3"].sort
   end
   
-  it "should produce an array of Individual objects when it receives #generate; at least one" do
+  it "should produce a Batch of Individual objects when it receives #generate; at least one" do
     twoGuys = @myGuesser.generate(2)
     twoGuys[0].scores = {"x2" => 612, "x1" => 77, "x3" => 712}
     twoGuys[1].scores = {"x2" => 2, "x1" => 3, "x3" => 4}
-    @myNondominatedScreener.generate(twoGuys).should be_a_kind_of(Array)
+    @myNondominatedScreener.generate(twoGuys).should be_a_kind_of(Batch)
     @myNondominatedScreener.generate(twoGuys)[0].should be_a_kind_of(Individual)
   end
   

@@ -13,9 +13,9 @@ describe "UniformBackboneCrossoverOperator" do
     @myXover.should be_a_kind_of(SearchOperator)
   end
   
-  it "should produce a set of Individuals when it receives #generate" do
+  it "should produce a Batch of Individuals when it receives #generate" do
     @newDudes = @myXover.generate(@myGuesser.generate(2))
-    @newDudes.should be_a_kind_of(Array)
+    @newDudes.should be_a_kind_of(Batch)
     @newDudes.each {|dude| dude.should be_a_kind_of(Individual)}
   end
   

@@ -22,9 +22,9 @@ describe "ResampleValuesOperator search operator" do
       @complicatedDude = Individual.new("block {sample int(3) sample bool(false) block {sample float(0.0)}}")
     end
     
-    it "should require an Array as a first parameter" do
+    it "should require a Batch as a first parameter" do
       lambda{@rs.generate()}.should raise_error(ArgumentError)
-      lambda{@rs.generate([])}.should_not raise_error(ArgumentError)
+      lambda{@rs.generate(Batch.new)}.should_not raise_error(ArgumentError)
     end
     
     it "should raise an ArgumentError if the array parameter isn't all Individuals" do
