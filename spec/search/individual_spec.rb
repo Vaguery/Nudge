@@ -42,7 +42,7 @@ describe "Individual" do
       @i1.timestamp.should be_a_kind_of(Time)
     end
     it "should have an age, defaulting to zero" do
-      @i1.age.should == 0
+      @i1.progress.should == 0
     end
     it "should have a locationID, defaulting to an empty string" do
       @i1.station.should == ""

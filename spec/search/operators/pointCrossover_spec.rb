@@ -44,5 +44,12 @@ describe "PointCrossoverOperator" do
         end
       end
     end
+    
+    it "should increment the offspring's progress from the max parents' progress" do
+      @dude1.progress = 7
+      @dude2.progress = 11
+      babies = @myXover.generate([@dude1, @dude2],10)
+      babies.each {|baby| [8,12].should include(baby.progress)}
+    end
   end
 end

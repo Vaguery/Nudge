@@ -49,5 +49,9 @@ describe "PointDeleteOperator search operator" do
       @zapper.generate([@dude1])[0].genome.should == "block {}"
     end
     
+    it "should increment the progress of the offspring" do
+      @dude1.progress = 195
+      @zapper.generate([@dude1])[0].progress.should == 196
+    end
   end
 end

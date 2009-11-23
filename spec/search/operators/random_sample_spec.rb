@@ -40,4 +40,11 @@ describe "random_resample operator" do
     newDudes = @mySampler.generate(pop)
     newDudes[0].program.should be_a_kind_of(CodeBlock)
   end
+  
+  it "should increment the #progress of each clone" do
+    pop = @myGuesser.generate(3)
+    pop.each {|donor| donor.progress = 12}
+    newDudes = @mySampler.generate(pop)
+    newDudes.each {|kid| kid.progress.should == 13}
+  end
 end

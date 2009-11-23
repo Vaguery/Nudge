@@ -16,7 +16,8 @@ module Nudge
     attr_accessor :context
     
     def initialize(params ={})
-      @context = Settings.new(:instructions => params[:instructions], :references => params[:references], :types => params[:types])
+      @context = Settings.new(:instructions => params[:instructions],
+        :references => params[:references], :types => params[:types])
       super
     end
     
@@ -40,6 +41,7 @@ module Nudge
       howMany.times do
         newGenome = CodeType.random_value(@context, @params.merge(tempParams))
         newDude = Individual.new(newGenome)
+        newDude.progress = 0
         result << newDude
       end
       result
@@ -65,9 +67,10 @@ module Nudge
     def generate(crowd, howMany = 1)
       result = []
       howMany.times do
-        which = rand(crowd.length)
-        newGenome = crowd[which].genome.clone
+        donor = crowd.sample
+        newGenome = donor.genome.clone
         newDude = Individual.new(newGenome)
+        newDude.progress = donor.progress + 1
         result << newDude
       end
       return result
@@ -108,6 +111,7 @@ module Nudge
             novelty << line
           end
           mutant = Individual.new(novelty)
+          mutant.progress = dude.progress + 1
           result << mutant
         end
       end
@@ -173,7 +177,10 @@ module Nudge
           end
         end
         xover << "}"
-        result << Individual.new(xover)
+        baby = Individual.new(xover)
+        baby.progress = [mom.progress,dad.progress].max + 1
+        
+        result << baby
       end
       return result
     end
@@ -190,12 +197,14 @@ module Nudge
       result = []
       production = crowd.length*howManyBabies
       production.times do
-        mom = crowd[rand(crowd.length)]
-        dad = crowd[rand(crowd.length)]
+        mom = crowd.sample
+        dad = crowd.sample
         momSplit = mom.isolate_point(rand(mom.points)+1)
         dadSplit = dad.isolate_point(rand(dad.points)+1)
         babyGenome = (momSplit[:left] || "") + " #{dadSplit[:middle]} " + (momSplit[:right] || "")
-        result << Individual.new(babyGenome)
+        baby = Individual.new(babyGenome)
+        baby.progress = [mom.progress,dad.progress].max + 1
+        result << baby
       end
       return result
     end
@@ -214,7 +223,9 @@ module Nudge
         howManyCopies.times do
           where = rand(dude.points)+1
           variant = dude.delete_point(where)
-          result << Individual.new(variant)
+          baby = Individual.new(variant)
+          baby.progress = dude.progress + 1
+          result << baby
         end
       end
       return result
@@ -243,7 +254,9 @@ module Nudge
           where = rand(dude.points)+1
           newCode = CodeType.random_value(@context, @params.merge(tempParams))
           variant = dude.replace_point(where,newCode)
-          result << Individual.new(variant)
+          baby = Individual.new(variant)
+          baby.progress = dude.progress + 1
+          result << baby 
         end
       end
       return result

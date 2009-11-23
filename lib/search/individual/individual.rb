@@ -5,7 +5,7 @@ module Nudge
       @helperParser ||= NudgeLanguageParser.new()
     end
       
-    attr_accessor :genome, :scores, :age, :ancestors, :station, :program
+    attr_accessor :genome, :scores, :progress, :ancestors, :station, :program
     attr_reader :timestamp, :id
     
     def initialize(listing)
@@ -16,10 +16,9 @@ module Nudge
       @program = Individual.helperParser.parse(genome).to_points
       @scores = Hash.new
       @timestamp = Time.now
-      @age = 0
+      @progress = 0
       @ancestors = []
       @station = ""
-      
     end
     
     def known_scores

@@ -46,10 +46,18 @@ describe "UniformBackboneCrossoverOperator" do
   
   
   it "should not affect the original parents set in any way" do
-    rent = @myGuesser.generate(2)
-    originalMom = rent[0].object_id
-    @newDudes = @myXover.generate(rent,1)
-    rent[0].object_id.should == originalMom
+    rents = @myGuesser.generate(2)
+    originalMom = rents[0].object_id
+    @newDudes = @myXover.generate(rents,1)
+    rents[0].object_id.should == originalMom
+  end
+  
+  it "should return offspring with #progress values incremented from the largest parent value" do
+    rents = @myGuesser.generate(2)
+    rents[0].progress = 12
+    rents[1].progress = 33
+    @newDudes = @myXover.generate(rents,20)
+    @newDudes.each {|baby| [13, 34].should include(baby.progress)}
   end
   
 end

@@ -117,6 +117,10 @@ describe "ResampleValuesOperator search operator" do
       littler.each {|dude| dude.genome.should =~ /-1\d/}
     end
     
+    it "should increment the #progress of every clone" do
+      @complicatedDude.progress = 192
+      @rs.generate([@complicatedDude],5).each {|clone| clone.progress.should == 193}
+    end
   end
   
 end

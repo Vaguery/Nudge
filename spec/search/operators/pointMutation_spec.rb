@@ -61,7 +61,11 @@ describe "PointMutationOperator" do
       @gammaray.generate([@dude1])[0].points.should == 3 # totally replaced with 3-pt code
       @gammaray.should_receive(:rand).and_return(0)
       @gammaray.generate([@dude1],1,:points => 10)[0].points.should == 10
-      
+    end
+    
+    it "should increment the #progress of the offspring" do
+      @dude1.progress = 888
+      @gammaray.generate([@dude1],13).each {|baby| baby.progress.should == 889}
     end
   end
 end

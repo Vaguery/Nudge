@@ -86,4 +86,13 @@ describe "nondominated_subset operator" do
     @myNondominatedScreener.generate(twoGuys).should include twoGuys[1]
     @myNondominatedScreener.generate(twoGuys,["x1"]).length.should == 2 # neither dominates on an objectve not shared
   end
+  
+  it "should return Individuals that belonged to crowd passed in" do
+    twoGuys = @myGuesser.generate(2)
+    orig_IDs = twoGuys.collect {|dude| dude.object_id}
+    twoGuys[0].scores = {"x1" => 1, "x2" => 2, "x3" => 3}
+    twoGuys[1].scores = {           "x2" => 1,           "x4" => 3}
+    @myNondominatedScreener.generate(twoGuys).length.should == 1
+    @myNondominatedScreener.generate(twoGuys).each {|newDude| orig_IDs.should include(newDude.object_id)}
+  end
 end

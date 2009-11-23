@@ -44,4 +44,8 @@ describe "random_guess operator" do
     @myNewGuesser.generate(3,:points => 12)[0].program.points.should == 12
     @myNewGuesser.generate(1,:points => 6, :blocks => 0, :types => [], :instructions => [], :references => ["y1"])[0].genome.should include("y1")
   end
+  
+  it "should produce a crowd that contains Individuals with progress=0 only" do
+    @myGuesser.generate(12).each {|dude| dude.progress.should == 0}
+  end
 end
