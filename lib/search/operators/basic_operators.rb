@@ -39,7 +39,6 @@ module Nudge
       result = []
       howMany.times do
         newGenome = CodeType.random_value(@context, @params.merge(tempParams))
-        puts newGenome
         newDude = Individual.new(newGenome)
         result << newDude
       end
