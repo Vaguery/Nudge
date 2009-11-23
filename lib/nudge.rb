@@ -31,5 +31,6 @@ require 'instructions/code_basics'
 
 require 'search/individual/individual'
 require 'search/operators/basic_operators'
+require 'search/operators/evaluators'
 require 'search/stations/station'
 require 'search/experiments/experiment'

@@ -8,8 +8,6 @@ describe "Individual" do
     end
   end
   
-  
-  
   describe "initialization" do
     before(:each) do
       @i1 = Individual.new("literal bool (false)")
