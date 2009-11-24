@@ -25,7 +25,7 @@ module Nudge
       end
       
       @capacity = params[:capacity] || 100
-      @settings = Settings.new(params)
+      @settings = InterpreterSettings.new(params)
       @population = []
       @downstream = Set.new
       

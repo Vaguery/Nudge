@@ -64,7 +64,7 @@ describe "Station" do
     it "should have a #settings attribute, where active instructions, variable names and types are listed" do
       loc1 = Station.new("place")
       loc1.settings.should_not == nil
-      loc1.settings.should be_a_kind_of(Settings)
+      loc1.settings.should be_a_kind_of(InterpreterSettings)
     end
     
     it "should default to all defined Instructions" do

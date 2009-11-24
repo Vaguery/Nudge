@@ -43,21 +43,49 @@ module Nudge
   
   
   class TestCaseEvaluator < Evaluator
+    attr_accessor :interpreter_settings
+    
     def evaluate(batch, cases = [], params = {})
       raise(ArgumentError, "Can only evaluate a Batch of Individuals") if !batch.kind_of?(Batch)
       
       batch.each do |dude|
         score = 0
-        cases.each do |c|
+        readings = {}
+        cases.each do |example|
+          difference = 0
           # make an Interpreter
+          workspace = Interpreter.new
+          
           # set up the program
+          workspace.reset(dude.genome)
+          
           # set up the bindings
+          example.bindings.each do |key,value|
+            workspace.bind_variable(key, value)
+          end
+          
           # run it
+          workspace.run
+          
           # apply the gauge(s) for each expectation
-          # collect differences
+          example.gauges.each do |variable_name,the_gauge|
+            readings[variable_name] = the_gauge.call(workspace)
+          end
+          
+          # synthesize readings into a single scalar difference
+          # FIXME this should be a settable Proc
+          example.gauges.each do |variable_name,the_gauge|
+            begin
+              difference = (readings[variable_name].value - example.expectations[variable_name])
+            rescue
+              difference = 100000
+            end
+          end
+          
+          score += difference.abs
         end
         # aggregate differences
-        dude.scores[@name] = 99.1
+        dude.scores[@name] = score.to_f / cases.length
       end
     end
     

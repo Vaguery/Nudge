@@ -1,5 +1,5 @@
 module Nudge
-  class Settings
+  class InterpreterSettings
     attr_accessor :instructions, :references, :types
     
     def initialize(params = {})

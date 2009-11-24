@@ -12,9 +12,9 @@ describe "Config" do
 end
 
 
-describe "Settings" do
+describe "InterpreterSettings" do
   before(:each) do
-    @s1 = Settings.new
+    @s1 = InterpreterSettings.new
   end
   
   it "should have an Array of active instruction classNames" do
@@ -40,19 +40,19 @@ describe "Settings" do
   describe "setting the value of Setting#attribute in initialization" do
     it "should allow Hash-values for instructions" do
       bools = [BoolAndInstruction, BoolOrInstruction]
-      s2 = Settings.new(:instructions => bools)
+      s2 = InterpreterSettings.new(:instructions => bools)
       s2.instructions.should == bools
     end
     
     it "should allow Hash-values for types" do
       push = [IntType, BoolType, FloatType]
-      s2 = Settings.new(:types => push)
+      s2 = InterpreterSettings.new(:types => push)
       s2.types.should == push
     end
     
     it "should allow Hash-values for variable names" do
       vars = ["x1", "x3", "y1"]
-      s2 = Settings.new(:references => vars)
+      s2 = InterpreterSettings.new(:references => vars)
       s2.references.should == vars
     end
   end
