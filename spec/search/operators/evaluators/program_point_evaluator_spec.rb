@@ -12,7 +12,7 @@ describe ProgramPointEvaluator do
   describe "#evaluate" do
     before(:each) do
       @ppe = ProgramPointEvaluator.new(name:"point_count")
-      @dudes = [
+      @dudes = Batch[
         Individual.new("block {}"),
         Individual.new("block { block {}}"),
         Individual.new("block { block { block {}}}")
@@ -21,11 +21,11 @@ describe ProgramPointEvaluator do
     
     it "should take a Batch of individuals as an argument" do
       lambda{@ppe.evaluate(Individual.new("block {}"))}.should raise_error(ArgumentError)
-      lambda{@ppe.evaluate([Individual.new("block {}")])}.should_not raise_error(ArgumentError)
+      lambda{@ppe.evaluate(Batch[Individual.new("block {}")])}.should_not raise_error(ArgumentError)
     end
     
     it "should raise an exception if it can't evaluate an Individual" do
-      lambda{@ppe.evaluate(Individual.new("blah_de_blah"))}.should raise_error(ArgumentError)
+      lambda{@ppe.evaluate(Batch[Individual.new("blah_de_blah")])}.should raise_error(ArgumentError)
     end
     
     it "should write the number of program points into each individual" do
