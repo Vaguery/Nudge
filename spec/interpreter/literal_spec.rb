@@ -18,7 +18,7 @@ describe "LiteralPoint" do
     end
     
     it "should move to the appropriate stack when removed from the exec stack" do
-      ii = Interpreter.new("literal bool (true)")
+      ii = Interpreter.new(program:"literal bool (true)")
       ii.step
       ii.stacks[:bool].peek.value.should == true
     end

@@ -126,6 +126,7 @@ describe ExecIfInstruction do
   describe "\#go" do
     before(:each) do
       @context = Interpreter.new
+      @context.enable(ExecIfInstruction)
       @i1 = ExecIfInstruction.new(@context)
       @v1 = LiteralPoint.new("float",  1.0)
       @v2 = LiteralPoint.new("float", -9.5)
@@ -146,6 +147,7 @@ describe ExecIfInstruction do
         @context.stacks[:exec].push(@v2)
         @context.stacks[:bool].push(LiteralPoint.new("bool", true))
         @i1.go
+        @context.stacks[:exec].entries.each {|i| p i.listing}
         @context.stacks[:exec].depth.should == 1
         @context.stacks[:exec].peek.value.should == 1.0
         

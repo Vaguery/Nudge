@@ -16,21 +16,26 @@ module Nudge
     attr_accessor :last_name, :evaluate_channels
     
     # A program to be interpreted can be passed in as an optional parameter
-    def initialize(initialProgram=nil)
-      @parser = NudgeLanguageParser.new()
-      @variables = Hash.new
-      @names = Hash.new
-      @types = NudgeType.all_types
-      @stacks ||=  Hash.new {|hash, key| hash[key] = Stack.new(key) }
+    def initialize(params = {})
+      initialProgram = params[:program] || ""
+      @types = params[:types] || NudgeType.all_types
+      @stepLimit = params[:step_limit] || 3000
+      
+      
       @instructions_library = Hash.new
       @instructions = []
-      if initialProgram
-        self.reset(initialProgram)
-      end
-      @stepLimit = 3000
+      
+      # private parts
+      @parser = NudgeLanguageParser.new()
+      @names = Hash.new
+      @variables = Hash.new
       @steps = 0
       @last_name = "refAAAAA"
       @evaluate_channels = true
+      @stacks =  Hash.new {|hash, key| hash[key] = Stack.new(key) }
+      
+      # set it all up here
+      self.reset(initialProgram)
     end
     
     # Resets the Interpreter state:
@@ -46,6 +51,7 @@ module Nudge
       parsed = @parser.parse(program)
       newCode = parsed.to_points if parsed
       @stacks[:exec].push(newCode)
+      @evaluate_channels = true
     end
     
     
