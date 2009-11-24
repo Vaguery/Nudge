@@ -54,7 +54,7 @@ module Nudge
         cases.each do |example|
           difference = 0
           # make an Interpreter
-          workspace = Interpreter.new
+          workspace = Interpreter.new()
           
           # set up the program
           workspace.reset(dude.genome)
