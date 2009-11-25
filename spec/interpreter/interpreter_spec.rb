@@ -12,7 +12,7 @@ describe "initialization" do
     @ii.parser.should be_a_kind_of(NudgeLanguageParser)
   end
   
-  it "should keep have an empty stacks attribute, empty to begin" do
+  it "should have an empty stacks Hash, empty initially" do
     @ii.stacks.should == {}
   end
   
