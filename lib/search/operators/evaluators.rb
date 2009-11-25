@@ -53,47 +53,53 @@ module Nudge
       variable_names = params[:references] || []
       
       batch.each do |dude|
-        score = 0
-        readings = {}
-        cases.each do |example|
-          difference = 0
+        if !params[:deterministic] || !dude.scores[@name]
+          score = 0
+          readings = {}
+          cases.each do |example|
+            difference = 0
           
-          # make an Interpreter
-          workspace = Interpreter.new(
-            :instructions => instructions,
-            :types => types,
-            :references => variable_names)
+            # make an Interpreter
+            workspace = Interpreter.new(
+              :instructions => instructions,
+              :types => types,
+              :references => variable_names)
           
-          # set up the program
-          workspace.reset(dude.genome)
+            # set up the program
+            workspace.reset(dude.genome)
           
-          # set up the bindings
-          example.bindings.each do |key,value|
-            workspace.bind_variable(key, value)
-          end
-          
-          # run it
-          workspace.run
-          
-          # apply the gauge(s) for each expectation
-          example.gauges.each do |variable_name,the_gauge|
-            readings[variable_name] = the_gauge.call(workspace)
-          end
-          
-          # synthesize readings into a single scalar difference
-          # FIXME this should be a settable Proc
-          example.gauges.each do |variable_name,the_gauge|
-            begin
-              difference = (readings[variable_name].value - example.expectations[variable_name])
-            rescue
-              difference = 100000
+            # set up the bindings
+            example.bindings.each do |key,value|
+              workspace.bind_variable(key, value)
             end
-          end
           
-          score += difference.abs
+            # run it
+            workspace.run
+          
+            # apply the gauge(s) for each expectation
+            example.gauges.each do |variable_name,the_gauge|
+              readings[variable_name] = the_gauge.call(workspace)
+            end
+          
+            # synthesize readings into a single scalar difference
+            # FIXME this should be a settable Proc
+            example.gauges.each do |variable_name,the_gauge|
+              begin
+                difference = (readings[variable_name].value - example.expectations[variable_name])
+              rescue
+                difference = 100000
+              end
+            end
+          
+            score += difference.abs
+          end
+          # aggregate differences
+          dude.scores[@name] = score.to_f / cases.length
+        
+          puts "#{score.to_f / cases.length}" if params[:feedback]
+        else
+          puts dude.scores[@name] if params[:feedback]
         end
-        # aggregate differences
-        dude.scores[@name] = score.to_f / cases.length
       end
     end
     

@@ -49,21 +49,33 @@ Nudge::Config.setup do |experiment|
         :references => ["x1", "x2"],
         :types => [IntType, BoolType]
         )
-      myCases = (1..10).collect do |i|
+      myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
+      myCases = (-10..10).collect do |i|
         TestCase.new(:bindings => {"x1" => LiteralPoint.new("int",i)},
-          :expectations => {"y" => i*i + 6},
+          :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
           :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
         )
       end
       
       newGuys = Batch.new
-      10.times do
+      3.times do
+        p "----"
         tourney = mySampler.generate(pop,10) # pick 10 dudes at random from the population
+        tourney = myEvaluator.evaluate(tourney, myCases, deterministic:true, feedback:true) # evaluate them
+        tourney = myPointsEvaluator.evaluate(tourney)
+        
         babies = myCrossover.generate(tourney) # create 10 babies from those
-        mutantBabies = myMutator.generate(babies) # append 10 mutants of the babies
-        muster = myEvaluator.evaluate(babies, myCases) # evaluate them
-        newGuys = mySelector.generate(muster) # retain only the best
+        babies = myEvaluator.evaluate(babies, myCases, deterministic:true, feedback:true) # evaluate them
+        babies = myPointsEvaluator.evaluate(babies)
+        
+        mutantBabies = myMutator.generate(babies) # make 10 mutants of the babies
+        mutantBabies = myEvaluator.evaluate(babies, myCases, deterministic:true, feedback:true) # evaluate
+        mutantBabies = myPointsEvaluator.evaluate(mutantBabies)
+        
+        bestInShow = mySelector.generate(tourney + babies + mutantBabies)
+        newGuys += bestInShow # retain only the best
       end
+      pop.each {|dude| puts dude.scores}
       
       newGuys
     end,
