@@ -21,9 +21,9 @@ module Nudge
       @types = params[:types] || NudgeType.all_types
       @stepLimit = params[:step_limit] || 3000
       
-      
+      instructions = params[:instructions] || []
       @instructions_library = Hash.new
-      @instructions = []
+      instructions.each {|i| self.enable(i)}
       
       # private parts
       @parser = NudgeLanguageParser.new()

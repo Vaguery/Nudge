@@ -42,12 +42,13 @@ Nudge::Config.setup do |experiment|
       myCrossover = PointCrossoverOperator.new
       myMutator = ResampleValuesOperator.new
       mySelector = NondominatedSubsetOperator.new
-      myEvaluator = TestCaseEvaluator.new(name:"errors")#,
-      # :instructions =>
-      #   [IntAddInstruction, IntSubtractInstruction, IntMultiplyInstruction, IntDivideInstruction],
-      #   :references = ["x1", "x2"],
-      #   :types = [IntType, BoolType]
-      #   )
+      myEvaluator = TestCaseEvaluator.new(
+      :name => "errors",
+      :instructions =>
+        [IntAddInstruction, IntSubtractInstruction, IntMultiplyInstruction, IntDivideInstruction],
+        :references => ["x1", "x2"],
+        :types => [IntType, BoolType]
+        )
       myCases = (1..10).collect do |i|
         TestCase.new(:bindings => {"x1" => LiteralPoint.new("int",i)},
           :expectations => {"y" => i*i + 6},

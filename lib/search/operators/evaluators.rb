@@ -48,13 +48,21 @@ module Nudge
     def evaluate(batch, cases = [], params = {})
       raise(ArgumentError, "Can only evaluate a Batch of Individuals") if !batch.kind_of?(Batch)
       
+      instructions = params[:instructions] || Instruction.all_instructions
+      types = params[:types] || [IntType, BoolType, FloatType]
+      variable_names = params[:references] || []
+      
       batch.each do |dude|
         score = 0
         readings = {}
         cases.each do |example|
           difference = 0
+          
           # make an Interpreter
-          workspace = Interpreter.new()
+          workspace = Interpreter.new(
+            :instructions => instructions,
+            :types => types,
+            :references => variable_names)
           
           # set up the program
           workspace.reset(dude.genome)

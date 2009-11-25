@@ -63,8 +63,6 @@ end
 
 
 
-
-
 module SwapInstruction
   attr_reader :target_stack
   
