@@ -12,9 +12,24 @@ spike_experiment = Experiment.new(name:"spike")
 # launch web server
 
 # run forever, checking config now and then
-10.times do
-  Station.stations.each {|name, station| puts "#{name}"; station.core_cycle}
+5.times do
+  50.times do 
+    [Station.stations["generator1"],Station.stations["generator2"]].each {|station| station.core_cycle}
+  end
+  
+  10.times do |gen|
+    puts "\nGeneration #{gen}\n"
+    Station.stations.each {|name, station| puts "#{name}"; station.core_cycle}
+  end
+  
+  Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}
+  
+  ["level1","level2","level3","level4"].each do |station|
+    if Station.stations[station].population.length > 20
+      sorted = Station.stations[station].population.sort_by {|dude| dude.scores["errors"] || 100000}
+      (0..20).each {|i| puts "#{sorted[i].scores}:\n#{sorted[i].genome}"}
+    end
+  end
+  
+  Station.stations["level1"].cull_all
 end
-
-
-Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}

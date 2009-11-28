@@ -116,6 +116,13 @@ module Nudge
     end
     
     
+    def cull_all
+      @population.length.times do
+        self.transfer(0, :DEAD)
+      end
+    end
+    
+    
     def generate
       prospects = self.breeding_pool
       my_babies = self.generate_rule.call( prospects )

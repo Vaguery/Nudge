@@ -22,6 +22,10 @@ module Nudge
       @listing ||= "block {}"
     end
     
+    def value
+      @listing
+    end
+    
     def contents=(newArray)
       @contents = newArray
     end

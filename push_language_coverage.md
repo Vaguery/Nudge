@@ -146,9 +146,9 @@ CODE.DO*:
 CODE.DO*COUNT:
 CODE.DO*RANGE: 
 CODE.DO*TIMES: 
-CODE.DUP: 
+CODE.DUP:            CodeDuplicateInstruction
 CODE.EXTRACT: 
-CODE.FLUSH: 
+CODE.FLUSH:          CodeFlushInstruction
 CODE.FROMBOOLEAN: 
 CODE.FROMFLOAT: 
 CODE.FROMINTEGER: 
@@ -163,15 +163,15 @@ CODE.NOOP:           CodeNoopInstruction
 CODE.NTH: 
 CODE.NTHCDR: 
 CODE.NULL: 
-CODE.POP: 
+CODE.POP:            CodePopInstruction
 CODE.POSITION: 
 CODE.QUOTE: 
 CODE.RAND: 
-CODE.ROT: 
-CODE.SHOVE: 
+CODE.ROT:            CodeRotateInstruction
+CODE.SHOVE:          CodeShoveInstruction
 CODE.SIZE: 
-CODE.STACKDEPTH: 
+CODE.STACKDEPTH:     CodeDepthInstruction
 CODE.SUBST: 
-CODE.SWAP: 
-CODE.YANK: 
-CODE.YANKDUP: 
+CODE.SWAP:           CodeSwapInstruction
+CODE.YANK:           CodeYankInstruction
+CODE.YANKDUP:        CodeYankdupInstruction
