@@ -7,7 +7,7 @@ Spike = Experiment.new(name:"spiker")
 
 Spike.instructions = []
 Spike.types = []
-Spike.stations = []
+Spike.station_names = []
 
 
 get '/' do
@@ -31,7 +31,7 @@ end
 get '/go' do
   # run 10 steps
   10.times do
-    Station.stations.each {|name, station| puts "running #{name}"; station.core_cycle}
+    Spike.station_names.each {|name| puts "running #{name}"; Station.stations[name].core_cycle}
   end
   redirect '/'
 end
@@ -39,6 +39,6 @@ end
 get '/reset' do
   Spike.instructions = []
   Spike.types = []
-  Spike.stations = []
+  Spike.station_names = []
   redirect '/'
 end
