@@ -3,7 +3,7 @@ include Nudge
 
 describe "nondominated_subset operator" do
   before(:each) do
-    @myNondominatedScreener = NondominatedSubsetOperator.new
+    @myNondominatedScreener = NondominatedSubsetSelector.new
     @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
     @myGuesser = RandomGuessOperator.new(@params)
     @twoGuys = @myGuesser.generate(2)

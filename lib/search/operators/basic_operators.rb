@@ -49,7 +49,7 @@ module Nudge
   end
   
   
-  class PopulationResampleOperator < SearchOperator
+  class ResampleAndCloneOperator < SearchOperator
     # returns an Array of clones of Individuals randomly selected from the crowd passed in
     # 
     # the first (required) parameter is an Array of Individuals
@@ -57,7 +57,7 @@ module Nudge
     #
     # For example, if
     # <tt>@currentPopulation = [a list of 300 Individuals]</tt> and
-    # <tt>myRandomSampler = PopulationResampleOperator.new(@currentPopulation)</tt>
+    # <tt>myRandomSampler = ResampleAndCloneOperator.new(@currentPopulation)</tt>
     # [<tt>myRandomSampler.generate()</tt>]
     #   produces a list of 1 Individual, which is a clone of somebody from <tt>@currentPopulation</tt>
     # [<tt>myRandomGuesser.generate(11)</tt>]
@@ -86,7 +86,7 @@ module Nudge
     #
     #   For example, if
     #     @currentPopulation = [a list of 300 Individuals]
-    #     myRandomSampler = PopulationResampleOperator.new(@currentPopulation)
+    #     myRandomSampler = ResampleAndCloneOperator.new(@currentPopulation)
     #     myRandomSampler.generate()::
     #       produces a list of 1 Individual, which is a clone of somebody from @currentPopulation
     #     myRandomGuesser.generate(11)::
@@ -119,41 +119,6 @@ module Nudge
     end
   end
   
-  
-  
-  class NondominatedSubsetOperator < SearchOperator
-    def all_known_scores(crowd)
-      union = []
-      crowd.each do |dude|
-        union |= dude.known_scores
-      end
-      return union
-    end
-    
-    
-    def all_shared_scores(crowd)
-      intersection = self.all_known_scores(crowd)
-      crowd.each do |dude|
-        intersection = intersection & dude.known_scores
-      end
-      return intersection
-    end
-    
-    
-    def generate(crowd, template = all_shared_scores(crowd))
-      result = Batch.new
-      crowd.each do |dude|
-        dominated = false
-        crowd.each do |otherDude|
-          dominated ||= dude.dominated_by?(otherDude, template)
-        end
-        if !dominated
-          result << dude
-        end
-      end
-      return result
-    end
-  end
   
   
   

@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
-describe "random_resample operator" do
+describe "resample_and_clone operator" do
   before(:each) do
     @myGuesser = RandomGuessOperator.new(:types => [IntType], :instructions => [IntAddInstruction])
-    @mySampler = PopulationResampleOperator.new
+    @mySampler = ResampleAndCloneOperator.new
   end
   
   it "should be a kind of SearchOperator" do

@@ -50,7 +50,7 @@ Nudge::Config.setup do |experiment|
         bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
         bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         
-        mySampler = PopulationResampleOperator.new
+        mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
         instructions:[IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
@@ -65,7 +65,7 @@ Nudge::Config.setup do |experiment|
         BoolYankdupInstruction, BoolXorInstruction],
         types:[IntType, BoolType],
         references:["x1","x2"])
-        mySelector = NondominatedSubsetOperator.new
+        mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
         :name => "errors",
         :instructions =>
@@ -125,7 +125,7 @@ Nudge::Config.setup do |experiment|
         bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
         bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         
-        mySampler = PopulationResampleOperator.new
+        mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
         instructions:[IntAddInstruction, IntSubtractInstruction,
@@ -133,7 +133,7 @@ Nudge::Config.setup do |experiment|
         types:[IntType, BoolType],
         references:["x1","x2"])
         
-        mySelector = NondominatedSubsetOperator.new
+        mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
           :name => "errors",
           :instructions =>
@@ -196,7 +196,7 @@ Nudge::Config.setup do |experiment|
         bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
         bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
 
-        mySampler = PopulationResampleOperator.new
+        mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
         instructions:[IntAddInstruction, IntSubtractInstruction,
@@ -204,7 +204,7 @@ Nudge::Config.setup do |experiment|
         types:[IntType, BoolType],
         references:["x1","x2"])
         
-        mySelector = NondominatedSubsetOperator.new
+        mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
           :name => "errors",
           :instructions =>
@@ -266,7 +266,7 @@ Nudge::Config.setup do |experiment|
       if pop.length > 70
         bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
         bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
-        mySampler = PopulationResampleOperator.new
+        mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
         instructions:[IntAddInstruction, IntSubtractInstruction,
@@ -274,7 +274,7 @@ Nudge::Config.setup do |experiment|
         types:[IntType, BoolType],
         references:["x1","x2"])
         
-        mySelector = NondominatedSubsetOperator.new
+        mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
           :name => "errors",
           :instructions =>
