@@ -22,6 +22,7 @@ module Nudge
       return intersection
     end
     
+    
     def domination_classes(crowd, template = all_shared_scores(crowd))
       result = Hash.new()
       crowd.each_index do |i|
@@ -35,6 +36,15 @@ module Nudge
       return result
     end
     
+    
+    def diversity_classes(crowd)
+      result = Hash.new()
+      crowd.each do |dude|
+        result[dude.program.tidy] ||= []
+        result[dude.program.tidy] << dude
+      end
+      return result
+    end
   end
   
   
@@ -57,7 +67,6 @@ module Nudge
   
   
   class DominatedQuantileSampler < Sampler
-    
     def generate(crowd, proportion = 0.5, template = all_shared_scores(crowd))
       classified = domination_classes(crowd, template)
       increasing_grades = classified.keys.sort {|a,b| b <=> a}
@@ -81,6 +90,33 @@ module Nudge
       classified = domination_classes(crowd, template)
       worst_key = classified.keys.sort[-1]
       classified[worst_key].each {|bad_dude| result.push bad_dude}
+      return result
+    end
+  end
+  
+  
+  
+  
+  
+  class AnyOneSampler < Sampler
+    def generate(crowd)
+      result = Batch[crowd.sample]
+    end
+  end
+  
+  
+  
+  
+  
+  class AllDuplicatedGenomesSampler < Sampler
+    def generate(crowd)
+      result = Batch.new
+      clustered = diversity_classes(crowd)
+      clustered.each do |genome, array|
+        if array.length > 1
+          result.concat array
+        end
+      end
       return result
     end
   end
