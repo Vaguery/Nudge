@@ -22,6 +22,19 @@ module Nudge
       return intersection
     end
     
+    def domination_classes(crowd, template = all_shared_scores(crowd))
+      result = Hash.new()
+      crowd.each_index do |i|
+        dominatedBy = 0
+        crowd.each_index do |j|
+          dominatedBy += 1 if crowd[i].dominated_by?(crowd[j], template)
+        end
+        result[dominatedBy] ||= []
+        result[dominatedBy].push crowd[i]
+      end
+      return result
+    end
+    
   end
   
   
@@ -45,20 +58,6 @@ module Nudge
   
   class DominatedQuantileSampler < Sampler
     
-    def domination_classes(crowd, template = all_shared_scores(crowd))
-      result = Hash.new()
-      crowd.each_index do |i|
-        dominatedBy = 0
-        crowd.each_index do |j|
-          dominatedBy += 1 if crowd[i].dominated_by?(crowd[j], template)
-        end
-        result[dominatedBy] ||= []
-        result[dominatedBy].push crowd[i]
-      end
-      return result
-    end
-    
-    
     def generate(crowd, proportion = 0.5, template = all_shared_scores(crowd))
       classified = domination_classes(crowd, template)
       increasing_grades = classified.keys.sort {|a,b| b <=> a}
@@ -70,7 +69,19 @@ module Nudge
       partial_ordering[0..how_many-1].each {|dude| result << dude} unless how_many == 0
       return result
     end
-    
   end
-
+  
+  
+  
+  
+  
+  class MostDominatedSubsetSampler < Sampler
+    def generate(crowd, template = all_shared_scores(crowd))
+      result = Batch.new
+      classified = domination_classes(crowd, template)
+      worst_key = classified.keys.sort[-1]
+      classified[worst_key].each {|bad_dude| result.push bad_dude}
+      return result
+    end
+  end
 end

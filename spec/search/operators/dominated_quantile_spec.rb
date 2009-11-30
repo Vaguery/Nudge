@@ -105,7 +105,6 @@ describe DominatedQuantileSampler do
       
       some = @dq.generate(@dudes,1, ["second"])
       some[0].should == @dudes[1]
-      
     end
   end
   
