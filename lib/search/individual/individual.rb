@@ -115,5 +115,9 @@ module Nudge
       end
       return result
     end
+    
+    def write()
+      @id = 88
+    end
   end
 end

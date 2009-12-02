@@ -134,6 +134,8 @@ describe "Station" do
       loc1.add_individual dude1
       dude1.station.should == "mordor"
     end
+    
+    it "should be a private method"
   end
   
   
@@ -287,21 +289,21 @@ describe "Station" do
   end
   
   
-  describe "cull_trigger" do
+  describe "cull_check" do
     it "should default to 'is population.length > capacity'?" do
       loc1 = Station.new("here", capacity: 1)
       dude1 = Individual.new("block {}")
       loc1.add_individual dude1
       loc1.population.length.should == 1
-      loc1.cull_trigger.call.should == false
+      loc1.cull_check.call.should == false
       loc1.add_individual dude1
       loc1.population.length.should == 2
-      loc1.cull_trigger.call.should == true
+      loc1.cull_check.call.should == true
     end
     
     it "should be settable to some other Proc" do
-      loc1 = Station.new("here", cull_trigger: Proc.new {77})
-      loc1.cull_trigger.call.should == 77
+      loc1 = Station.new("here", cull_check: Proc.new {77})
+      loc1.cull_check.call.should == 77
     end
   end
   
@@ -312,15 +314,15 @@ describe "Station" do
       [true,false].should include(loc1.cull?)
     end
     
-    it "should invoke self#cull_trigger" do
+    it "should invoke self#cull_check" do
       loc1 = Station.new("amondul", capacity:1)
-      loc1.cull_trigger.should_receive(:call)
+      loc1.cull_check.should_receive(:call)
       loc1.cull?
     end
   end
   
   
-  describe "cull_order" do
+  describe "cull_selection" do
     it "should return an Array with the Individuals from self#population in it" do
       loc1 = Station.new("amondul", capacity:1)
       loc1.add_individual Individual.new("block {}")
@@ -451,7 +453,7 @@ describe "Station" do
       @loc1.population.length.should == 2
       Station.stations[:DEAD].population.length.should == 1
       
-      @loc1.cull_trigger.should_receive(:call).and_return(true, true, false)
+      @loc1.cull_check.should_receive(:call).and_return(true, true, false)
       @loc1.should_receive(:cull_order).and_return(@loc1.population)
       @loc1.core_cycle  #now we have three dudes, two of which will die
       @loc1.population.length.should == 1

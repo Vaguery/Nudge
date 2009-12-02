@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
+require 'fakeweb'
 include Nudge
 
 
@@ -77,18 +78,23 @@ describe "Experiment" do
       @exp.objectives.should == {}
     end
     
-    describe "build_objective" do
-      it "should create a new Evaluator instance, and add it to its own #stations list" do
-        
-      end
-    end
-    
   end
   
   describe "databases" do
-    it "should have a couchDB path" do
-      @exp.data_path.should == "../data"
-      Experiment.new(:data_path => "../somewhere_else").data_path.should == '../somewhere_else'
+    it "should have a couchDB URL attribute, via parameter setting or default" do
+      @exp.couch_url.should == "http://localhost:5984"
+      otherplace = 'http://vagueserver.com:99999'
+      Experiment.new(:couch_url => otherplace).couch_url.should == otherplace
+    end
+    
+    it "should have a method to check that couchDB is accessible" do
+      FakeWeb.register_uri(:get, "http://localhost:5984", :status => ["200", "OK"])
+      @exp.couch_url = "http://localhost:5984"
+      @exp.couch_live?.should == true
+            
+      FakeWeb.register_uri(:get, "http://localhost:99999", :exception => SocketError)
+      @exp.couch_url = "http://localhost:99999"
+      @exp.couch_live?.should == false
     end
   end
   

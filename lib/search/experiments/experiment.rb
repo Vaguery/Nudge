@@ -1,9 +1,10 @@
 module Nudge
+  require 'open-uri'
   
   class Experiment
     attr_reader :name
     attr_accessor :config
-    attr_accessor :data_path
+    attr_accessor :couch_url
     attr_accessor :instructions, :types, :variable_names
     attr_accessor :station_names, :objectives
     
@@ -15,7 +16,7 @@ module Nudge
       @variable_names = []
       
       # paths
-      @data_path = options[:data_path] || '../data'
+      @couch_url = options[:couch_url] || 'http://localhost:5984'
       
       # infrastructure
       @station_names = []
@@ -31,6 +32,16 @@ module Nudge
     
     def station_known?(name)
       return @station_names.include?(name)
+    end
+    
+    def couch_live?
+      begin
+        ack = (open(@couch_url) {|db| db.status[0]} == "200")
+        p open(@couch_url) {|db| db.status.inspect}
+      rescue SocketError # there may be more exceptions to catch!
+        ack = false
+      end
+      return ack
     end
     
     def connect_stations(flow_from, flow_to)

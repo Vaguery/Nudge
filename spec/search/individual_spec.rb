@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), "./../spec_helper")
+require "fakeweb"
 include Nudge
 
 describe "Individual" do
@@ -261,6 +262,36 @@ describe "Individual" do
     
   end
   
+  describe "Station knowledge" do
+    before(:each) do
+      @dude = Individual.new("block {}")
+      Station.cleanup
+      @where = Station.new("here")
+    end
+    
+    it "should know its Station" do
+      @where.add_individual @dude
+      @dude.station.should == @where.name
+    end
+  end
   
+  describe "#write" do
+    before(:each) do
+      @dude = Individual.new("block {}")
+      Station.cleanup
+      @where = Station.new("here")
+      @where.stub!(:database => "http://it.is.com:4567")
+    end
+    
+    it "should write its data to the database for its Station" do
+      FakeWeb.register_uri(:post, "http://it.is.com:4567", {})
+      @dude.write
+      @dude.id.should_not == nil
+    end
+    
+    it "should write the genome"
+    it "should write the scores hash"
+    it "should write the Time.now"
+  end  
   
 end
