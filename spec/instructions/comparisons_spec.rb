@@ -439,3 +439,48 @@ describe "NameEqualQInstruction" do
     @context.stacks[:bool].peek.value.should == true
   end
 end
+
+
+describe CodeEqualQInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeEqualQInstruction.new(@context)
+    @thing1 = ChannelPoint.new("x")
+    @thing2 = LiteralPoint.new("int", 991)
+  end
+  
+  it "should have its #context set to that Interpreter instance it's in" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end 
+  
+  it "should check that there are enough parameters" do
+    @context.stacks[:code].push @thing1
+    @context.stacks[:code].push @thing1
+    @i1.preconditions?.should == true
+  end
+  
+  it "should raise an error if the preconditions aren't met" do
+    @context.clear_stacks # there are no params at all
+    lambda{@i1.preconditions?}.should raise_error(Instruction::NotEnoughStackItems)
+  end
+  
+  it "should push the correct result to the :bool stack" do
+    @context.stacks[:code].push @thing1
+    @context.stacks[:code].push @thing1
+    @i1.go
+    @context.stacks[:bool].peek.value.should == true
+    
+    @context.stacks[:code].push @thing1
+    @context.stacks[:code].push @thing2
+    @i1.go
+    @context.stacks[:bool].peek.value.should == false
+  end
+  
+  it "should depend on the tidy listing, not the type of the item on the :code stack"
+end

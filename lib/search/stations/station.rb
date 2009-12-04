@@ -14,7 +14,7 @@ module Nudge
     attr_reader :name
     attr_accessor :downstream, :population, :capacity
     attr_accessor :settings
-    attr_accessor :cull_check, :generate_rule, :promotion_rule
+    attr_accessor :cull_check, :generate_rule, :promotion_rule, :cull_rule
     
     
     def initialize(name, params = {})
@@ -29,9 +29,10 @@ module Nudge
       @population = []
       @downstream = Set.new
       
-      @cull_check = params[:cull_check] || Proc.new {@population.length > @capacity}
       @generate_rule = params[:generate_rule] || Proc.new { |crowd| RandomGuessOperator.new.generate}
       @promotion_rule = params[:promotion_rule] || Proc.new { |indiv| false }
+      @cull_check = params[:cull_check] || Proc.new {@population.length > @capacity}
+      
       
       Station.stations[@name] = self
     end
@@ -100,19 +101,7 @@ module Nudge
     end
     
     
-    def cull_order
-      result = @population.shuffle
-      return result
-    end
-    
-    
     def review_and_cull
-      lottery = self.cull_order
-      while self.cull?
-        where = @population.find_index(lottery[0])
-        self.transfer(where, :DEAD)
-        lottery.delete_at(0)
-      end
     end
     
     

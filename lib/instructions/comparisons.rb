@@ -132,3 +132,21 @@ class NameEqualQInstruction < Instruction
     pushes :bool, @result
   end
 end
+
+
+class CodeEqualQInstruction < Instruction
+  def preconditions?
+    needs :code, 2
+  end
+  def setup
+    @arg2 = @context.stacks[:code].pop.tidy
+    @arg1 = @context.stacks[:code].pop.tidy
+  end
+  def derive
+    @result = LiteralPoint.new("bool", @arg1 == @arg2)
+  end
+  def cleanup
+    pushes :bool, @result
+  end
+end
+
