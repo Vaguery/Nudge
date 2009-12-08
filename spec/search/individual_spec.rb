@@ -271,27 +271,58 @@ describe "Individual" do
     
     it "should know its Station" do
       @where.add_individual @dude
-      @dude.station.should == @where.name
+      @dude.station == @where
     end
   end
   
   describe "#write" do
     before(:each) do
-      @dude = Individual.new("block {}")
       Station.cleanup
+      @dude = Individual.new("block {}")
+      @dude.scores["error"] = 1
+      @dude.timestamp = Time.utc(2000,"jan",1,20,15,1)
       @where = Station.new("here")
-      @where.stub!(:database => "http://it.is.com:4567")
+      @where.stub!(:database => "http://127.0.0.1:5984/here")
+      @where.add_individual(@dude)
+      FakeWeb.allow_net_connect = false
+      
+      @response_body = <<-END
+      {
+        "_id": "12345678",
+        "_rev": "1-12345678"
+      }
+      END
     end
     
     it "should write its data to the database for its Station" do
-      FakeWeb.register_uri(:post, "http://it.is.com:4567", {})
+      FakeWeb.register_uri(:post, "http://127.0.0.1:5984/here", body:@response_body)
       @dude.write
-      @dude.id.should_not == nil
+      @dude.id.should == "12345678"
     end
     
-    it "should write the genome"
-    it "should write the scores hash"
-    it "should write the Time.now"
+    it "should write the genome" do
+      mockDatabase = mock("fakeDB")
+      CouchRest.should_receive(:database!).and_return(mockDatabase)
+      mockDatabase.should_receive(:save_doc).
+        with(hash_including({"genome" => "block {}"})).and_return(@response_body)
+      @dude.write
+    end
+    
+    it "should write the scores hash" do
+      mockDatabase = mock("fakeDB")
+      CouchRest.should_receive(:database!).and_return(mockDatabase)
+      mockDatabase.should_receive(:save_doc).
+        with(hash_including({"scores" => {"error" => 1}})).and_return(@response_body)
+      @dude.write
+    end
+    
+    it "should write the Time.now" do
+      mockDatabase = mock("fakeDB")
+      CouchRest.should_receive(:database!).and_return(mockDatabase)
+      mockDatabase.should_receive(:save_doc).
+        with(hash_including({"creation_time" => Time.utc(2000,"jan",1,20,15,1)})).and_return(@response_body)
+      @dude.write
+    end
   end  
   
 end

@@ -107,6 +107,12 @@ describe "Station" do
     end
   end
   
+  describe "persistent store (database)" do
+    it "should have a URL for a couchDB (with name)" do
+      loc1 = Station.new("spain", database:"http://localhost:5984")
+      loc1.database.should == "http://localhost:5984/spain"
+    end
+  end
   
   describe "breeding pool" do
     it "should include every Individual in the Station and all downstream stations" do
@@ -132,7 +138,7 @@ describe "Station" do
       loc1 = Station.new("mordor")
       dude1 = Individual.new("ref f")
       loc1.add_individual dude1
-      dude1.station.should == "mordor"
+      dude1.station.should == loc1
     end
     
     it "should be a private method"
@@ -154,9 +160,9 @@ describe "Station" do
     end
     
     it "should change the #station attribute of the moved Individual" do
-      @dude1.station.should == "bree"
+      @dude1.station.should == @loc1
       @loc1.transfer(0,"rivendell")
-      @dude1.station.should == "rivendell"
+      @dude1.station.should == @loc2
     end
     
     it "should bounds check the popIndex parameter and raise an error if impossible" do
@@ -329,22 +335,24 @@ describe "Station" do
     
     it "should invoke cull_rule repeatedly until cull? is false"
     
-    # it "should return an Array with the Individuals from self#population in it" do
-    #   loc1 = Station.new("amondul", capacity:1)
-    #   loc1.add_individual Individual.new("block {}")
-    #   loc1.add_individual Individual.new("ref x")
-    #   loc1.cull_order.should be_a_kind_of(Array)
-    #   loc1.cull_order[0].should be_a_kind_of(Individual)
-    #   loc1.cull_order.length.should == loc1.population.length
-    # end
-    # 
-    # it "should default to random shuffle order" do
-    #   loc1 = Station.new("amondul", capacity:1) # default rule
-    #   loc1.add_individual Individual.new("block {}")
-    #   loc1.add_individual Individual.new("ref x")
-    #   loc1.population.should_receive(:shuffle)
-    #   loc1.cull_order
-    # end
+    it "should return an Array with the Individuals from self#population in it" do
+      pending
+      loc1 = Station.new("amondul", capacity:1)
+      loc1.add_individual Individual.new("block {}")
+      loc1.add_individual Individual.new("ref x")
+      loc1.cull_order.should be_a_kind_of(Array)
+      loc1.cull_order[0].should be_a_kind_of(Individual)
+      loc1.cull_order.length.should == loc1.population.length
+    end
+    
+    it "should default to random shuffle order" do
+      pending
+      loc1 = Station.new("amondul", capacity:1) # default rule
+      loc1.add_individual Individual.new("block {}")
+      loc1.add_individual Individual.new("ref x")
+      loc1.population.should_receive(:shuffle)
+      loc1.cull_order
+    end
   end
   
   

@@ -1,3 +1,5 @@
+require 'couchrest'
+
 module Nudge
   
   class Individual
@@ -5,8 +7,8 @@ module Nudge
       @helperParser ||= NudgeLanguageParser.new()
     end
       
-    attr_accessor :genome, :scores, :progress, :ancestors, :station, :program
-    attr_reader :timestamp, :id
+    attr_accessor :genome, :scores, :progress, :ancestors, :station, :program, :timestamp
+    attr_reader :id
     
     def initialize(listing)
       @helperParser = 
@@ -116,8 +118,13 @@ module Nudge
       return result
     end
     
-    def write()
-      @id = 88
+    def write
+      where = CouchRest.database!(@station.database)
+      response = where.save_doc({
+        "genome" => @genome,
+        "scores" => @scores,
+        "creation_time" => @timestamp})
+      @id = response["_id"]
     end
   end
 end

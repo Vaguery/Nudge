@@ -14,6 +14,7 @@ module Nudge
     attr_reader :name
     attr_accessor :downstream, :population, :capacity
     attr_accessor :settings
+    attr_accessor :database
     attr_accessor :cull_check, :generate_rule, :promotion_rule, :cull_rule
     
     
@@ -33,6 +34,7 @@ module Nudge
       @promotion_rule = params[:promotion_rule] || Proc.new { |indiv| false }
       @cull_check = params[:cull_check] || Proc.new {@population.length > @capacity}
       
+      @database = "#{params[:database]}/#{@name}" || ("http://localhost:5984/" + @name)
       
       Station.stations[@name] = self
     end
@@ -54,7 +56,7 @@ module Nudge
     
     
     def add_individual(newDude)
-      newDude.station = @name
+      newDude.station = self
       @population << newDude
     end
     
@@ -70,7 +72,7 @@ module Nudge
       movedDude = @population[popIndex]
       Station.stations[newStationName].population << movedDude
       @population.delete_at(popIndex)
-      movedDude.station = newStationName
+      movedDude.station = Station.stations[newStationName]
     end
     
     
