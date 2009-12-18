@@ -275,7 +275,7 @@ describe "Individual" do
     end
   end
   
-  describe "#write" do
+  describe "#write behavior" do
     before(:each) do
       Station.cleanup
       @dude = Individual.new("block {}")
@@ -288,8 +288,8 @@ describe "Individual" do
       
       @response_body = <<-END
       {
-        "_id": "12345678",
-        "_rev": "1-12345678"
+        "id": "12345678",
+        "rev": "1-12345678"
       }
       END
     end
@@ -323,6 +323,34 @@ describe "Individual" do
         with(hash_including({"creation_time" => Time.utc(2000,"jan",1,20,15,1)})).and_return(@response_body)
       @dude.write
     end
-  end  
+  end 
+
+  
+  describe "#get" do
+    before(:each) do
+      @url = "http://localhost:5984/here"
+      @individual_id = "88888"
+      @genome = "do int_add"
+      
+      @response_body = <<-END
+      {
+        "id": "88888",
+        "rev": "1-12345678",
+        "genome": "#{@genome}"
+      }
+      END
+      
+      FakeWeb.allow_net_connect = false
+      FakeWeb.register_uri(:get, "#{@url}/#{@individual_id}", body:@response_body)
+    end
+    
+    it "retrive an individual from the data store by id" do
+      @dude = Individual.get(@url, @individual_id)
+      @dude.id.should == @individual_id
+      @dude.genome.should == @genome
+    end
+    
+    it "should handle connection errors"
+  end
   
 end
