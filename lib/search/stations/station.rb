@@ -33,8 +33,11 @@ module Nudge
       @generate_rule = params[:generate_rule] || Proc.new { |crowd| RandomGuessOperator.new.generate}
       @promotion_rule = params[:promotion_rule] || Proc.new { |indiv| false }
       @cull_check = params[:cull_check] || Proc.new {@population.length > @capacity}
-      
-      @database = "#{params[:database]}/#{@name}" || ("http://localhost:5984/" + @name)
+      if params[:database]
+        @database = "#{params[:database]}/#{@name}"
+      else 
+        @database = "http://localhost:5984/#{@name}"
+      end
       
       Station.stations[@name] = self
     end

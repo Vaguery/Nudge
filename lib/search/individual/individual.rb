@@ -6,6 +6,23 @@ module Nudge
     def self.helperParser
       @helperParser ||= NudgeLanguageParser.new()
     end
+    
+    def self.get(db_url, individual_id)
+      # connect
+      db = CouchRest.database!(db_url)
+      
+      # search
+      couchDoc = db.get(individual_id.to_s)
+      puts couchDoc
+      
+      # create new guy
+      newDude = self.new(couchDoc["genome"])
+      newDude.instance_variable_set('@id',couchDoc["_id"])
+      newDude.timestamp = couchDoc["creation_time"]
+      newDude.scores = couchDoc["scores"]
+      
+      return newDude
+    end
       
     attr_accessor :genome, :scores, :progress, :ancestors, :station, :program, :timestamp
     attr_reader :id
@@ -17,7 +34,7 @@ module Nudge
       raise(ArgumentError, "Nudge program cannot be parsed") if Individual.helperParser.parse(genome) == nil
       @program = Individual.helperParser.parse(genome).to_points
       @scores = Hash.new
-      @timestamp = Time.now
+      @timestamp = Time.now.to_i
       @progress = 0
       @ancestors = []
       @station = ""
@@ -124,7 +141,7 @@ module Nudge
         "genome" => @genome,
         "scores" => @scores,
         "creation_time" => @timestamp})
-      @id = response["_id"]
+      @id = response["id"]
     end
   end
 end

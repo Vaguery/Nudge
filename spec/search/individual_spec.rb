@@ -38,7 +38,7 @@ describe "Individual" do
       @i1.scores.should == {}
     end
     it "should have a timestamp, which is when (wall clock time) it was made" do
-      @i1.timestamp.should be_a_kind_of(Time)
+      @i1.timestamp.should be_a_kind_of(Fixnum)
     end
     it "should have an age, defaulting to zero" do
       @i1.progress.should == 0
@@ -334,8 +334,8 @@ describe "Individual" do
       
       @response_body = <<-END
       {
-        "id": "88888",
-        "rev": "1-12345678",
+        "_id": "88888",
+        "_rev": "1-12345678",
         "genome": "#{@genome}"
       }
       END

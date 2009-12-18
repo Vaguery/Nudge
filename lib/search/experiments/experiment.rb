@@ -37,7 +37,6 @@ module Nudge
     def couch_live?
       begin
         ack = (open(@couch_url) {|db| db.status[0]} == "200")
-        p open(@couch_url) {|db| db.status.inspect}
       rescue SocketError # there may be more exceptions to catch!
         ack = false
       end
