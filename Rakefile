@@ -5,7 +5,7 @@ begin
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "nudge"
     gemspec.summary = "Genetic Programming in the Nudge language"
-    gemspec.description = "It's way complicated"
+    gemspec.description = "The nudge gem will (but does not yet) provide a simple framework for building, running and managing genetic programming experiments which automatically discover algorithms and equations to solve well-defined target problems. It depends on CouchDB and Ruby 1.9+"
     gemspec.email = "bill@vagueinnovation.com"
     gemspec.homepage = "http://github.com/Vaguery/PragGP"
     gemspec.authors = ["Bill Tozier", "Trek Glowacki"]
