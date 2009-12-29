@@ -615,6 +615,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/Vaguery/PragGP}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.required_ruby_version = Gem::Requirement.new(">= 1.9.1")
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Genetic Programming in the Nudge language}
   s.test_files = [
@@ -679,24 +680,24 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<couchrest>, [">= 0"])
-      s.add_runtime_dependency(%q<sinatra>, [">= 0"])
-      s.add_runtime_dependency(%q<treetop>, [">= 0"])
-      s.add_runtime_dependency(%q<polyglot>, [">= 0"])
-      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
+      s.add_runtime_dependency(%q<couchrest>, [">= 0.33"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 0.9.4"])
+      s.add_runtime_dependency(%q<treetop>, [">= 1.4.3"])
+      s.add_runtime_dependency(%q<polyglot>, [">= 0.2.9"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.5"])
     else
-      s.add_dependency(%q<couchrest>, [">= 0"])
-      s.add_dependency(%q<sinatra>, [">= 0"])
-      s.add_dependency(%q<treetop>, [">= 0"])
-      s.add_dependency(%q<polyglot>, [">= 0"])
-      s.add_dependency(%q<activesupport>, [">= 0"])
+      s.add_dependency(%q<couchrest>, [">= 0.33"])
+      s.add_dependency(%q<sinatra>, [">= 0.9.4"])
+      s.add_dependency(%q<treetop>, [">= 1.4.3"])
+      s.add_dependency(%q<polyglot>, [">= 0.2.9"])
+      s.add_dependency(%q<activesupport>, [">= 2.3.5"])
     end
   else
-    s.add_dependency(%q<couchrest>, [">= 0"])
-    s.add_dependency(%q<sinatra>, [">= 0"])
-    s.add_dependency(%q<treetop>, [">= 0"])
-    s.add_dependency(%q<polyglot>, [">= 0"])
-    s.add_dependency(%q<activesupport>, [">= 0"])
+    s.add_dependency(%q<couchrest>, [">= 0.33"])
+    s.add_dependency(%q<sinatra>, [">= 0.9.4"])
+    s.add_dependency(%q<treetop>, [">= 1.4.3"])
+    s.add_dependency(%q<polyglot>, [">= 0.2.9"])
+    s.add_dependency(%q<activesupport>, [">= 2.3.5"])
   end
 end
 
