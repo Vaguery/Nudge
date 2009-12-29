@@ -10,6 +10,8 @@ begin
     gemspec.homepage = "http://github.com/Vaguery/PragGP"
     gemspec.authors = ["Bill Tozier", "Trek Glowacki"]
     
+    gemspec.required_ruby_version = '>= 1.9.1'
+    
     gemspec.add_dependency('couchrest', '>= 0.33')
     gemspec.add_dependency('sinatra', '>= 0.9.4')
     gemspec.add_dependency('treetop', '>= 1.4.3')
