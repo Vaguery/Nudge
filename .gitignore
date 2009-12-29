@@ -1,4 +1,5 @@
 .hg*
+pkg/*
 *.pdf
 *.aux
 *.dvi

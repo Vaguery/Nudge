@@ -10,8 +10,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bill Tozier", "Trek Glowacki"]
   s.date = %q{2009-12-29}
+  s.default_executable = %q{nudge}
   s.description = %q{It's way complicated}
   s.email = %q{bill@vagueinnovation.com}
+  s.executables = ["nudge"]
   s.extra_rdoc_files = [
     "LICENSE.txt"
   ]
@@ -42,6 +44,10 @@ Gem::Specification.new do |s|
      "_spikes/symbolic_regression/experiment/objectives/programLength.rb",
      "_spikes/symbolic_regression/experiment/objectives/summedSquaredError.rb",
      "_spikes/symbolic_regression/lib/tasks/run.rake",
+     "app_generators/nudge/USAGE",
+     "app_generators/nudge/nudge_generator.rb",
+     "app_generators/nudge/templates/activate.rb",
+     "bin/nudge",
      "doc/classes/BlockNode.html",
      "doc/classes/BlockNode.src/M000246.html",
      "doc/classes/BoolAndInstruction.html",
@@ -539,8 +545,12 @@ Gem::Specification.new do |s|
      "lib/search/operators/evaluators.rb",
      "lib/search/operators/samplers_and_selectors.rb",
      "lib/search/stations/station.rb",
+     "nudge.gemspec",
      "push_language_coverage.md",
      "readme.md",
+     "script/console",
+     "script/destroy",
+     "script/generate",
      "spec/data/couchdb_spec.rb",
      "spec/fixtures/just_block.example",
      "spec/fixtures/just_block_with_newline.example",
@@ -598,7 +608,9 @@ Gem::Specification.new do |s|
      "spec/search/operators/sizePreservingMutation_spec.rb",
      "spec/search/operators/uniformBackboneCrossover_spec.rb",
      "spec/search/stations/station_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "test/test_generator_helper.rb",
+     "test/test_nudge_generator.rb"
   ]
   s.homepage = %q{http://github.com/Vaguery/PragGP}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -657,7 +669,9 @@ Gem::Specification.new do |s|
      "spec/search/operators/sizePreservingMutation_spec.rb",
      "spec/search/operators/uniformBackboneCrossover_spec.rb",
      "spec/search/stations/station_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "test/test_generator_helper.rb",
+     "test/test_nudge_generator.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -669,20 +683,20 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sinatra>, [">= 0"])
       s.add_runtime_dependency(%q<treetop>, [">= 0"])
       s.add_runtime_dependency(%q<polyglot>, [">= 0"])
-      s.add_runtime_dependency(%q<active_support>, [">= 0"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 0"])
     else
       s.add_dependency(%q<couchrest>, [">= 0"])
       s.add_dependency(%q<sinatra>, [">= 0"])
       s.add_dependency(%q<treetop>, [">= 0"])
       s.add_dependency(%q<polyglot>, [">= 0"])
-      s.add_dependency(%q<active_support>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 0"])
     end
   else
     s.add_dependency(%q<couchrest>, [">= 0"])
     s.add_dependency(%q<sinatra>, [">= 0"])
     s.add_dependency(%q<treetop>, [">= 0"])
     s.add_dependency(%q<polyglot>, [">= 0"])
-    s.add_dependency(%q<active_support>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 0"])
   end
 end
 
