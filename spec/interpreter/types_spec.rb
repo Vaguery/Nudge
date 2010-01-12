@@ -13,11 +13,26 @@ describe "base class" do
     class FooBarBazType < NudgeType; end
     @klass = FooBarBazType
   end
-  [:from_s, :any_value, :random_value].each do |method_name|
+  {:from_s => "thing", :any_value => nil, :random_value => {}}.each do |method_name, arg|
     it "should raise an error when #{method_name} is missing" do
-      lambda{@klass.send(method_name)}.should raise_error("This class must implement #{@klass.inspect}.#{method_name}")
+      args = [method_name, arg].compact
+      lambda{@klass.send(*args)}.should raise_error("This class must implement #{@klass.inspect}.#{method_name}")
     end
-  end  
+  end 
+  
+  it "self.from_s should require a parameter" do
+    NudgeType.method(:from_s).arity.should == 1
+  end
+  
+  it "self.random_value should require a parameter" do
+    NudgeType.method(:random_value).arity.should == 1
+  end 
+  
+  it "self.any_value should require a parameter" do
+    NudgeType.method(:any_value).arity.should == 0
+  end 
+  
+  
 end
 
 describe "Int Type" do

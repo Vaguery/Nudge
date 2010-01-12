@@ -23,7 +23,7 @@ class NudgeType
     self.to_s.slice(0..-5).downcase
   end
   
-  def self.from_s
+  def self.from_s(some_string)
     raise "This class must implement #{self.inspect}.from_s"
   end
   
@@ -31,7 +31,7 @@ class NudgeType
     raise "This class must implement #{self.inspect}.any_value"
   end
   
-  def self.random_value
+  def self.random_value(params)
     raise "This class must implement #{self.inspect}.random_value"
   end
   
