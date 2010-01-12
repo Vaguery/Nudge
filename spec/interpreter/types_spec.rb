@@ -8,6 +8,18 @@ describe "Type list" do
   end
 end
 
+describe "base class" do
+  before(:all) do
+    class FooBarBazType < NudgeType; end
+    @klass = FooBarBazType
+  end
+  [:from_s, :any_value, :random_value].each do |method_name|
+    it "should raise an error when #{method_name} is missing" do
+      lambda{@klass.send(method_name)}.should raise_error("This class must implement #{@klass.inspect}.#{method_name}")
+    end
+  end  
+end
+
 describe "Int Type" do
   it "should be a Singleton" do
     IntType.instance.should be_a_kind_of(Singleton)

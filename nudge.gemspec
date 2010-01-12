@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["Bill Tozier", "Trek Glowacki"]
   s.date = %q{2009-12-29}
   s.default_executable = %q{nudge}
-  s.description = %q{It's way complicated}
+  s.description = %q{The nudge gem will (but does not yet) provide a simple framework for building, running and managing genetic programming experiments which automatically discover algorithms and equations to solve well-defined target problems. It depends on CouchDB and Ruby 1.9+}
   s.email = %q{bill@vagueinnovation.com}
   s.executables = ["nudge"]
   s.extra_rdoc_files = [

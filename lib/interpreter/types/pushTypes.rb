@@ -24,8 +24,18 @@ class NudgeType
   end
   
   def self.from_s
-    raise "Your subclass of NudgeType should provide a method for parsing string values in code"
+    raise "This class must implement #{self.inspect}.from_s"
   end
+  
+  def self.any_value
+    raise "This class must implement #{self.inspect}.any_value"
+  end
+  
+  def self.random_value
+    raise "This class must implement #{self.inspect}.random_value"
+  end
+  
+  
 end
 
 
