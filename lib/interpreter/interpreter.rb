@@ -101,15 +101,18 @@ module Nudge
     def enable(item)
       if item.superclass == Instruction
         @instructions_library[item] = item.new(self)
-      elsif item.superclass == NudgeType
+      elsif item.include? NudgeType
         @types |= [item]
       end
     end
     
     def active?(item)
+      puts "#{item.inspect} is the item"
       if item.superclass == Instruction
         @instructions_library.include?(item)
-      elsif item.superclass == NudgeType
+      elsif item.include? NudgeType
+        puts "#{@types} is the type list"
+        
         @types.include?(item)
       end
     end
@@ -160,7 +163,7 @@ module Nudge
     def disable(item)
       if item.superclass == Instruction
         @instructions_library.delete(item)
-      elsif item.superclass == NudgeType
+      elsif item.include? NudgeType
         @types.delete(item)
       end
     end

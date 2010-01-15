@@ -82,7 +82,7 @@ module Nudge
     def randomize(context)
       raise(ArgumentError,"Random code cannot be created") if context.types == [CodeType]
       newType = context.types.sample
-      @type = newType.to_s.slice(0..-5).downcase
+      @type = newType.to_nudgecode
       if newType != CodeType
         @value = newType.any_value
       else
@@ -123,7 +123,7 @@ module Nudge
     
     def randomize(context)
       newType = context.types.sample
-      @type = newType.to_s.slice(0..-5).downcase
+      @type = newType.to_nudgecode
       if newType != CodeType
         @value = newType.any_value
       else
@@ -194,6 +194,7 @@ module Nudge
     end
     
     def className
+      puts @name.camelize
       "#{@name.camelize}Instruction"
     end
     

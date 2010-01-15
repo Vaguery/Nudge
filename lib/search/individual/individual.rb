@@ -28,9 +28,7 @@ module Nudge
     attr_reader :id
     
     def initialize(listing)
-      @helperParser = 
-      
-      @genome = listing
+      @helperParser = @genome = listing
       raise(ArgumentError, "Nudge program cannot be parsed") if Individual.helperParser.parse(genome) == nil
       @program = Individual.helperParser.parse(genome).to_points
       @scores = Hash.new

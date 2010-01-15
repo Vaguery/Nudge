@@ -90,7 +90,7 @@ describe "erc" do
       @ii.disable_all_types
       @ii.enable(IntType)
       myErc.randomize(@ii)
-      myErc.type.should == "int"
+      myErc.type.should == :int
     end
   end
   
@@ -106,7 +106,7 @@ describe "erc" do
       @ii.disable_all_types
       @ii.enable(BoolType)
       rE = Erc.any(@ii)
-      rE.type.should == "bool"
+      rE.type.should == :bool
     end
   end
   

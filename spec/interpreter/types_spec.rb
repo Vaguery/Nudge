@@ -4,15 +4,17 @@ include Nudge
 describe "Type list" do
   it "should have an #all_types [getter] method to return a list of every defined type" do
     # will be a list of every type subclassed from NudgeType
-    NudgeType.all_types.should include(IntType)
+    p NudgeType.all_types
+    NudgeType.all_types.should include(NudgeType::IntType)
   end
 end
 
 describe "base class" do
   before(:all) do
-    class FooBarBazType < NudgeType; end
-    @klass = FooBarBazType
+    class FooType < BasicType; end
+    @klass = FooType
   end
+  
   {:from_s => "thing", :any_value => nil, :random_value => {}}.each do |method_name, arg|
     it "should raise an error when #{method_name} is missing" do
       args = [method_name, arg].compact
@@ -21,24 +23,21 @@ describe "base class" do
   end 
   
   it "self.from_s should require a parameter" do
-    NudgeType.method(:from_s).arity.should == 1
+    @klass.method(:from_s).arity.should == 1
   end
   
   it "self.random_value should require a parameter" do
-    NudgeType.method(:random_value).arity.should == 1
+    @klass.method(:random_value).arity.should == 1
   end 
   
   it "self.any_value should require a parameter" do
-    NudgeType.method(:any_value).arity.should == 0
+    @klass.method(:any_value).arity.should == 0
   end 
   
   
 end
 
 describe "Int Type" do
-  it "should be a Singleton" do
-    IntType.instance.should be_a_kind_of(Singleton)
-  end
   
   it "should parse a string from code and produce the actual value" do
     IntType.from_s("3").should == 3
@@ -74,9 +73,6 @@ end
 
 
 describe "Bool Type" do
-  it "should be a Singleton" do
-    BoolType.instance.should be_a_kind_of(Singleton)
-  end
   it "should parse a string from code and produce the actual value" do
     BoolType.from_s("false").should == false
     lambda{BoolType.from_s()}.should raise_error
@@ -102,9 +98,6 @@ end
 
 
 describe "Float Type" do
-  it "should be a Singleton" do
-    FloatType.instance.should be_a_kind_of(Singleton)
-  end
   it "should return the result of self.randomize when it receives an #any_value call" do
     FloatType.should_receive(:random_value).and_return(-9.2)
     FloatType.any_value.should == -9.2

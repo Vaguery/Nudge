@@ -78,7 +78,7 @@ describe "LiteralPoint" do
         @ii.disable_all_types
         @ii.enable(BoolType)
         myL.randomize(@ii)
-        myL.type.should == "bool"
+        myL.type.should == :bool
       end
     end
     

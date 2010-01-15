@@ -1,11 +1,6 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
-
 describe "Code Type" do
-  it "should be a Singleton" do
-    CodeType.instance.should be_a_kind_of(Singleton)
-  end
-  
   
   it "should return the result of self.randomize when it receives an #any_value call" do
     CodeType.should_receive(:random_value).and_return("hi there!")

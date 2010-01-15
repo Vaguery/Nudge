@@ -36,3 +36,5 @@ require 'search/operators/samplers_and_selectors'
 require 'search/operators/evaluators'
 require 'search/stations/station'
 require 'search/experiments/experiment'
+
+include NudgeType
