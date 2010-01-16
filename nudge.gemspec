@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bill Tozier", "Trek Glowacki"]
-  s.date = %q{2010-01-12}
+  s.date = %q{2010-01-15}
   s.default_executable = %q{nudge}
   s.description = %q{The nudge gem will (but does not yet) provide a simple framework for building, running and managing genetic programming experiments which automatically discover algorithms and equations to solve well-defined target problems. It depends on CouchDB and Ruby 1.9+}
   s.email = %q{bill@vagueinnovation.com}
