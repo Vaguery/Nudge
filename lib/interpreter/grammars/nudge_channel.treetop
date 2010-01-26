@@ -1,0 +1,10 @@
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeChannel
+  include NudgeCommon
+
+  rule channel
+    'ref' spcs channel_name:alphas_and_underscores
+  end
+  
+end

@@ -1,0 +1,13 @@
+grammar NudgeCommon
+  rule common
+    spcs / alphas_and_underscores
+  end
+  
+  rule spcs
+    [\s\t\n]+
+  end
+  
+  rule alphas_and_underscores
+    [a-zA-Z] [a-zA-Z0-9_]*
+  end
+end

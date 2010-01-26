@@ -1,0 +1,13 @@
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeInstruction
+  include NudgeCommon
+  
+  rule instruction
+    'do' spcs opcode 
+  end
+  
+  rule opcode
+    alphas_and_underscores
+  end
+end
