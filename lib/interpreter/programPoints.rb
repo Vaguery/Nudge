@@ -194,7 +194,6 @@ module Nudge
     end
     
     def className
-      puts @name.camelize
       "#{@name.camelize}Instruction"
     end
     

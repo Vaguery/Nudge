@@ -1,0 +1,23 @@
+NUDGECODE:
+
+block {
+  literal «1»
+  literal «2»
+  block {
+    sample «3»
+    sample «4»
+  }
+}
+
+# local values:
+«1» float: 9.128
+«2» code: block {literal code «5» block {sample bool «6»}}
+«3» image: file:///881727183.jpg
+«4» int: 881
+«5» code: block { do int_add do int_multiply }
+«6» bool: false
+
+# local values can include references to other local values, but can never backtrack
+# syntax check: are all local values assigned?
+# syntax check: are all local values strings?
+# semantic check: are there no backward-references?

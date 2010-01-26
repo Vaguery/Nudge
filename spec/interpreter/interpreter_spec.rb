@@ -187,7 +187,6 @@ describe "initialization" do
       @ii.enable(IntType)
       @ii.enable(BoolType)
       @ii.disable(IntType)
-      puts @ii.types
       @ii.active?(NudgeType::IntType).should == false
       @ii.active?(BoolType).should == true
       @ii.enable(IntType)
