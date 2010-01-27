@@ -1,0 +1,25 @@
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeValue
+  include NudgeCommon
+  
+  rule value
+    'value' spcs type spcs? '(' footnote_number ')'
+  end
+  
+  rule type
+    alphas_and_underscores
+  end
+  
+  rule escaped_paren
+    '\)' / '\('
+  end
+  
+  rule escaped_backslash
+    '\\'
+  end
+  
+  rule footnote_number
+    [0-9]+
+  end
+end

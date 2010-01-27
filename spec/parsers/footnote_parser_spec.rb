@@ -19,13 +19,19 @@ describe NudgeFootnoteParser do
     got.should == "123"
   end
   
+  it "should capture trailing space" do
+    got = @parser.parse("«6» 123\n\n\n").elements[2].text_value
+    got.should == "123\n\n\n"
+  end
+  
+  
   it "should get the body right if it's multiline" do
     got = @parser.parse("«7»\t \n this is\n 3-line string\n!").elements[2].text_value
     got.should == "this is\n 3-line string\n!"
     got.split(/\n/).length.should == 3
   end
   
-  it "shouldn't care if there are more footnotes in the body" do
+  it "shouldn't care if there are more footnote markup chars in the body" do
     tricky = "including « loose « and matching «3» ones"
     got = @parser.parse("«8» #{tricky}").elements[2].text_value
     got.should == tricky
