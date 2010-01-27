@@ -7,7 +7,7 @@ describe NudgeCodeblockParser do
     @parser = NudgeCodeblockParser.new()
   end
   
-  it { should parse("value int (8)") }
+  it { should parse("value (8)") }
   it { should parse("do int_add") }
   it { should parse("ref x88") }
   

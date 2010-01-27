@@ -1,24 +1,30 @@
+#encoding: utf-8
 program = <<-ENDME
+
 block {
-  literal int(4)
-  literal string(2)
-  literal image (11)
+  value «1»
+  value «2»
+  value «3»
 }
 
-«2» hi there \n we have some lines \t here!
-«4» 88
-«11» http://mypath.com/somefile.jpg
-«88» some extra one with a «3» in it (and some ' and "' " quotes)
-«99» also works with ǝpoɔıun
+«1,string» hi there \n we have some lines 
+       with extra space
+\t here!
+«2,int» 88
+«3,image» http://mypath.com/somefile.jpg
+«4,string» some extra one with a «3,hi» in it (and some ' and "' " quotes)
+«5,blob» also works with ǝpoɔıun
 
 ENDME
 
-listing, spacer, fn = program.partition( /^(?=«[\d]+»)/ )
+listing, spacer, fn = program.partition( /^(?=«[\d],)/ )
 
-eachfn = fn.split ( /^(?=«[\d]+»)/ )
+eachfn = fn.split( /^(?=«[\d],)/ )
 
-breaker = /^«([\d]+)»\s*(.*)/
+breaker = /^«([\d]),([a-zA-Z][a-zA-Z0-9]*)»(.*)/m
 
-footnotes = Hash[ eachfn.collect {|fn| breaker.match(fn)[1..2]}]
+pieces = eachfn.collect {|fn| fn.match(breaker)[1..3]}
 
-puts footnotes.inspect
+puts  listing 
+puts "\nchunks:\n" + eachfn.inspect
+puts "\nsliced chunks:\n" + pieces.inspect

@@ -4,7 +4,7 @@ grammar NudgeValue
   include NudgeCommon
   
   rule value
-    'value' spcs type spcs? '(' footnote_number ')'
+    'value' spcs? '(' footnote_number ')'
   end
   
   rule type
