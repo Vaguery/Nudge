@@ -1,0 +1,25 @@
+require 'interpreter/grammars/nudge_common'
+require 'interpreter/grammars/nudge_channel'
+require 'interpreter/grammars/nudge_instruction'
+require 'interpreter/grammars/nudge_value'
+
+
+grammar NudgeCodeblock
+  include NudgeCommon
+  include NudgeChannel
+  include NudgeInstruction
+  include NudgeValue
+  
+  rule codeblock
+    program_point / block_statement
+  end
+  
+  rule program_point
+    value / instruction / channel
+  end
+  
+  rule block_statement
+    'block' spcs? '{' spcs? (codeblock spcs?)* '}'
+  end
+  
+end
