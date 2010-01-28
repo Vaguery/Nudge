@@ -1,4 +1,4 @@
-Feature: parser recognizes Nudge language code
+Feature: parser recognizes Nudge programs
   In order to hand-edit Nudge language files
   As a problem-solver
   I want to parse text files into object code in memory

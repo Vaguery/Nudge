@@ -16,8 +16,17 @@ describe NudgeChannelParser do
     before(:each) do
       @parsed = @parser.parse("ref x_99_agent")
     end
+    
     it { should capture(:channel_name).as('x_99_agent') }
   end
   
-  
+  describe "Nudge node subclasses and methods" do
+    before(:each) do
+      @parsed = @parser.parse("ref v")
+    end
+    
+    it "should return a SyntaxNode that is a ChannelNode" do
+      @parsed.should be_a_kind_of(ChannelNode)
+    end
+  end
 end

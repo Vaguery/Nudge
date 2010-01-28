@@ -4,7 +4,7 @@ grammar NudgeChannel
   include NudgeCommon
 
   rule channel
-    'ref' spcs channel_name:alphas_and_underscores
+    'ref' spcs channel_name:alphas_and_underscores <ChannelNode>
   end
   
 end

@@ -1,22 +1,11 @@
+# encoding: utf-8
 require 'interpreter/grammars/nudge_common'
 
 grammar NudgeValue
   include NudgeCommon
   
   rule value
-    'value' spcs? '(' footnote_number ')'
-  end
-  
-  rule type
-    alphas_and_underscores
-  end
-  
-  rule escaped_paren
-    '\)' / '\('
-  end
-  
-  rule escaped_backslash
-    '\\'
+    'value' spcs? '«' footnote_number '»'
   end
   
   rule footnote_number

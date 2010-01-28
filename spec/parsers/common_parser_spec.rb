@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "./../spec_helper")
 load_grammar('common')
 include Nudge
@@ -17,5 +18,5 @@ describe NudgeCommonParser do
   it { should_not parse("_this") }
   it { should_not parse("9this") }
   
-  it { should parse("unicode_ɷʦƞ") }
+  it { pending; should parse("unicode_ɷʦƞ") } # as an alphas_and_underscores
 end
