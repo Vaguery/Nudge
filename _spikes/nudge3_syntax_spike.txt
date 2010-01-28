@@ -1,21 +1,21 @@
 NUDGECODE:
 
 block {
-  literal «1»
-  literal «2»
+  value «1,float»
+  value «2,code»
   block {
-    sample «3»
-    sample «4»
+    value «3,image»
+    value «4,int»
   }
 }
 
 # local values:
-«1» float: 9.128
-«2» code: block {literal code «5» block {sample bool «6»}}
-«3» image: file:///881727183.jpg
-«4» int: 881
-«5» code: block { do int_add do int_multiply }
-«6» bool: false
+«1,float»  9.128
+«2,code» block {value «5» block {value «6»}}
+«3,image» file:///881727183.jpg
+«4,int» 881
+«5,code» block { do int_add do int_multiply }
+«6,bool» false
 
 # local values can include references to other local values, but can never backtrack
 # syntax check: are all local values assigned?

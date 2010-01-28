@@ -28,5 +28,10 @@ describe NudgeChannelParser do
     it "should return a SyntaxNode that is a ChannelNode" do
       @parsed.should be_a_kind_of(ChannelNode)
     end
+    
+    describe "should have the necessary attributes" do
+      it "should capture the channel_name attribute"
+      it "should have a to_points method"
+    end
   end
 end

@@ -2,9 +2,9 @@
 program = <<-ENDME
 
 block {
-  value «1»
-  value «2»
-  value «3»
+  value «1,string»
+  value «2,int»
+  value «3,image»
 }
 
 «1,string» hi there \n we have some lines 
@@ -27,4 +27,9 @@ pieces = eachfn.collect {|fn| fn.match(breaker)[1..3]}
 
 puts  listing 
 puts "\nchunks:\n" + eachfn.inspect
-puts "\nsliced chunks:\n" + pieces.inspect
+puts "\nsliced chunks:\n"
+pieces.each do |fn|
+  puts "footnote number: #{fn[0]}\n"
+  puts "           type: #{fn[1]}\n"
+  puts "          value:#{fn[2].inspect}\n\n"
+end
