@@ -1,0 +1,53 @@
+Program: listing plus appropriate footnotes
+ProgramPoint:
+  CodeblockPoint
+  InstructionPoint
+  ReferencePoint
+  ValuePoint
+  
+  
+exampleProgram = <<-EOF
+block { value «float» value «code» block {value «int»} do foo_add ref d3 }
+
+«float» 12.9
+«int» 888
+«code» do foo_subtract
+EOF
+
+
+
+# parses into:
+parsed = CodeblockPoint.new(
+  [
+    ValuePoint.new("float", "12.9"),
+    ValuePoint.new("code", "do foo_subtract"),
+    CodeblockPoint.new(
+      [
+        ValuePoint.new("int","888")
+      ]),
+    InstructionPoint.new("foo_add"),
+    ReferencePoint.new("d3")
+  ])
+
+
+
+parsed.program = [original program string]
+
+parsed.contents[0].program = "value «float»\n\n«float» 12.9"
+
+parsed.contents[1].program = "value «code» \n\n«code» do foo_subtract"
+
+parsed.contents[2].program = "block { value «int»} \n\n«int» 888"
+
+parsed.contents[2].contents[0].program = "value «int» \n\n«int» 888"
+
+parsed.contents[3].program = "do foo_add"
+
+parsed.contents[4].program = "ref d3"
+
+
+parsed.points = 7
+
+parsed.tidy = "block {\n  value «float»\n  value «code»\n  block {\n    value «int»}\n  do foo_add\n  ref d3}\n\n«float» 12.9\n«int» 888\n«code» do foo_subtract"
+
+parsed.contents[2].tidy = "block {\n  value «int»} \n\n«int» 888"

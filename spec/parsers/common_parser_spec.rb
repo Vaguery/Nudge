@@ -18,5 +18,5 @@ describe NudgeCommonParser do
   it { should_not parse("_this") }
   it { should_not parse("9this") }
   
-  it { pending; should parse("unicode_ɷʦƞ") } # as an alphas_and_underscores
+  it { should parse("unicoɷʦƞ_2") } # as an alphas_and_underscores
 end

@@ -1,12 +1,12 @@
 require 'interpreter/grammars/nudge_common'
-require 'interpreter/grammars/nudge_channel'
+require 'interpreter/grammars/nudge_reference'
 require 'interpreter/grammars/nudge_instruction'
 require 'interpreter/grammars/nudge_value'
 
 
 grammar NudgeCodeblock
   include NudgeCommon
-  include NudgeChannel
+  include NudgeReference
   include NudgeInstruction
   include NudgeValue
   
@@ -15,7 +15,7 @@ grammar NudgeCodeblock
   end
   
   rule program_point
-    value / instruction / channel
+    value / instruction / reference
   end
   
   rule block_statement

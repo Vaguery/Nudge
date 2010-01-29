@@ -1,0 +1,9 @@
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeReference
+  include NudgeCommon
+
+  rule reference
+    'ref' spcs vname:alphas_and_underscores <ReferencePoint>
+  end
+end

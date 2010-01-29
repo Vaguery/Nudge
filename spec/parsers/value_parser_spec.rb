@@ -8,11 +8,12 @@ describe NudgeValueParser do
     @parser = NudgeValueParser.new()
   end
   
-  it { should parse("value «8»") }
-  it { should parse("value «111»") }
-  it { should parse('value    «9999999999999999999»') }
+  it { should parse("value «float»") }
+  it { should parse("value «bool_3»") }
+  it { should parse("value  \n  «β_distribution»") }
   
   # deprecated syntax
+  it { should_not parse('value «100»') }
   it { should_not parse('value float(2.1)') }
   it { should_not parse('value bool(false)') }
   it { should_not parse('value bool(false)') }
@@ -20,9 +21,28 @@ describe NudgeValueParser do
   
   describe "captures" do
     before(:each) do
-      @parsed = @parser.parse("value «8»")
+      @parsed = @parser.parse("value «bool»")
     end
     
-    it { should capture(:footnote_number).as('8') }
+    it { should capture(:footnote_type).as('bool') }
   end
+  
+  
+  describe "resulting node class" do
+    it "should be a ValuePoint" do
+      parsed = @parser.parse("value «float»")
+      parsed.should be_a_kind_of(ValuePoint)
+    end
+    
+    it "should capture the #type as a string" do
+      parsed = @parser.parse("value «hi_there8»")
+      parsed.type.should == 'hi_there8'
+    end
+    
+    it "should have a #value attribute that's nil (at this point!)" do
+      parsed = @parser.parse("value «jump»")
+      parsed.value.should == nil
+    end
+  end
+  
 end

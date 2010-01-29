@@ -5,10 +5,10 @@ grammar NudgeValue
   include NudgeCommon
   
   rule value
-    'value' spcs? '«' footnote_number '»'
+    'value' spcs? '«' footnote_type '»' <ValuePoint>
   end
   
-  rule footnote_number
-    [0-9]+
+  rule footnote_type
+    alphas_and_underscores
   end
 end
