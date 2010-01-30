@@ -29,9 +29,9 @@ describe NudgeValueParser do
   
   
   describe "resulting node class" do
-    it "should be a ValuePoint" do
+    it "should be a ValueProgramPoint" do
       parsed = @parser.parse("value «float»")
-      parsed.should be_a_kind_of(ValuePoint)
+      parsed.should be_a_kind_of(ValueProgramPoint)
     end
     
     it "should capture the #type as a string" do

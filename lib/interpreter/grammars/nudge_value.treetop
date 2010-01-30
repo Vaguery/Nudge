@@ -5,7 +5,7 @@ grammar NudgeValue
   include NudgeCommon
   
   rule value
-    'value' spcs? '«' footnote_type '»' <ValuePoint>
+    'value' spcs? '«' footnote_type '»' <ValueProgramPoint>
   end
   
   rule footnote_type

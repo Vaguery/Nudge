@@ -7,6 +7,9 @@ require 'active_support'
 require 'interpreter/grammars/nudge_language_helpers'
 require 'interpreter/grammars/nudge_value_helpers'
 require 'interpreter/grammars/nudge_reference_helpers'
+require 'interpreter/grammars/nudge_instruction_helpers'
+require 'interpreter/grammars/nudge_codeblock_helpers'
+
 
 
 require 'interpreter/grammars/nudge_language'

@@ -26,9 +26,9 @@ describe NudgeReferenceParser do
   end
   
   describe "resulting node class" do
-    it "should be a ReferencePoint" do
+    it "should be a ReferenceProgramPoint" do
       parsed = @parser.parse("ref v23")
-      parsed.should be_a_kind_of(ReferencePoint)
+      parsed.should be_a_kind_of(ReferenceProgramPoint)
     end
     
     it "should capture the #variable_name as a string" do

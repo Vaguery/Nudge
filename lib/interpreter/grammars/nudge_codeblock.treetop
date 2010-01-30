@@ -11,15 +11,11 @@ grammar NudgeCodeblock
   include NudgeValue
   
   rule codeblock
-    program_point / block_statement
-  end
-  
-  rule program_point
-    value / instruction / reference
+    value / instruction / reference / (block_statement <CodeblockProgramPoint>)
   end
   
   rule block_statement
-    'block' spcs? '{' spcs? (codeblock spcs?)* '}'
+    'block' spcs? '{' spcs? block_contents:(codeblock spcs?)* '}' 
   end
   
 end

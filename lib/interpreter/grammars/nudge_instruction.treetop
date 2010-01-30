@@ -1,10 +1,11 @@
+#encoding: utf-8
 require 'interpreter/grammars/nudge_common'
 
 grammar NudgeInstruction
   include NudgeCommon
   
   rule instruction
-    'do' spcs opcode 
+    'do' spcs opcode <InstructionProgramPoint>
   end
   
   rule opcode

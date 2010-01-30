@@ -1,5 +1,5 @@
 # coding: utf-8
-class ValuePoint < Treetop::Runtime::SyntaxNode
+class ValueProgramPoint < Treetop::Runtime::SyntaxNode
   attr_accessor :value
   
   def type=(new_type)

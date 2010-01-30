@@ -44,16 +44,16 @@ describe "Nudge Program Parsing" do
   describe "building parsed ProgramPoint trees" do
     describe "single lines" do
       describe "should build ProgramPoints of the right subclass" do
-        it "should read 'block {}' as a CodeBlockPoint"
-        it "should read 'ref x1' as a ChannelPoint"
-        it "should read 'value «71»' as a ValuePoint"
-        it "should read 'do int_add' as an InstructionPoint"
+        it "should read 'block {}' as a CodeBlockProgramPoint"
+        it "should read 'ref x1' as a ChannelProgramPoint"
+        it "should read 'value «71»' as a ValueProgramPoint"
+        it "should read 'do int_add' as an InstructionProgramPoint"
       end
     end
     
     
     describe "nested blocks" do
-      it "should read 'block {}' and produce a CodeBlockPoint with an empty #contents list"
+      it "should read 'block {}' and produce a CodeblockProgramPoint with an empty #contents list"
       it "should read 'ref x1' and produce a ChannelPoint with no #contents method"
       it "should read 'block {ref x1}' as a CodeBlockPoint a 1-element #contents"
     end
