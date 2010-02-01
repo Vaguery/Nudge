@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bill Tozier", "Trek Glowacki"]
-  s.date = %q{2010-01-15}
+  s.date = %q{2010-02-01}
   s.default_executable = %q{nudge}
   s.description = %q{The nudge gem will (but does not yet) provide a simple framework for building, running and managing genetic programming experiments which automatically discover algorithms and equations to solve well-defined target problems. It depends on CouchDB and Ruby 1.9+}
   s.email = %q{bill@vagueinnovation.com}
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "_spikes/couch_document_spike.rb",
      "_spikes/nested_parsing/nested.rb",
      "_spikes/nested_parsing/nested.treetop",
+     "_spikes/nudge3_syntax_spike.txt",
      "_spikes/nudgeview/init.rb",
      "_spikes/nudgeview/public/javascripts/app.js",
      "_spikes/nudgeview/public/javascripts/jquery.js",
@@ -651,6 +652,12 @@ Gem::Specification.new do |s|
      "spec/interpreter/stack_spec.rb",
      "spec/interpreter/treetophelpers.rb",
      "spec/interpreter/types_spec.rb",
+     "spec/parsers/codeblock_parser_spec.rb",
+     "spec/parsers/common_parser_spec.rb",
+     "spec/parsers/instruction_parser_spec.rb",
+     "spec/parsers/nudge_parser_spec.rb",
+     "spec/parsers/reference_parser_spec.rb",
+     "spec/parsers/value_parser_spec.rb",
      "spec/search/batch_spec.rb",
      "spec/search/experiments/experiment_spec.rb",
      "spec/search/helpers_spec.rb",
