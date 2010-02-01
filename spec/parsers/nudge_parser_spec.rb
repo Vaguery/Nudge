@@ -58,9 +58,5 @@ describe "Nudge Program Parsing" do
       it "should read 'block {ref x1}' as a CodeBlockPoint a 1-element #contents"
     end
     
-    
-    describe "multiline blocks" do
-      it "should read 'block {ref x1 ref y1}' as a CodeBlockPoint a 2-element #contents"
-    end
   end
 end
