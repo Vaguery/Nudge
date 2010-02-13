@@ -1,40 +1,51 @@
-# this will be the "native" code for the Nudge2 language interpreter:
+# this will be the "native" code for the Nudge2.1 language interpreter:
 
-# here's a program, with the four point types shown (block, literal, erc, instruction, binding):
+# here's a program, with the four point types shown (block, value, ref, do):
 
-block
-  literal :int, -133
-  instr :int_add
-  block
-    erc :bool, false
-    instr :int_sub
-    instr :bool_and
-    instr :code_quote
-    binding 'x1'
-    literal :int, 800
-    instr :code_quote
-    block
-      instr :int_neg
-      instr :int_dup
-      block
-      block
-        instr :bool_xor
-  erc :bool, true
-  instr :code_if
+block {
+  value «int»
+  do int_add
+  block {
+    value «bool»
+    do int_subtract
+    do bool_and
+    do code_quote
+    ref x1
+    value «int» 
+    do code_quote
+    block {
+      do int_negate
+      do int_duplicate
+      block {}
+      block {
+        do bool_xor}}}
+  value «bool»
+  do code_if}
+  
+«int» -133
+«bool» false
+«int» 800
+«bool» true
 
-# here's a "flat" multiline program in Nudge2
 
-block
-  instr :exec_dup
-  erc :int, 4
-  instr :int_rand
-  instr :int_dup
-  instr :int_shove
-  literal :int, -99
+# here's a "flat" multiline program in Nudge2.1
 
-# and here's a one-line program (without an initial block):
+block {
+  do exec_duplicate
+  value «int»
+  do int_random
+  do int_duplicate
+  do int_shove
+  value «int»}
+  
+«int» 4
+«int» -99
 
-literal :int, 66
+# and here's a "one-line" program (without an initial block):
+
+value «int»
+
+«int» 66
 
 
 

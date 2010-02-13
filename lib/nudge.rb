@@ -10,7 +10,7 @@ require 'interpreter/grammars/nudge_reference_helpers'
 require 'interpreter/grammars/nudge_instruction_helpers'
 require 'interpreter/grammars/nudge_codeblock_helpers'
 
-
+require 'interpreter/nudge_program'
 
 require 'interpreter/grammars/nudge_language'
 require 'interpreter/interpreter'
