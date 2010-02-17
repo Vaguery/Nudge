@@ -1,5 +1,9 @@
+# LISP-style version
 (+ (- (x1) (3.12)) (÷ (* (- (x2)) (9)) (sin (x1))))
 
+
+
+# "tidy" version
 number_add_2
   {number_subtract_2
     {ref x1}
@@ -17,6 +21,44 @@ number_add_2
 
 
 
+# APPROXIMATE! treetop grammar
+grammar s_expression
+  rule sub_tree
+    leaf / branch
+  end
+  
+  rule leaf
+    ref_statement / value_statement / arity_0
+  end
+  
+  rule branch
+    arity_2 / arity_1
+  end
+  
+  rule arity_2
+    instruction_name:.+ spcs* {sub_tree} {sub_tree}
+  end
+  
+  rule arity_1
+    instruction_name:[.+] spcs* {sub_tree}
+  end
+  
+  rule arity_0
+    instruction_name:[.+]
+  end
+  
+  rule value_statement
+    value « type:[\S]* »
+  end
+  
+  rule ref_statement
+    ref variable:[\S]*
+  end
+end
+
+
+
+PROGRAM POINTS
 pt
 1   number_add_2
 2     {number_subtract_2
@@ -32,3 +74,10 @@ pt
 
 f1  «int» 9
 f2  «float» 3.12
+
+
+
+# evaluating it:
+easy mapping to a tree of method calls, kinda pretty much done already for simple S-expressions:
+
+Number.add(Number.subtract (x1, 3.12), Number.divide(Number.multiply(Number.negate(x2),9),Number.sine(x1)))

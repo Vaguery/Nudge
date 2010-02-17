@@ -9,13 +9,15 @@ describe NudgeReferenceParser do
   end
   
   it { should parse("ref x1") }
-  it { should parse("ref h_") }
+  it { should parse("ref h_factor_") }
   it { should parse("ref β2") }
   it { should parse("ref ǝ1qɐıɹɐʌ") }
   
   
   it { should_not parse("ref _x1") }
   it { should_not parse("ref 1x1") }
+  it { should_not parse("ref 1 x 1") }
+  
   
   describe "captures" do
     before(:each) do

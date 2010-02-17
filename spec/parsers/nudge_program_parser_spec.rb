@@ -53,6 +53,27 @@ describe "Nudge Program parsing" do
     
   end
   
+  
+  describe "keep footnote values associated with proper program point Nodes" do
+    it "should set the #value attribute of a ValueProgramPoint" do
+      bo = NudgeProgram.new("value «int» \n«int» 99")
+      fn = bo.footnotes
+      fn.length.should == 1
+      bo.my_parser.should_not == nil
+      $GIANT_GLOBAL_KLUDGE.should == fn
+      wtf = bo.parse!
+      puts wtf.associated_value.inspect
+    end
+    
+    it "should map values correctly based on the type strings"
+    
+    it "should create 'empty' values if it runs out of footnotes"
+    
+    it "should throw away unused footnotes"
+    
+    it "should associate values in the order they appear"
+  end
+  
   describe "handling malformed programs" do
     it "should interpret an empty string as no code at all" do
       huh = NudgeProgram.new(" \n")

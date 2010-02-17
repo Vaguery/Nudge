@@ -2,16 +2,7 @@ Nudge::Config.setup do |experiment|
   
   # set up instructions
   experiment.instructions =
-    [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction, IntSubtractInstruction,
-    IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-    IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-    IntMinInstruction, IntPopInstruction, IntRotateInstruction, IntShoveInstruction,
-    IntDepthInstruction, IntSwapInstruction, IntYankInstruction, IntYankdupInstruction, IntAbsInstruction,
-    IntIfInstruction, IntNegativeInstruction, BoolEqualQInstruction, BoolAndInstruction,
-    BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-    BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-    BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-    BoolYankdupInstruction, BoolXorInstruction]
+    [99]
     
   
   # set up variable names

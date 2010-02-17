@@ -11,6 +11,7 @@ describe NudgeInstructionParser do
   
   it { should parse("do int_add") }
   it { should parse("do anything") }
+  it { should parse("do int_add23") }
   it { should parse("do Int_ADD") }
   it { should parse("do β_assay") }
   
