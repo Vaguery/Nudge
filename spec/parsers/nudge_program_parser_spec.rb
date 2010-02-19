@@ -43,14 +43,38 @@ describe "Nudge Program parsing" do
       
       it "should capture each individual footnote into #footnotes" do
         NudgeProgram.new("do int_add").footnotes.should == []
-        NudgeProgram.new("value «int» \n«int» 8").footnotes.should include(["int"," 8"])
+        NudgeProgram.new("value «int» \n«int» 8").footnotes.should include(["int","8"])
         
         tricky = NudgeProgram.new("value «int» \n«int» 8 \n«code» value «bool»").footnotes
         tricky.length.should == 2
-        tricky[1][1].should == " value «bool»"
+        tricky[1][1].should == "value «bool»"
       end
     end
     
+  end
+  
+  
+  describe "footnote handling: " do
+    describe "trimming whitespace from footnote values" do
+      it "should ignore leading whitespace" do
+        NudgeProgram.new("value «int» \n«int»\t\t8").footnotes[0][1].should == "8"
+        NudgeProgram.new("value «int» \n«int»\n\n\n\n8").footnotes[0][1].should == "8"
+        NudgeProgram.new("value «int» \n«int»      8").footnotes[0][1].should == "8"
+        NudgeProgram.new("value «int» \n«int»8").footnotes[0][1].should == "8"
+      end
+      
+      it "should should ignore trailing whitespace" do
+        NudgeProgram.new("value «foo» \n«foo» 9\t\t").footnotes[0][1].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").footnotes[0][1].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9     ").footnotes[0][1].should == "9"
+      end
+      
+      it "should capture whitespace inside values" do
+        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").footnotes[0][1].should == "9\t\t9"
+        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").footnotes[0][1].should == "9\n\n\n\n9"
+        NudgeProgram.new("value «bar» \n«bar» 9     9").footnotes[0][1].should == "9     9"
+      end
+    end
   end
   
   
@@ -62,7 +86,6 @@ describe "Nudge Program parsing" do
       bo.my_parser.should_not == nil
       $GIANT_GLOBAL_KLUDGE.should == fn
       wtf = bo.parse!
-      puts wtf.associated_value.inspect
     end
     
     it "should map values correctly based on the type strings"
@@ -90,14 +113,6 @@ describe "Nudge Program parsing" do
   end
   
   
-  describe "handling whitespace" do
-    it "should ignore leading whitespace"
-    it "should should ignore trailing whitespace"
-    it "should ignore newlines"
-    it "should ignore space around footnote markup"
-    it "should capture whitespace inside values"
-    it "should remove extra whitespace before and after values in footnotes"
-  end
   
   
   describe "building parsed ProgramPoint trees" do

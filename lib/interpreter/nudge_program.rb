@@ -30,7 +30,7 @@ module Nudge
       @footnote_section = split_at_first_guillemet[2].strip
       
       shattered = @footnote_section.split( /^(?=«)/ )
-      breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»(.*)/m
+      breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
       @footnotes = shattered.collect {|fn| fn.match(breaker)[1..2]}
     end
     
