@@ -2,6 +2,7 @@ require 'interpreter/grammars/nudge_common'
 require 'interpreter/grammars/nudge_reference'
 require 'interpreter/grammars/nudge_instruction'
 require 'interpreter/grammars/nudge_value'
+require 'nudge'
 
 
 grammar NudgeCodeblock
@@ -10,12 +11,11 @@ grammar NudgeCodeblock
   include NudgeInstruction
   include NudgeValue
   
-  rule codeblock
+  rule codesection
     value / instruction / reference / (block_statement <CodeblockProgramPoint>)
   end
   
   rule block_statement
-    'block' spcs? '{' spcs? block_contents:(codeblock spcs?)* '}' 
+    'block' spcs? '{' spcs? block_contents:(codesection spcs?)* '}' 
   end
-  
 end

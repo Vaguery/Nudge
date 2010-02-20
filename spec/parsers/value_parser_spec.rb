@@ -40,9 +40,7 @@ describe NudgeValueParser do
     end
     
     it "should have a #value attribute that's nil (at this point!)" do
-      parsed = @parser.parse("value «jump»")
-      parsed.associated_value.should == nil
-      
+      parsed = @parser.parse("value «jump»")      
     end
   end
   

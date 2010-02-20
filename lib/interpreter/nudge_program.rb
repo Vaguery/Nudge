@@ -3,26 +3,19 @@ require 'treetop'
 
 
 module Nudge
+
   class NudgeProgram
     attr_accessor :code_section, :footnote_section
     attr_accessor :footnotes
-    attr_reader :my_parser
+    attr_accessor :program_points
     attr_reader :raw_code
     
     def initialize(sourcecode)
-      @my_parser = NudgeCodeblockParser.new()
       raise(ArgumentError, "NudgeProgram.new should be passed a string") unless sourcecode.kind_of?(String)
       @raw_code = sourcecode
       program_split!
-      class << @my_parser
-        attr_accessor :footnotes
-      end
-      $GIANT_GLOBAL_KLUDGE = (@footnotes || [])
     end
     
-    def parse!(parser = nil)
-      (parser || @my_parser).parse(@code_section)
-    end
     
     def program_split!
       split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
@@ -34,5 +27,17 @@ module Nudge
       @footnotes = shattered.collect {|fn| fn.match(breaker)[1..2]}
     end
     
+    
+    def parses?
+      (NudgeCodeblockParser.new.parse(@code_section) != nil)
+    end
+    
+    
+    def tidy
+      frame = NudgeCodeblockParser.new.parse(@code_section)
+      frame ? frame.tidy : ""
+    end
   end
+  
+  
 end

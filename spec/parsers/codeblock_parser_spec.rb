@@ -33,7 +33,6 @@ describe NudgeCodeblockParser do
       @parsed.contents[0].text_value.should include "do int_add"
       @parsed.contents[1].text_value.should include "do int_subtract"
       @parsed.contents[2].text_value.should include "block {}"
-      
     end
   end
   
@@ -54,7 +53,11 @@ describe NudgeCodeblockParser do
       parsed.contents[3].should be_a_kind_of(ValueProgramPoint)
       
       parsed.contents[2].contents.length.should == 0
-      
+    end
+    
+    it "should manage to collect empty contents for an empty block" do
+      parsed = @parser.parse("block{}")
+      parsed.contents.should == []
     end
   end
   
