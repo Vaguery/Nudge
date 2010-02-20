@@ -1,5 +1,5 @@
 # coding: utf-8
-class ValueProgramPoint < Treetop::Runtime::SyntaxNode
+class ValueParseNode < Treetop::Runtime::SyntaxNode
   def type=(new_type)
     @type = new_type
   end
@@ -10,6 +10,10 @@ class ValueProgramPoint < Treetop::Runtime::SyntaxNode
   
   def tidy(level=1)
     "value «#{type}»"
+  end
+  
+  def to_point
+    return ValuePoint.new(type)
   end
   
 end

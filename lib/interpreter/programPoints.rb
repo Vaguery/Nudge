@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Nudge
   
   class ProgramPoint
@@ -7,37 +8,16 @@ module Nudge
   end
   
   
-  class CodeBlock < ProgramPoint
-    @@parser = NudgeLanguageParser.new
+  class CodeblockPoint < ProgramPoint
+    attr_accessor :listing, :contents
     
-    def initialize(code = "block {}")
-      @listing = code
-    end
-    
-    def listing=(rawCode)
-      @listing = rawCode
-    end
-    
-    def listing
-      @listing ||= "block {}"
+    def initialize(contents = [])
+      @contents = contents
+      @listing = self.tidy
     end
     
     def value
       @listing
-    end
-    
-    def contents=(newArray)
-      @contents = newArray
-    end
-    
-    def contents
-      @contents ||= self.reparse
-    end
-    
-    def reparse
-      clone = @@parser.parse(@listing).to_points
-      @listing = clone.listing
-      return clone.contents
     end
     
     def points
@@ -50,6 +30,7 @@ module Nudge
     end
     
     def go(context)
+      raise "REPLACE THIS CODE"
       @contents.reverse.each {|item| context.stacks[:exec].push(item)} 
     end
     
@@ -63,11 +44,12 @@ module Nudge
   end
   
   
-  class LiteralPoint < ProgramPoint
-    attr_accessor :type, :value
+  class ValuePoint < ProgramPoint
+    attr_accessor :type, :value, :raw
     
-    def initialize(type,value)
+    def initialize(type,value=nil)
       @type = type.to_sym
+      @raw = value
       @value = value
     end
     
@@ -76,7 +58,7 @@ module Nudge
     end
     
     def tidy(level=1)
-      "literal " + @type.to_s + " (" + @value.to_s + ")"
+      "value «" + @type.to_s + "»"
     end
     
     def randomize(context)
@@ -147,10 +129,10 @@ module Nudge
   end
   
   
-  class ChannelPoint < ProgramPoint
+  class ReferencePoint < ProgramPoint
     
     def self.any(context)
-      tmp = ChannelPoint.new("e")
+      tmp = ReferencePoint.new("e")
       tmp.randomize(context)
       return tmp
     end

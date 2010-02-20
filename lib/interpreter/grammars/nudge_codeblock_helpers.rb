@@ -1,5 +1,5 @@
 # coding: utf-8
-module CodeblockProgramPoint
+module CodeblockParseNode
   def contents
     block_contents.elements.collect {|e| e.elements[0]}
   end
@@ -12,5 +12,8 @@ module CodeblockProgramPoint
     return tt
   end
   
+  def to_point
+    c = CodeblockPoint.new(contents.collect {|e| e.to_point})
+  end
 end
 

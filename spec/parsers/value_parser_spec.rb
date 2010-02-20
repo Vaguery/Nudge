@@ -8,15 +8,15 @@ describe NudgeValueParser do
     @parser = NudgeValueParser.new()
   end
   
-  it { should parse("value «float»") }
-  it { should parse("value «bool_3»") }
-  it { should parse("value  \n  «β_distribution»") }
+  it { should treetop_parse("value «float»") }
+  it { should treetop_parse("value «bool_3»") }
+  it { should treetop_parse("value  \n  «β_distribution»") }
   
   # deprecated syntax
-  it { should_not parse('value «100»') }
-  it { should_not parse('value float(2.1)') }
-  it { should_not parse('value bool(false)') }
-  it { should_not parse('value bool(false)') }
+  it { should_not treetop_parse('value «100»') }
+  it { should_not treetop_parse('value float(2.1)') }
+  it { should_not treetop_parse('value bool(false)') }
+  it { should_not treetop_parse('value bool(false)') }
   
   
   describe "captures" do
@@ -31,7 +31,7 @@ describe NudgeValueParser do
   describe "resulting node class" do
     it "should be a ValueProgramPoint" do
       parsed = @parser.parse("value «float»")
-      parsed.should be_a_kind_of(ValueProgramPoint)
+      parsed.should be_a_kind_of(ValueParseNode)
     end
     
     it "should capture the #type as a string" do
@@ -41,6 +41,14 @@ describe NudgeValueParser do
     
     it "should have a #value attribute that's nil (at this point!)" do
       parsed = @parser.parse("value «jump»")      
+    end
+  end
+  
+  describe "result should respond to #to_point correctly" do
+    it "should return a ValuePoint instance when invoked" do
+      bp = @parser.parse('value «bool»').to_point
+      bp.should be_a_kind_of(ValuePoint)
+      bp.type.should == :bool
     end
   end
   

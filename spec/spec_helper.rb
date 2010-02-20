@@ -1,3 +1,4 @@
+#encoding: utf-8
 $: << File.join(File.dirname(__FILE__), "/../lib") 
 
 require 'spec'
@@ -17,7 +18,7 @@ def load_grammar(name)
   Treetop.load(File.join(File.dirname(__FILE__), '..', 'lib', 'interpreter', 'grammars', "nudge_#{name}.treetop"))
 end
 
-module GrammarParsingMatchers
+module TrekGrammarParsingMatchers
   class ShouldParse
     def initialize(contents, parser)
       @contents = contents
@@ -55,6 +56,8 @@ module GrammarParsingMatchers
       end
     end
   end
+  
+  
   class ShouldCapture
     def initialize(name, nodes)
       @name = name
@@ -109,5 +112,5 @@ module GrammarParsingMatchers
 end
  
 Spec::Runner.configure do |config|
-  config.include(GrammarParsingMatchers)
+  config.include(TrekGrammarParsingMatchers)
 end

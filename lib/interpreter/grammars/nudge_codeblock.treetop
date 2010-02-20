@@ -12,7 +12,7 @@ grammar NudgeCodeblock
   include NudgeValue
   
   rule codesection
-    value / instruction / reference / (block_statement <CodeblockProgramPoint>)
+    value / instruction / reference / (block_statement <CodeblockParseNode>)
   end
   
   rule block_statement

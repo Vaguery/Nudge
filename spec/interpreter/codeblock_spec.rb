@@ -2,30 +2,32 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-describe "codeblock objects" do
-  describe "should only accept #new from a NudgeLanguageParser"
+describe "CodeblockPoint objects" do
+  describe "should only accept #new from a NudgeProgramParser"
   
   it "should be a kind of program point" do
-    myB = CodeBlock.new()
+    myB = CodeblockPoint.new()
     myB.should be_a_kind_of(ProgramPoint)
   end
   
-  it "should take a listing as a param, default to 'block {}'" do
-    sCode = CodeBlock.new()
-    sCode.listing.should == "block {}"
-    tCode = CodeBlock.new("block {\n  literal int, 3}")
-    tCode.listing.should == "block {\n  literal int, 3}"
+  it "should take an array of ProgramPoint objects as an input, default to an empty Array" do
+    sCode = CodeblockPoint.new()
+    sCode.contents.should == []
+    tCode = CodeblockPoint.new([InstructionPoint.new("image_rotate")])
+    tCode.contents[0].should be_a_kind_of(InstructionPoint)
+    tCode.contents[0].name.should == "image_rotate"
   end
   
   it "should expose its #contents" do
-    parser = NudgeLanguageParser.new()
+    raise "FIX THIS"
+    parser = NudgeProgramParser.new()
     cbs = ["block {\n  literal int(3)}",
       "block { do int_add \ndo int_subtract\n do int_divide}",
       "block { block{}}", "block{ block{ do int_add block{ block{} block{}}} }"]
     
     cbs.each do |myCode|
-      handMade = CodeBlock.new(myCode)
-      generated = parser.parse(myCode).to_points
+      handMade = CodeblockPoint.new(myCode)
+      generated = parser.parse(myCode).to_point
       handMade.contents.length.should == generated.contents.length
       handMade.contents[0].tidy.should == generated.contents[0].tidy
       handMade.listing.should == generated.listing

@@ -4,6 +4,6 @@ grammar NudgeReference
   include NudgeCommon
 
   rule reference
-    'ref' spcs vname:alphas_and_underscores <ReferenceProgramPoint>
+    'ref' spcs vname:alphas_and_underscores <ReferenceParseNode>
   end
 end

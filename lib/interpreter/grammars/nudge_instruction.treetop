@@ -5,7 +5,7 @@ grammar NudgeInstruction
   include NudgeCommon
   
   rule instruction
-    'do' spcs opcode <InstructionProgramPoint>
+    'do' spcs opcode <InstructionParseNode>
   end
   
   rule opcode

@@ -4,7 +4,6 @@ include Nudge
 describe "Type list" do
   it "should have an #all_types [getter] method to return a list of every defined type" do
     # will be a list of every type subclassed from NudgeType
-    p NudgeType.all_types
     NudgeType.all_types.should include(NudgeType::IntType)
   end
 end
