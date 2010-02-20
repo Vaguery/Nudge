@@ -43,38 +43,43 @@ describe "Nudge Program parsing" do
       
       it "should capture each individual footnote into #footnotes" do
         NudgeProgram.new("do int_add").footnotes.should == {}
-        NudgeProgram.new("value «int» \n«int» 8").footnotes["int"].should include("8")
+        NudgeProgram.new("value «int» \n«bool» false").footnotes[:bool].should include("false")
         
         tricky = NudgeProgram.new("value «int» \n«int» 8 \n«code» value «bool»").footnotes
         tricky.keys.length.should == 2
-        tricky["code"].should == ["value «bool»"]
+        tricky[:code].should == ["value «bool»"]
       end
     end
   
     describe ": trimming whitespace from footnote values" do
       it "should ignore leading whitespace" do
-        NudgeProgram.new("value «baz» \n«baz»\t\t8").footnotes["baz"][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»\n\n\n\n8").footnotes["baz"][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»      8").footnotes["baz"][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»8").footnotes["baz"][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»\t\t8").parsed_footnotes[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»\n\n\n\n8").parsed_footnotes[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»      8").parsed_footnotes[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»8").parsed_footnotes[:baz][0].should == "8"
       end
       
       it "should should ignore trailing whitespace" do
-        NudgeProgram.new("value «foo» \n«foo» 9\t\t").footnotes["foo"][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").footnotes["foo"][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9     ").footnotes["foo"][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9\t\t").parsed_footnotes[:foo][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").parsed_footnotes[:foo][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9     ").parsed_footnotes[:foo][0].should == "9"
       end
       
       it "should capture whitespace inside values" do
-        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").footnotes["bar"][0].should == "9\t\t9"
-        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").footnotes["bar"][0].should == "9\n\n\n\n9"
-        NudgeProgram.new("value «bar» \n«bar» 9     9").footnotes["bar"][0].should == "9     9"
+        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").parsed_footnotes[:bar][0].should == "9\t\t9"
+        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").parsed_footnotes[:bar][0].should == "9\n\n\n\n9"
+        NudgeProgram.new("value «bar» \n«bar» 9     9").parsed_footnotes[:bar][0].should == "9     9"
       end
       
       it "should trim whitespace between footnotes" do
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").footnotes.keys.length.should == 2
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").footnotes.keys.should include("bar")
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").footnotes.keys.should include("baz")
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.length.should == 2
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.should include(:bar)
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.should include(:baz)
+      end
+      
+      it "should avoid capturing newlines between footnotes" do
+        known_risk = NudgeProgram.new("block {value «mya»\nvalue «myb»}\n«myb» this is a b\n«mya» a")
+        known_risk.parsed_footnotes[:myb][0].should == "this is a b"
       end
     end
   end
@@ -148,21 +153,38 @@ describe "Nudge Program parsing" do
   describe "keep footnote values associated with proper program point Nodes" do
     it "should set the #value attribute of a ValuePoint" do
       simple = NudgeProgram.new("value «int» \n«int» 0")
-      raise "FIX ME"
+      simple.linked_code.should be_a_kind_of(ValuePoint)
+      simple.linked_code.value.should == "0"
     end
     
-    it "should map values correctly based on the type strings"
+    it "should set the value attribute even in a deeply nested statement" do
+      deep = NudgeProgram.new("block { block { block {} block {value «int»}}} \n«int» 0")
+      deep.linked_code.contents[0].contents[1].contents[0].value.should == "0"
+    end
     
-    it "should create 'empty' values if it runs out of footnotes"
+    it "should map values correctly based on the type strings" do
+      swapped = NudgeProgram.new("block {value «my_a»\nvalue «my_b»}\n«my_b» this is a b\n«my_a» a")
+      swapped.linked_code.contents[0].value.should == "a"
+      swapped.linked_code.contents[1].value.should == "this is a b"
+    end
     
-    it "should throw away unused footnotes"
+    it "should associate values in the order they appear" do
+      swapped = NudgeProgram.new("block {value «my_a»\nvalue «my_a»}\n«my_a» one\n«my_a» two")
+      swapped.linked_code.contents[0].value.should == "one"
+      swapped.linked_code.contents[1].value.should == "two"
+    end
     
-    it "should associate values in the order they appear"
+    it "should leave nil values if it runs out of footnotes" do
+      simple = NudgeProgram.new("value «int»")
+      simple.linked_code.should be_a_kind_of(ValuePoint)
+      simple.linked_code.value.should == nil
+    end
     
     describe "handling complex nested CODE values" do
       it "should associate all necessary footnotes with CODE values" do
         pending
         hofstadter1 = NudgeProgram.new("value «code» \n«code» value «code»\n«code» value «int»\n«int» 777")
+        hofstadter1.linked_code.value.should == "value «code»"
         # result should be what??? 
       end
 
@@ -193,7 +215,7 @@ describe "Nudge Program parsing" do
     
     it "should collect unused footnotes" do
       hmm = NudgeProgram.new("do int_add\n«nob» nothing")
-      hmm.footnotes["nob"].should include("nothing")
+      hmm.footnotes[:nob].should include("nothing")
     end
     
     it "should act as specified above for unparseable programs with footnotes"

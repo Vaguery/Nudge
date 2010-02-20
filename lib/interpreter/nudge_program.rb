@@ -22,17 +22,35 @@ module Nudge
       split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
       @code_section = split_at_first_guillemet[0].strip
       @footnote_section = split_at_first_guillemet[2].strip
-      
+      @footnotes = parsed_footnotes
+    end
+    
+    def parsed_footnotes
       shattered = @footnote_section.split( /^(?=«)/ )
       breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
       pairs = shattered.collect {|fn| fn.match(breaker)[1..2]}
-      @footnotes = Hash.new {|hash, key| hash[key] = [] }
-      pairs.each { |key,value| @footnotes[key] << value}
+      fn = Hash.new {|hash, key| hash[key] = [] }
+      pairs.each { |key,value| fn[key.to_sym] << value.chomp}
+      return fn
     end
     
     
     def link_code!
-      @linked_code = parses? ? @parser.parse(@code_section).to_point : nil
+      if parses?
+        @linked_code = @parser.parse(@code_section).to_point
+        depth_first_association!
+      else
+        @linked_code = nil
+      end
+    end
+    
+    
+    def depth_first_association!(program_point=@linked_code)
+      if program_point.kind_of?(ValuePoint)
+        program_point.value = @footnotes[program_point.type].shift
+      elsif program_point.kind_of?(CodeblockPoint)
+        program_point.contents.each {|branch| depth_first_association!(branch)}
+      end
     end
     
     
