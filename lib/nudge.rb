@@ -12,7 +12,6 @@ require 'interpreter/grammars/nudge_codeblock_helpers'
 
 require 'interpreter/nudge_program'
 
-require 'interpreter/grammars/nudge_language'
 require 'interpreter/interpreter'
 require 'interpreter/types/pushTypes'
 require 'interpreter/types/codeType'

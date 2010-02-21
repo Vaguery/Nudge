@@ -1,5 +1,6 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
-
+load_grammar('codeblock')
 include Nudge
 
 describe "initialization" do
@@ -8,16 +9,12 @@ describe "initialization" do
     @ii.clear_stacks
   end
   
-  it "should have a #parser, which defaults to a new NudgeLanguageParser" do
-    @ii.parser.should be_a_kind_of(NudgeLanguageParser)
-  end
-  
-  it "should have an empty stacks Hash, empty initially" do
+  it "should have a #stacks Hash" do
     @ii.stacks.should == {}
   end
   
-  it "should keep have an empty instructions attribute, a Hash" do
-    @ii.instructions_library.should == Hash.new
+  it "should keep have an empty #instructions Hash" do
+    @ii.instructions_library.should == {}
   end
   
   it "should automatically create an entry if an unmentioned stack is referenced by a method" do
@@ -34,14 +31,13 @@ describe "initialization" do
   end
   
   it "should respond to #reset(listing) by parsing the listing and pushing it onto its exec stack" do
-    checker = NudgeLanguageParser.new()
     myCode = "ref x"
     @ii.reset(myCode)
     @ii.stacks.should include(:exec)
     @ii.stacks[:exec].should be_a_kind_of(Stack)
     @ii.stacks[:exec].depth.should == 1
-    @ii.stacks[:exec].peek.should be_a_kind_of(ChannelPoint)
-    @ii.stacks[:exec].peek.name.should == checker.parse(myCode).to_points.name
+    @ii.stacks[:exec].peek.should be_a_kind_of(ReferencePoint)
+    @ii.stacks[:exec].peek.name.should == "x"
   end
   
   it "#reset should reset the #steps counter, too" do
@@ -51,21 +47,20 @@ describe "initialization" do
   end
   
   it "should load a complex CodeBlock as a single item on the exec stack" do
-    checker = NudgeLanguageParser.new()
     myCode = "block {\ndo foo\n do bar\n block {\ndo baz}}"
     @ii.reset(myCode)
     @ii.stacks.should include(:exec)
     @ii.stacks[:exec].depth.should == 1
     whatGotPushed = @ii.stacks[:exec].peek
-    whatGotPushed.should be_a_kind_of(CodeBlock)
-    whatGotPushed.contents.length.should == checker.parse(myCode).to_points.contents.length
+    whatGotPushed.should be_a_kind_of(CodeblockPoint)
+    whatGotPushed.contents.length.should == 3
     whatGotPushed.contents[1].name.should == "bar"
     whatGotPushed.contents[2].contents[0].name.should == "baz"
   end
   
   it "should accept a listing, which should default to an empty string" do
-    ij = Interpreter.new(program:"literal int(7)")
-    ij.stacks[:exec].peek.should be_a_kind_of(LiteralPoint)
+    Interpreter.new(program:"value «int» \n«int» 7").program.should == "value «int» \n«int» 7"
+    # Interpreter.new().program.should == ""
   end
   
   it "should have an #enable method that works for Instructions, adding them to the #instructions hash" do
@@ -102,10 +97,10 @@ describe "initialization" do
     end
 
     it "should create a new entry when #bind_variable is called" do
-      @ii.bind_variable("x",LiteralPoint.new(:int,88))
-      @ii.variables["x"].should be_a_kind_of(LiteralPoint)
+      @ii.bind_variable("x",ValuePoint.new(:int,"88"))
+      @ii.variables["x"].should be_a_kind_of(ValuePoint)
       @ii.variables["x"].type.should == :int
-      @ii.variables["x"].value.should == 88
+      @ii.variables["x"].value.should == "88"
     end
     
     it "should raise an exception if the bound value is anything but a LiteralPoint" do
@@ -115,14 +110,14 @@ describe "initialization" do
     end
     
     it "should remove an new entry when #unbind_variable is called" do
-      @ii.bind_variable("x",LiteralPoint.new(:int,88))
-      @ii.variables["x"].value.should == 88
+      @ii.bind_variable("x",ValuePoint.new(:int,"99"))
+      @ii.variables["x"].value.should == "99"
       @ii.unbind_variable("x")
       @ii.variables["x"].should == nil
     end
     
     it "should be resettable" do
-      @ii.bind_variable("x",LiteralPoint.new(:int,88))
+      @ii.bind_variable("x",ValuePoint.new(:int,"77"))
       @ii.reset_variables
       @ii.variables.should_not include("x")
     end
@@ -134,10 +129,10 @@ describe "initialization" do
     end
   
     it "should create a new entry when #bind_name is called" do
-      @ii.bind_name("x",LiteralPoint.new(:bool,false))
-      @ii.names["x"].should be_a_kind_of(LiteralPoint)
+      @ii.bind_name("x",ValuePoint.new(:bool,"false"))
+      @ii.names["x"].should be_a_kind_of(ValuePoint)
       @ii.names["x"].type.should == :bool
-      @ii.names["x"].value.should == false
+      @ii.names["x"].value.should == "false"
     end
 
     it "should raise an exception if the bound value is anything but a LiteralPoint" do
@@ -147,14 +142,14 @@ describe "initialization" do
     end
     
     it "should remove an new entry when #unbind_name is called" do
-      @ii.bind_name("x",LiteralPoint.new(:int,88))
-      @ii.names["x"].value.should == 88
+      @ii.bind_name("x",ValuePoint.new(:int,"55"))
+      @ii.names["x"].value.should == "55"
       @ii.unbind_name("x")
       @ii.names["x"].should == nil
     end
     
     it "should be resettable" do
-      @ii.bind_name("x",LiteralPoint.new(:int,88))
+      @ii.bind_name("x",ValuePoint.new(:int,"44"))
       @ii.reset_names
       @ii.names.should_not include("x")
     end
@@ -162,9 +157,9 @@ describe "initialization" do
   
   describe "references" do
     it "should return an Array of keys obtained by mergine variables into names (not vice versa)" do
-      @ii.bind_name("x",LiteralPoint.new(:int,88))
-      @ii.bind_variable("y",LiteralPoint.new(:int,88))
-      @ii.bind_name("y",LiteralPoint.new(:bool,false))
+      @ii.bind_name("x",ValuePoint.new(:foo,"bar"))
+      @ii.bind_variable("y",ValuePoint.new(:baz,"qux"))
+      @ii.bind_name("y",ValuePoint.new(:bool,"false"))
       @ii.references.should == @ii.names.merge(@ii.variables).keys
       @ii.references.should_not == @ii.variables.merge(@ii.names).keys
     end

@@ -30,7 +30,6 @@ module Nudge
     end
     
     def go(context)
-      raise "REPLACE THIS CODE"
       @contents.reverse.each {|item| context.stacks[:exec].push(item)} 
     end
     

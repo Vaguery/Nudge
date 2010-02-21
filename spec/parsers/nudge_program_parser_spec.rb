@@ -150,6 +150,15 @@ describe "Nudge Program parsing" do
   end
   
   
+  describe "#contains_codevalues? method" do
+    it "should return true iff the raw code (including footnote_section) includes 'value «code»" do
+      NudgeProgram.new("do int_add").contains_codevalues?.should == false
+      NudgeProgram.new("value \t\t«code»").contains_codevalues?.should == true
+      NudgeProgram.new("block {block {value \n «code»}}").contains_codevalues?.should == true
+    end
+  end
+  
+  
   describe "keep footnote values associated with proper program point Nodes" do
     it "should set the #value attribute of a ValuePoint" do
       simple = NudgeProgram.new("value «int» \n«int» 0")
@@ -183,8 +192,10 @@ describe "Nudge Program parsing" do
     describe "handling complex nested CODE values" do
       it "should associate all necessary footnotes with CODE values" do
         pending
+        
         hofstadter1 = NudgeProgram.new("value «code» \n«code» value «code»\n«code» value «int»\n«int» 777")
-        hofstadter1.linked_code.value.should == "value «code»"
+        hofstadter1.contains_codevalues?.should == true
+        hofstadter1.linked_code.value.should == "value «code»\n«code» value «int»\n«int» 777"
         # result should be what??? 
       end
 

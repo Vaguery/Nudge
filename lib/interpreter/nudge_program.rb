@@ -25,6 +25,7 @@ module Nudge
       @footnotes = parsed_footnotes
     end
     
+    
     def parsed_footnotes
       shattered = @footnote_section.split( /^(?=«)/ )
       breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
@@ -62,6 +63,11 @@ module Nudge
     def tidy
       framework = NudgeCodeblockParser.new.parse(@code_section)
       framework ? framework.tidy : ""
+    end
+    
+    
+    def contains_codevalues?
+      (@raw_code =~ /value\s*«code»/) != nil
     end
   end
 end

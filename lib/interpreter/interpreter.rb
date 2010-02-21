@@ -3,21 +3,22 @@ module Nudge
   # The Interpreter class executes the Push3 language loop:
   # 1. Pop the top item off the <b>:exec</b> Stack
   # 2. If it is a(n)...
-  #    * ... Instruction, execute its go() method;
-  #    * ... Literal or Sample, push its value to the Stack it names;
-  #    * ... Reference (Variable or Name), ...
+  #    * ... InstructionPoint, execute its go() method;
+  #    * ... ValuePoint, push its value to the Stack it names;
+  #    * ... ReferencePoint (Variable or Name), ...
   #       * ... if it's bound to a value, push the bound value onto the <b>:exec</b> Stack;
   #       * ... if it's not bound, push the name itself onto the <b>:name</b> Stack;
-  #    * ... CodeBlock, push its #contents (in the same order) back onto the <b>:exec</b> Stack
+  #    * ... CodeblockPoint, push its #contents (in the same order) back onto the <b>:exec</b> Stack
   
   class Interpreter
-    attr_accessor :parser, :stepLimit, :steps
+    attr_accessor :program, :stepLimit, :steps
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
     attr_accessor :last_name, :evaluate_channels
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(params = {})
       initialProgram = params[:program] || ""
+      @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @stepLimit = params[:step_limit] || 3000
       
@@ -26,7 +27,6 @@ module Nudge
       instructions.each {|i| self.enable(i)}
       
       # private parts
-      @parser = NudgeLanguageParser.new()
       @names = Hash.new
       @variables = Hash.new
       @steps = 0
@@ -46,11 +46,10 @@ module Nudge
     #    * (and if it doesn't parse, leaves all stacks empty)
     # * resets the @step counter.
     def reset(program="")
+      @program = program
       self.clear_stacks
       @steps = 0
-      parsed = @parser.parse(program)
-      newCode = parsed.to_points if parsed
-      @stacks[:exec].push(newCode)
+      @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       @evaluate_channels = true
     end
     
@@ -107,24 +106,21 @@ module Nudge
     end
     
     def active?(item)
-      puts "#{item.inspect} is the item"
       if item.superclass == Instruction
         @instructions_library.include?(item)
-      elsif item.include? NudgeType
-        puts "#{@types} is the type list"
-        
+      elsif item.include? NudgeType        
         @types.include?(item)
       end
     end
     
     
     def bind_variable(name, value)
-      raise(ArgumentError, "Variables can only be bound to Literals") unless value.kind_of?(LiteralPoint)
+      raise(ArgumentError, "Variables can only be bound to ValuePoints") unless value.kind_of?(ValuePoint)
       @variables[name] = value
     end
     
     def bind_name(name, value)
-      raise(ArgumentError, "Names can only be bound to Literals") unless value.kind_of?(LiteralPoint)
+      raise(ArgumentError, "Names can only be bound to ValuePoints") unless value.kind_of?(ValuePoint)
       @names[name] = value
     end
     
