@@ -166,7 +166,7 @@ module DuplicateInstruction
     @arg1 = @context.stacks[@target_stack].peek.value
   end
   def derive
-    @result = LiteralPoint.new(@target_stack.to_s,@arg1)
+    @result = ValuePoint.new(@target_stack.to_s,@arg1)
   end
   def cleanup
     pushes @target_stack, @result
@@ -322,7 +322,7 @@ module DepthInstruction
   def setup
   end
   def derive
-    @result = LiteralPoint.new("int",@context.stacks[@target_stack].depth)
+    @result = ValuePoint.new("int",@context.stacks[@target_stack].depth)
   end
   def cleanup
     pushes :int, @result

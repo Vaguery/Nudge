@@ -55,11 +55,11 @@ describe TestCaseEvaluator do
         Individual.new("block { sample int(99) sample int(12)}")
       ]
       @cases = [
-        TestCase.new(:bindings => {"x" => LiteralPoint.new("int",77)},
+        TestCase.new(:bindings => {"x" => ValuePoint.new("int",77)},
           :expectations => {"y" => 12},
           :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
         ),
-        TestCase.new(:bindings => {"x" => LiteralPoint.new("int",78)},
+        TestCase.new(:bindings => {"x" => ValuePoint.new("int",78)},
           :expectations => {"y" => 13},
           :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
         )

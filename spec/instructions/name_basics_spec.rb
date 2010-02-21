@@ -20,7 +20,7 @@ describe NameRandomBoundInstruction do
   describe "\#go" do
     before(:each) do
       @i1 = NameRandomBoundInstruction.new(@context)
-      @bar = LiteralPoint.new("int", 99)
+      @bar = ValuePoint.new("int", 99)
       @context.reset_names
       @context.reset_variables
     end
@@ -43,20 +43,20 @@ describe NameRandomBoundInstruction do
         @context.bind_variable("d", @bar)
         @i1.go
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.should be_a_kind_of(ChannelPoint)
+        @context.stacks[:exec].peek.should be_a_kind_of(ReferencePoint)
         @context.stacks[:exec].peek.value.should == "d"
         
         @context.reset_variables
         @context.bind_name("e", @bar)
         @i1.go
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].peek.should be_a_kind_of(ChannelPoint)
+        @context.stacks[:exec].peek.should be_a_kind_of(ReferencePoint)
         @context.stacks[:exec].peek.value.should == "e"
         
         @context.reset_names
         @i1.go # nothing should happen
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].peek.should be_a_kind_of(ChannelPoint)
+        @context.stacks[:exec].peek.should be_a_kind_of(ReferencePoint)
         @context.stacks[:exec].peek.value.should == "e"
       end
     end
@@ -93,7 +93,7 @@ describe NameNextInstruction do
     end
     
     describe "\#cleanup" do
-      it "should push a new ChannelPoint onto :exec, with an incremented value" do
+      it "should push a new ReferencePoint onto :exec, with an incremented value" do
         @context.last_name.should == "refAAAAA"
         @i1.go
         @context.last_name.should == "refAAAAB"
@@ -126,7 +126,7 @@ describe NameDisableLookupInstruction do
   describe "\#go" do
     before(:each) do
       @i1 = NameDisableLookupInstruction.new(@context)
-      @bar = LiteralPoint.new("int", 99)
+      @bar = ValuePoint.new("int", 99)
       @context.bind_name("zzzz", @bar)
     end
     
@@ -138,7 +138,7 @@ describe NameDisableLookupInstruction do
     
     describe "\#cleanup" do
       it "should switch off channel lookup until one NAME is encountered" do
-        3.times {@context.stacks[:exec].push(ChannelPoint.new("zzzz"))}
+        3.times {@context.stacks[:exec].push(ReferencePoint.new("zzzz"))}
         
         @context.evaluate_channels.should == true
         2.times {@context.step} # looks up 'zzzz', pushes to :exec; pushes to :int
@@ -147,7 +147,7 @@ describe NameDisableLookupInstruction do
         @i1.go
         @context.evaluate_channels.should == false
         
-        @context.step # doesn't look it up, pushes ChannelPoint to :name
+        @context.step # doesn't look it up, pushes ReferencePoint to :name
         @context.stacks[:name].peek.value.should == "zzzz"
         @context.evaluate_channels.should == true
         2.times {@context.step} # looks up 'zzzz' again, pushes to :exec; pushes to :int

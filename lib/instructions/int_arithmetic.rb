@@ -7,7 +7,7 @@ class IntAddInstruction < Instruction
     @arg2 = @context.stacks[:int].pop
   end
   def derive
-    @result = LiteralPoint.new("int", @arg1.value + @arg2.value)
+    @result = ValuePoint.new("int", @arg1.value + @arg2.value)
   end
   def cleanup
     pushes :int, @result
@@ -23,7 +23,7 @@ class IntMultiplyInstruction < Instruction
     @arg2 = @context.stacks[:int].pop
   end
   def derive
-    @result = LiteralPoint.new("int", @arg1.value * @arg2.value)
+    @result = ValuePoint.new("int", @arg1.value * @arg2.value)
   end
   def cleanup
     pushes :int, @result
@@ -42,7 +42,7 @@ class IntDivideInstruction < Instruction
   def derive
     if @arg2 != 0
       @quotient = @arg1 / @arg2
-      @result = LiteralPoint.new("int", @quotient)
+      @result = ValuePoint.new("int", @quotient)
     else
       raise InstructionMethodError
     end
@@ -63,7 +63,7 @@ class IntSubtractInstruction < Instruction
   end
   def derive
       @diff = @arg1-@arg2
-      @result = LiteralPoint.new("int", @diff)
+      @result = ValuePoint.new("int", @diff)
   end
   def cleanup
     pushes :int, @result
@@ -82,7 +82,7 @@ class IntModuloInstruction < Instruction
   def derive
     if @arg2 != 0
       @mod = @arg1 % @arg2
-      @result = LiteralPoint.new("int", @mod)
+      @result = ValuePoint.new("int", @mod)
     else
       raise InstructionMethodError
     end
@@ -103,7 +103,7 @@ class IntMaxInstruction < Instruction
   end
   def derive
       @max = [@arg1,@arg2].max
-      @result = LiteralPoint.new("int", @max)
+      @result = ValuePoint.new("int", @max)
   end
   def cleanup
     pushes :int, @result
@@ -121,7 +121,7 @@ class IntMinInstruction < Instruction
   end
   def derive
       @min = [@arg1,@arg2].min
-      @result = LiteralPoint.new("int", @min)
+      @result = ValuePoint.new("int", @min)
   end
   def cleanup
     pushes :int, @result
@@ -137,7 +137,7 @@ class IntAbsInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = LiteralPoint.new("int", @arg1.abs)
+      @result = ValuePoint.new("int", @arg1.abs)
   end
   def cleanup
     pushes :int, @result
@@ -152,7 +152,7 @@ class IntNegativeInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = LiteralPoint.new("int", -@arg1)
+      @result = ValuePoint.new("int", -@arg1)
   end
   def cleanup
     pushes :int, @result

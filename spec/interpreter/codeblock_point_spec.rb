@@ -2,17 +2,20 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-describe "something simple" do
-  it "should description" do
-    @ii = Interpreter.new
+
+describe "#initialize" do
+  it "should accept an Array of ProgramPoint objects, defaulting to none" do
+    lambda{CodeblockPoint.new()}.should_not raise_error
+    lambda{CodeblockPoint.new("block {}")}.should raise_error(ArgumentError)
+    lambda{CodeblockPoint.new([ReferencePoint.new("x")])}.should_not raise_error
+    CodeblockPoint.new([ReferencePoint.new("x")]).contents[0].should be_a_kind_of(ReferencePoint)
   end
 end
-
 
 describe "#go" do
   describe "should split at the root #contents level and push IN REVERSE ORDER back onto :exec" do
     before(:each) do
-      Interpreter.new()
+      @ii=Interpreter.new()
       @ii.clear_stacks
     end
     
@@ -23,19 +26,19 @@ describe "#go" do
     end
     
     it " : if it is a long, flat Codeblock" do
-      @ii.reset("block {\nliteral int(1)\nliteral int(2)\nliteral int(3)\nliteral int(4)}")
+      @ii.reset("block {\nref a\nref b\nref c\nref d}")
       @ii.stacks[:exec].depth.should == 1
       @ii.step
       @ii.stacks[:exec].depth.should == 4
-      @ii.stacks[:exec].pop.value.should == 1
-      @ii.stacks[:exec].pop.value.should == 2
-      @ii.stacks[:exec].pop.value.should == 3
-      @ii.stacks[:exec].pop.value.should == 4
+      @ii.stacks[:exec].pop.name.should == "a"
+      @ii.stacks[:exec].pop.name.should == "b"
+      @ii.stacks[:exec].pop.name.should == "c"
+      @ii.stacks[:exec].pop.name.should == "d"
       @ii.stacks[:exec].pop.should == nil
     end
     
-    it " : if it is a deeply nested Codeblock" do
-      @ii.reset("block {\nblock {\n block {\nliteral int (1)}\nliteral bool (false)}}")
+    it " : if it is a deeply nested program" do
+      @ii.reset("block {\nblock {\n block {\nvalue «int»}\nvalue «bool»}}")
       @ii.stacks[:exec].depth.should == 1
       @ii.step
       @ii.stacks[:exec].depth.should == 1
@@ -44,11 +47,11 @@ describe "#go" do
       @ii.step
       @ii.stacks[:exec].depth.should == 2
       item = @ii.stacks[:exec].pop
-      item.should be_a_kind_of(LiteralPoint)
-      item.value.should == 1
+      item.should be_a_kind_of(ValuePoint)
+      item.type.should == :int
       item = @ii.stacks[:exec].pop
-      item.should be_a_kind_of(LiteralPoint)
-      item.value.should == false
+      item.should be_a_kind_of(ValuePoint)
+      item.type.should == :bool
     end
   end
 end
@@ -57,19 +60,19 @@ end
 describe "codeblock methods" do
   describe "#points" do
     it "should return the number of lines in the block" do
-      myP = CodeBlock.new("block {}")
+      myP = NudgeProgram.new("block {}")
       myP.points.should == 1
       
-      myP = CodeBlock.new("block { block { block {}}}")
+      myP = NudgeProgram.new("block { block { block {}}}")
       myP.points.should == 3
       
-      myP = CodeBlock.new("block { block {} block {}}")
+      myP = NudgeProgram.new("block { block {} block {}}")
       myP.points.should == 3
       
-      myP = CodeBlock.new("block { do int_add}")
+      myP = NudgeProgram.new("block { do int_add}")
       myP.points.should == 2
       
-      myP = CodeBlock.new("block { do int_add ref x1\nref x2}")
+      myP = NudgeProgram.new("block { do int_add ref x1\nref x2}")
       myP.points.should == 4
       
     end

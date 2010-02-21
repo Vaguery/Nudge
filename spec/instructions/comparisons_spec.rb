@@ -5,8 +5,8 @@ describe "IntEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = IntEqualQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do
@@ -61,8 +61,8 @@ describe "IntLessThanQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = IntLessThanQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have a #context" do
@@ -123,8 +123,8 @@ describe "IntGreaterThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = IntGreaterThanQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have its #context set correctly" do
@@ -185,8 +185,8 @@ describe "FloatGreaterThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatGreaterThanQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its context set" do
@@ -247,8 +247,8 @@ describe "FloatLessThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatLessThanQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its context set" do
@@ -309,8 +309,8 @@ describe "FloatEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = FloatEqualQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do
@@ -446,7 +446,7 @@ describe CodeEqualQInstruction do
     @context = Interpreter.new
     @i1 = CodeEqualQInstruction.new(@context)
     @thing1 = ChannelPoint.new("x")
-    @thing2 = LiteralPoint.new("int", 991)
+    @thing2 = ValuePoint.new("int", 991)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do

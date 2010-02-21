@@ -7,7 +7,7 @@ class BoolAndInstruction < Instruction
     @arg2 = @context.stacks[:bool].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 && @arg2)
+    @result = ValuePoint.new("bool", @arg1 && @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -24,7 +24,7 @@ class BoolOrInstruction < Instruction
     @arg2 = @context.stacks[:bool].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 || @arg2)
+    @result = ValuePoint.new("bool", @arg1 || @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -41,7 +41,7 @@ class BoolXorInstruction < Instruction
     @arg2 = @context.stacks[:bool].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 != @arg2)
+    @result = ValuePoint.new("bool", @arg1 != @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -59,7 +59,7 @@ class BoolEqualQInstruction < Instruction
     @arg2 = @context.stacks[:bool].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 == @arg2)
+    @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -77,7 +77,7 @@ class BoolNotInstruction < Instruction
     @arg1 = @context.stacks[:bool].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", !@arg1)
+    @result = ValuePoint.new("bool", !@arg1)
   end
   def cleanup
     pushes :bool, @result

@@ -40,7 +40,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @float1 = LiteralPoint.new("float", 12.12)
+        @float1 = ValuePoint.new("float", 12.12)
       end
     
       describe "\#preconditions?" do
@@ -77,7 +77,7 @@ theseInstructions.each do |instName|
           examples.each do |inputs, expected|
             params = inputs.inspect
             it "should produce #{expected} given #{params}" do
-              inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+              inputs.each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
               @i1.go
               @context.stacks[:float].peek.value.should be_close(expected,0.000001)
             end

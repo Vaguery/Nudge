@@ -8,7 +8,7 @@ describe "ValuePoint" do
     myL.should be_a_kind_of(ProgramPoint)
   end
   
-  it "should be initialized with a type and a value as strings, with value defaulting to nil" do
+  it "should be initialized with a type and a value, with value defaulting to nil" do
     i4 = ValuePoint.new("int", "4")
     i4.type.should == :int
     i4.value.should == "4"
@@ -16,9 +16,10 @@ describe "ValuePoint" do
     lambda{ValuePoint.new("bool")}.should_not raise_error(ArgumentError)
   end
   
-  it "should accept a string or symbol for #value, but set it to a symbol" do
+  it "should accept a string or symbol for #type, but set it to a symbol" do
     ValuePoint.new("int", "4").type.should == :int
     ValuePoint.new(:int, "4").type.should == :int
+    lambda {ValuePoint.new(false, "4")}.should raise_error(ArgumentError)
   end
   
   it "should move to the appropriate stack when removed from the exec stack" do
@@ -32,7 +33,7 @@ describe "ValuePoint" do
     before(:each) do
       @ii = Interpreter.new()
       @ii.clear_stacks
-      @ii.stacks[:exec].push(ValuePoint.new("int","222"))
+      @ii.stacks[:exec].push(ValuePoint.new("int",222))
     end
     
     it "should pop the exec stack when a ValuePoint is interpreted" do
@@ -53,9 +54,9 @@ describe "ValuePoint" do
     end
 
     it "should push the value onto the right stack" do
-      @ii.stacks[:exec].push(ValuePoint.new("int","3"))
-      @ii.stacks[:exec].push(ValuePoint.new("float","2.2"))
-      @ii.stacks[:exec].push(ValuePoint.new("fiddle","false"))
+      @ii.stacks[:exec].push(ValuePoint.new("int",3))
+      @ii.stacks[:exec].push(ValuePoint.new("float",2.2))
+      @ii.stacks[:exec].push(ValuePoint.new("fiddle",false))
       
       3.times {@ii.step}
       @ii.stacks.should include(:int)
@@ -66,7 +67,7 @@ describe "ValuePoint" do
   
   describe "#tidy" do
     it "should print 'value «type»' for ValuePoint#tidy" do
-      myL = ValuePoint.new("float", "-99.121001")
+      myL = ValuePoint.new("float", -99.121001)
       myL.tidy.should == "value «float»"
     end
   end

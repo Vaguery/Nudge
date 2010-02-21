@@ -9,6 +9,11 @@ require 'interpreter/grammars/nudge_value_helpers'
 require 'interpreter/grammars/nudge_reference_helpers'
 require 'interpreter/grammars/nudge_instruction_helpers'
 require 'interpreter/grammars/nudge_codeblock_helpers'
+require 'interpreter/grammars/nudge_common'
+require 'interpreter/grammars/nudge_reference'
+require 'interpreter/grammars/nudge_instruction'
+require 'interpreter/grammars/nudge_value'
+require 'interpreter/grammars/nudge_codeblock'
 
 require 'interpreter/nudge_program'
 

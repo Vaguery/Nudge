@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -39,7 +40,7 @@ describe ExecYInstruction do
         @context.stacks[:exec].peek.listing.should == "do int_add"
         @context.stacks[:exec].entries[0].points.should == 3
         @context.stacks[:exec].entries[0].listing.should include("do exec_y")
-        @context.stacks[:exec].entries[0].listing.should include(@context.stacks[:exec].peek.listing)
+        @context.stacks[:exec].entries[0].listing.should include(@context.stacks[:exec].peek.tidy)
       end
     end
   end
@@ -153,7 +154,7 @@ describe ExecPopInstruction do
     before(:each) do
       @context = Interpreter.new
       @i1 = ExecPopInstruction.new(@context)
-      @context.reset("block {literal float(-2.1)\nliteral float(-2.1)}")
+      @context.reset("block {value «float»\nvalue «float»} \n«float» -2.1\n«float» -2.1")
     end
 
     describe "\#preconditions?" do
@@ -194,7 +195,7 @@ describe ExecDuplicateInstruction do
     before(:each) do
       @myInterpreter = Interpreter.new
       @i1 = ExecDuplicateInstruction.new(@myInterpreter)
-      @myInterpreter.reset("literal bool(false)")
+      @myInterpreter.reset("value «bool» \n«bool» false")
     end
 
     describe "\#preconditions?" do
@@ -241,7 +242,7 @@ describe ExecSwapInstruction do
     before(:each) do
       @myInterpreter = Interpreter.new
       @i1 = ExecSwapInstruction.new(@myInterpreter)
-      @myInterpreter.reset("block{literal bool(false) literal int(88)}")
+      @myInterpreter.reset("block{value «bool»\n value «int»}\n«bool» false\n«int» 88")
       @myInterpreter.step # [pushing the two points]
     end
 
@@ -416,7 +417,7 @@ describe ExecYankdupInstruction do
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :exec item" do
         @context.reset("block {}")
-        @context.stacks[:int].push(LiteralPoint.new("int",2))
+        @context.stacks[:int].push(ValuePoint.new("int",2))
         @i1.preconditions?.should == true
       end
     end
@@ -424,37 +425,37 @@ describe ExecYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:exec].push(LiteralPoint.new("float",i*1.0))}
+        (1..3).each {|i| @context.stacks[:exec].push(ValuePoint.new("float",i*1.0))}
       end
       
       it "should duplicate the top item if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0,3.0]
       end
       
       it "should duplicate the top item if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 3.0]
       end
       
       it "should clone the bottom item and push it if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0]
       end
       
       it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0]
         
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0, 2.0]
@@ -484,12 +485,12 @@ describe ExecYankInstruction do
     before(:each) do
       @i1 = ExecYankInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one more :int" do
-        @context.stacks[:exec].push(LiteralPoint.new("float", -99.99))
+        @context.stacks[:exec].push(ValuePoint.new("float", -99.99))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -498,32 +499,32 @@ describe ExecYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:exec].push(LiteralPoint.new("float",i*0.5))}
+        (1..3).each {|i| @context.stacks[:exec].push(ValuePoint.new("float",i*0.5))}
       end
       
       it "should not change anything if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [0.5,1.0,1.5]
       end
       
       it "should not change anything if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [0.5,1.0,1.5]
       end
       
       it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [1.0,1.5, 0.5]
       end
       
       it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
         @i1.go
         and_now = @context.stacks[:exec].entries.collect {|i| i.value}
         and_now.should == [0.5,1.5, 1.0]
@@ -553,12 +554,12 @@ describe ExecShoveInstruction do
     before(:each) do
       @i1 = ExecShoveInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 9.9)
+      @float1 = ValuePoint.new("float", 9.9)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :float" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @context.stacks[:exec].push(@float1)
         @i1.preconditions?.should == true
       end
@@ -568,32 +569,32 @@ describe ExecShoveInstruction do
       before(:each) do
         @context.clear_stacks
         11.times {@context.stacks[:exec].push(@float1)}
-        @context.stacks[:exec].push(LiteralPoint.new("float", 1.1)) # making it 12 deep
+        @context.stacks[:exec].push(ValuePoint.new("float", 1.1)) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         @context.stacks[:exec].depth.should == 12
         @context.stacks[:exec].peek.value.should == 1.1
       end
       
       it "should not move the top item if the integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:exec].depth.should == 12
         @context.stacks[:exec].peek.value.should == 1.1
       end
       
       it "should move the top item farther down if the value is less than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         @context.stacks[:exec].depth.should == 12
         @context.stacks[:exec].entries[0].value.should == 1.1
       end
       
       it "should move the top item to the bottom if the value is more than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         @context.stacks[:exec].depth.should == 12
         @context.stacks[:exec].entries[11].value.should == 9.9
@@ -629,8 +630,8 @@ describe ExecDoRangeInstruction do
     
     describe "\#preconditions?" do
       it "should check that there are two :ints and at least one :exec item" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.preconditions?.should == true
       end
     end
@@ -641,8 +642,8 @@ describe ExecDoRangeInstruction do
       end
       
       it "should finish if the :ints are identical, pushing an :int and a copy of the codeblock" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.go
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 3
@@ -651,8 +652,8 @@ describe ExecDoRangeInstruction do
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.go
         
         @context.stacks[:int].depth.should == 1
@@ -672,8 +673,8 @@ describe ExecDoRangeInstruction do
       end
       
       it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -2))
-        @context.stacks[:int].push(LiteralPoint.new("int", -19))
+        @context.stacks[:int].push(ValuePoint.new("int", -2))
+        @context.stacks[:int].push(ValuePoint.new("int", -19))
         @i1.go
         
         @context.stacks[:int].depth.should == 1
@@ -693,8 +694,8 @@ describe ExecDoRangeInstruction do
       end
       
       it "should 'continue' until counter and destination are the same value" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
-        @context.stacks[:int].push(LiteralPoint.new("int", 100))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 100))
         @i1.go
         @context.run # finish it off
         @context.stacks[:int].depth.should == 100
@@ -733,8 +734,8 @@ describe ExecDoTimesInstruction do
     
     describe "\#preconditions?" do
       it "should check that there are two :ints and at least one :exec item" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.preconditions?.should == true
       end
     end
@@ -745,8 +746,8 @@ describe ExecDoTimesInstruction do
       end
       
       it "should finish if the :ints are identical, leaving only a copy of the codeblock" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.go
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
@@ -754,8 +755,8 @@ describe ExecDoTimesInstruction do
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.go
         
         @context.stacks[:int].depth.should == 0
@@ -773,8 +774,8 @@ describe ExecDoTimesInstruction do
       
       it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
         @context.reset("literal float (0.1)")
-        @context.stacks[:int].push(LiteralPoint.new("int", -2))
-        @context.stacks[:int].push(LiteralPoint.new("int", -19))
+        @context.stacks[:int].push(ValuePoint.new("int", -2))
+        @context.stacks[:int].push(ValuePoint.new("int", -19))
         @i1.go
         
         @context.stacks[:int].depth.should == 0
@@ -792,9 +793,9 @@ describe ExecDoTimesInstruction do
       end
       
       it "should 'continue' until counter and destination are the same value" do
-        @context.reset("literal float (0.1)")
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
-        @context.stacks[:int].push(LiteralPoint.new("int", 100))
+        @context.reset("value «float»\n«float» 0.1")
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 100))
         @i1.go
         @context.run # finish it off
         @context.stacks[:float].depth.should == 100
@@ -834,16 +835,16 @@ describe ExecDoCountInstruction do
     
     describe "\#preconditions?" do
       it "should check that there are two :ints and at least one :exec item" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @context.enable(ExecDoRangeInstruction)
         @i1.preconditions?.should == true
       end
       
       it "should check that the @context knows about exec_do_range" do
         @context.disable(ExecDoRangeInstruction)
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         lambda{@i1.preconditions?}.should raise_error
       end
     end
@@ -855,14 +856,14 @@ describe ExecDoCountInstruction do
       end
       
       it "should not work if the int is negative or zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -213))
+        @context.stacks[:int].push(ValuePoint.new("int", -213))
         @i1.go
         @context.stacks[:int].depth.should == 1
         @context.stacks[:exec].depth.should == 1
         @context.stacks[:exec].peek.listing.should == "block {}"
         
         @context.reset("block {}")
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:int].depth.should == 1
         @context.stacks[:exec].depth.should == 1
@@ -870,7 +871,7 @@ describe ExecDoCountInstruction do
       end
       
       it "should push a 0 onto :int, and an exec_do_range block onto :exec" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
         @i1.go
         
         @context.stacks[:int].depth.should == 0

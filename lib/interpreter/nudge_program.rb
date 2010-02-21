@@ -1,13 +1,17 @@
 #encoding: utf-8
 require 'treetop'
-
+Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treetop"))
 
 module Nudge
+  
   class NudgeProgram
+    
     attr_accessor :code_section, :footnote_section
     attr_accessor :linked_code,:footnotes
     attr_reader :raw_code
     attr_reader :parser
+    attr_reader :points
+    
     
     def initialize(sourcecode)
       raise(ArgumentError, "NudgeProgram.new should be passed a string") unless sourcecode.kind_of?(String)
@@ -15,6 +19,7 @@ module Nudge
       program_split!
       @parser = NudgeCodeblockParser.new
       link_code!
+      @points = self.points
     end
     
     
@@ -68,6 +73,10 @@ module Nudge
     
     def contains_codevalues?
       (@raw_code =~ /value\s*«code»/) != nil
+    end
+    
+    def points
+      @points ||= (@linked_code ? @linked_code.points : 0)
     end
   end
 end

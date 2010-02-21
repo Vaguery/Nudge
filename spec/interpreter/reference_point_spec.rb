@@ -68,11 +68,11 @@ describe "ReferencePoint" do
       # context.reset_variables
       # context.reset_names
       # myC = ChannelPoint.new("a")
-      # context.bind_name("y",LiteralPoint.new("bool", false))
+      # context.bind_name("y",ValuePoint.new("bool", false))
       # myC.randomize(context)
       # myC.name.should == "y"
       # context.reset_names
-      # context.bind_variable("z",LiteralPoint.new("bool", false))
+      # context.bind_variable("z",ValuePoint.new("bool", false))
       # myC.randomize(context)
       # myC.name.should == "z"
     end
@@ -84,11 +84,11 @@ describe "ReferencePoint" do
       # context = Interpreter.new
       # context.reset_variables
       # context.reset_names
-      # context.bind_name("y",LiteralPoint.new("bool", false))
+      # context.bind_name("y",ValuePoint.new("bool", false))
       # rC = ChannelPoint.any(context)
       # rC.name.should == "y"
       # context.reset_names
-      # context.bind_variable("d",LiteralPoint.new("bool", false))
+      # context.bind_variable("d",ValuePoint.new("bool", false))
       # rC = ChannelPoint.any(context)
       # rC.name.should == "d"
     end

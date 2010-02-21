@@ -54,7 +54,7 @@ theseInstructions.each do |instName|
         @stackSymbol = itNeeds[instName]["stack"]
         @stackName = itNeeds[instName]["stackname"]
         @someValue = itNeeds[instName]["type"].any_value
-        @myStarter = LiteralPoint.new(@stackName,@someValue)
+        @myStarter = ValuePoint.new(@stackName,@someValue)
       end
       
       describe "\#preconditions?" do
@@ -81,7 +81,7 @@ theseInstructions.each do |instName|
             end
             whatHappens[instName].each do |k,v|
               it "\'#{k}\' becomes #{itNeeds[instName]["becomes"]} \'#{v}\'" do
-                @context.stacks[@stackSymbol].push(LiteralPoint.new(@stackName,k))
+                @context.stacks[@stackSymbol].push(ValuePoint.new(@stackName,k))
               end
             end
           end

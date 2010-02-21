@@ -87,7 +87,7 @@ describe "Code Type" do
   
     it "should return a random reference from the context" do
       @context.reset_variables
-      @context.bind_variable("x",LiteralPoint.new(:int,12))
+      @context.bind_variable("x",ValuePoint.new(:int,12))
       CodeType.any_reference(@context.references).should == "x"
     end
     
@@ -159,7 +159,7 @@ describe "Code Type" do
     describe "program leaves" do
       describe "instructions" do
         it "should work when there are no active instructions" do
-          @context.bind_variable("x",LiteralPoint.new(:int,12))
+          @context.bind_variable("x",ValuePoint.new(:int,12))
           @context.enable(IntType)
           lambda{CodeType.random_value(@context)}.should_not raise_error
         end
@@ -193,7 +193,7 @@ describe "Code Type" do
       
       describe "types" do
         it "should work when there are no active types" do
-          @context.bind_variable("x",LiteralPoint.new(:int,12))
+          @context.bind_variable("x",ValuePoint.new(:int,12))
           @context.enable(IntAddInstruction)
           lambda{CodeType.random_value(@context)}.should_not raise_error
         end

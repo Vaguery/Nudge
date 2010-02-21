@@ -1,6 +1,5 @@
 #encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
-load_grammar('codeblock')
 include Nudge
 
 describe "initialization" do
@@ -103,7 +102,7 @@ describe "initialization" do
       @ii.variables["x"].value.should == "88"
     end
     
-    it "should raise an exception if the bound value is anything but a LiteralPoint" do
+    it "should raise an exception if the bound value is anything but a ValuePoint" do
       lambda {@ii.bind_variable("x", 88)}.should raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", nil)}.should raise_error(ArgumentError)
@@ -135,7 +134,7 @@ describe "initialization" do
       @ii.names["x"].value.should == "false"
     end
 
-    it "should raise an exception if the bound value is anything but a LiteralPoint" do
+    it "should raise an exception if the bound value is anything but a ValuePoint" do
       lambda {@ii.bind_name("x", 88)}.should raise_error(ArgumentError)
       lambda {@ii.bind_name("x", [1,2])}.should raise_error(ArgumentError)
       lambda {@ii.bind_name("x", nil)}.should raise_error(ArgumentError)

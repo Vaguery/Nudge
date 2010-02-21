@@ -6,7 +6,7 @@ class ExecYInstruction < Instruction
     @arg1 = @context.stacks[:exec].pop
   end
   def derive
-    @recurser = CodeBlock.new("block {do exec_y #{@arg1.listing}}")
+    @recurser = CodeblockPoint.new([InstructionPoint.new("exec_y"),ValuePoint.new("code",@arg1.listing)])
   end
   def cleanup
     pushes :exec, @recurser
@@ -68,9 +68,9 @@ class ExecDoRangeInstruction < Instruction
     if @counter.value == @destination.value
       @finished = true
     elsif @counter.value < @destination.value
-      @new_counter = LiteralPoint.new("int", @counter.value + 1)
+      @new_counter = ValuePoint.new("int", @counter.value + 1)
     else
-      @new_counter = LiteralPoint.new("int", @counter.value - 1)
+      @new_counter = ValuePoint.new("int", @counter.value - 1)
     end
   end
   
@@ -106,9 +106,9 @@ class ExecDoTimesInstruction < Instruction
     if @counter.value == @destination.value
       @finished = true
     elsif @counter.value < @destination.value
-      @new_counter = LiteralPoint.new("int", @counter.value + 1)
+      @new_counter = ValuePoint.new("int", @counter.value + 1)
     else
-      @new_counter = LiteralPoint.new("int", @counter.value - 1)
+      @new_counter = ValuePoint.new("int", @counter.value - 1)
     end
   end
   
@@ -143,7 +143,7 @@ class ExecDoCountInstruction < Instruction
   end
   
   def derive
-    @one_less = LiteralPoint.new("int",@destination.value-1)
+    @one_less = ValuePoint.new("int",@destination.value-1)
   end
   
   def cleanup

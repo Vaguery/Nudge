@@ -76,7 +76,7 @@ Nudge::Config.setup do |experiment|
           )
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
         myCases = (-10..10).collect do |i|
-          TestCase.new(:bindings => {"x1" => LiteralPoint.new("int",i)},
+          TestCase.new(:bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -146,7 +146,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -217,7 +217,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -287,7 +287,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
