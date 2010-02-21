@@ -37,10 +37,10 @@ describe ExecYInstruction do
         @context.stacks[:exec].depth.should == 1
         @i1.go
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].peek.listing.should == "do int_add"
+        @context.stacks[:exec].peek.tidy.should == "do int_add"
         @context.stacks[:exec].entries[0].points.should == 3
-        @context.stacks[:exec].entries[0].listing.should include("do exec_y")
-        @context.stacks[:exec].entries[0].listing.should include(@context.stacks[:exec].peek.tidy)
+        @context.stacks[:exec].entries[0].tidy.should include("do exec_y")
+        @context.stacks[:exec].entries[0].tidy.should include(@context.stacks[:exec].peek.tidy)
       end
     end
   end
@@ -82,7 +82,7 @@ describe ExecKInstruction do
         @context.stacks[:exec].depth.should == 2
         @i1.go
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "do int_add"
+        @context.stacks[:exec].peek.tidy.should == "do int_add"
       end
     end
   end
@@ -124,9 +124,9 @@ describe ExecSInstruction do
         @context.stacks[:exec].depth.should == 3
         @i1.go
         @context.stacks[:exec].depth.should == 3
-        @context.stacks[:exec].entries[2].listing.should == "do int_add" # old top one
-        @context.stacks[:exec].entries[1].listing.should == "do int_multiply" # old 3rd one
-        @context.stacks[:exec].entries[0].listing.should == "block {do int_subtract do int_multiply}"
+        @context.stacks[:exec].entries[2].tidy.should == "do int_add" # old top one
+        @context.stacks[:exec].entries[1].tidy.should == "do int_multiply" # old 3rd one
+        @context.stacks[:exec].entries[0].tidy.should == "block {do int_subtract do int_multiply}"
       end
     end
   end
@@ -751,7 +751,7 @@ describe ExecDoTimesInstruction do
         @i1.go
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "block {}"
+        @context.stacks[:exec].peek.tidy.should == "block {}"
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do

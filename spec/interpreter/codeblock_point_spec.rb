@@ -1,6 +1,11 @@
-# coding: utf-8
+# encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
+
+def magicCodeblockPointMaker(program_listing)
+  my_kludge = NudgeProgram.new(program_listing)
+  return my_kludge.linked_code
+end
 
 
 describe "#initialize" do
@@ -9,6 +14,58 @@ describe "#initialize" do
     lambda{CodeblockPoint.new("block {}")}.should raise_error(ArgumentError)
     lambda{CodeblockPoint.new([ReferencePoint.new("x")])}.should_not raise_error
     CodeblockPoint.new([ReferencePoint.new("x")]).contents[0].should be_a_kind_of(ReferencePoint)
+  end
+end
+
+describe "tidy" do
+  it "should return the #tidy string of the codeblock, with 0 indent" do
+    CodeblockPoint.new([]).tidy.should == "block {}"
+    CodeblockPoint.new([CodeblockPoint.new([CodeblockPoint.new])]).tidy.should ==
+      "block {\n  block {\n    block {}}}"
+    CodeblockPoint.new([ReferencePoint.new("a"), ValuePoint.new("b")]).tidy.should ==
+      "block {\n  ref a\n  value «b»}"
+  end
+end
+
+
+describe "listing_parts" do
+  context "when there are no footnotes" do
+    it "should produce an Array with (1) self.tidy and (2) an empty string" do
+      CodeblockPoint.new([]).listing_parts.should == ["block {}",""]
+      CodeblockPoint.new([CodeblockPoint.new([CodeblockPoint.new])]).listing_parts.should ==
+        ["block {\n  block {\n    block {}}}",""]        
+      CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")]).listing_parts.should ==
+        ["block {\n  ref a\n  do b}",""]
+    end
+  end
+  
+  context "when there need to be footnotes" do
+    it "should work for blocks containing nil-valued ValuePoints" do
+      CodeblockPoint.new([ValuePoint.new("foo")]).listing_parts.should ==
+        ["block {\n  value «foo»}",""]
+      annoyinglyWordy = magicCodeblockPointMaker("block { block { block { value «foo»}}}")
+      annoyinglyWordy.listing_parts.should ==
+        ["block {\n  block {\n    block {\n      value «foo»}}}",""]
+    end
+    
+    it "should work with footnotes from the root" do
+      simple1 = magicCodeblockPointMaker("block { value «foo»} \n«foo» bar")
+      simple1.listing_parts.should ==
+        ["block {\n  value «foo»}","«foo» bar"]
+      nested = magicCodeblockPointMaker("block { block { value «foo»} ref x} \n«foo» bar")
+      nested.listing_parts[1].should == "«foo» bar"
+    end
+    
+    it "should return the footnotes in depth-first order" do
+      listed = magicCodeblockPointMaker("block { value «c» value «b» value «a»} \n«a» 1\n«b» 2\n«c» 3")
+      listed.listing_parts[1].should == "«c» 3\n«b» 2\n«a» 1"
+    end
+    
+    it "should work with nested «code» footnotes" do
+      simple_tricky = "block { value «code»}\n«code» value «code»\n«int» 123\n«code» value «int»"
+      simple_tricky = magicCodeblockPointMaker(simple_tricky)
+      puts simple_tricky.listing_parts[1] #.should == "«code» value «code»\n«code» value «int»\n«int» 123"
+    end
   end
 end
 

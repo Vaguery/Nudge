@@ -33,6 +33,14 @@ describe "InstructionPoint" do
     end
   end
   
+  describe "#listing_parts" do
+    it "should return an Array containing (1) InstructionPoint#tidy and (2) an empty string" do
+      myIP = InstructionPoint.new("bah_8")
+      myIP.listing_parts.should == [myIP.tidy,""]
+    end
+  end
+  
+  
   [["plant_water","PlantWaterInstruction"],["opinion_greaterthan?", "OpinionGreaterthan?Instruction"]].each do |inp|
     it "should know the appropriate class name for the Instruction singleton for #{inp}" do
       pointName = inp[0]

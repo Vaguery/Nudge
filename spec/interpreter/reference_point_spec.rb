@@ -61,6 +61,13 @@ describe "ReferencePoint" do
     end
   end
   
+  describe "#listing_parts" do
+    it "should return an Array containing (1) ReferencePoint#tidy and (2) an empty string" do
+      myRP = ReferencePoint.new("bah_8")
+      myRP.listing_parts.should == [myRP.tidy,""]
+    end
+  end
+  
   describe "randomize" do
     it "should set the ReferencePoint's name to a randomly selected channel or name key" do
       pending

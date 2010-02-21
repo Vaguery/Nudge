@@ -23,10 +23,13 @@ describe "ValuePoint" do
   end
   
   it "should move to the appropriate stack when removed from the exec stack" do
-    pending
-    # ii = Interpreter.new(program:"value bool (true)")
-    # ii.step
-    # ii.stacks[:bool].peek.value.should == true
+    ii = Interpreter.new(program:"value «bool»\n«bool»true")
+    ii.step
+    ii.stacks[:bool].peek.value.should == "true"
+    
+    ii.reset("value «code» \n«code» block { do foo_bar}")
+    ii.step
+    ii.stacks[:code].peek.value.should == "block { do foo_bar}"
   end
   
   describe "#go" do
@@ -72,6 +75,21 @@ describe "ValuePoint" do
     end
   end
   
+  describe "#listing_parts" do
+    it "should description return an Array with two parts: (1) self#tidy (2) the footnotes as a string" do
+      myL = ValuePoint.new("float", "-99.121001")
+      myL.listing_parts.should == ["value «float»","«float» -99.121001"]
+      myURI = ValuePoint.new("uri", "http://googol.com")
+      myURI.listing_parts.should == ["value «uri»","«uri» http://googol.com"]
+      
+      myHuh = ValuePoint.new("missing")
+      myHuh.listing_parts.should == ["value «missing»",""]
+      
+      myFUcode = ValuePoint.new("code", "block { value «code»}\n«code» value «int»\n«int» 8")
+      myFUcode.listing_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
+    end
+  end
+  
   describe "randomize" do
     before(:each) do
       @ii = Interpreter.new()
@@ -94,7 +112,7 @@ describe "ValuePoint" do
       @ii.disable_all_types
       @ii.disable_all_instructions
       @ii.enable(CodeType)
-      lambda{ValuePoint.any(@ii)}.should raise_error(ArgumentError, "Random code cannot be created")
+      lambda{ValuePoint.any(@ii)}.should_not raise_error
     end
   end
 end

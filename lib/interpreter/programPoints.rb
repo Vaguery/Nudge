@@ -9,16 +9,11 @@ module Nudge
   
   
   class CodeblockPoint < ProgramPoint
-    attr_accessor :listing, :contents
+    attr_accessor :contents
     
     def initialize(contents = [])
       raise(ArgumentError,"CodeblockPoint must be passed an Array") unless contents.kind_of?(Array)
       @contents = contents
-      @listing = self.tidy
-    end
-    
-    def value
-      @listing
     end
     
     def points
@@ -35,6 +30,13 @@ module Nudge
       @contents.each {|item| tt += ("\n" + (" "*indent) + item.tidy(level+1))}
       tt += "}"
       return tt
+    end
+    
+    def listing_parts
+      fn = self.contents.inject("\n") do |fn_accumulator, branch|
+        fn_accumulator + "\n#{branch.listing_parts[1]}"
+      end
+      return [self.tidy, fn.strip]
     end
   end
   
@@ -78,14 +80,15 @@ module Nudge
       return tmp
     end
     
-    def listing
-      self.tidy
+    def listing_parts
+      fn = @value ? "«#{self.type}» #{self.value}" : ""
+      return [self.tidy, fn]
     end
+    
   end
   
   
   class ReferencePoint < ProgramPoint
-    
     def self.any(context)
       tmp = ReferencePoint.new("e")
       tmp.randomize(context)
@@ -122,8 +125,8 @@ module Nudge
       @name = which
     end
     
-    def listing
-      self.tidy
+    def listing_parts
+      [self.tidy,""]
     end
   end
   
@@ -173,8 +176,8 @@ module Nudge
       return tmp
     end
     
-    def listing
-      self.tidy
+    def listing_parts
+      [self.tidy,""]
     end
   end
   

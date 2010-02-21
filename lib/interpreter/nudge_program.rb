@@ -71,6 +71,12 @@ module Nudge
     end
     
     
+    def listing
+      code_section, footnote_section = @linked_code.listing_parts
+      return (code_section.strip + " \n" + footnote_section.strip).strip
+    end
+    
+    
     def contains_codevalues?
       (@raw_code =~ /value\s*«code»/) != nil
     end

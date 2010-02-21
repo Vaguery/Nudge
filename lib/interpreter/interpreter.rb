@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Nudge
   
   # The Interpreter class executes the Push3 language loop:

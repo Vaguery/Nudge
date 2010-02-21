@@ -189,13 +189,45 @@ describe "Nudge Program parsing" do
       simple.linked_code.value.should == nil
     end
     
+    describe "listing" do
+      it "should produce the same thing as #tidy for a ReferencePoint program" do
+        justrp = NudgeProgram.new("ref g8")
+        justrp.listing.should == "ref g8"
+      end
+      
+      it "should produce the same thing as #tidy for an InstructionPoint program" do
+        justrp = NudgeProgram.new("do my_word")
+        justrp.listing.should == "do my_word"
+      end
+      
+      it "should produce the same thing as #tidy for a CodeblockPoint program without footnotes" do
+        tree1 = NudgeProgram.new("block {\t\t ref g}")
+        tree1.listing.should == "block {\n  ref g}"
+        tree2 = NudgeProgram.new("block {\t\t do a\ndo b\n \n do c\n do d}")
+        tree2.listing.should == tree2.tidy
+      end
+      
+      it "should produce the same thing as #tidy for a CodeblockPoint program with unassigned footnotes" do
+        dangling = NudgeProgram.new("block {\t\t value «a»\nvalue «b»\n \n value «c»}")
+        dangling.listing.should == dangling.tidy
+      end
+      
+      it "should put out the tidy form AND the footnotes in the right order" do
+        withfn = NudgeProgram.new("value \t\t«int» \n«int» \t\t\n 0")
+        withfn.listing.should == "value «int» \n«int» 0"
+      end
+    end
+    
     describe "handling complex nested CODE values" do
-      it "should associate all necessary footnotes with CODE values" do
-        pending
-        
-        hofstadter1 = NudgeProgram.new("value «code» \n«code» value «code»\n«code» value «int»\n«int» 777")
-        hofstadter1.contains_codevalues?.should == true
-        hofstadter1.linked_code.value.should == "value «code»\n«code» value «int»\n«int» 777"
+      before(:each) do
+        @hofstadter1 = "block { value «int» value «code» value «int»} \n«int» 2\n«code» value «int»\n«int» 33\n«int» 444"
+      end
+      
+      it "should associate all necessary footnotes with CODE values" do        
+        we_think = NudgeProgram.new(@hofstadter1)
+        we_think.contains_codevalues?.should == true
+        we_think.tidy.should == "block {\n  value «int»\n  value «code»\n  value «int»}"
+        we_think.linked_code.contents[1].value == "value «code»\n«code» value «int»\n«int» 33"
         # result should be what??? 
       end
 

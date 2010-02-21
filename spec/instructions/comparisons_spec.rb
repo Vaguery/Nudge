@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -365,9 +366,9 @@ describe "ExecEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = ExecEqualQInstruction.new(@context)
-    @thing1 = "block { do int_add  sample float(0.5) block { } }"
-    @thing2 = "block {do int_add sample float(0.5) block {}}"
-    @thing3 = "block {do int_add sample float(0.25) block {}}"
+    @thing1 = "block { do int_add  value «float» block { } }"
+    @thing2 = "block {do int_add value «float» block {}}"
+    @thing3 = "block {do int_add value «bool» block {}}"
     @context.reset("block {#{@thing1} #{@thing2} #{@thing3} #{@thing2}}")
     @context.step
   end
@@ -404,9 +405,9 @@ describe "NameEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = NameEqualQInstruction.new(@context)
-    @thing1 = ChannelPoint.new("x")
-    @thing2 = ChannelPoint.new("x")
-    @thing3 = ChannelPoint.new("not_x")
+    @thing1 = ReferencePoint.new("x")
+    @thing2 = ReferencePoint.new("x")
+    @thing3 = ReferencePoint.new("not_x")
     @thing1.go(@context)
     @thing2.go(@context)
     @thing3.go(@context)
@@ -445,7 +446,7 @@ describe CodeEqualQInstruction do
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeEqualQInstruction.new(@context)
-    @thing1 = ChannelPoint.new("x")
+    @thing1 = ReferencePoint.new("x")
     @thing2 = ValuePoint.new("int", 991)
   end
   
