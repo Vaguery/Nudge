@@ -305,23 +305,20 @@ block { value «int» value «code» value «int»}
       @simple = "block {value «code»}\n«code» value «int»\n«int» 2"
       @boring = "value «code»\n«code» block {}"
       @stringy = "value «code»\n«code» value «code»\n«code» value «code»\n«code» do X"
+      @filler = '['+ (" \n "*100) + ']'
+      @spacey = "value «code»\n«code» value «spacer»\n«spacer»#{@filler}"
       @staged_program = NudgeProgram.new("")
+      
+      def reprocess_using(new_code)
+        @staged_program.instance_variable_set(:@raw_code,new_code)
+        @staged_program.program_split!
+        @staged_program.relink_code!
+      end
     end
     
     it "should determine if the listing contains any ValuePoints if it is type code" do
       @staged_program.should_receive(:contains_valuepoints?).with("block {}")
-      @staged_program.instance_variable_set(:@raw_code,@boring)
-      @staged_program.program_split!
-      @staged_program.relink_code!
-    end
-    
-    it "should parse the listing into a real ProgramPoint if it might contain ValuePoints" do
-      pending
-      # @staged_program.parser.should_receive(:parse).at_least(2).times
-      
-      @staged_program.instance_variable_set(:@raw_code,@nasty)
-      @staged_program.program_split!
-      @staged_program.relink_code!
+      reprocess_using(@boring)
     end
     
     it "should attach a footnote to collected_footnotes if it can"
@@ -330,28 +327,22 @@ block { value «int» value «code» value «int»}
     it "should recursively call itself if the ProgramPoint is a CodeblockPoint"
  
     it "should (in the end) return the collected_footnotes string for this depth-first traversal" do
-      @staged_program.instance_variable_set(:@raw_code,@nasty)
-      @staged_program.program_split!
-      @staged_program.relink_code!
+      reprocess_using(@nasty)
       @staged_program.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
       @staged_program.linked_code.contents[1].value.should == "value «code»\n«code» value «foo»\n«foo» 2"
       @staged_program.linked_code.contents[2].value.should == "3"
       
-      @staged_program.instance_variable_set(:@raw_code,@simple)
-      @staged_program.program_split!
-      @staged_program.relink_code!
+      reprocess_using(@simple)
       @staged_program.linked_code.contents[0].value.should == "value «int»\n«int» 2"
       
-      @staged_program.instance_variable_set(:@raw_code,@boring)
-      @staged_program.program_split!
-      @staged_program.relink_code!
+      reprocess_using(@boring)
       @staged_program.linked_code.value.should == "block {}"
       
-      @staged_program.instance_variable_set(:@raw_code,@stringy)
-      @staged_program.program_split!
-      @staged_program.relink_code!
+      reprocess_using(@stringy)
       @staged_program.linked_code.value.should == "value «code»\n«code» value «code»\n«code» do X"
       
+      reprocess_using(@spacey)
+      @staged_program.linked_code.value.should == "value «spacer»\n«spacer» #{@filler}"
     end
   end
   
