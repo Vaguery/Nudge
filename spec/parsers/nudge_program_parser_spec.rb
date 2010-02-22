@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), "./../spec_helper")
 load_grammar('codeblock')
 include Nudge
 
+
 describe "Nudge Program parsing" do
   before(:each) do
     @parser = NudgeCodeblockParser.new()
@@ -126,6 +127,7 @@ describe "Nudge Program parsing" do
     end
   end
   
+  
   describe "linked_code should contain the abstract syntax tree, plus associated_values" do
     it "should be a simple one-node tree for one-line code" do
       NudgeProgram.new("ref time").linked_code.should be_a_kind_of(ReferencePoint)
@@ -157,6 +159,44 @@ describe "Nudge Program parsing" do
       NudgeProgram.new("block {block {value \n «code»}}").contains_codevalues?.should == true
     end
   end
+  
+  
+  # some examples worked by hand to test the
+  #   depth-first association of values to footnotes
+  #
+  # @nasty:             |  associated values:
+  # -------------       |  ------------------
+  # block {             |
+  #   value «code»      |  <- "value «foo»\n«foo» 1"
+  #   value «code»      |  <- "value «code»\n«code» value «foo»\n«foo» 2"
+  #   value «foo»}      |  <- "3"
+  # «code» value «foo»  |
+  # «code» value «code» |
+  # «foo» 1             |
+  # «foo» 2             |
+  # «code» value «foo»  |
+  # «foo» 3             |
+  #                     |
+  #                     |
+  # @boring:            |  associated values:
+  # -------------       |  ------------------
+  # block {             |
+  #   value «code»}     |  <- "value «int»\n«int» 2"
+  # «code» value «int»  |
+  # «int» 2             |
+  #                     |
+  #                     |
+  # @hofstadter1:       |  associated values:
+  # -------------       |  ------------------
+  # block {             |
+  #   value «int»       |  <- "2"
+  #   value «code»      |  <- "value «code»\n«code» value «int»\n«int» 33"
+  #   value «int»}      |  <- "444"
+  # «int» 2             |
+  # «int» 33            |
+  # «code» value «code» |
+  # «int» 444           |
+  # «code» value «int»  |
   
   
   describe "keep footnote values associated with proper program point Nodes" do
@@ -218,28 +258,102 @@ describe "Nudge Program parsing" do
       end
     end
     
-    describe "handling complex nested CODE values" do
+    describe "handling complex nested CODE values is hard!" do
       before(:each) do
-        @hofstadter1 = "block { value «int» value «code» value «int»} \n«int» 2\n«code» value «int»\n«int» 33\n«int» 444"
+        @hofstadter1 = <<-END
+block { value «int» value «code» value «int»}
+«int» 2
+«int» 33
+«code» value «code»
+«int» 444
+«code» value «int»
+          END
       end
       
-      it "should associate all necessary footnotes with CODE values" do        
+      it "should associate values in a depth-first way (into «code» values)" do
         we_think = NudgeProgram.new(@hofstadter1)
         we_think.contains_codevalues?.should == true
         we_think.tidy.should == "block {\n  value «int»\n  value «code»\n  value «int»}"
-        we_think.linked_code.contents[1].value == "value «code»\n«code» value «int»\n«int» 33"
-        # result should be what??? 
-      end
-
-      it "should first associate values in the root tree" do
-        pending
-        hofstadter2 = NudgeProgram.new("value «code» \n«code» value «code»\n«int» 777")
-        # result should have a value in root tree, but no footnote in that
+        we_think.linked_code.contents[0].value.should == "2"
+        we_think.linked_code.contents[1].value.should ==
+          "value «code»\n«code» value «int»\n«int» 33"
+        we_think.linked_code.contents[2].value.should == "444"
+        we_think.listing.should == 
+        "block {\n  value «int»\n  value «code»\n  value «int»} " +
+        "\n«int» 2\n«code» value «code»\n«code» value «int»\n«int» 33\n«int» 444"
       end
     end
     
   end
   
+  describe "contains_valuepoints?" do
+    it "should accept a string and return true if it contains any «» markup AT ALL" do
+      np = NudgeProgram.new("")
+      np.contains_valuepoints?("value «foo»").should == true
+      np.contains_valuepoints?("block {value «foo_3»}").should == true
+      np.contains_valuepoints?("value «a»").should == true
+      np.contains_valuepoints?("««»»").should == false
+      np.contains_valuepoints?("boring old crap").should == false
+      np.contains_valuepoints?("misleading «something»").should == false
+    end
+  end
+  
+  
+  describe "pursue_more_footnotes method" do
+    before(:each) do
+      @nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» value «code»\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
+      @simple = "block {value «code»}\n«code» value «int»\n«int» 2"
+      @boring = "value «code»\n«code» block {}"
+      @stringy = "value «code»\n«code» value «code»\n«code» value «code»\n«code» do X"
+      @staged_program = NudgeProgram.new("")
+    end
+    
+    it "should determine if the listing contains any ValuePoints if it is type code" do
+      @staged_program.should_receive(:contains_valuepoints?).with("block {}")
+      @staged_program.instance_variable_set(:@raw_code,@boring)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+    end
+    
+    it "should parse the listing into a real ProgramPoint if it might contain ValuePoints" do
+      pending
+      # @staged_program.parser.should_receive(:parse).at_least(2).times
+      
+      @staged_program.instance_variable_set(:@raw_code,@nasty)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+    end
+    
+    it "should attach a footnote to collected_footnotes if it can"
+    it "should recursively call itself if the value of the codepoint was «code»"
+    it "should attach a footnote to collected_footnotes and return the longer string if it isn't type «code»"
+    it "should recursively call itself if the ProgramPoint is a CodeblockPoint"
+ 
+    it "should (in the end) return the collected_footnotes string for this depth-first traversal" do
+      @staged_program.instance_variable_set(:@raw_code,@nasty)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+      @staged_program.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
+      @staged_program.linked_code.contents[1].value.should == "value «code»\n«code» value «foo»\n«foo» 2"
+      @staged_program.linked_code.contents[2].value.should == "3"
+      
+      @staged_program.instance_variable_set(:@raw_code,@simple)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+      @staged_program.linked_code.contents[0].value.should == "value «int»\n«int» 2"
+      
+      @staged_program.instance_variable_set(:@raw_code,@boring)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+      @staged_program.linked_code.value.should == "block {}"
+      
+      @staged_program.instance_variable_set(:@raw_code,@stringy)
+      @staged_program.program_split!
+      @staged_program.relink_code!
+      @staged_program.linked_code.value.should == "value «code»\n«code» value «code»\n«code» do X"
+      
+    end
+  end
   
   
   
