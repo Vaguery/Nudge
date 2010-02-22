@@ -168,10 +168,10 @@ describe "Nudge Program parsing" do
   # -------------       |  ------------------
   # block {             |
   #   value «code»      |  <- "value «foo»\n«foo» 1"
-  #   value «code»      |  <- "value «code»\n«code» value «foo»\n«foo» 2"
+  #   value «code»      |  <- "block {value «code»}\n«code» value «foo»\n«foo» 2"
   #   value «foo»}      |  <- "3"
   # «code» value «foo»  |
-  # «code» value «code» |
+  # «code» block {value «code»}
   # «foo» 1             |
   # «foo» 2             |
   # «code» value «foo»  |
@@ -301,7 +301,7 @@ block { value «int» value «code» value «int»}
   
   describe "pursue_more_footnotes method" do
     before(:each) do
-      @nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» value «code»\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
+      @nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
       @simple = "block {value «code»}\n«code» value «int»\n«int» 2"
       @boring = "value «code»\n«code» block {}"
       @stringy = "value «code»\n«code» value «code»\n«code» value «code»\n«code» do X"
@@ -321,15 +321,11 @@ block { value «int» value «code» value «int»}
       reprocess_using(@boring)
     end
     
-    it "should attach a footnote to collected_footnotes if it can"
-    it "should recursively call itself if the value of the codepoint was «code»"
-    it "should attach a footnote to collected_footnotes and return the longer string if it isn't type «code»"
-    it "should recursively call itself if the ProgramPoint is a CodeblockPoint"
- 
     it "should (in the end) return the collected_footnotes string for this depth-first traversal" do
       reprocess_using(@nasty)
       @staged_program.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
-      @staged_program.linked_code.contents[1].value.should == "value «code»\n«code» value «foo»\n«foo» 2"
+      @staged_program.linked_code.contents[1].value.should ==
+        "block {value «code»}\n«code» value «foo»\n«foo» 2"
       @staged_program.linked_code.contents[2].value.should == "3"
       
       reprocess_using(@simple)
@@ -352,22 +348,61 @@ block { value «int» value «code» value «int»}
     it "should interpret an empty string as no code at all" do
       huh = NudgeProgram.new("")
       huh.code_section.should == ""
+      huh.linked_code.should == nil
       huh.footnote_section.should == ""
-      huh.footnotes.should == {}
+      huh.footnotes.should == {} # they didn't get used
     end
     
-    it "should interpret an unparseable codesection as no code at all, but keep footnotes"
+    it "should interpret an unparseable codesection as no code at all, but keep the footnotes" do
+      got_nuthin = NudgeProgram.new("block { hunh \n«int» 2")
+      got_nuthin.code_section.should == "block { hunh"
+      got_nuthin.linked_code.should == nil
+      got_nuthin.footnote_section.should == "«int» 2"
+      got_nuthin.footnotes.should == {:int => ["2"]} # it's not been used
+    end
     
     
-    it "should read values linking to missing footnotes as linked to 'nil'"
+    it "should read values linking to missing footnotes as linked to 'nil'" do
+      # nasty_shorter:     |  associated values:
+      # -------------       |  ------------------
+      # block {             |
+      #   value «code»      |  <- "value «foo»\n«foo» 1"
+      #   value «code»      |  <- "block {value «code»}"
+      #   value «foo»}      |  <- nil
+      # «code» value «foo»  |
+      # «code» block {value «code»}
+      # «foo» 1             |
+      
+      nasty_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
+      shortstop = NudgeProgram.new(nasty_shorter)
+      shortstop.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
+      shortstop.linked_code.contents[1].value.should == "block {value «code»}"
+      shortstop.linked_code.contents[2].value.should == nil
+    end
     
     it "should collect unused footnotes" do
       hmm = NudgeProgram.new("do int_add\n«nob» nothing")
       hmm.footnotes[:nob].should include("nothing")
     end
     
-    it "should act as specified above for unparseable programs with footnotes"
-    it "should act as specified above when one or more footnote is unparseable"
+    it "should act as specified above when one or more footnote is unparseable" do
+      # stupid_shorter:    |  associated values:
+      # -------------       |  ------------------
+      # block {             |
+      #   value «code»      |  <- "value «foo»\n«foo» 1"
+      #   value «code»      |  <- "some junk"
+      #   value «foo»}      |  <- nil
+      # «code» value «foo»  |
+      # «code» some junk    |
+      # «foo» 1             |
+      
+      stupid_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» some junk\n«foo» 1"
+      busted = NudgeProgram.new(stupid_shorter)
+      busted.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
+      busted.linked_code.contents[1].value.should == "some junk"
+      busted.linked_code.contents[2].value.should == nil
+      
+    end
   end
   
   
