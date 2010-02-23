@@ -794,7 +794,7 @@ describe ExecDoTimesInstruction do
         @context.stacks[:int].depth.should == 0
         @context.stacks[:float].depth.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»\n«float» 0.1",""]
+        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»","«float» 0.1"]
         @context.stacks[:exec].entries[0].listing_parts.should == 
           ["block {\n  value «int»\n  value «int»\n  do exec_do_times\n  value «float»}",
             "«int» -4\n«int» -19\n«float» 0.1"]
@@ -868,14 +868,14 @@ describe ExecDoCountInstruction do
         @i1.go
         @context.stacks[:int].depth.should == 1
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "block {}"
+        @context.stacks[:exec].peek.listing_parts.should == ["block {}",""]
         
         @context.reset("block {}")
         @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:int].depth.should == 1
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "block {}"
+        @context.stacks[:exec].peek.listing_parts.should == ["block {}",""]
       end
       
       it "should push a 0 onto :int, and an exec_do_range block onto :exec" do
@@ -884,8 +884,9 @@ describe ExecDoCountInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
-        res = "block {\n  literal int (0)\n  literal int (2)\n  do exec_do_range\n  block {}}"
-        @context.stacks[:exec].entries[0].listing.should == res
+        @context.stacks[:exec].entries[0].listing_parts.should ==
+          ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}",
+            "«int» 0\n«int» 2"]
       end
     end
   end

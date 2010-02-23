@@ -34,7 +34,8 @@ module Nudge
     
     def listing_parts
       fn = self.contents.inject("\n") do |fn_accumulator, branch|
-        fn_accumulator + "\n#{branch.listing_parts[1]}"
+        rhs = branch.listing_parts[1].empty? ? "" :  "\n#{branch.listing_parts[1]}"
+        fn_accumulator + rhs
       end
       return [self.tidy, fn.strip]
     end

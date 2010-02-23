@@ -19,7 +19,7 @@ EOF
 # parses into:
 parsed = CodeblockPoint.new(
   [
-    ValuePoint.new("float", "12.9"),
+    ValuePoint.new("float",\s(.+)),
     ValuePoint.new("code", "do foo_subtract"),
     CodeblockPoint.new(
       [

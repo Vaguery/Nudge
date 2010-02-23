@@ -10,6 +10,7 @@ describe "Individual" do
     end
     
     it "should have a genome string, with no default value" do
+      pending "REWORK THIS ENTIRE FILE"
       @i1.genome.should be_a_kind_of(String)
       lambda{Individual.new()}.should raise_error
     end
@@ -186,15 +187,15 @@ describe "Individual" do
     it "should return a genome with at least one fewer program points" do
       startPoints = @clipper.points
       (0..5).each do |where|
-        @parser.parse(@clipper.delete_point(2)).to_points.points.should < startPoints
+        @parser.parse(@clipper.delete_point(2)).to_point.point.should < startPoints
       end
     end
         
     it "should delete the expected specific point (and any subpoints it has)" do
-      @parser.parse(@clipper.delete_point(2)).to_points.points.should == 4
-      @parser.parse(@clipper.delete_point(3)).to_points.points.should == 4
-      @parser.parse(@clipper.delete_point(4)).to_points.points.should == 3
-      @parser.parse(@clipper.delete_point(5)).to_points.points.should == 4
+      @parser.parse(@clipper.delete_point(2)).to_point.points.should == 4
+      @parser.parse(@clipper.delete_point(3)).to_point.points.should == 4
+      @parser.parse(@clipper.delete_point(4)).to_point.points.should == 3
+      @parser.parse(@clipper.delete_point(5)).to_point.points.should == 4
     end
     
     it "should return 'block {}' when the entire program is deleted" do

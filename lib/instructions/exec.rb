@@ -147,8 +147,8 @@ class ExecDoCountInstruction < Instruction
   end
   
   def cleanup
-    recursor = @context.parser.parse(
-      "block {literal int (0) #{@one_less.listing} do exec_do_range #{@code.listing}}")
-    pushes :exec, recursor.to_points
+    recursor = CodeblockPoint.new([ValuePoint.new("int",0), @one_less,
+      InstructionPoint.new("exec_do_range"),@code])
+    pushes :exec, recursor
   end
 end

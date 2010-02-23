@@ -119,7 +119,7 @@ describe "ValuePoint" do
   
   describe "#tidy" do
     it "should print 'value «type»' for ValuePoint#tidy" do
-      myL = ValuePoint.new("float", "-99.121001")
+      myL = ValuePoint.new("float", -99.121001)
       myL.tidy.should == "value «float»"
     end
   end

@@ -166,7 +166,7 @@ module DuplicateInstruction
     @arg1 = @context.stacks[@target_stack].peek
   end
   def derive
-    @result = ValuePoint.new(@arg1.type,@arg1.raw)
+    @result = @arg1.clone
   end
   def cleanup
     pushes @target_stack, @result
