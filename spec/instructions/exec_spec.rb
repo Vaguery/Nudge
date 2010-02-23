@@ -126,7 +126,7 @@ describe ExecSInstruction do
         @context.stacks[:exec].depth.should == 3
         @context.stacks[:exec].entries[2].tidy.should == "do int_add" # old top one
         @context.stacks[:exec].entries[1].tidy.should == "do int_multiply" # old 3rd one
-        @context.stacks[:exec].entries[0].tidy.should == "block {do int_subtract do int_multiply}"
+        @context.stacks[:exec].entries[0].tidy.should == "block {\n  do int_subtract\n  do int_multiply}"
       end
     end
   end
@@ -285,7 +285,7 @@ describe ExecDepthInstruction do
   describe "\#go" do
     before(:each) do
       @i1 = ExecDepthInstruction.new(@context)
-      @context.reset("block{literal bool(false) literal int(88) block {}}")
+      @context.reset("block{value «bool» value «int» block {}}\n«bool»false\n«int»88")
     end
     
     describe "\#preconditions?" do
@@ -328,7 +328,7 @@ describe ExecFlushInstruction do
   describe "\#go" do
     before(:each) do
       @i1 = ExecFlushInstruction.new(@context)
-      @context.reset("block{literal bool(false) literal int(88) block {}}")
+      @context.reset("block{value «bool» value «int» block {}}\n«bool»false\n«int»88")
     end
     
     describe "\#preconditions?" do
@@ -369,7 +369,7 @@ describe ExecRotateInstruction do
     before(:each) do
       @context = Interpreter.new
       @i1 = ExecRotateInstruction.new(@context)
-      @context.reset("block{literal bool(false) literal int(88) literal float(0.5)}")
+      @context.reset("block{value «bool» value «int» value «float»}\n«bool» false\n«int»88\n«float»0.5")
       @context.step # [pushing the 3 points]
     end
 
@@ -648,7 +648,7 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 3
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "block {}"
+        @context.stacks[:exec].peek.tidy.should == "block {}"
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do
@@ -659,8 +659,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (2)\n  literal int (3)\n  do exec_do_range\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 2\n«int» 3"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
         
@@ -668,8 +668,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].peek.value.should == 2
         
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (3)\n  literal int (3)\n  do exec_do_range\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 3\n«int» 3"]
       end
       
       it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
@@ -680,8 +680,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == -2
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-3)\n  literal int (-19)\n  do exec_do_range\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -3\n«int» -19"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
         
@@ -689,8 +689,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].peek.value.should == -3
         
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-4)\n  literal int (-19)\n  do exec_do_range\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -4\n«int» -19"]
       end
       
       it "should 'continue' until counter and destination are the same value" do
@@ -761,35 +761,43 @@ describe ExecDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (2)\n  literal int (3)\n  do exec_do_times\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == [
+          "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  block {}}",
+          "«int» 2\n«int» 3"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "block {}"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (3)\n  literal int (3)\n  do exec_do_times\n  block {}}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == [
+          "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  block {}}",
+          "«int» 3\n«int» 3"]
       end
       
       it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
-        @context.reset("literal float (0.1)")
+        @context.reset("value «float»\n«float» 0.1")
         @context.stacks[:int].push(ValuePoint.new("int", -2))
         @context.stacks[:int].push(ValuePoint.new("int", -19))
         @i1.go
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "literal float (0.1)"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-3)\n  literal int (-19)\n  do exec_do_times\n  literal float (0.1)}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»","«float» 0.1"]
+        @context.stacks[:exec].entries[0].listing_parts.should == 
+          ["block {\n  value «int»\n  value «int»\n  do exec_do_times\n  value «float»}",
+            "«int» -3\n«int» -19\n«float» 0.1"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_times
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:float].depth.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "literal float (0.1)"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  literal int (-4)\n  literal int (-19)\n  do exec_do_times\n  literal float (0.1)}"
+        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»\n«float» 0.1",""]
+        @context.stacks[:exec].entries[0].listing_parts.should == 
+          ["block {\n  value «int»\n  value «int»\n  do exec_do_times\n  value «float»}",
+            "«int» -4\n«int» -19\n«float» 0.1"]
       end
       
       it "should 'continue' until counter and destination are the same value" do

@@ -22,6 +22,10 @@ module NudgeType
     def from_s(some_string)
       raise "This class must implement #{self.inspect}.from_s"
     end
+    
+    def recognizes?(some_representation)
+      raise "This class should implement #{self.inspect}.recognizes?"
+    end
 
     def any_value
       raise "This class must implement #{self.inspect}.any_value"
@@ -38,7 +42,7 @@ module NudgeType
     end
   end
   
-  class IntType < Fixnum
+  class IntType
     extend TypeBehaviors
     @defaultLowest = -100
     @defaultHighest = 100
@@ -61,6 +65,10 @@ module NudgeType
     def self.from_s(string_value)
       return string_value.to_i
     end
+    
+    def self.recognizes?(a_thing)
+      !a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_i)
+    end
 
     def self.any_value
       self.random_value
@@ -81,7 +89,11 @@ module NudgeType
     def self.from_s(string_value)
       string_value.downcase == "true" ? true : false
     end
-
+    
+    def self.recognizes?(a_thing)
+      a_thing.kind_of?(TrueClass) || a_thing.kind_of?(FalseClass)
+    end
+    
     def self.any_value
       self.random_value
     end
@@ -90,7 +102,7 @@ module NudgeType
 
 
 
-  class FloatType < Float
+  class FloatType
     extend TypeBehaviors
 
     @defaultLowest = -1000.0
@@ -107,7 +119,11 @@ module NudgeType
     def self.from_s(string_value)
       return string_value.to_f
     end
-
+    
+    def self.recognizes?(a_thing)
+      !a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_f)
+    end
+    
     def self.any_value
       self.random_value
     end

@@ -99,7 +99,7 @@ describe "initialization" do
       @ii.bind_variable("x",ValuePoint.new(:int,"88"))
       @ii.variables["x"].should be_a_kind_of(ValuePoint)
       @ii.variables["x"].type.should == :int
-      @ii.variables["x"].value.should == "88"
+      @ii.variables["x"].raw.should == "88"
     end
     
     it "should raise an exception if the bound value is anything but a ValuePoint" do
@@ -110,7 +110,7 @@ describe "initialization" do
     
     it "should remove an new entry when #unbind_variable is called" do
       @ii.bind_variable("x",ValuePoint.new(:int,"99"))
-      @ii.variables["x"].value.should == "99"
+      @ii.variables["x"].raw.should == "99"
       @ii.unbind_variable("x")
       @ii.variables["x"].should == nil
     end
@@ -131,7 +131,7 @@ describe "initialization" do
       @ii.bind_name("x",ValuePoint.new(:bool,"false"))
       @ii.names["x"].should be_a_kind_of(ValuePoint)
       @ii.names["x"].type.should == :bool
-      @ii.names["x"].value.should == "false"
+      @ii.names["x"].raw.should == "false"
     end
 
     it "should raise an exception if the bound value is anything but a ValuePoint" do
@@ -142,7 +142,7 @@ describe "initialization" do
     
     it "should remove an new entry when #unbind_name is called" do
       @ii.bind_name("x",ValuePoint.new(:int,"55"))
-      @ii.names["x"].value.should == "55"
+      @ii.names["x"].raw.should == "55"
       @ii.unbind_name("x")
       @ii.names["x"].should == nil
     end

@@ -203,30 +203,30 @@ describe "Nudge Program parsing" do
     it "should set the #value attribute of a ValuePoint" do
       simple = NudgeProgram.new("value «int» \n«int» 0")
       simple.linked_code.should be_a_kind_of(ValuePoint)
-      simple.linked_code.value.should == "0"
+      simple.linked_code.raw.should == "0"
     end
     
     it "should set the value attribute even in a deeply nested statement" do
       deep = NudgeProgram.new("block { block { block {} block {value «int»}}} \n«int» 0")
-      deep.linked_code.contents[0].contents[1].contents[0].value.should == "0"
+      deep.linked_code.contents[0].contents[1].contents[0].raw.should == "0"
     end
     
     it "should map values correctly based on the type strings" do
       swapped = NudgeProgram.new("block {value «my_a»\nvalue «my_b»}\n«my_b» this is a b\n«my_a» a")
-      swapped.linked_code.contents[0].value.should == "a"
-      swapped.linked_code.contents[1].value.should == "this is a b"
+      swapped.linked_code.contents[0].raw.should == "a"
+      swapped.linked_code.contents[1].raw.should == "this is a b"
     end
     
     it "should associate values in the order they appear" do
       swapped = NudgeProgram.new("block {value «my_a»\nvalue «my_a»}\n«my_a» one\n«my_a» two")
-      swapped.linked_code.contents[0].value.should == "one"
-      swapped.linked_code.contents[1].value.should == "two"
+      swapped.linked_code.contents[0].raw.should == "one"
+      swapped.linked_code.contents[1].raw.should == "two"
     end
     
     it "should leave nil values if it runs out of footnotes" do
       simple = NudgeProgram.new("value «int»")
       simple.linked_code.should be_a_kind_of(ValuePoint)
-      simple.linked_code.value.should == nil
+      simple.linked_code.raw.should == nil
     end
     
     describe "listing" do
@@ -255,6 +255,10 @@ describe "Nudge Program parsing" do
       it "should put out the tidy form AND the footnotes in the right order" do
         withfn = NudgeProgram.new("value \t\t«int» \n«int» \t\t\n 0")
         withfn.listing.should == "value «int» \n«int» 0"
+        
+        nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
+        once_around = NudgeProgram.new(nasty).listing
+        once_around.should == NudgeProgram.new(once_around).listing
       end
     end
     
@@ -274,10 +278,10 @@ block { value «int» value «code» value «int»}
         we_think = NudgeProgram.new(@hofstadter1)
         we_think.contains_codevalues?.should == true
         we_think.tidy.should == "block {\n  value «int»\n  value «code»\n  value «int»}"
-        we_think.linked_code.contents[0].value.should == "2"
-        we_think.linked_code.contents[1].value.should ==
+        we_think.linked_code.contents[0].raw.should == "2"
+        we_think.linked_code.contents[1].raw.should ==
           "value «code»\n«code» value «int»\n«int» 33"
-        we_think.linked_code.contents[2].value.should == "444"
+        we_think.linked_code.contents[2].raw.should == "444"
         we_think.listing.should == 
         "block {\n  value «int»\n  value «code»\n  value «int»} " +
         "\n«int» 2\n«code» value «code»\n«code» value «int»\n«int» 33\n«int» 444"
@@ -323,22 +327,22 @@ block { value «int» value «code» value «int»}
     
     it "should (in the end) return the collected_footnotes string for this depth-first traversal" do
       reprocess_using(@nasty)
-      @staged_program.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
-      @staged_program.linked_code.contents[1].value.should ==
+      @staged_program.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
+      @staged_program.linked_code.contents[1].raw.should ==
         "block {value «code»}\n«code» value «foo»\n«foo» 2"
-      @staged_program.linked_code.contents[2].value.should == "3"
+      @staged_program.linked_code.contents[2].raw.should == "3"
       
       reprocess_using(@simple)
-      @staged_program.linked_code.contents[0].value.should == "value «int»\n«int» 2"
+      @staged_program.linked_code.contents[0].raw.should == "value «int»\n«int» 2"
       
       reprocess_using(@boring)
-      @staged_program.linked_code.value.should == "block {}"
+      @staged_program.linked_code.raw.should == "block {}"
       
       reprocess_using(@stringy)
-      @staged_program.linked_code.value.should == "value «code»\n«code» value «code»\n«code» do X"
+      @staged_program.linked_code.raw.should == "value «code»\n«code» value «code»\n«code» do X"
       
       reprocess_using(@spacey)
-      @staged_program.linked_code.value.should == "value «spacer»\n«spacer» #{@filler}"
+      @staged_program.linked_code.raw.should == "value «spacer»\n«spacer» #{@filler}"
     end
   end
   
@@ -375,9 +379,9 @@ block { value «int» value «code» value «int»}
       
       nasty_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
       shortstop = NudgeProgram.new(nasty_shorter)
-      shortstop.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
-      shortstop.linked_code.contents[1].value.should == "block {value «code»}"
-      shortstop.linked_code.contents[2].value.should == nil
+      shortstop.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
+      shortstop.linked_code.contents[1].raw.should == "block {value «code»}"
+      shortstop.linked_code.contents[2].raw.should == nil
     end
     
     it "should collect unused footnotes" do
@@ -398,9 +402,9 @@ block { value «int» value «code» value «int»}
       
       stupid_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» some junk\n«foo» 1"
       busted = NudgeProgram.new(stupid_shorter)
-      busted.linked_code.contents[0].value.should == "value «foo»\n«foo» 1"
-      busted.linked_code.contents[1].value.should == "some junk"
-      busted.linked_code.contents[2].value.should == nil
+      busted.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
+      busted.linked_code.contents[1].raw.should == "some junk"
+      busted.linked_code.contents[2].raw.should == nil
       
     end
   end

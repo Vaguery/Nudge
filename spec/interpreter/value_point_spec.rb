@@ -8,13 +8,59 @@ describe "ValuePoint" do
     myL.should be_a_kind_of(ProgramPoint)
   end
   
-  it "should be initialized with a type and a value, with value defaulting to nil" do
+  
+  it "should be initialized with a type and a raw value, with raw defaulting to nil" do
     i4 = ValuePoint.new("int", "4")
     i4.type.should == :int
-    i4.value.should == "4"
+    i4.raw.should == "4"
     lambda{ValuePoint.new()}.should raise_error(ArgumentError)
     lambda{ValuePoint.new("bool")}.should_not raise_error(ArgumentError)
   end
+  
+  
+  describe "raw" do
+    it "should cast the representation of the thing as a string unless nil" do
+      lambda{ValuePoint.new("anything", "something")}.should_not raise_error(ArgumentError)
+      lambda{ValuePoint.new("fiddlefaddle", 88)}.raw.should == "88"
+      lambda{ValuePoint.new("int", 8)}.should == "8"
+    end
+  end
+  
+  
+  describe "nudgetype" do
+    it "should be able to identify its NudgeType, and if it's defined" do
+      ValuePoint.new("int").nudgetype.should == "IntType"
+      ValuePoint.new("int").nudgetype_defined?.should == true
+      ValuePoint.new("bool").nudgetype_defined?.should == true
+      ValuePoint.new("float").nudgetype_defined?.should == true
+      
+      ValuePoint.new("foo").nudgetype.should == "FooType"
+      ValuePoint.new("foo").nudgetype_defined?.should == false
+    end
+  end
+  
+  
+  describe "#value" do
+    it "should use the #from_s method from the appropriate NudgeType" do
+      ValuePoint.new("int","9912").value.should == 9912
+      ValuePoint.new("float","1.2").value.should == 1.2
+      ValuePoint.new("bool","false").value.should == false
+    end
+    
+    it "should not create a value if none is present in #raw" do
+      ValuePoint.new("int").value.should == nil
+      ValuePoint.new("float").value.should == nil
+      ValuePoint.new("bool",nil).value.should == nil
+    end
+    
+    it "should return nil as a value if the type is not defined" do
+      left_field = ValuePoint.new("foo", "some weird thing")
+      left_field.value.should == nil
+      left_field.raw.should == "some weird thing"
+    end
+    
+  end
+  
   
   it "should accept a string or symbol for #type, but set it to a symbol" do
     ValuePoint.new("int", "4").type.should == :int
@@ -22,21 +68,23 @@ describe "ValuePoint" do
     lambda {ValuePoint.new(false, "4")}.should raise_error(ArgumentError)
   end
   
+  
   it "should move to the appropriate stack when removed from the exec stack" do
     ii = Interpreter.new(program:"value «bool»\n«bool»true")
     ii.step
-    ii.stacks[:bool].peek.value.should == "true"
+    ii.stacks[:bool].peek.raw.should == "true"
     
     ii.reset("value «code» \n«code» block { do foo_bar}")
     ii.step
-    ii.stacks[:code].peek.value.should == "block { do foo_bar}"
+    ii.stacks[:code].peek.raw.should == "block { do foo_bar}"
   end
+  
   
   describe "#go" do
     before(:each) do
       @ii = Interpreter.new()
       @ii.clear_stacks
-      @ii.stacks[:exec].push(ValuePoint.new("int",222))
+      @ii.stacks[:exec].push(ValuePoint.new("int","222"))
     end
     
     it "should pop the exec stack when a ValuePoint is interpreted" do
@@ -57,9 +105,9 @@ describe "ValuePoint" do
     end
 
     it "should push the value onto the right stack" do
-      @ii.stacks[:exec].push(ValuePoint.new("int",3))
-      @ii.stacks[:exec].push(ValuePoint.new("float",2.2))
-      @ii.stacks[:exec].push(ValuePoint.new("fiddle",false))
+      @ii.stacks[:exec].push(ValuePoint.new("int","3"))
+      @ii.stacks[:exec].push(ValuePoint.new("float","2.2"))
+      @ii.stacks[:exec].push(ValuePoint.new("fiddle","false"))
       
       3.times {@ii.step}
       @ii.stacks.should include(:int)
@@ -68,12 +116,14 @@ describe "ValuePoint" do
     end
   end
   
+  
   describe "#tidy" do
     it "should print 'value «type»' for ValuePoint#tidy" do
-      myL = ValuePoint.new("float", -99.121001)
+      myL = ValuePoint.new("float", "-99.121001")
       myL.tidy.should == "value «float»"
     end
   end
+  
   
   describe "#listing_parts" do
     it "should description return an Array with two parts: (1) self#tidy (2) the footnotes as a string" do

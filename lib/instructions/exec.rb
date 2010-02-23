@@ -6,7 +6,7 @@ class ExecYInstruction < Instruction
     @arg1 = @context.stacks[:exec].pop
   end
   def derive
-    @recurser = CodeblockPoint.new([InstructionPoint.new("exec_y"),ValuePoint.new("code",@arg1.listing)])
+    @recurser = CodeblockPoint.new([InstructionPoint.new("exec_y"),@arg1])
   end
   def cleanup
     pushes :exec, @recurser
@@ -41,7 +41,7 @@ class ExecSInstruction < Instruction
     @argC = @context.stacks[:exec].pop
   end
   def derive  
-    @s_result = CodeBlock.new("block {#{@argB.listing} #{@argC.listing}}")
+    @s_result = CodeblockPoint.new([@argB,@argC])
   end
   def cleanup
     pushes :exec, @s_result
@@ -79,10 +79,10 @@ class ExecDoRangeInstruction < Instruction
       pushes :int, @counter
       pushes :exec, @code
     else
-      recursor = @context.parser.parse(
-        "block {#{@new_counter.listing} #{@destination.listing} do exec_do_range #{@code.listing}}")
+      recursor = CodeblockPoint.new([@new_counter, @destination,
+        InstructionPoint.new("exec_do_range"),@code])
       pushes :int, @counter
-      pushes :exec, recursor.to_points
+      pushes :exec, recursor
       pushes :exec, @code
     end
   end
@@ -116,9 +116,9 @@ class ExecDoTimesInstruction < Instruction
     if @finished
       pushes :exec, @code
     else
-      recursor = @context.parser.parse(
-        "block {#{@new_counter.listing} #{@destination.listing} do exec_do_times #{@code.listing}}")
-      pushes :exec, recursor.to_points
+      recursor = CodeblockPoint.new([@new_counter, @destination,
+        InstructionPoint.new("exec_do_times"),@code])
+      pushes :exec, recursor
       pushes :exec, @code
     end
   end

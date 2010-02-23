@@ -53,10 +53,10 @@ module Nudge
     
     def depth_first_association!(program_point=@linked_code)
       if program_point.kind_of?(ValuePoint)
-        program_point.value = @footnotes[program_point.type].shift
-        if program_point.value != nil
+        program_point.raw = @footnotes[program_point.type].shift
+        if program_point.raw != nil
           if program_point.type == :code
-            program_point.value << pursue_more_footnotes(program_point.value)
+            program_point.raw << pursue_more_footnotes(program_point.raw)
           end
         end
       elsif program_point.kind_of?(CodeblockPoint)
@@ -76,11 +76,11 @@ module Nudge
               local_footnotes << pursue_more_footnotes(branch.tidy)
             end
           elsif local_subtree.kind_of?(ValuePoint)
-            local_subtree.value = @footnotes[local_subtree.type].shift
-            if local_subtree.value != nil
-              local_footnotes = "\n«#{local_subtree.type}» #{local_subtree.value}"
+            local_subtree.raw = @footnotes[local_subtree.type].shift
+            if local_subtree.raw != nil
+              local_footnotes = "\n«#{local_subtree.type}» #{local_subtree.raw}"
               if local_subtree.type == :code
-                local_footnotes << pursue_more_footnotes(local_subtree.value,collected_footnotes)
+                local_footnotes << pursue_more_footnotes(local_subtree.raw,collected_footnotes)
               end
             end
           end

@@ -15,42 +15,39 @@ describe "ReferencePoint" do
   end
   
   describe "#go" do
-    # before(:each) do
-    #   @ii = Interpreter.new()
-    #   @ii.reset("block{\nref x\nref y\nref z}")
-    #   @ii.bind_variable("x", ValuePoint.new("float", "1.1"))
-    #   @ii.bind_name("y", ValuePoint.new("int", "99999"))
-    #   #reference "z" is unbound
-    # end
+    before(:each) do
+      @ii = Interpreter.new()
+      @ii.reset("block{\nref x\nref y\nref z}")
+      @ii.bind_variable("x", ValuePoint.new(:float, "1.1"))
+      @ii.bind_name("y", ValuePoint.new(:int, "99999"))
+      #reference "z" is unbound
+    end
     
     it "should pop the exec stack when the program_point ReferencePoint is interpreted" do
-      pending
-      # @ii.stacks[:exec].depth.should == 1
-      # @ii.step
-      # @ii.stacks[:exec].depth.should == 3
-      # @ii.step
-      # @ii.stacks[:exec].depth.should == 3
-      # @ii.stacks[:exec].peek.value.should == 1.1
-      # 2.times {@ii.step}
-      # @ii.stacks[:exec].depth.should == 2
-      # @ii.stacks[:exec].peek.value.should == 99999
+      @ii.stacks[:exec].depth.should == 1
+      @ii.step
+      @ii.stacks[:exec].depth.should == 3
+      @ii.step
+      @ii.stacks[:exec].depth.should == 3
+      @ii.stacks[:exec].peek.raw.should == "1.1"
+      2.times {@ii.step}
+      @ii.stacks[:exec].depth.should == 2
+      @ii.stacks[:exec].peek.raw.should == "99999"
     end
     
     it "should push the ReferencePoint object onto the :name stack if it's not bound" do
-      pending
-      # 6.times {@ii.step}
-      # @ii.stacks[:name].depth.should == 1
-      # @ii.stacks[:name].peek.name.should == "z"
+      6.times {@ii.step}
+      @ii.stacks[:name].depth.should == 1
+      @ii.stacks[:name].peek.name.should == "z"
     end
 
     it "should push the value onto the right stack" do
-      pending
-      # 3.times {@ii.step}
-      # @ii.stacks[:float].peek.value.should == 1.1
-      # 2.times {@ii.step}
-      # @ii.stacks[:int].peek.value.should == 99999
-      # @ii.step
-      # @ii.stacks[:name].peek.name.should == "z"
+      3.times {@ii.step}
+      @ii.stacks[:float].peek.raw.should == "1.1"
+      2.times {@ii.step}
+      @ii.stacks[:int].peek.raw.should == "99999"
+      @ii.step
+      @ii.stacks[:name].peek.name.should == "z"
     end
   end
   
@@ -70,34 +67,32 @@ describe "ReferencePoint" do
   
   describe "randomize" do
     it "should set the ReferencePoint's name to a randomly selected channel or name key" do
-      pending
-      # context = Interpreter.new
-      # context.reset_variables
-      # context.reset_names
-      # myC = ChannelPoint.new("a")
-      # context.bind_name("y",ValuePoint.new("bool", false))
-      # myC.randomize(context)
-      # myC.name.should == "y"
-      # context.reset_names
-      # context.bind_variable("z",ValuePoint.new("bool", false))
-      # myC.randomize(context)
-      # myC.name.should == "z"
+      context = Interpreter.new
+      context.reset_variables
+      context.reset_names
+      myC = ReferencePoint.new("a")
+      context.bind_name("y",ValuePoint.new("bool", false))
+      myC.randomize(context)
+      myC.name.should == "y"
+      context.reset_names
+      context.bind_variable("z",ValuePoint.new("bool", false))
+      myC.randomize(context)
+      myC.name.should == "z"
     end
   end
   
   describe "#any" do
     it "should be a class method that returns a completely random instance of a ChannelPoint" do
-      pending
-      # context = Interpreter.new
-      # context.reset_variables
-      # context.reset_names
-      # context.bind_name("y",ValuePoint.new("bool", false))
-      # rC = ChannelPoint.any(context)
-      # rC.name.should == "y"
-      # context.reset_names
-      # context.bind_variable("d",ValuePoint.new("bool", false))
-      # rC = ChannelPoint.any(context)
-      # rC.name.should == "d"
+      context = Interpreter.new
+      context.reset_variables
+      context.reset_names
+      context.bind_name("y",ValuePoint.new("bool", false))
+      rC = ReferencePoint.any(context)
+      rC.name.should == "y"
+      context.reset_names
+      context.bind_variable("d",ValuePoint.new("bool", false))
+      rC = ReferencePoint.any(context)
+      rC.name.should == "d"
     end
   end
 end

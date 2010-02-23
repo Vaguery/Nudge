@@ -73,9 +73,9 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:code stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:code].push(ReferencePoint.new(i))}
+              inputs.each {|i| @context.stacks[:code].push(ValuePoint.new("code",i))}
               @i1.go
-              finalStackState.reverse.each {|i| @context.stacks[:code].pop.value.should == i}
+              finalStackState.reverse.each {|i| @context.stacks[:code].pop.raw.should == i}
             end
           end
         end

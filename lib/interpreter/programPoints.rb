@@ -42,13 +42,16 @@ module Nudge
   
   
   class ValuePoint < ProgramPoint
-    attr_accessor :type, :value, :raw
+    attr_accessor :type, :raw
+    attr_reader :value
     
-    def initialize(type,value=nil)
+    def initialize(type,representation=nil)
       raise(ArgumentError, "Type must be a symbol or string") unless [Symbol,String].include?(type.class)
       @type = type.to_sym
-      @raw = value
-      @value = value
+      if representation != nil
+        representation = representation.to_s
+      end     
+      @raw = representation
     end
     
     def go(context)
@@ -57,6 +60,22 @@ module Nudge
     
     def points
       1
+    end
+    
+    def nudgetype(typename=@type)
+      "#{typename.to_s.camelize}Type"
+    end
+    
+    def nudgetype_defined?(typename=@type)
+      Nudge.const_defined?(nudgetype(typename).to_sym)
+    end
+    
+    def value
+      if @raw && nudgetype_defined?
+        @value ||= nudgetype.constantize.from_s(@raw)
+      else
+        nil
+      end
     end
     
     def tidy(level=1)
@@ -68,9 +87,9 @@ module Nudge
       newType = context.types.sample
       @type = newType.to_nudgecode
       if newType != CodeType
-        @value = newType.any_value
+        @raw = newType.any_value
       else
-        @value = newType.any_value(context)
+        @raw = newType.any_value(context)
       end
     end
     
@@ -81,10 +100,9 @@ module Nudge
     end
     
     def listing_parts
-      fn = @value ? "«#{self.type}» #{self.value}" : ""
+      fn = @raw ? "«#{self.type}» #{self.raw}" : ""
       return [self.tidy, fn]
     end
-    
   end
   
   

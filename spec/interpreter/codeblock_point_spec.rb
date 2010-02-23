@@ -64,7 +64,7 @@ describe "listing_parts" do
     it "should work with nested «code» footnotes" do
       simple_tricky = "block { value «code»}\n«code» value «code»\n«int» 123\n«code» value «int»"
       simple_tricky = magicCodeblockPointMaker(simple_tricky)
-      puts simple_tricky.listing_parts[1] #.should == "«code» value «code»\n«code» value «int»\n«int» 123"
+      simple_tricky.listing_parts[1].should == "«code» value «code»\n«code» value «int»\n«int» 123"
     end
   end
 end

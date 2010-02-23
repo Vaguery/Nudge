@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -42,7 +43,20 @@ describe "built-in Nudge Types (except CodeType) :" do
       IntType.from_s("3").should == 3
       lambda{IntType.from_s()}.should raise_error
     end
-
+    
+    it "should have a #recognizes? method that returns true if the arg responds to to_i" do
+      IntType.recognizes?(3).should == true
+      IntType.recognizes?(-3).should == true
+      IntType.recognizes?(3.1321).should == true
+      
+      
+      IntType.recognizes?(nil).should == false
+      IntType.recognizes?("hi there").should == false
+      
+      IntType.recognizes?([1,2,3]).should == false
+      IntType.recognizes?(Object.new).should == false
+    end
+    
     it "should return the result of self.randomize when it receives an #any_value call" do
       IntType.should_receive(:rand).and_return(0)
       IntType.any_value.should == IntType.defaultLowest
@@ -77,6 +91,22 @@ describe "built-in Nudge Types (except CodeType) :" do
       BoolType.from_s("false").should == false
       lambda{BoolType.from_s()}.should raise_error
     end
+    
+    it "should have a #recognizes? method that returns true if the arg is TrueClass or FalseClass" do
+      BoolType.recognizes?(true).should == true
+      BoolType.recognizes?(false).should == true
+      
+      BoolType.recognizes?(nil).should == false
+      BoolType.recognizes?("false").should == false
+      BoolType.recognizes?(99).should == false
+      BoolType.recognizes?(0).should == false      
+      
+      BoolType.recognizes?([1,2,3]).should == false
+      BoolType.recognizes?(Object.new).should == false
+    end
+    
+    
+    
     it "should return the result of self.randomize when it receives an #any_value call" do
       BoolType.should_receive(:rand).and_return(0.1)
       BoolType.any_value.should == true
@@ -102,6 +132,21 @@ describe "built-in Nudge Types (except CodeType) :" do
       FloatType.should_receive(:random_value).and_return(-9.2)
       FloatType.any_value.should == -9.2
     end
+    
+    it "should have a #recognizes? method that returns true if the arg responds to to_f" do
+      FloatType.recognizes?(3.991).should == true
+      FloatType.recognizes?(-3.99129).should == true
+      FloatType.recognizes?(3).should == true
+      FloatType.recognizes?(Complex(2,3)).should == true
+      FloatType.recognizes?(Rational("2/3")).should == true
+      
+      FloatType.recognizes?(nil).should == false
+      FloatType.recognizes?("2.123").should == false
+      FloatType.recognizes?([1.1, 2.2, 3.3]).should == false
+      FloatType.recognizes?(Object.new).should == false
+    end
+    
+    
     it "should return a result from a given range when that range is passed in" do
       FloatType.should_receive(:rand).and_return(0.0)
       FloatType.random_value(:randomFloatLowerBound=>0.0, :randomFloatUpperBound=>10.0).should == 0.0

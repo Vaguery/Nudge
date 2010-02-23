@@ -3,11 +3,6 @@ require "fakeweb"
 include Nudge
 
 describe "Individual" do
-  describe "class methods" do
-    it "should have a class attribute Parser for validating code" do
-      Individual.helperParser.should be_a_kind_of(NudgeLanguageParser)
-    end
-  end
   
   describe "initialization" do
     before(:each) do
@@ -19,19 +14,8 @@ describe "Individual" do
       lambda{Individual.new()}.should raise_error
     end
     
-    it "should have a program attribute, which is the parsed genome" do
-      @par = NudgeLanguageParser.new
-      expected = @par.parse(@i1.genome).to_points
-      @i1.program.tidy.should == expected.tidy
-    end
-    
-    it "should raise an ArgumentError if the genome doesn't parse" do
-      lambda{Individual.new("bad stuff happens")}.should raise_error(ArgumentError)
-      lambda{Individual.new("block {")}.should raise_error(ArgumentError)
-      lambda{Individual.new("}")}.should raise_error(ArgumentError)
-      
-      lambda{Individual.new("")}.should raise_error(ArgumentError)
-      lambda{Individual.new("block {}")}.should_not raise_error(ArgumentError)
+    it "should have a program attribute, which is a NudgeProgram" do
+      @i1.program.should be_a_kind_of(NudgeProgram)
     end
     
     it "should have a scores hash, which is empty" do
@@ -178,7 +162,7 @@ describe "Individual" do
   describe "delete_point" do
     before(:each) do
       @clipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
-      @parser = NudgeLanguageParser.new()
+      @parser = NudgeCodeblockParser.new()
     end
     
     it "should return Individual#genome if[f] the position param is out of bounds" do
@@ -222,7 +206,7 @@ describe "Individual" do
   describe "replace_point" do
     before(:each) do
       @receiver = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
-      @parser = NudgeLanguageParser.new()
+      @parser = NudgeCodeblockParser.new()
       @mutant = "do NOTHING"
     end
     

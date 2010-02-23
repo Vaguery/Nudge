@@ -147,7 +147,6 @@ describe ExecIfInstruction do
         @context.stacks[:exec].push(@v2)
         @context.stacks[:bool].push(ValuePoint.new("bool", true))
         @i1.go
-        @context.stacks[:exec].entries.each {|i| p i.listing}
         @context.stacks[:exec].depth.should == 1
         @context.stacks[:exec].peek.value.should == 1.0
         

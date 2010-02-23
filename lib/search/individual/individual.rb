@@ -2,11 +2,7 @@ require 'couchrest'
 
 module Nudge
   
-  class Individual
-    def self.helperParser
-      @helperParser ||= NudgeLanguageParser.new()
-    end
-    
+  class Individual    
     def self.get(db_url, individual_id)
       # connect
       db = CouchRest.database!(db_url)
@@ -28,9 +24,8 @@ module Nudge
     attr_reader :id
     
     def initialize(listing)
-      @helperParser = @genome = listing
-      raise(ArgumentError, "Nudge program cannot be parsed") if Individual.helperParser.parse(genome) == nil
-      @program = Individual.helperParser.parse(genome).to_points
+      @genome = listing
+      @program = NudgeProgram.new(genome)
       @scores = Hash.new
       @timestamp = Time.now.to_i
       @progress = 0
