@@ -138,7 +138,7 @@ describe "Station" do
       loc1 = Station.new("mordor")
       dude1 = Individual.new("ref f")
       loc1.add_individual dude1
-      dude1.station.should == loc1
+      dude1.station_name.should == loc1
     end
     
     it "should be a private method"
