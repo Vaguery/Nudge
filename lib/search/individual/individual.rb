@@ -20,17 +20,17 @@ module Nudge
       return newDude
     end
       
-    attr_accessor :genome, :scores, :progress, :ancestors, :station, :program, :timestamp
+    attr_accessor :genome, :scores, :progress, :ancestors, :station_name, :program, :timestamp
     attr_reader :id
     
     def initialize(listing)
       @genome = listing
       @program = NudgeProgram.new(genome)
       @scores = Hash.new
-      @timestamp = Time.now.to_i
+      @timestamp = Time.now
       @progress = 0
       @ancestors = []
-      @station = ""
+      @station_name = ""
     end
     
     def known_scores

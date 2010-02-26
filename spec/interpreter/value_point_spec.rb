@@ -21,8 +21,8 @@ describe "ValuePoint" do
   describe "raw" do
     it "should cast the representation of the thing as a string unless nil" do
       lambda{ValuePoint.new("anything", "something")}.should_not raise_error(ArgumentError)
-      lambda{ValuePoint.new("fiddlefaddle", 88)}.raw.should == "88"
-      lambda{ValuePoint.new("int", 8)}.should == "8"
+      ValuePoint.new("fiddlefaddle", 88).raw.should == "88"
+      ValuePoint.new("int", 8).raw.should == "8"
     end
   end
   

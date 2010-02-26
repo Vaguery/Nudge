@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "./../spec_helper")
 require "fakeweb"
 include Nudge
@@ -6,16 +7,15 @@ describe "Individual" do
   
   describe "initialization" do
     before(:each) do
-      @i1 = Individual.new("literal bool (false)")
+      @i1 = Individual.new("value «bool»\n«bool» false")
     end
     
     it "should have a genome string, with no default value" do
-      pending "REWORK THIS ENTIRE FILE"
       @i1.genome.should be_a_kind_of(String)
       lambda{Individual.new()}.should raise_error
     end
     
-    it "should have a program attribute, which is a NudgeProgram" do
+    it "should have a program attribute, which is a NudgeProgram object (or nil)" do
       @i1.program.should be_a_kind_of(NudgeProgram)
     end
     
@@ -23,13 +23,13 @@ describe "Individual" do
       @i1.scores.should == {}
     end
     it "should have a timestamp, which is when (wall clock time) it was made" do
-      @i1.timestamp.should be_a_kind_of(Fixnum)
+      @i1.timestamp.should be_a_kind_of(Time)
     end
-    it "should have an age, defaulting to zero" do
+    it "should have a progress attribute, defaulting to zero" do
       @i1.progress.should == 0
     end
-    it "should have a locationID, defaulting to an empty string" do
-      @i1.station.should == ""
+    it "should have a station_name attribute, defaulting to an empty string" do
+      @i1.station_name.should == ""
     end
     it "should have a list of ancestors, defaulting to none" do
       @i1.ancestors.should == []
@@ -156,6 +156,9 @@ describe "Individual" do
       @snipper.isolate_point(4)[:middle].gsub(/([\s]+)/," ").should == "block { do some3}"
       @snipper.isolate_point(5)[:middle].strip.should == "do some3"
     end
+    
+    it "should deal with footnotes"
+    it "should cope with the raw strings of ValuePoints it includes"
   end
   
   
@@ -187,7 +190,7 @@ describe "Individual" do
     it "should return a genome with at least one fewer program points" do
       startPoints = @clipper.points
       (0..5).each do |where|
-        @parser.parse(@clipper.delete_point(2)).to_point.point.should < startPoints
+        @parser.parse(@clipper.delete_point(2)).to_point.points.should < startPoints
       end
     end
         
@@ -201,6 +204,8 @@ describe "Individual" do
     it "should return 'block {}' when the entire program is deleted" do
       @clipper.delete_point(1).should == "block {}"
     end
+    
+    it "should deal with footnotes correctly"
   end
   
   
