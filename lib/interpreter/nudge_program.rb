@@ -36,7 +36,10 @@ module Nudge
       breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
       pairs = shattered.collect {|fn| fn.match(breaker)[1..2]}
       fn = Hash.new {|hash, key| hash[key] = [] }
-      pairs.each { |key,value| fn[key.to_sym] << value.chomp}
+      @footnote_order = []
+      pairs.each do |key,value|
+        fn[key.to_sym] << value.strip
+      end
       return fn
     end
     
@@ -90,6 +93,14 @@ module Nudge
     end
     
     
+    def unused_footnotes
+      leftovers = []
+      @footnotes.each do |key,val|
+        val.each {|fn| leftovers << "«#{key.to_s}» #{fn.strip}"}
+      end
+      return leftovers
+    end
+    
     def parses?(program_listing = @code_section)
       (@parser.parse(program_listing) != nil)
     end
@@ -103,6 +114,7 @@ module Nudge
     
     def listing
       code_section, footnote_section = @linked_code.listing_parts
+      unused_footnotes.each {|fn| footnote_section += "\n#{fn}"}
       return (code_section.strip + " \n" + footnote_section.strip).strip
     end
     

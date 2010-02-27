@@ -1,7 +1,6 @@
 require 'couchrest'
 
 module Nudge
-  
   class Individual    
     def self.get(db_url, individual_id)
       # connect
@@ -9,7 +8,6 @@ module Nudge
       
       # search
       couchDoc = db.get(individual_id.to_s)
-      puts couchDoc
       
       # create new guy
       newDude = self.new(couchDoc["genome"])
@@ -19,9 +17,11 @@ module Nudge
       
       return newDude
     end
-      
+    
+    
     attr_accessor :genome, :scores, :progress, :ancestors, :station_name, :program, :timestamp
     attr_reader :id
+    
     
     def initialize(listing)
       @genome = listing
@@ -33,13 +33,16 @@ module Nudge
       @station_name = ""
     end
     
+    
     def known_scores
       return self.scores.keys.sort
     end
     
+    
     def points
       return self.program.points
     end
+    
     
     def score_vector(template = self.known_scores)
       vector = []
@@ -122,11 +125,12 @@ module Nudge
       # noting that if which==1, we will have empty left & right, and return the entire codeblock
       result[:middle] = workingCopy[posn]
       if which > 1
-        result[:left] = workingCopy[0..posn-1].join
+        result[:left] = workingCopy[0...posn].join
         result[:right] = workingCopy[posn+1..-1].join
       end
       return result
     end
+    
     
     def write
       where = CouchRest.database!(@station.database)

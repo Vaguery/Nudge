@@ -347,6 +347,25 @@ block { value «int» value «code» value «int»}
   end
   
   
+  describe "preserving unused footnotes" do
+    before(:each) do
+      @all_extras = "value «foo»\n«bar» baz\n«qux» nothing"
+      @all_used = "value «foo»\n«foo» bar"
+      
+    end
+    it "should collect unused footnote strings in an Array called #unused_footnotes" do
+      NudgeProgram.new(@all_extras).unused_footnotes.should include("«bar» baz")
+      NudgeProgram.new(@all_extras).unused_footnotes.should include("«qux» nothing")
+      
+      NudgeProgram.new(@all_used).unused_footnotes.should be_empty
+    end
+    
+    it "should preserve the unused footnotes at the end of #listing" do
+      NudgeProgram.new(@all_extras).listing.should include("«bar» baz")
+    end
+  end
+  
+  
   
   describe ": handling malformed programs" do
     it "should interpret an empty string as no code at all" do
@@ -409,6 +428,21 @@ block { value «int» value «code» value «int»}
     end
   end
   
+  
+  describe "maintinaing integrity through parsing and listing cycles" do
+    before(:each) do
+      @extras = "block {\nvalue «code»\nvalue «code»\nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3\n«bar» baz"
+    end
+    
+    it "should have all the same footnotes it started with" do
+      original_fn = @extras.partition( /^(?=«)/ )[2].split( /^(?=«)/ ).collect {|fn| fn.strip}
+      new_fn = NudgeProgram.new(@extras).listing.partition( /^(?=«)/ )[2].
+        split( /^(?=«)/ ).collect {|fn| fn.strip}
+      
+      # original_fn.length.should == new_fn.length
+      original_fn.sort.should == new_fn.sort
+    end
+  end
   
   
 end

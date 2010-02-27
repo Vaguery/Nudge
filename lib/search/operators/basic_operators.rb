@@ -130,7 +130,7 @@ module Nudge
         mom = crowd[where]
         dad = crowd[ (where+1) % crowd.length ]
         xover = "block {\n"
-        (0..mom.program.contents.length-1).each do |point|
+        (0...mom.program.contents.length).each do |point|
           if rand() < prob
             xover << mom.program.contents[point].tidy + "\n"
           else

@@ -75,7 +75,7 @@ module Nudge
       how_many = crowd.length * proportion
       
       result = Batch.new
-      partial_ordering[0..how_many-1].each {|dude| result << dude} unless how_many == 0
+      partial_ordering[0...how_many].each {|dude| result << dude} unless how_many == 0
       return result
     end
   end

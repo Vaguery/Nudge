@@ -228,7 +228,7 @@ describe "Individual" do
   
   describe "replace_point" do
     before(:each) do
-      @receiver = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
+      @receiver = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
       @parser = NudgeCodeblockParser.new()
       @mutant = "do NOTHING"
     end
@@ -243,24 +243,27 @@ describe "Individual" do
       lambda{@receiver.replace_point(1,"")}.should raise_error(ArgumentError)
     end
     
-    
-    it "should call self#isolate_point to slice the wildtype genome" do
-      @receiver.should_receive(:isolate_point).with(2).and_return(
-        {:left => "so ",:middle=>"it",:right=>" works"})
-      @receiver.replace_point(2,"this")
-    end
-    
     it "should produce a parsable genome" do
       @parser.parse(@receiver.replace_point(2,@mutant)).should_not == nil
       @parser.parse(@receiver.replace_point(1,@mutant)).should_not == nil
     end
     
     it "should replace the expected specific point (and any subpoints it has)" do
-      @receiver.replace_point(2,@mutant).should_not include("some1")
-      @receiver.replace_point(3,@mutant).should_not include("some2")
-      @receiver.replace_point(4,@mutant).should_not include("some3")
-      @receiver.replace_point(5,@mutant).should_not include("some3")
       @receiver.replace_point(1,@mutant).should_not include("block")
+      @receiver.replace_point(1,@mutant).should include("do NOTHING")
+      
+      @receiver.replace_point(2,@mutant).should_not include("value «foo»")
+      @receiver.replace_point(2,@mutant).should include("do some2")
+      
+      @receiver.replace_point(3,@mutant).should_not include("do some2")
+      @receiver.replace_point(3,@mutant).should include("value «code»")
+      
+      @receiver.replace_point(4,@mutant).should_not include("value «code»")
+      @receiver.replace_point(4,@mutant).should include("do some2")
+      
+      @receiver.replace_point(5,@mutant).should_not include("value «code»")
+      @receiver.replace_point(5,@mutant).should include("block {\n do NOTHING}")
+      
     end
 
     it "should replace the entire program if it replaces point 0" do
