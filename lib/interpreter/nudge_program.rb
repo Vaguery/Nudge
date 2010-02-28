@@ -101,6 +101,42 @@ module Nudge
       return leftovers
     end
     
+    
+    
+    
+    def [](which)
+      raise ArgumentError,"Cannot retrieve #{which}th program point" if which < 1
+      raise ArgumentError,"Cannot retrieve #{which}th program point" if which > self.points
+      if which == 1
+        result = @linked_code
+      else
+        result = @linked_code.each_with_index do |node,index|
+          break(node) if index == which-1
+        end
+      end
+      return result
+    end
+    
+    def replace_point(which,new_junk)
+      raise ArgumentError,"Cannot replace #{which}th program point" if which < 1
+      raise ArgumentError,"Cannot replace #{which}th program point" if which > self.points
+      raise ArgumentError,"Cannot insert #{new_junk.class}" unless new_junk.kind_of?(ProgramPoint)
+      
+      result = self.clone
+      
+      if which == 1
+        result.linked_code = new_junk
+      else
+        result.linked_code.each_with_index do |node, index|
+          if index == which - 1
+          end
+        end
+      end
+      
+      return result
+    end
+    
+    
     def parses?(program_listing = @code_section)
       (@parser.parse(program_listing) != nil)
     end
@@ -129,7 +165,7 @@ module Nudge
     
     
     def points
-      @points ||= (@linked_code ? @linked_code.points : 0)
+      return @linked_code ? @linked_code.points : 0
     end
   end
 end

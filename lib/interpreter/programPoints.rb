@@ -1,9 +1,14 @@
 #encoding: utf-8
 module Nudge
+  include Enumerable
   
   class ProgramPoint
     def points
       1
+    end
+    
+    def each
+      yield self
     end
   end
   
@@ -38,6 +43,13 @@ module Nudge
         fn_accumulator + rhs
       end
       return [self.tidy, fn.strip]
+    end
+    
+    def each
+      yield self
+      @contents.each do |child|
+        child.each {|c| yield c}
+      end
     end
   end
   

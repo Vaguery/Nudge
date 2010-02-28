@@ -117,21 +117,35 @@ end
 describe "codeblock methods" do
   describe "#points" do
     it "should return the number of lines in the block" do
-      myP = NudgeProgram.new("block {}")
+      myP = CodeblockPoint.new()
       myP.points.should == 1
       
-      myP = NudgeProgram.new("block { block { block {}}}")
-      myP.points.should == 3
+      myQ = CodeblockPoint.new([CodeblockPoint.new([myP])])
+      myQ.points.should == 3
       
-      myP = NudgeProgram.new("block { block {} block {}}")
-      myP.points.should == 3
+      myQ = CodeblockPoint.new([CodeblockPoint.new, CodeblockPoint.new])
+      myQ.points.should == 3
       
-      myP = NudgeProgram.new("block { do int_add}")
-      myP.points.should == 2
+      myQ = CodeblockPoint.new([InstructionPoint.new("int_add")])
+      myQ.points.should == 2
       
-      myP = NudgeProgram.new("block { do int_add ref x1\nref x2}")
+      myP = CodeblockPoint.new([InstructionPoint.new("a"),ReferencePoint.new("b"),ReferencePoint.new("c")])
       myP.points.should == 4
-      
+    end
+  end
+  
+  describe "each" do
+    before(:each) do
+      @myQ = CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")])
+    end
+    
+    it "should return an Enumerator object of the right size" do
+      @myQ = CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")])
+      @myQ.collect {|c| c.tidy}.length.should == 3
+    end
+    
+    it "should cycle depth-first through the tree" do
+      @myQ.collect {|c| c.tidy}[2].should == "do b"
     end
   end
 end

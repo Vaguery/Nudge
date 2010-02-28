@@ -429,7 +429,7 @@ block { value «int» value «code» value «int»}
   end
   
   
-  describe "maintinaing integrity through parsing and listing cycles" do
+  describe "maintaining integrity through parsing and listing cycles" do
     before(:each) do
       @extras = "block {\nvalue «code»\nvalue «code»\nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3\n«bar» baz"
     end
@@ -443,6 +443,80 @@ block { value «int» value «code» value «int»}
       original_fn.sort.should == new_fn.sort
     end
   end
+  
+  
+  describe "[] method" do
+    before(:each) do
+      @bigger_tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+    end
+    
+    it "should raise an ArgumentError if the index is 0 or less" do
+      lambda{NudgeProgram.new("block {}")[-2]}.should raise_error(ArgumentError)
+      lambda{NudgeProgram.new("block {}")[0]}.should raise_error(ArgumentError)
+      lambda{NudgeProgram.new("block {}")[1]}.should_not raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the index is more than self.points" do
+      lambda{NudgeProgram.new("block {}")[4]}.should raise_error(ArgumentError)
+      lambda{NudgeProgram.new("block {}")[2]}.should raise_error(ArgumentError)
+      lambda{NudgeProgram.new("block {}")[1]}.should_not raise_error(ArgumentError)
+    end
+    
+    it "should return a single numbered point of the #linked_code tree" do
+      NudgeProgram.new(@bigger_tree)[1].should be_a_kind_of(ProgramPoint)
+      NudgeProgram.new(@bigger_tree)[3].should be_a_kind_of(ProgramPoint)
+    end
+    
+    it "should return the right ProgramPoint" do
+      caught = NudgeProgram.new(@bigger_tree)[3]
+      caught.should be_a_kind_of(ValuePoint)
+      caught.value.should == 2
+      NudgeProgram.new(@bigger_tree)[2].listing_parts[1].should == "«code» value «int»\n«int» 1"
+    end
+  end
+  
+  describe "#replace_point method" do
+    before(:each) do
+      @bigger_tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+      @starter = NudgeProgram.new(@bigger_tree)
+      @new_chunk = ReferencePoint.new("HI")
+    end
+    
+    it "should raise an ArgumentError if the index is 0 or less" do
+      lambda{@starter.replace_point(-8,@new_chunk)}.should raise_error(ArgumentError)
+      lambda{@starter.replace_point(0,@new_chunk)}.should raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the index is more than self.points" do
+      lambda{@starter.replace_point(9919,@new_chunk)}.should raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the second argument isn't a ProgramPoint" do
+      lambda{@starter.replace_point(1,"hello")}.should raise_error(ArgumentError)
+    end
+    
+    it "should return a new NudgeProgram based on the new code if which=1" do
+      result = @starter.replace_point(1,@new_chunk)
+      result.should be_a_kind_of(NudgeProgram)
+      result.listing.should == "ref HI"
+    end
+    
+    it "should not damage the invoking NudgeProgram" do
+      result = @starter.replace_point(1,@new_chunk)
+      @starter.raw_code.should == @bigger_tree
+    end
+    
+    it "should return a new NudgeProgram" do
+      result = @starter.replace_point(2,@new_chunk)
+      result.should be_a_kind_of(NudgeProgram)
+    end
+    
+    it "should return a new NudgeProgram with the right ProgramPoint replaced in its linked_code" do
+      result = @starter.replace_point(2,@new_chunk)
+      result[2].should be_a_kind_of(ReferencePoint)
+    end
+  end
+  
   
   
 end
