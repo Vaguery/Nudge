@@ -104,81 +104,6 @@ describe "Individual" do
   
   
   
-  describe "isolate_point" do
-    before(:each) do
-      @snipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
-      @footer = Individual.new("block {value «code» value «code»}\n«code» value «int»\n«code» value «bool»\n«bool» false\n«int» 1234")
-    end
-    
-    it "should raise an ArgumentError if the integer param referring to a particular point is OOB" do
-      lambda{@snipper.isolate_point()}.should raise_error(ArgumentError)
-      lambda{@snipper.isolate_point(-12)}.should raise_error(ArgumentError)
-      lambda{@snipper.isolate_point(912)}.should raise_error(ArgumentError)
-      
-      lambda{@snipper.isolate_point(2)}.should_not raise_error(ArgumentError)
-      
-      lambda{@footer.isolate_point()}.should raise_error(ArgumentError)
-      lambda{@footer.isolate_point(-12)}.should raise_error(ArgumentError)
-      lambda{@footer.isolate_point(912)}.should raise_error(ArgumentError)
-      
-      lambda{@footer.isolate_point(2)}.should_not raise_error(ArgumentError)
-    end
-    
-    it "should return a Hash containing up to three strings" do
-      works = @snipper.isolate_point(2)
-      works.should be_a_kind_of(Hash)
-      works.length.should == 3
-      works.each_value {|chunk| chunk.should be_a_kind_of(String)}
-      
-      @snipper.isolate_point(1).length.should == 1
-      @snipper.isolate_point(5).length.should == 3
-      
-      maybe = @footer.isolate_point(2)
-      maybe.should be_a_kind_of(Hash)
-      maybe.length.should == 3
-      maybe.each_value {|chunk| chunk.should be_a_kind_of(String)}
-      
-      @footer.isolate_point(1).length.should == 1
-      @footer.isolate_point(1)[:middle].should == @footer.program.listing
-    end
-    
-    it "should include the material in the genome before the point in the first string" do
-      works = @snipper.isolate_point(2)
-      works[:left].should include("block {")
-      works[:left].should_not include("}")
-      
-      whole = @snipper.isolate_point(1)
-      whole[:left].should == nil
-    end
-    
-    
-    it "should include the material in the genome after the point in the third string" do
-      works = @snipper.isolate_point(2)
-      works[:right].should include("do some2")
-      works[:right].should_not include("do some1")
-      
-      whole = @snipper.isolate_point(1)
-      whole[:right].should == nil
-      
-      bracesLeft = @snipper.isolate_point(5)
-      bracesLeft[:right].should == "}}"
-    end
-    
-    it "should include the entire isolated point in the middle string" do
-      works = @snipper.isolate_point(2)
-      works[:middle].strip.should == "do some1"
-      
-      @snipper.isolate_point(3)[:middle].strip.should == "do some2"
-      @snipper.isolate_point(4)[:middle].gsub(/([\s]+)/," ").should == "block { do some3}"
-      @snipper.isolate_point(5)[:middle].strip.should == "do some3"
-    end
-    
-    it "should deal with footnotes correctly by associating them with the correct chunk(s)"
-    
-    it "should cope with the raw strings of ValuePoints it includes, including footnotes"
-  end
-  
-  
   
   describe "delete_point" do
     before(:each) do
@@ -229,7 +154,6 @@ describe "Individual" do
   describe "replace_point" do
     before(:each) do
       @receiver = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
-      @parser = NudgeCodeblockParser.new()
       @mutant = "do NOTHING"
     end
     

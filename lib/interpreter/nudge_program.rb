@@ -135,7 +135,9 @@ module Nudge
         result.linked_code = new_junk
       else
         to_replace = result[which]
-        parent = result.linked_code.detect {|wrapper| wrapper.contents.include?(to_replace)}
+        parent = result.linked_code.detect do |wrapper|
+          wrapper.contents.include?(to_replace) if wrapper.respond_to?(:contents)
+        end
         parent_index = parent.contents.find_index(to_replace)
         parent.contents[parent_index] = new_junk
       end

@@ -532,7 +532,7 @@ block { value «int» value «code» value «int»}
     end
     
     it "should return a new NudgeProgram with the right ProgramPoint replaced in its linked_code" do
-      # "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref c}"
+      # untouched = "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref c}"
       reffy = NudgeProgram.new(@deeper_tree)
       
       result = reffy.replace_point(2,@new_chunk)
@@ -547,7 +547,8 @@ block { value «int» value «code» value «int»}
       result = reffy.replace_point(5,@new_chunk)
       result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref HI}}\n  ref c}"
       
-      puts reffy[6].tidy
+      result = reffy.replace_point(6,@new_chunk)
+      result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref HI}"
     end
   end
   
