@@ -42,9 +42,9 @@ describe "ValuePoint" do
   
   describe "#value" do
     it "should use the #from_s method from the appropriate NudgeType" do
-      ValuePoint.new("int","9912").value.should == 9912
-      ValuePoint.new("float","1.2").value.should == 1.2
-      ValuePoint.new("bool","false").value.should == false
+      ValuePoint.new("int",9912).value.should == 9912
+      ValuePoint.new("float",1.2).value.should == 1.2
+      ValuePoint.new("bool",false).value.should == false
     end
     
     it "should not create a value if none is present in #raw" do
@@ -84,7 +84,7 @@ describe "ValuePoint" do
     before(:each) do
       @ii = Interpreter.new()
       @ii.clear_stacks
-      @ii.stacks[:exec].push(ValuePoint.new("int","222"))
+      @ii.stacks[:exec].push(ValuePoint.new("int",222))
     end
     
     it "should pop the exec stack when a ValuePoint is interpreted" do
@@ -105,9 +105,9 @@ describe "ValuePoint" do
     end
 
     it "should push the value onto the right stack" do
-      @ii.stacks[:exec].push(ValuePoint.new("int","3"))
-      @ii.stacks[:exec].push(ValuePoint.new("float","2.2"))
-      @ii.stacks[:exec].push(ValuePoint.new("fiddle","false"))
+      @ii.stacks[:exec].push(ValuePoint.new("int",3))
+      @ii.stacks[:exec].push(ValuePoint.new("float",2.2))
+      @ii.stacks[:exec].push(ValuePoint.new("fiddle",false))
       
       3.times {@ii.step}
       @ii.stacks.should include(:int)

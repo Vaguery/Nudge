@@ -475,9 +475,29 @@ block { value «int» value «code» value «int»}
     end
   end
   
+  
+  describe "deep_copy" do
+    it "should return a copy of the NudgeProgram that contains NONE of the same object_ids" do
+      tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+      start = NudgeProgram.new(tree)
+      cloned = start.clone
+      
+      # expected behavior from #clone
+      cloned.linked_code.collect{|node| node.object_id}.should ==
+        start.linked_code.collect{|node| node.object_id}
+      
+      deeply = start.deep_copy
+      0.upto(2) {|i| deeply.linked_code.collect{|node| node.object_id}[i].should_not ==
+        start.linked_code.collect{|node| node.object_id}[i] }
+      
+      
+    end
+  end
+  
   describe "#replace_point method" do
     before(:each) do
       @bigger_tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+      @deeper_tree = "block { block {ref a block {ref b}} ref c}"
       @starter = NudgeProgram.new(@bigger_tree)
       @new_chunk = ReferencePoint.new("HI")
     end
@@ -512,8 +532,22 @@ block { value «int» value «code» value «int»}
     end
     
     it "should return a new NudgeProgram with the right ProgramPoint replaced in its linked_code" do
-      result = @starter.replace_point(2,@new_chunk)
-      result[2].should be_a_kind_of(ReferencePoint)
+      # "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref c}"
+      reffy = NudgeProgram.new(@deeper_tree)
+      
+      result = reffy.replace_point(2,@new_chunk)
+      result.listing.should == "block {\n  ref HI\n  ref c}"     
+      
+      result = reffy.replace_point(3,@new_chunk)
+      result.listing.should == "block {\n  block {\n    ref HI\n    block {\n      ref b}}\n  ref c}"
+      
+      result = reffy.replace_point(4,@new_chunk)
+      result.listing.should == "block {\n  block {\n    ref a\n    ref HI}\n  ref c}"
+      
+      result = reffy.replace_point(5,@new_chunk)
+      result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref HI}}\n  ref c}"
+      
+      puts reffy[6].tidy
     end
   end
   

@@ -134,6 +134,7 @@ describe "codeblock methods" do
     end
   end
   
+  
   describe "each" do
     before(:each) do
       @myQ = CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")])

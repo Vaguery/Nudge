@@ -2,8 +2,8 @@
 require 'treetop'
 Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treetop"))
 
+
 module Nudge
-  
   class NudgeProgram
     
     attr_accessor :code_section, :footnote_section
@@ -117,20 +117,27 @@ module Nudge
       return result
     end
     
+    
+    def deep_copy
+      NudgeProgram.new(self.listing)
+    end
+    
+    
+    
     def replace_point(which,new_junk)
       raise ArgumentError,"Cannot replace #{which}th program point" if which < 1
       raise ArgumentError,"Cannot replace #{which}th program point" if which > self.points
       raise ArgumentError,"Cannot insert #{new_junk.class}" unless new_junk.kind_of?(ProgramPoint)
       
-      result = self.clone
+      result = self.deep_copy
       
       if which == 1
         result.linked_code = new_junk
       else
-        result.linked_code.each_with_index do |node, index|
-          if index == which - 1
-          end
-        end
+        to_replace = result[which]
+        parent = result.linked_code.detect {|wrapper| wrapper.contents.include?(to_replace)}
+        parent_index = parent.contents.find_index(to_replace)
+        parent.contents[parent_index] = new_junk
       end
       
       return result
