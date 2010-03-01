@@ -18,6 +18,11 @@ describe "Nudge Program parsing" do
     it "should keep the original string in #raw_code" do
       NudgeProgram.new("I'm a little teacup").raw_code.should == "I'm a little teacup"
     end
+    
+    it "should be possible to initialize it with an empty string" do
+      lambda{NudgeProgram.new("")}.should_not raise_error
+      NudgeProgram.new("").listing.should == ""
+    end
   end
   
   describe ": parser should first break up programs into codeblock and footnotes" do
@@ -564,10 +569,71 @@ block { value «int» value «code» value «int»}
       
       valueful.replace_point(3,addedvalue).listing.should ==
         "block {\n  value «code»\n  value «foo»} \n«code» block {value «int»}\n«int» 7\n«foo» •••"
-      
     end 
   end
   
-  
-  
+  describe "#delete_point method" do
+    before(:each) do
+      @tree_with_values = NudgeProgram.new(
+        "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2")
+      @lodgepole_tree = NudgeProgram.new(
+        "block{block{block{block{block{block {ref a}}}}}}")
+    end
+    
+    it "should raise an ArgumentError if the index is 0 or less" do
+      lambda{@tree_with_values.delete_point(-8)}.should raise_error(ArgumentError)
+      lambda{@tree_with_values.delete_point(0)}.should raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the index is more than self.points" do
+      lambda{@tree_with_values.delete_point(10000)}.should raise_error(ArgumentError)
+    end
+    
+    it "should return a new empty NudgeProgram if which=1" do
+      result = @tree_with_values.delete_point(1)
+      result.should be_a_kind_of(NudgeProgram)
+      result.listing.should == ""
+      result.linked_code.should == nil
+    end
+    
+    it "should not damage the invoking NudgeProgram" do
+      starting = @tree_with_values.listing
+      result = @tree_with_values.delete_point(1)
+      @tree_with_values.listing.should == starting
+    end
+    
+    it "should return a new NudgeProgram" do
+      result = @tree_with_values.delete_point(2)
+      result.should be_a_kind_of(NudgeProgram)
+    end
+    
+    it "should return a new NudgeProgram with the right ProgramPoint deleted" do
+      # "block {\n  block {\n    block {\n      block {\n        block {\n          block {\n            ref a}}}}}}"
+      result = @lodgepole_tree.delete_point(1)
+      result.listing.should == ""
+      
+      result = @lodgepole_tree.delete_point(2)
+      result.listing.should == "block {}"     
+      
+      result = @lodgepole_tree.delete_point(4)
+      result.listing.should == "block {\n  block {\n    block {}}}"     
+      
+      result = @lodgepole_tree.delete_point(7)
+      result.listing.should == "block {\n  block {\n    block {\n      block {\n        block {\n          block {}}}}}}"     
+    end
+    
+    it "should leave the expected footnotes in the resulting program" do
+      valueful = NudgeProgram.new(
+        "block {value «code» value «code»}\n«code»block {value «int»}\n«int» 7\n«code» value «bool»")
+      
+      valueful.delete_point(1).listing.should ==
+        ""
+        
+      valueful.delete_point(2).listing.should ==
+        "block {\n  value «code»} \n«code» value «bool»"
+        
+      valueful.delete_point(3).listing.should ==
+        "block {\n  value «code»} \n«code» block {value «int»}\n«int» 7"
+    end 
+  end
 end

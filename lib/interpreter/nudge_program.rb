@@ -146,6 +146,25 @@ module Nudge
     end
     
     
+    def delete_point(which)
+      raise ArgumentError,"Cannot delete #{which}th program point" if which < 1
+      raise ArgumentError,"Cannot delete #{which}th program point" if which > self.points
+      
+      if which == 1
+        result = NudgeProgram.new("")
+      else
+        result = self.deep_copy
+        to_delete = result[which]
+        parent = result.linked_code.detect do |wrapper|
+          wrapper.contents.include?(to_delete) if wrapper.respond_to?(:contents)
+        end
+        parent_index = parent.contents.find_index(to_delete)
+        parent.contents.delete_at(parent_index)
+      end
+      return result
+    end
+    
+    
     def parses?(program_listing = @code_section)
       (@parser.parse(program_listing) != nil)
     end
@@ -158,9 +177,13 @@ module Nudge
     
     
     def listing
-      code_section, footnote_section = @linked_code.listing_parts
-      unused_footnotes.each {|fn| footnote_section += "\n#{fn}"}
-      return (code_section.strip + " \n" + footnote_section.strip).strip
+      if @linked_code != nil
+        code_section, footnote_section = @linked_code.listing_parts
+        unused_footnotes.each {|fn| footnote_section += "\n#{fn}"}
+        return (code_section.strip + " \n" + footnote_section.strip).strip
+      else
+        return ""
+      end
     end
     
     

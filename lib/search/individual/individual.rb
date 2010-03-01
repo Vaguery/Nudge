@@ -19,13 +19,12 @@ module Nudge
     end
     
     
-    attr_accessor :genome, :scores, :progress, :ancestors, :station_name, :program, :timestamp
+    attr_accessor :scores, :progress, :ancestors, :station_name, :program, :timestamp
     attr_reader :id
     
     
-    def initialize(listing)
-      @genome = listing
-      @program = NudgeProgram.new(genome)
+    def initialize(code="block {}")
+      @program = NudgeProgram.new(code)
       @scores = Hash.new
       @timestamp = Time.now
       @progress = 0
@@ -34,9 +33,20 @@ module Nudge
     end
     
     
+    def genome
+      self.program.listing
+    end
+    
+    
+    def parses?
+      self.program.parses?
+    end
+    
+    
     def known_scores
       return self.scores.keys.sort
     end
+    
     
     
     def points

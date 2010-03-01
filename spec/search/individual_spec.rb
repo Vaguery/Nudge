@@ -10,50 +10,54 @@ describe "Individual" do
       @i1 = Individual.new("value «bool»\n«bool» false")
     end
     
-    it "should have a genome string, with no default value" do
-      @i1.genome.should be_a_kind_of(String)
-      lambda{Individual.new()}.should raise_error
+    it "should have a program attribute, which is a NudgeProgram object" do
+      @i1.program.should be_a_kind_of(NudgeProgram)
+      Individual.new().program.should be_a_kind_of(NudgeProgram)
+      Individual.new().program.raw_code.should == "block {}"
     end
     
-    it "should have a program attribute, which is a NudgeProgram object (or nil)" do
-      @i1.program.should be_a_kind_of(NudgeProgram)
+    it "should respond to #genome by returning self.program.listing" do
+      @i1.genome.should be_a_kind_of(String)
+      @i1.program.should_receive(:listing)
+      @i1.genome
     end
     
     it "should have a scores hash, which is empty" do
       @i1.scores.should == {}
     end
+    
     it "should have a timestamp, which is when (wall clock time) it was made" do
-      @i1.timestamp.should be_a_kind_of(Time)
+      Time.should_receive(:now).and_return(Time.at(0))
+      timex = Individual.new("block {}")
+      timex.timestamp.should be_a_kind_of(Time)
+      timex.timestamp.should == Time.at(0)
     end
+    
     it "should have a progress attribute, defaulting to zero" do
       @i1.progress.should == 0
     end
+    
     it "should have a station_name attribute, defaulting to an empty string" do
       @i1.station_name.should == ""
     end
+    
     it "should have a list of ancestors, defaulting to none" do
       @i1.ancestors.should == []
     end
   end
   
   
-  
-  describe "runnable?" do
-    it "should have a genome that an interpreter can understand" do
-      @i1 = Individual.new(fixture(:long_arithmetic))
-      @interp = Interpreter.new
-      @interp.reset(@i1.genome)
-      @interp.enable_all_instructions
-      @interp.run
-      @interp.stacks[:int].peek.value.should == -36
+  describe "parses?" do
+    it "should respond to #parses? with an answer from its NudgeProgram" do
+      Individual.new("block {}").parses?.should == true
+      Individual.new("I do nothing at all").parses?.should == false
     end
   end
   
   
-  
   describe "#known_scores and #score_vector" do
     before(:each) do
-      @oneGuy = Individual.new("block {}")
+      @oneGuy = Individual.new()
       @oneGuy.scores = {"beta" => -100, "alpha" => 100, "zeta" => 22}
     end
     
@@ -71,10 +75,10 @@ describe "Individual" do
   
   describe "#dominated_by?" do
     before(:each) do
-      @oneGuy = Individual.new("block {}")
-      @betterGuy = Individual.new("block {}")
-      @mixedGuy = Individual.new("block {}")
-      @extraGuy = Individual.new("block {}")
+      @oneGuy = Individual.new
+      @betterGuy = Individual.new
+      @mixedGuy = Individual.new
+      @extraGuy = Individual.new
       
       @oneGuy.scores =    {"beta" => -100, "alpha" => 100, "gamma" => 22 }
       @betterGuy.scores = {"beta" => -120, "alpha" => 20,  "gamma" => 0  }
@@ -100,6 +104,55 @@ describe "Individual" do
       @oneGuy.dominated_by?(@extraGuy,["delta"]).should == false # because self has no "delta" score
       @extraGuy.dominated_by?(@oneGuy).should == false # because they're incomparible on "delta"
     end
+  end
+  
+  
+  describe "replace_point" do
+    before(:each) do
+      @receiver = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
+      @mutant = "do NOTHING"
+    end
+    
+    it "should return Individual#genome if[f] the position param is out of bounds" do
+      @receiver.replace_point(-1,@mutant).should == @receiver.program.listing
+      @receiver.replace_point(132,@mutant).should == @receiver.program.listing
+      @receiver.replace_point(2,@mutant).should_not == @receiver.program.listing
+    end
+    
+    it "should raise an ArgumentError if passed an empty replacement" do
+      lambda{@receiver.replace_point(1,"")}.should raise_error(ArgumentError)
+    end
+    
+    it "should produce a parsable genome" do
+      @parser.parse(@receiver.replace_point(2,@mutant)).should_not == nil
+      @parser.parse(@receiver.replace_point(1,@mutant)).should_not == nil
+    end
+    
+    it "should replace the expected specific point (and any subpoints it has)" do
+      @receiver.replace_point(1,@mutant).should_not include("block")
+      @receiver.replace_point(1,@mutant).should include("do NOTHING")
+      
+      @receiver.replace_point(2,@mutant).should_not include("value «foo»")
+      @receiver.replace_point(2,@mutant).should include("do some2")
+      
+      @receiver.replace_point(3,@mutant).should_not include("do some2")
+      @receiver.replace_point(3,@mutant).should include("value «code»")
+      
+      @receiver.replace_point(4,@mutant).should_not include("value «code»")
+      @receiver.replace_point(4,@mutant).should include("do some2")
+      
+      @receiver.replace_point(5,@mutant).should_not include("value «code»")
+      @receiver.replace_point(5,@mutant).should include("block {\n do NOTHING}")
+      
+    end
+
+    it "should replace the entire program if it replaces point 0" do
+      @receiver.replace_point(1,@mutant).should == " do NOTHING "
+    end
+    
+    it "should NOT remove the footnotes that it replaces"
+    
+    it "should insert the new footnotes it needs in the right place in the footnote_section"
   end
   
   
@@ -151,53 +204,6 @@ describe "Individual" do
   end
   
   
-  describe "replace_point" do
-    before(:each) do
-      @receiver = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
-      @mutant = "do NOTHING"
-    end
-    
-    it "should return Individual#genome if[f] the position param is out of bounds" do
-      @receiver.replace_point(-1,@mutant).should == @receiver.program.listing
-      @receiver.replace_point(132,@mutant).should == @receiver.program.listing
-      @receiver.replace_point(2,@mutant).should_not == @receiver.program.listing
-    end
-    
-    it "should raise an ArgumentError if passed an empty replacement" do
-      lambda{@receiver.replace_point(1,"")}.should raise_error(ArgumentError)
-    end
-    
-    it "should produce a parsable genome" do
-      @parser.parse(@receiver.replace_point(2,@mutant)).should_not == nil
-      @parser.parse(@receiver.replace_point(1,@mutant)).should_not == nil
-    end
-    
-    it "should replace the expected specific point (and any subpoints it has)" do
-      @receiver.replace_point(1,@mutant).should_not include("block")
-      @receiver.replace_point(1,@mutant).should include("do NOTHING")
-      
-      @receiver.replace_point(2,@mutant).should_not include("value «foo»")
-      @receiver.replace_point(2,@mutant).should include("do some2")
-      
-      @receiver.replace_point(3,@mutant).should_not include("do some2")
-      @receiver.replace_point(3,@mutant).should include("value «code»")
-      
-      @receiver.replace_point(4,@mutant).should_not include("value «code»")
-      @receiver.replace_point(4,@mutant).should include("do some2")
-      
-      @receiver.replace_point(5,@mutant).should_not include("value «code»")
-      @receiver.replace_point(5,@mutant).should include("block {\n do NOTHING}")
-      
-    end
-
-    it "should replace the entire program if it replaces point 0" do
-      @receiver.replace_point(1,@mutant).should == " do NOTHING "
-    end
-    
-    it "should NOT remove the footnotes that it replaces"
-    
-    it "should insert the new footnotes it needs in the right place in the footnote_section"
-  end
   
   describe "Station knowledge" do
     before(:each) do

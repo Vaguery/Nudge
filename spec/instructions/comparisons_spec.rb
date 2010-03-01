@@ -446,7 +446,7 @@ describe CodeEqualQInstruction do
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeEqualQInstruction.new(@context)
-    @thing1 = ReferencePoint.new("x")
+    @thing1 = ValuePoint.new("bool", false)
     @thing2 = ValuePoint.new("int", 991)
   end
   
