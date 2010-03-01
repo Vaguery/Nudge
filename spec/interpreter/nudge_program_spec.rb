@@ -550,6 +550,22 @@ block { value «int» value «code» value «int»}
       result = reffy.replace_point(6,@new_chunk)
       result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref HI}"
     end
+    
+    it "should produce the expected footnotes in the resulting program" do
+      valueful = NudgeProgram.new(
+        "block {value «code» value «code»}\n«code»block {value «int»}\n«int» 7\n«code» value «bool»")
+      addedvalue = ValuePoint.new("foo","•••")
+      
+      valueful.replace_point(1,addedvalue).listing.should ==
+        "value «foo» \n«foo» •••"
+        
+      valueful.replace_point(2,addedvalue).listing.should ==
+        "block {\n  value «foo»\n  value «code»} \n«foo» •••\n«code» value «bool»"
+      
+      valueful.replace_point(3,addedvalue).listing.should ==
+        "block {\n  value «code»\n  value «foo»} \n«code» block {value «int»}\n«int» 7\n«foo» •••"
+      
+    end 
   end
   
   
