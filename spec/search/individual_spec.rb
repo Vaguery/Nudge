@@ -10,10 +10,26 @@ describe "Individual" do
       @i1 = Individual.new("value «bool»\n«bool» false")
     end
     
+    it "should accept a string OR a NudgeProgram as an initialization parameter" do
+      lambda{Individual.new("some crap")}.should_not raise_error
+      lambda{Individual.new("block {}")}.should_not raise_error
+      lambda{Individual.new("")}.should_not raise_error
+      
+      lambda{Individual.new(NudgeProgram.new("block {}"))}.should_not raise_error
+      lambda{Individual.new(NudgeProgram.new(""))}.should_not raise_error
+      
+      lambda{Individual.new(8812)}.should raise_error
+      lambda{Individual.new(NudgeProgram.new())}.should raise_error
+      lambda{Individual.new([1,2,3])}.should raise_error
+    end
+    
     it "should have a program attribute, which is a NudgeProgram object" do
       @i1.program.should be_a_kind_of(NudgeProgram)
       Individual.new().program.should be_a_kind_of(NudgeProgram)
       Individual.new().program.raw_code.should == "block {}"
+      
+      probe = NudgeProgram.new("do it_now")
+      Individual.new(probe).program.listing.should == "do it_now"
     end
     
     it "should respond to #genome by returning self.program.listing" do
@@ -51,6 +67,7 @@ describe "Individual" do
     it "should respond to #parses? with an answer from its NudgeProgram" do
       Individual.new("block {}").parses?.should == true
       Individual.new("I do nothing at all").parses?.should == false
+      Individual.new(NudgeProgram.new("neither do I")).parses?.should == false
     end
   end
   
@@ -109,50 +126,58 @@ describe "Individual" do
   
   describe "replace_point" do
     before(:each) do
-      @receiver = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
-      @mutant = "do NOTHING"
+      @wildtype = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
+      @mutant_code = "do nothing"
     end
     
-    it "should return Individual#genome if[f] the position param is out of bounds" do
-      @receiver.replace_point(-1,@mutant).should == @receiver.program.listing
-      @receiver.replace_point(132,@mutant).should == @receiver.program.listing
-      @receiver.replace_point(2,@mutant).should_not == @receiver.program.listing
+    it "should return a NudgeProgram" do
+      @wildtype.replace_point_or_clone(2,@mutant_code).should be_a_kind_of(NudgeProgram)
+      @wildtype.replace_point_or_clone(2,InstructionPoint.new("jump_up")).should be_a_kind_of(NudgeProgram)
     end
     
-    it "should raise an ArgumentError if passed an empty replacement" do
-      lambda{@receiver.replace_point(1,"")}.should raise_error(ArgumentError)
+    it "should return a clone of the original NudgeProgram if the position param is out of bounds" do
+      @wildtype.replace_point_or_clone(-1,@mutant_code).listing.should == @wildtype.program.listing
+      @wildtype.replace_point_or_clone(132,@mutant_code).listing.should == @wildtype.program.listing
+      @wildtype.replace_point_or_clone(2,@mutant_code).listing.should_not == @wildtype.program.listing
     end
     
-    it "should produce a parsable genome" do
-      @parser.parse(@receiver.replace_point(2,@mutant)).should_not == nil
-      @parser.parse(@receiver.replace_point(1,@mutant)).should_not == nil
+    it "should raise an ArgumentError if passed an unparseable replacement" do
+      lambda{@wildtype.replace_point_or_clone(1,"")}.should raise_error(ArgumentError)
+      lambda{@wildtype.replace_point_or_clone(1,"i cannot exist")}.should raise_error(ArgumentError)
+      lambda{@wildtype.replace_point_or_clone(1,"do something_real")}.should_not raise_error
     end
     
-    it "should replace the expected specific point (and any subpoints it has)" do
-      @receiver.replace_point(1,@mutant).should_not include("block")
-      @receiver.replace_point(1,@mutant).should include("do NOTHING")
+    it "should produce a new parsable NudgeProgram with a new listing (as expected)" do
+      @wildtype.replace_point_or_clone(1,@mutant_code).listing.should_not == @wildtype.program.listing
+      @wildtype.replace_point_or_clone(1,@mutant_code).listing.should == "do nothing"
+    end
+    
+    it "should replace the expected specific point (and any subpoints and footnotes it has)" do
+      @wildtype.replace_point_or_clone(1,@mutant_code).listing.should_not include("block")
+      @wildtype.replace_point_or_clone(1,@mutant_code).listing.should include("do nothing")
       
-      @receiver.replace_point(2,@mutant).should_not include("value «foo»")
-      @receiver.replace_point(2,@mutant).should include("do some2")
+      @wildtype.replace_point_or_clone(2,@mutant_code).listing.should_not include("value «foo»")
+      @wildtype.replace_point_or_clone(2,@mutant_code).listing.should_not include("bar")
+      @wildtype.replace_point_or_clone(2,@mutant_code).listing.should include("do some2")
       
-      @receiver.replace_point(3,@mutant).should_not include("do some2")
-      @receiver.replace_point(3,@mutant).should include("value «code»")
+      @wildtype.replace_point_or_clone(3,@mutant_code).listing.should_not include("do some2")
+      @wildtype.replace_point_or_clone(3,@mutant_code).listing.should include("value «code»")
       
-      @receiver.replace_point(4,@mutant).should_not include("value «code»")
-      @receiver.replace_point(4,@mutant).should include("do some2")
+      @wildtype.replace_point_or_clone(4,@mutant_code).listing.should_not include("value «code»")
+      @wildtype.replace_point_or_clone(4,@mutant_code).listing.should_not include("777")
+      @wildtype.replace_point_or_clone(4,@mutant_code).listing.should include("do some2")
       
-      @receiver.replace_point(5,@mutant).should_not include("value «code»")
-      @receiver.replace_point(5,@mutant).should include("block {\n do NOTHING}")
-      
+      @wildtype.replace_point_or_clone(5,@mutant_code).listing.should_not include("value «code»")
+      @wildtype.replace_point_or_clone(5,@mutant_code).listing.should include("block {\n    do nothing}")
     end
-
-    it "should replace the entire program if it replaces point 0" do
-      @receiver.replace_point(1,@mutant).should == " do NOTHING "
+        
+    it "should insert the new footnotes it needs in the right place in the footnote_section" do
+      @wildtype.replace_point_or_clone(4,"value «up»\n«up» down").listing.should_not include("value «code»")
+      @wildtype.replace_point_or_clone(4,"value «up»\n«up» down").listing.should include("«up» down")
     end
     
-    it "should NOT remove the footnotes that it replaces"
+    it "should not affect extra (unused) footnotes"
     
-    it "should insert the new footnotes it needs in the right place in the footnote_section"
   end
   
   
@@ -161,46 +186,22 @@ describe "Individual" do
   describe "delete_point" do
     before(:each) do
       @clipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
-      @parser = NudgeCodeblockParser.new()
     end
     
-    it "should return Individual#genome if[f] the position param is out of bounds" do
-      @clipper.delete_point(-12).should == @clipper.program.listing
-      @clipper.delete_point(933).should == @clipper.program.listing
-      @clipper.delete_point(2).should_not == @clipper.program.listing
-    end
+    it "should return a NudgeProgram"
     
-    it "should call self#isolate_point to slice the wildtype genome" do
-      @clipper.should_receive(:isolate_point).with(2).and_return(
-        {:left => "so",:middle=>"it",:right=>"works"})
-      @clipper.delete_point(2)
-    end
+    it "should return a clone of the calling Individual's program if the point is out of bounds"
     
-    it "should produce a parsable genome" do
-      (0..5).each do |where|
-        @parser.parse(@clipper.delete_point(2)).should_not == nil
-      end
-    end
     
-    it "should return a genome with at least one fewer program points" do
-      startPoints = @clipper.points
-      (0..5).each do |where|
-        @parser.parse(@clipper.delete_point(2)).to_point.points.should < startPoints
-      end
-    end
-        
-    it "should delete the expected specific point (and any subpoints it has)" do
-      @parser.parse(@clipper.delete_point(2)).to_point.points.should == 4
-      @parser.parse(@clipper.delete_point(3)).to_point.points.should == 4
-      @parser.parse(@clipper.delete_point(4)).to_point.points.should == 3
-      @parser.parse(@clipper.delete_point(5)).to_point.points.should == 4
-    end
+    it "should return a NudgeProgram with at least one fewer program points (if the range is OK)"
     
-    it "should return 'block {}' when the entire program is deleted" do
-      @clipper.delete_point(1).should == "block {}"
-    end
+    it "should delete the expected specific point (and any subpoints it has)"
     
-    it "should NOT delete the footnotes associated with a point it deletes"
+    it "should return NudgeProgram.new('block {}') when the entire program is deleted"
+    
+    it "should delete the footnotes associated with a point it deletes"
+    
+    it "should not delete extra footnotes"
   end
   
   
