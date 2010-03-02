@@ -67,5 +67,11 @@ describe "PointMutationOperator" do
       @dude1.progress = 888
       @gammaray.generate([@dude1],13).each {|baby| baby.progress.should == 889}
     end
+    
+    it "should handle moving the footnotes correctly"
+    
+    it "should maintain unused footnotes correctly"
+    
+    it "should introduce new footnotes smoothly, if a ValuePoint is added"
   end
 end

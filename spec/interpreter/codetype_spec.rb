@@ -8,21 +8,11 @@ describe "Code Type" do
   end
   
   
-  it "should have a #recognizes? method that returns true if the arg is something it can read" do
-    pending
-    # examples from FLoatType:
-    # FloatType.recognizes?(3.991).should == true
-    # FloatType.recognizes?(-3.99129).should == true
-    # FloatType.recognizes?(3).should == true
-    # FloatType.recognizes?(Complex(2,3)).should == true
-    # FloatType.recognizes?(Rational("2/3")).should == true
-    # 
-    # FloatType.recognizes?(nil).should == false
-    # FloatType.recognizes?("2.123").should == false
-    # FloatType.recognizes?([1.1, 2.2, 3.3]).should == false
-    # FloatType.recognizes?(Object.new).should == false
+  it "should have a #recognizes? method that returns true if the arg is a string" do
+    CodeType.recognizes?("").should == true
+    CodeType.recognizes?(NudgeProgram.new("")).should == false
+    CodeType.recognizes?(992).should == false
   end
-  
   
   
   describe "#random_skeleton" do    
@@ -30,12 +20,17 @@ describe "Code Type" do
       lambda{CodeType.random_skeleton(3,1)}.should_not raise_error
     end
     
-    it "should return a string filled with asterisks and 'block{}'" do
+    it "should return a string filled with asterisks and 'block{}'" do      
       CodeType.random_skeleton(3,0).should == "block {**}"
       CodeType.random_skeleton(3,1).should == "block {**}"      
       CodeType.random_skeleton(1,1).should == "block {}"
+      CodeType.random_skeleton(1,0).should == "*"
       CodeType.random_skeleton(2,2).should == "block { block {}}"
       CodeType.random_skeleton(20,3).count("}").should == 3
+    end
+    
+    it "should return an empty string if asked for 0 points, for any # blocks" do
+      CodeType.random_skeleton(0,0).should == ""
     end
     
     it "should limit range-check the blocks parameter" do
@@ -96,6 +91,7 @@ describe "Code Type" do
     end
   end
   
+  
   describe "any_reference" do
     before(:each) do
       @context = Interpreter.new
@@ -125,6 +121,7 @@ describe "Code Type" do
       @context.disable_all_instructions
       @context.disable_all_types
     end
+    
     
     describe "skeletons" do
       before(:each) do
@@ -162,6 +159,7 @@ describe "Code Type" do
       end
     end
     
+    
     describe "argument checking" do
       it "should raise an ArgumentError if there are no Instructions, References or Types" do
         @context.reset_variables
@@ -171,6 +169,7 @@ describe "Code Type" do
         lambda{CodeType.random_value(@context)}.should raise_error
       end
     end
+    
     
     describe "program leaves" do
       describe "instructions" do
@@ -190,7 +189,8 @@ describe "Code Type" do
         end
       end
       
-      describe "channels" do
+      
+      describe "references" do
         it "should work when there are no active channels" do
           @context.enable(IntAddInstruction)
           @context.enable(IntType)
@@ -207,6 +207,7 @@ describe "Code Type" do
         end
       end
       
+      
       describe "types" do
         it "should work when there are no active types" do
           @context.bind_variable("x",ValuePoint.new(:int,"12"))
@@ -222,6 +223,18 @@ describe "Code Type" do
         it "should allow a list of types to be passed in as a param" do
           lambda{CodeType.random_value(@context,:types => [BoolType])}.should_not raise_error
         end
+      end
+      
+      describe "footnotes" do
+        it "should generate footnotes section of random code correctly" do
+          true.should == false
+        end
+        
+        it "should not generate an infinite tree of sub-footnotes"
+        
+        it "should append the footnotes in depth-first order"
+        
+        it "should have a footnote_number option, that can fix the number of them attached"
       end
     end
   end

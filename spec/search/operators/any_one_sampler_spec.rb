@@ -9,7 +9,7 @@ describe AnyOneSampler do
   
   describe "#generate" do
     before(:each) do
-      @dudes = Batch[Individual.new("block {}"), Individual.new("block {}"), Individual.new("block {}")]
+      @dudes = Batch[Individual.new(), Individual.new(), Individual.new()]
       @dudes[0].scores = Hash["first", 2,   "second", 20,  "third", 200]
       @dudes[1].scores = Hash["first", 20,  "second", 200, "third", 2]
       @dudes[2].scores = Hash["first", 200, "second", 2,   "third", 20]

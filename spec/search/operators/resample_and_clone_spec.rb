@@ -47,4 +47,8 @@ describe "resample_and_clone operator" do
     newDudes = @mySampler.generate(pop)
     newDudes.each {|kid| kid.progress.should == 13}
   end
+  
+  it "should handle footnotes correctly"
+  
+  it "should use a deep copy to clone new guys, not just clone"
 end

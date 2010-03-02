@@ -53,5 +53,10 @@ describe "PointDeleteOperator search operator" do
       @dude1.progress = 195
       @zapper.generate([@dude1])[0].progress.should == 196
     end
+    
+    it "should handle moving the footnotes correctly"
+    
+    it "should maintain unused footnotes correctly"
+    
   end
 end

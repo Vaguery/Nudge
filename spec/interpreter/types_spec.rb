@@ -37,7 +37,7 @@ describe "base class" do
   
 end
 
-describe "built-in Nudge Types (except CodeType) :" do
+describe "built-in Nudge Types :" do
   describe "Int Type" do
     it "should parse a string from code and produce the actual value" do
       IntType.from_s("3").should == 3
@@ -161,7 +161,7 @@ describe "built-in Nudge Types (except CodeType) :" do
     end
 
     it "should actually work" do
-      lambda{FloatType.any_value}.should_not raise_error
+      lambda{FloatType.any_value}.should_not raise_error      
     end
   end  
 end

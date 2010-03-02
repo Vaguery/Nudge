@@ -35,6 +35,7 @@ describe "PointCrossoverOperator" do
       babies = @myXover.generate([@dude1, @dude2],4)
       babies.length.should == 8
     end
+    
     it "should only include points from one of the parents in the offspring genomes" do
       babies = @myXover.generate([@dude1, @dude2])
       bothGenomes = @dude1.program.listing + @dude2.program.listing
@@ -44,6 +45,10 @@ describe "PointCrossoverOperator" do
         end
       end
     end
+    
+    it "should handle moving the footnotes correctly"
+    
+    it "should maintain unused footnotes correctly"
     
     it "should increment the offspring's progress from the max parents' progress" do
       @dude1.progress = 7

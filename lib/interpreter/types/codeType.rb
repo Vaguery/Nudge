@@ -4,6 +4,10 @@ module NudgeType
   class CodeType
     include TypeBehaviors
     @@defaultPoints = 20
+    
+    def self.recognizes?(thing)
+      return thing.kind_of?(String)
+    end
   
     def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
       blocks = [0,[points,blocks].min].max
@@ -22,12 +26,14 @@ module NudgeType
           skel[back] = skel[back] + "}"
         end
         skel = skel.join
-      else
+      elsif points == 1
         if blocks>0
           skel = "block {}"
         else
           skel = "*"
         end
+      else
+        skel = ""
       end
       return skel
     end

@@ -48,4 +48,7 @@ describe "random_guess operator" do
   it "should produce a Batch that contains Individuals with progress=0 only" do
     @myGuesser.generate(12).each {|dude| dude.progress.should == 0}
   end
+  
+  it "should handle generated footnotes correctly"
+  
 end

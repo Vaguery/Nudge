@@ -60,4 +60,9 @@ describe "UniformBackboneCrossoverOperator" do
     @newDudes.each {|baby| [13, 34].should include(baby.progress)}
   end
   
+  it "should handle moving the footnotes correctly"
+  
+  it "should maintain unused footnotes correctly"
+  
+  
 end
