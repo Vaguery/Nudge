@@ -36,11 +36,8 @@ module NudgeType
     end
   end
   
-  class BasicType
-    def self.inherited(subclass)
-      subclass.extend TypeBehaviors
-    end
-  end
+  
+  
   
   class IntType
     extend TypeBehaviors

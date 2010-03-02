@@ -11,7 +11,9 @@ end
 
 describe "base class" do
   before(:all) do
-    class FooType < BasicType; end
+    class FooType
+      extend TypeBehaviors
+    end
     @klass = FooType
   end
   

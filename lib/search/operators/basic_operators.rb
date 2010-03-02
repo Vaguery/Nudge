@@ -16,8 +16,10 @@ module Nudge
     attr_accessor :context
     
     def initialize(params ={})
-      @context = InterpreterSettings.new(:instructions => params[:instructions],
-        :references => params[:references], :types => params[:types])
+      @context = InterpreterSettings.new(
+        :instructions => params[:instructions],
+        :references => params[:references],
+        :types => params[:types])
       super
     end
     
