@@ -572,6 +572,7 @@ block { value «int» value «code» value «int»}
     end 
   end
   
+  
   describe "#delete_point method" do
     before(:each) do
       @tree_with_values = NudgeProgram.new(

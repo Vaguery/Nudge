@@ -124,7 +124,7 @@ describe "Individual" do
   end
   
   
-  describe "replace_point" do
+  describe "replace_point_or_clone" do
     before(:each) do
       @wildtype = Individual.new("block {value «foo»\n do some2\n block {\n value «code»}}\n«code» value «int»\n«int» 777\n«foo» bar")
       @mutant_code = "do nothing"
@@ -183,7 +183,7 @@ describe "Individual" do
   
   
   
-  describe "delete_point" do
+  describe "delete_point_or_clone" do
     before(:each) do
       @clipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
     end

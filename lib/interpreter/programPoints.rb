@@ -96,14 +96,9 @@ module Nudge
     end
     
     def randomize(context)
-      raise(ArgumentError,"Random code cannot be created") if context.types == [CodeType]
       newType = context.types.sample
       @type = newType.to_nudgecode
-      if newType != CodeType
-        @raw = newType.any_value
-      else
-        @raw = newType.any_value(context)
-      end
+      @raw = newType.any_value
     end
     
     def self.any(context)

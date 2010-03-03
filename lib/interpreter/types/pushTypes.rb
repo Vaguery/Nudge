@@ -7,7 +7,7 @@ module NudgeType
   end
   
   def self.push_types
-    [IntType, BoolType, FloatType]
+    [IntType, BoolType, FloatType, CodeType]
   end
   
   module TypeBehaviors
@@ -67,7 +67,7 @@ module NudgeType
       !a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_i)
     end
 
-    def self.any_value
+    def self.any_value(options ={})
       self.random_value
     end
   end
@@ -91,7 +91,7 @@ module NudgeType
       a_thing.kind_of?(TrueClass) || a_thing.kind_of?(FalseClass)
     end
     
-    def self.any_value
+    def self.any_value(options ={})
       self.random_value
     end
   end
@@ -121,7 +121,7 @@ module NudgeType
       !a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_f)
     end
     
-    def self.any_value
+    def self.any_value(options ={})
       self.random_value
     end
   end

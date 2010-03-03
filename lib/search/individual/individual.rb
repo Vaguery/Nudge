@@ -83,12 +83,7 @@ module Nudge
     end
     
     
-    def delete_point(which)
-      return self.program.listing if (which < 1 || which > self.program.points)
-      return "block {}" if which == 1
-      chunks = isolate_point(which)
-      variant = chunks[:left] + chunks[:right]
-      return variant
+    def delete_point_or_clone(which)
     end
     
     

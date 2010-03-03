@@ -2,116 +2,130 @@
 module NudgeType
   
   class CodeType
-    include TypeBehaviors
+    extend TypeBehaviors
     @@defaultPoints = 20
     
     def self.recognizes?(thing)
       return thing.kind_of?(String)
     end
-  
-    def self.random_skeleton(points=@@defaultPoints, blocks=points/10)
-      blocks = [0,[points,blocks].min].max
     
-      if points > 1
-        skel = ["block {"]
-        (points-2).times {skel << "*"}
-        skel << "*}"
-        front = 0
-        (blocks-1).times do
-          until skel[front].include?("*") do
-            a,b = rand(points), rand(points)
-            front,back = [a,b].min, [a,b].max
-          end
-          skel[front] = skel[front].sub(/\*/," block {")
-          skel[back] = skel[back] + "}"
-        end
-        skel = skel.join
-      elsif points == 1
-        if blocks>0
-          skel = "block {}"
-        else
-          skel = "*"
-        end
-      else
-        skel = ""
-      end
-      return skel
-    end
-  
-  
-    def self.any_type(types)
-      raise(ArgumentError,"no available NudgeTypes") if types.empty?
-      return types.sample
-    end
-  
-  
-    def self.any_instruction(instructions)
-      raise(ArgumentError,"no available Instructions") if instructions.empty?
-      return instructions.sample
-    end
-  
-  
-    def self.any_reference(references)
-      raise(ArgumentError,"no available references") if references.empty?
-      return references.sample
-    end
-  
-  
-    def self.roulette_wheel(references, instructions, types)
-      basis = Hash["reference", references.length,
-        "instruction", instructions.length,
-        "sample", types.length]
-      sum = basis.values.inject(:+)
-      spin = rand(sum)
-      basis.each do |result,weight|
-        return result if spin <= weight && weight > 0
-        spin -= weight
-      end
-      raise "A problem occurred when executing CodeType#roulette_wheel"
-    end
-  
-  
-    def self.random_value(context, params = {})
-      points = params[:points] || @@defaultPoints
-      blocks = params[:blocks] || points/10
-      skeleton = params[:skeleton] || self.random_skeleton(points, blocks)
-      instructions = params[:instructions] || context.instructions
-      references = params[:references] || context.references
-      types = params[:types] || context.types
     
-      while skeleton.include?("*") do
-        case self.roulette_wheel(references,instructions,types)
-        when "instruction"
-          newPoint = " do " + self.any_instruction(instructions).to_nudgecode
-        when "reference"
-          newPoint = " ref " + self.any_reference(references)
-        when "sample"
-          theType = any_type(types)
-          if theType == CodeType
-            if types != [CodeType]
-              theType = self.any_type(types - [CodeType])
-            else
-              raise ArgumentError, "Random code cannot be created"
-            end
-          end
-          newPoint = " sample " + theType.to_nudgecode + " (" + theType.any_value.to_s + ")"
-        else
-          raise ArgumentError, "Nothing to make random code from"
-        end
-        skeleton = skeleton.sub(/\*/, newPoint)
-        skeleton = skeleton.sub(/\n/,'')
-      end
-      skeleton
-    end
-  
-  
-  
     def self.from_s(string_value)
       return string_value.sub(/\(/,"«").sub(/\)/,"»")
     end
+    
+    def self.any_value(options = {})
+      StringRewritingGenerator.new(options).generate
+    end
+  end
   
-    def self.any_value(context)
-      self.random_value(context)
+  
+  
+  
+  class StringRewritingGenerator
+    attr_accessor :incoming_options
+    attr_accessor :target_size_in_points
+    attr_accessor :probabilities
+    attr_accessor :reference_names
+    attr_accessor :type_names
+    attr_accessor :instruction_names
+    
+    
+    def initialize(options = {})
+      @incoming_options = options
+      @target_size_in_points = options[:target_size_in_points] || 20
+      @probabilities = options[:probabilities] || {b:1, r:1, v:1, i:1}
+      raise(ArgumentError, "probabilities Hash doesn't have necessary keys") unless
+        @probabilities.keys.sort == [:b,:i,:r,:v]
+      @reference_names = options[:reference_names] || []
+      @type_names = options[:type_names] ||
+        NudgeType::all_types.collect {|t| t.to_nudgecode.to_s}
+      @instruction_names = options[:instruction_names] ||
+        Instruction.all_instructions.collect {|i| i.to_nudgecode.to_s}
+    end
+    
+    
+    def choose_weighted(normalized_hash)
+      total = @probabilities.values.inject(:+)
+      rand_sample = rand(total)
+      @probabilities.each do |key,value|
+        return key if rand_sample < value
+        rand_sample -= value
+      end
+    end
+    
+    
+    def generate
+      top_and_bottom = self.filled_framework
+      return "#{top_and_bottom[:code_part].strip} \n#{top_and_bottom[:footnote_part].strip}".strip
+    end
+    
+    
+    def backbone
+      return "*" * @target_size_in_points
+    end
+    
+    def open_framework(stars = self.backbone)
+      stars[0]= 'b' if stars.length > 1 # because any long framework bust be in a block
+      asteriskless = stars.gsub(/\*/) {|match| choose_weighted(@probabilities).to_s}
+      return asteriskless
+    end
+    
+    
+    def closed_framework(without_braces = self.open_framework)
+      braceless = /[b]([^{])/
+      if without_braces[0] == 'b'
+        without_braces << "}"
+        without_braces.insert(1,'{')
+      end
+      
+      with_some_braces = without_braces
+      while with_some_braces.match(braceless)
+        where = with_some_braces.index(braceless)
+        with_some_braces.insert(where+1, '{')
+        close_position = [where+rand(10)+1,with_some_braces.length].min
+        while with_some_braces[close_position] == '{'
+          close_position += 1
+        end
+        with_some_braces.insert(close_position,'} ')
+      end
+      return with_some_braces
+    end
+    
+    
+    def filled_framework(recipe = self.closed_framework)
+      top, bottom = '',''
+      recipe.chars do |c|
+        case
+        when c == 'b'
+          top << 'block '
+        when c == 'i'
+          top << "do #{instruction_names.sample} "
+        when c == 'r'
+          ref_name = @reference_names.sample || next_name
+          top << "ref #{ref_name} "
+        when c == 'v'
+          begin
+            type_name = @type_names.sample || 'unknown'
+            type_class = "#{type_name}_type".camelize.constantize
+            reduced_size = rand(@target_size_in_points/2)
+            reduced_option = {target_size_in_points:reduced_size}
+            sampled_value = type_class.any_value(@incoming_options.merge(reduced_option)).to_s
+          rescue NameError
+            sampled_value = ""
+          end
+          top << "value «#{type_name}» "
+          bottom << "\n«#{type_name}» #{sampled_value}"
+        else
+          top << c
+        end
+      end
+      return {:code_part => top.strip, :footnote_part => bottom.strip}
+    end
+    
+    
+    def next_name
+      @next_name = (@next_name || "aaa000").succ
     end
   end
 end
