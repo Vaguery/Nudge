@@ -37,6 +37,11 @@ module NudgeType
       @probabilities = options[:probabilities] || {b:1, r:1, v:1, i:1}
       raise(ArgumentError, "probabilities Hash doesn't have necessary keys") unless
         @probabilities.keys.sort == [:b,:i,:r,:v]
+      @probabilities.values.each {|v| raise(ArgumentError, "probabilities must be positive") if v < 0}
+      raise(ArgumentError, "probability values must be positive") unless
+        @probabilities.values.inject(:+) > 0
+      
+      
       @reference_names = options[:reference_names] || []
       @type_names = options[:type_names] ||
         NudgeType::all_types.collect {|t| t.to_nudgecode.to_s}

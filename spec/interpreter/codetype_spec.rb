@@ -1,6 +1,8 @@
 #encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
+
+
 describe "Code Type" do
   
   it "should have a #recognizes? method that returns true if the arg is a string" do
@@ -70,7 +72,10 @@ describe "Code Type" do
         raise_error(ArgumentError)
     end
     
-    it "should raise an exception if there are no positive values in the probabilities table"
+    it "should raise an exception if there are no positive values in the probabilities table" do
+      lambda{StringRewritingGenerator.new(:probabilities => {b:0, r:0, v:0, i:0})}.should raise_error
+      lambda{StringRewritingGenerator.new(:probabilities => {b:-2, r:-8, v:1, i:9})}.should raise_error
+    end
     
     it "should capture an Array in options[:reference_names] into self#reference_names" do
       lambda{StringRewritingGenerator.new(reference_names:["a"])}.should_not raise_error
@@ -233,8 +238,9 @@ describe "Code Type" do
         it "should use the CodeType.any_value call" do
           one_scary_choice = StringRewritingGenerator.new(type_names:["code"])
           CodeType.should_receive(:any_value).and_return("block {}")
-          one_scary_choice.filled_framework('v')[:footnote_part].should == "«code» block {}"
+          one_scary_choice.filled_framework('v')[:footnote_part].should == "«code» block {}"          
         end
+        
         
         it "should reduce the :target_size_in_points in every recursive call" do
           one_scary_choice = StringRewritingGenerator.new(type_names:["code"], target_size_in_points:8)
@@ -244,12 +250,20 @@ describe "Code Type" do
           # writing the rspec matcher for the actual test would be better
         end
         
-        it "should add the footnote strings at the end of :footnote_part in the order they're added in code"
+        it "should add footnotes at the end of :footnote_part in the order they're added in code"
         
         it "should generate any needed sub-footnote values from within other footnote values"
         
         it "should not generate an infinite tree of sub-footnotes"
         
+        # it "should do what I say" do
+        #   my_fave = 
+        #   StringRewritingGenerator.new(target_size_in_points:100,
+        #     type_names:["code","bool","int"],
+        #     reference_names:["x1","x2","x3","g","planck_constant"],
+        #     probabilities:{b:11,v:10,r:4,i:9})
+        #   puts NudgeProgram.new(my_fave.generate).listing.gsub(" ","&nbsp;").gsub("\n","<br />")
+        # end
         
       end
       
@@ -259,9 +273,6 @@ describe "Code Type" do
       
     end
     
-    it "should have a footnote_number option, that can fix the number of them attached"
-    
-    it "should generate as many points as requested"
     
     it "should have a expected number of points" do
       stubby = StringRewritingGenerator.new(target_size_in_points:1)
