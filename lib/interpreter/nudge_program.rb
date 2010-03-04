@@ -146,6 +146,7 @@ module Nudge
     end
     
     
+    
     def delete_point(which)
       raise ArgumentError,"Cannot delete #{which}th program point" if which < 1
       raise ArgumentError,"Cannot delete #{which}th program point" if which > self.points

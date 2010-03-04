@@ -1,7 +1,7 @@
 module Nudge
   require 'open-uri'
   
-  class Experiment
+  class Factory
     attr_reader :name
     attr_accessor :config
     attr_accessor :couch_url
@@ -9,7 +9,7 @@ module Nudge
     attr_accessor :station_names, :objectives
     
     def initialize(options = {})
-      @name = options[:name] || 'default_experiment'
+      @name = options[:name] || 'default_factory'
       @config = Nudge::Config.new
       @instructions = Instruction.all_instructions
       @types = [BoolType, FloatType, IntType]

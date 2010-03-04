@@ -5,7 +5,7 @@ require APP_ROOT + '/config/environment.rb'
 
 include Nudge
 
-spike_experiment = Experiment.new(name:"spike")
+spike_factory = Factory.new(name:"spike")
 
 # couchDB crap
 

@@ -120,6 +120,21 @@ module Nudge
   end
   
   
+  # Returns a Batch of new Individuals whose programs are made by stitching together
+  # the programs of pairs of 'parents'. The incoming Batch is divided into pairs based on
+  # adjacency (modulo the Batch.length), one pair for each 'offspring' to be made. To make
+  # an offspring, the number of backbone program points is determined in each parent; 'backbone'
+  # refers to the number of branches directly within the root of the program, not the entire tree.
+  #
+  # To construct an offspring's program, program points are copied from the first parent with
+  # probability p, or the second parent with probability (1-p), for each point in the first
+  # parent's backbone. So if there are 13 and 6 points, respectively, the first six points are
+  # selected randomly, but the last 7 are copied from the first parent. If there are 8 and 11
+  # respectively, then the last 3 will be ignored from the second parent in any case.
+  #   
+  #   the first (required) parameter is an Array of Individuals
+  #   the second (optional) parameter is how many crossovers to make,
+  #     which defaults to the number of Individuals in the incoming Batch
   
   
   class UniformBackboneCrossoverOperator < SearchOperator
@@ -129,8 +144,10 @@ module Nudge
         where = rand(crowd.length)
         mom = crowd[where]
         dad = crowd[ (where+1) % crowd.length ]
-        xover = "block {\n"
-        (0...mom.program.contents.length).each do |point|
+        mom_length = mom.program[1].contents.length
+        dad_length = dad.program[1].contents.length
+        
+        (0...mom.program[0].contents.length).each do |point|
           if rand() < prob
             xover << mom.program.contents[point].tidy + "\n"
           else

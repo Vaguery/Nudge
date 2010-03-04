@@ -4,9 +4,9 @@ include Nudge
 describe "UniformBackboneCrossoverOperator" do
   before(:each) do
     @newDudes = []
-    @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
+    @options = {target_size_in_points: 6, instruction_names: ["int_add"], type_names: ["int"]}
     @myXover = UniformBackboneCrossoverOperator.new
-    @myGuesser = RandomGuessOperator.new(@params)
+    @myGuesser = RandomGuessOperator.new(@options)
   end
   
   it "should be a kind of SearchOperator" do
