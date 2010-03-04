@@ -54,6 +54,8 @@ module Nudge
   end
   
   
+  
+  
   class ValuePoint < ProgramPoint
     attr_accessor :type, :raw
     attr_reader :value
@@ -101,12 +103,6 @@ module Nudge
       @raw = newType.any_value
     end
     
-    def self.any(context)
-      tmp = ValuePoint.new("foo", nil)
-      tmp.randomize(context)
-      return tmp
-    end
-    
     def listing_parts
       fn = @raw ? "«#{self.type}» #{self.raw}" : ""
       return [self.tidy, fn]
@@ -114,13 +110,9 @@ module Nudge
   end
   
   
-  class ReferencePoint < ProgramPoint
-    def self.any(context)
-      tmp = ReferencePoint.new("e")
-      tmp.randomize(context)
-      return tmp
-    end
-    
+  
+  
+  class ReferencePoint < ProgramPoint    
     attr_accessor :name
     alias value name
     
@@ -155,6 +147,8 @@ module Nudge
       [self.tidy,""]
     end
   end
+  
+  
   
   
   class InstructionPoint < ProgramPoint
@@ -194,12 +188,6 @@ module Nudge
     def randomize(context)
       instructionName = context.instructions.sample.to_s
       @name = instructionName.slice(0..-12).underscore
-    end
-    
-    def self.any(context)
-      tmp = InstructionPoint.new("int_add")
-      tmp.randomize(context)
-      return tmp
     end
     
     def listing_parts

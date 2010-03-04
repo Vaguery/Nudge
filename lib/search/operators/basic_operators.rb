@@ -3,24 +3,22 @@ module Nudge
   # Abstract class that from which specific SearchOperator subclasses inherit initialization
   
   class SearchOperator
-    attr_accessor :params
+    attr_accessor :options
 
-     def initialize(params={})
-       @params = params
+     def initialize(options={})
+       @options = options
      end
   end
   
   
   
   class RandomGuessOperator < SearchOperator
-    attr_accessor :context
+    attr_accessor :incoming_options
+    attr_accessor :code_generator
     
-    def initialize(params ={})
-      @context = InterpreterSettings.new(
-        :instructions => params[:instructions],
-        :references => params[:references],
-        :types => params[:types])
-      super
+    def initialize(options ={})
+      @incoming_options = options
+      @code_generator = StringRewritingGenerator.new(options)
     end
     
     # returns an Array of random Individuals
@@ -38,10 +36,10 @@ module Nudge
     # [<tt>myRandomGuesser.generate(1,:randomIntegerLowerBound => 0)</tt>]
     #   makes one Individual whose IntType samples (if any) will be between [0,100]
     
-    def generate(howMany = 1, tempParams ={})
+    def generate(howMany = 1, overridden_options ={})
       result = Batch.new
       howMany.times do
-        newGenome = CodeType.random_value(@context, @params.merge(tempParams))
+        newGenome = CodeType.any_value(@incoming_options.merge(overridden_options))
         newDude = Individual.new(newGenome)
         newDude.progress = 0
         result << newDude

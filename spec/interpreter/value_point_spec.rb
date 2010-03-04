@@ -139,30 +139,4 @@ describe "ValuePoint" do
       myFUcode.listing_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
     end
   end
-  
-  describe "randomize" do
-    before(:each) do
-      @ii = Interpreter.new()
-      @ii.enable_all_types
-    end
-    
-    it "should return one of the active types (not one of the defined types!)" do
-      myL = ValuePoint.new("int", "77")
-      @ii.disable_all_types
-      @ii.enable(BoolType)
-      myL.randomize(@ii)
-      myL.type.should == :bool
-    end
-  end
-  
-  describe "random CodeType should not be a problem" do
-    it "should have a valid code type and a value that parses" do
-      pending
-      @ii = Interpreter.new()
-      @ii.disable_all_types
-      @ii.disable_all_instructions
-      @ii.enable(CodeType)
-      lambda{ValuePoint.any(@ii)}.should_not raise_error
-    end
-  end
 end

@@ -63,36 +63,5 @@ describe "ReferencePoint" do
       myRP = ReferencePoint.new("bah_8")
       myRP.listing_parts.should == [myRP.tidy,""]
     end
-  end
-  
-  describe "randomize" do
-    it "should set the ReferencePoint's name to a randomly selected channel or name key" do
-      context = Interpreter.new
-      context.reset_variables
-      context.reset_names
-      myC = ReferencePoint.new("a")
-      context.bind_name("y",ValuePoint.new("bool", false))
-      myC.randomize(context)
-      myC.name.should == "y"
-      context.reset_names
-      context.bind_variable("z",ValuePoint.new("bool", false))
-      myC.randomize(context)
-      myC.name.should == "z"
-    end
-  end
-  
-  describe "#any" do
-    it "should be a class method that returns a completely random instance of a ChannelPoint" do
-      context = Interpreter.new
-      context.reset_variables
-      context.reset_names
-      context.bind_name("y",ValuePoint.new("bool", false))
-      rC = ReferencePoint.any(context)
-      rC.name.should == "y"
-      context.reset_names
-      context.bind_variable("d",ValuePoint.new("bool", false))
-      rC = ReferencePoint.any(context)
-      rC.name.should == "d"
-    end
-  end
+  end  
 end
