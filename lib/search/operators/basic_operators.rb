@@ -24,8 +24,8 @@ module Nudge
     # returns an Array of random Individuals
     #
     # the first (optional) parameter specifies how many to make, and defaults to 1
-    # the second (also optional) parameter is a hash or set of hash bindings that
-    # temporarily override those set in the initialization
+    # the second (also optional) parameter is a hash that
+    # can temporarily override those set in the initialization
     #
     # For example, if
     # <tt>myRandomGuesser = RandomGuessOperator.new(:randomIntegerLowerBound => -90000)</tt>
