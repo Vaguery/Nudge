@@ -677,7 +677,7 @@ Gem::Specification.new do |s|
      "spec/parsers/reference_parser_spec.rb",
      "spec/parsers/value_parser_spec.rb",
      "spec/search/batch_spec.rb",
-     "spec/search/experiments/experiment_spec.rb",
+     "spec/search/factories/factory_spec.rb",
      "spec/search/helpers_spec.rb",
      "spec/search/individual_spec.rb",
      "spec/search/operators/any_one_sampler_spec.rb",

@@ -4,16 +4,16 @@ include Nudge
 describe "PointMutationOperator" do
   describe "initialization" do
     it "should have a params attribute when created that sets basic values for code generation" do
-      PointMutationOperator.new.params.should == {}
+      PointMutationOperator.new.incoming_options.should == {}
       mutator = PointMutationOperator.new(:points => 3, :blocks => 1)
-      mutator.params.should_not == {}
-      mutator.params[:points].should == 3
+      mutator.incoming_options.should_not == {}
+      mutator.incoming_options[:points].should == 3
     end
   end
   
   describe "generate" do
     before(:each) do
-      @gammaray = PointMutationOperator.new(:points => 3, :types => [IntType])
+      @gammaray = PointMutationOperator.new(target_size_in_points: 3, types_name: ["int"])
       @dude1 = Individual.new("block { do x1 \n do x2 \n do x3}")
     end
     
@@ -31,7 +31,7 @@ describe "PointMutationOperator" do
     end
     
     it "should use Individual#replace_point to produce the variants" do
-      @dude1.should_receive(:replace_point).and_return("do anything")
+      @dude1.should_receive(:replace_point_or_clone).and_return("do anything")
       @gammaray.generate([@dude1])
     end
     
@@ -60,7 +60,7 @@ describe "PointMutationOperator" do
       @gammaray.should_receive(:rand).and_return(0)
       @gammaray.generate([@dude1])[0].points.should == 3 # totally replaced with 3-pt code
       @gammaray.should_receive(:rand).and_return(0)
-      @gammaray.generate([@dude1],1,:points => 10)[0].points.should == 10
+      @gammaray.generate([@dude1],1,target_size_in_points: 10)[0].points.should == 10
     end
     
     it "should increment the #progress of the offspring" do

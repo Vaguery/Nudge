@@ -176,7 +176,15 @@ describe "Individual" do
       @wildtype.replace_point_or_clone(4,"value «up»\n«up» down").listing.should include("«up» down")
     end
     
-    it "should not affect extra (unused) footnotes"
+    it "should not affect extra (unused) footnotes" do
+      has_leftovers = Individual.new("block {}\n«int» 7")
+      prefatory = "value «float»\n«float» 1.2"
+      
+      has_leftovers.replace_point_or_clone(1,prefatory).listing.should ==
+        "value «float» \n«float» 1.2\n«int» 7"
+    end
+    
+    
     
   end
   

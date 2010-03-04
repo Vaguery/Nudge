@@ -18,11 +18,6 @@ describe "random_guess operator" do
     thisGuesser.incoming_options[:foo].should == 99
   end
   
-  it "should create a persistent StringRewritingGenerator instance and pass through options" do
-    my_maker = RandomGuessOperator.new
-    my_maker.code_generator.should be_a_kind_of(StringRewritingGenerator)
-    my_maker.code_generator.incoming_options.should == my_maker.incoming_options
-  end
   
   it "should produce a Batch of Individuals when it receives #generate" do
     newDudes = @myGuesser.generate

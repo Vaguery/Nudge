@@ -59,33 +59,37 @@ describe "Nudge Program parsing" do
   
     describe ": trimming whitespace from footnote values" do
       it "should ignore leading whitespace" do
-        NudgeProgram.new("value «baz» \n«baz»\t\t8").parsed_footnotes[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»\n\n\n\n8").parsed_footnotes[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»      8").parsed_footnotes[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»8").parsed_footnotes[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»\t\t8").tokenized_footnote_section[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»\n\n\n\n8").tokenized_footnote_section[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»      8").tokenized_footnote_section[:baz][0].should == "8"
+        NudgeProgram.new("value «baz» \n«baz»8").tokenized_footnote_section[:baz][0].should == "8"
       end
       
       it "should should ignore trailing whitespace" do
-        NudgeProgram.new("value «foo» \n«foo» 9\t\t").parsed_footnotes[:foo][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").parsed_footnotes[:foo][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9     ").parsed_footnotes[:foo][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9\t\t").tokenized_footnote_section[:foo][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").tokenized_footnote_section[:foo][0].should == "9"
+        NudgeProgram.new("value «foo» \n«foo» 9     ").tokenized_footnote_section[:foo][0].should == "9"
       end
       
       it "should capture whitespace inside values" do
-        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").parsed_footnotes[:bar][0].should == "9\t\t9"
-        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").parsed_footnotes[:bar][0].should == "9\n\n\n\n9"
-        NudgeProgram.new("value «bar» \n«bar» 9     9").parsed_footnotes[:bar][0].should == "9     9"
+        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").tokenized_footnote_section[:bar][0].should == "9\t\t9"
+        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").tokenized_footnote_section[:bar][0].
+          should == "9\n\n\n\n9"
+        NudgeProgram.new("value «bar» \n«bar» 9     9").tokenized_footnote_section[:bar][0].should == "9     9"
       end
       
       it "should trim whitespace between footnotes" do
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.length.should == 2
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.should include(:bar)
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").parsed_footnotes.keys.should include(:baz)
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
+          tokenized_footnote_section.keys.length.should == 2
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
+          tokenized_footnote_section.keys.should include(:bar)
+        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
+          tokenized_footnote_section.keys.should include(:baz)
       end
       
       it "should avoid capturing newlines between footnotes" do
         known_risk = NudgeProgram.new("block {value «mya»\nvalue «myb»}\n«myb» this is a b\n«mya» a")
-        known_risk.parsed_footnotes[:myb][0].should == "this is a b"
+        known_risk.tokenized_footnote_section[:myb][0].should == "this is a b"
       end
     end
   end
@@ -499,6 +503,22 @@ block { value «int» value «code» value «int»}
     end
   end
   
+  
+  describe "#cleanup_strings_from_linked_code!" do
+    it "should [re-]derive the NudgeProgram's #raw_code, #code_section and #footnote_section" do
+      mess_with_me = NudgeProgram.new("value «foo»\n«foo» bar\n«baz» qux")
+      mess_with_me.raw_code = "oh, that's really funny"
+      mess_with_me.code_section = "totally: ha"
+      mess_with_me.footnote_section = "no, really, I am laughing"
+      
+      mess_with_me.cleanup_strings_from_linked_code!
+      mess_with_me.raw_code.should_not == "oh, that's really funny"
+      mess_with_me.footnote_section.should == "«foo» bar\n«baz» qux"
+      
+    end
+  end
+  
+  
   describe "#replace_point method" do
     before(:each) do
       @bigger_tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
@@ -570,6 +590,22 @@ block { value «int» value «code» value «int»}
       valueful.replace_point(3,addedvalue).listing.should ==
         "block {\n  value «code»\n  value «foo»} \n«code» block {value «int»}\n«int» 7\n«foo» •••"
     end 
+    
+    it "should synchronize the #raw_code, #footnote_section #code_section strings" do
+      starting_from = NudgeProgram.new("value «foo»\n«foo» bar\n«baz» qux")
+      starting_raw = starting_from.raw_code
+      starting_code = starting_from.code_section
+      starting_fn = starting_from.footnote_section
+      
+      revised = starting_from.replace_point(1,CodeblockPoint.new)
+      
+      revised.listing.should == "block {} \n«baz» qux"
+      revised.raw_code.should == "block {} \n«baz» qux"
+      revised.footnote_section.should == "«baz» qux"
+      revised.code_section.should == "block {}"
+    end
+    
+    
   end
   
   

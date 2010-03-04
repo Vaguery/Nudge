@@ -6,9 +6,9 @@ Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treet
 module Nudge
   class NudgeProgram
     
-    attr_accessor :code_section, :footnote_section
     attr_accessor :linked_code,:footnotes
-    attr_reader :raw_code
+    attr_accessor :raw_code
+    attr_accessor :code_section, :footnote_section
     attr_reader :parser
     attr_reader :points
     
@@ -23,15 +23,17 @@ module Nudge
     end
     
     
+    
     def program_split!
       split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
       @code_section = split_at_first_guillemet[0].strip
       @footnote_section = split_at_first_guillemet[2].strip
-      @footnotes = parsed_footnotes
+      @footnotes = tokenized_footnote_section
     end
     
     
-    def parsed_footnotes
+    
+    def tokenized_footnote_section
       shattered = @footnote_section.split( /^(?=«)/ )
       breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
       pairs = shattered.collect {|fn| fn.match(breaker)[1..2]}
@@ -44,6 +46,7 @@ module Nudge
     end
     
     
+    
     def relink_code!
       if parses?
         @linked_code = @parser.parse(@code_section).to_point
@@ -52,6 +55,7 @@ module Nudge
         @linked_code = nil
       end
     end
+    
     
     
     def depth_first_association!(program_point=@linked_code)
@@ -66,6 +70,7 @@ module Nudge
         program_point.contents.each {|branch| depth_first_association!(branch)}
       end
     end
+    
     
     
     def pursue_more_footnotes(codepoint_as_string, collected_footnotes = "")
@@ -93,6 +98,7 @@ module Nudge
     end
     
     
+    
     def unused_footnotes
       leftovers = []
       @footnotes.each do |key,val|
@@ -100,7 +106,6 @@ module Nudge
       end
       return leftovers
     end
-    
     
     
     
@@ -116,6 +121,7 @@ module Nudge
       end
       return result
     end
+    
     
     
     def deep_copy
@@ -142,6 +148,7 @@ module Nudge
         parent.contents[parent_index] = new_junk
       end
       
+      result.cleanup_strings_from_linked_code!
       return result
     end
     
@@ -162,8 +169,20 @@ module Nudge
         parent_index = parent.contents.find_index(to_delete)
         parent.contents.delete_at(parent_index)
       end
+      
+      result.cleanup_strings_from_linked_code!
       return result
     end
+    
+    
+    
+    def cleanup_strings_from_linked_code!
+      @raw_code = self.listing
+      split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
+      @code_section = split_at_first_guillemet[0].strip
+      @footnote_section = split_at_first_guillemet[2].strip
+    end
+    
     
     
     def parses?(program_listing = @code_section)
@@ -171,10 +190,12 @@ module Nudge
     end
     
     
+    
     def tidy
       framework = NudgeCodeblockParser.new.parse(@code_section)
       framework ? framework.tidy : ""
     end
+    
     
     
     def listing
@@ -188,6 +209,7 @@ module Nudge
     end
     
     
+    
     def contains_codevalues?(program_listing = @raw_code)
       (program_listing =~ /value\s*«code»/) != nil
     end
@@ -195,6 +217,7 @@ module Nudge
     def contains_valuepoints?(program_listing = @raw_code)
       (program_listing =~ /value\s*«[\p{Alpha}][_\p{Alnum}]*»/) != nil
     end
+    
     
     
     def points

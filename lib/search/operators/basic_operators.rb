@@ -14,11 +14,9 @@ module Nudge
   
   class RandomGuessOperator < SearchOperator
     attr_accessor :incoming_options
-    attr_accessor :code_generator
     
     def initialize(options ={})
       @incoming_options = options
-      @code_generator = StringRewritingGenerator.new(options)
     end
     
     # returns an Array of random Individuals
@@ -68,10 +66,9 @@ module Nudge
       result = Batch.new
       howMany.times do
         donor = crowd.sample
-        newGenome = donor.genome.clone
-        newDude = Individual.new(newGenome)
-        newDude.progress = donor.progress + 1
-        result << newDude
+        clone = Individual.new(donor.genome)
+        clone.progress = donor.progress + 1
+        result << clone
       end
       return result
     end
@@ -144,22 +141,27 @@ module Nudge
         where = rand(crowd.length)
         mom = crowd[where]
         dad = crowd[ (where+1) % crowd.length ]
-        mom_length = mom.program[1].contents.length
-        dad_length = dad.program[1].contents.length
+        mom_backbone_length = mom.program[1].contents.length
+        dad_backbone_length = dad.program[1].contents.length
         
-        (0...mom.program[0].contents.length).each do |point|
+        baby_blueprint_parts = ["",""]
+        (0..mom_backbone_length-1).each do |backbone_point|
           if rand() < prob
-            xover << mom.program.contents[point].tidy + "\n"
+            next_chunks = mom.program[1].contents[backbone_point].listing_parts || ["",""]
           else
-            begin
-              xover << dad.program.contents[point].tidy + "\n"
-            rescue
-              xover << mom.program.contents[point].tidy + "\n"
+            if backbone_point < dad_backbone_length
+              next_chunks = (dad.program[1].contents[backbone_point].listing_parts || ["", ""])
+            else
+              next_chunks = ["",""]
             end
           end
+          baby_blueprint_parts[0] << " #{next_chunks[0]}"
+          baby_blueprint_parts[1] << " \n#{next_chunks[1]}"
         end
-        xover << "}"
-        baby = Individual.new(xover)
+        mom.program.unused_footnotes.each {|fn| baby_blueprint_parts[1] += "\n#{fn}"}
+        
+        baby_blueprint = "block {#{baby_blueprint_parts[0]}} #{baby_blueprint_parts[1]}"
+        baby = Individual.new(baby_blueprint)
         baby.progress = [mom.progress,dad.progress].max + 1
         
         result << baby
@@ -181,10 +183,11 @@ module Nudge
       production.times do
         mom = crowd.sample
         dad = crowd.sample
-        momSplit = mom.isolate_point(rand(mom.points)+1)
-        dadSplit = dad.isolate_point(rand(dad.points)+1)
-        babyGenome = (momSplit[:left] || "") + " #{dadSplit[:middle]} " + (momSplit[:right] || "")
-        baby = Individual.new(babyGenome)
+        mom_receives = rand(mom.points) + 1
+        dad_donates = rand(dad.points) + 1
+        
+        baby_genome = mom.replace_point_or_clone(mom_receives,dad.program[dad_donates])
+        baby = Individual.new(baby_genome)
         baby.progress = [mom.progress,dad.progress].max + 1
         result << baby
       end
@@ -217,15 +220,13 @@ module Nudge
   
   
   class PointMutationOperator < SearchOperator
-    attr_accessor :context
+    attr_accessor :incoming_options
     
-    def initialize(params ={})
-      @context = InterpreterSettings.new(:instructions => params[:instructions],
-        :references => params[:references], :types => params[:types])
-      super
+    def initialize(options ={})
+      @incoming_options = options
     end
     
-    def generate(crowd, howManyCopies = 1, tempParams ={})
+    def generate(crowd, howManyCopies = 1, overridden_options ={})
       raise(ArgumentError) if !crowd.kind_of?(Array)
       raise(ArgumentError) if crowd.empty?
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
@@ -234,8 +235,8 @@ module Nudge
       crowd.each do |dude|
         howManyCopies.times do
           where = rand(dude.points)+1
-          newCode = CodeType.random_value(@context, @params.merge(tempParams))
-          variant = dude.replace_point(where,newCode)
+          newCode = CodeType.any_value(@incoming_options.merge(overridden_options))
+          variant = dude.replace_point_or_clone(where,newCode)
           baby = Individual.new(variant)
           baby.progress = dude.progress + 1
           result << baby 
