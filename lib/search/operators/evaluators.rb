@@ -16,7 +16,13 @@ module Nudge
   class ProgramPointEvaluator < Evaluator
     def evaluate(batch)
       raise(ArgumentError, "Can only evaluate a Batch of Individuals") if !batch.kind_of?(Batch)
-      batch.each {|i| i.scores[@name] = i.points}
+      batch.each do |i|
+        if i.parses?
+          i.scores[@name] = i.points
+        else
+          raise(ArgumentError, "Program is not parseable")
+        end
+      end
     end
   end
   
