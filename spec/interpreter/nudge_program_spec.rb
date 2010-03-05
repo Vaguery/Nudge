@@ -605,6 +605,12 @@ block { value «int» value «code» value «int»}
       revised.code_section.should == "block {}"
     end
     
+    it "should not affect unused footnotes" do
+      unclear_on_concept = NudgeProgram.new("value «int»\n«bool» false")
+      unclear_on_concept.replace_point(1,ReferencePoint.new("x")).footnote_section.should == "«bool» false"
+    end
+    
+    
     
   end
   
@@ -626,11 +632,11 @@ block { value «int» value «code» value «int»}
       lambda{@tree_with_values.delete_point(10000)}.should raise_error(ArgumentError)
     end
     
-    it "should return a new empty NudgeProgram if which=1" do
+    it "should return a NudgeProgram with code 'block {}' if which=1" do
       result = @tree_with_values.delete_point(1)
       result.should be_a_kind_of(NudgeProgram)
-      result.listing.should == ""
-      result.linked_code.should == nil
+      result.listing.should == "block {}"
+      result.linked_code.should_not == nil
     end
     
     it "should not damage the invoking NudgeProgram" do
@@ -647,7 +653,7 @@ block { value «int» value «code» value «int»}
     it "should return a new NudgeProgram with the right ProgramPoint deleted" do
       # "block {\n  block {\n    block {\n      block {\n        block {\n          block {\n            ref a}}}}}}"
       result = @lodgepole_tree.delete_point(1)
-      result.listing.should == ""
+      result.listing.should == "block {}"
       
       result = @lodgepole_tree.delete_point(2)
       result.listing.should == "block {}"     
@@ -664,13 +670,18 @@ block { value «int» value «code» value «int»}
         "block {value «code» value «code»}\n«code»block {value «int»}\n«int» 7\n«code» value «bool»")
       
       valueful.delete_point(1).listing.should ==
-        ""
+        "block {}"
         
       valueful.delete_point(2).listing.should ==
         "block {\n  value «code»} \n«code» value «bool»"
         
       valueful.delete_point(3).listing.should ==
         "block {\n  value «code»} \n«code» block {value «int»}\n«int» 7"
-    end 
+    end
+    
+    it "should not delete unused footnotes" do
+      unclear_on_concept = NudgeProgram.new("value «int»\n«bool» false")
+      unclear_on_concept.delete_point(1).listing.should == "block {} \n«bool» false"
+    end
   end
 end

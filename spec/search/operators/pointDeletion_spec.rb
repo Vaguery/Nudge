@@ -26,7 +26,7 @@ describe "PointDeleteOperator search operator" do
     end
     
     it "should use Individual#delete_point to produce the variants" do
-      @dude1.should_receive(:delete_point).and_return("do parseable")
+      @dude1.should_receive(:delete_point_or_clone).and_return("do parseable")
       @zapper.generate([@dude1])
     end
     

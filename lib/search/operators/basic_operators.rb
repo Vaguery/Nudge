@@ -1,23 +1,19 @@
+#encoding: utf-8
 module Nudge
 
   # Abstract class that from which specific SearchOperator subclasses inherit initialization
   
   class SearchOperator
-    attr_accessor :options
+    attr_accessor :incoming_options
 
      def initialize(options={})
-       @options = options
+       @incoming_options = options
      end
   end
   
   
   
   class RandomGuessOperator < SearchOperator
-    attr_accessor :incoming_options
-    
-    def initialize(options ={})
-      @incoming_options = options
-    end
     
     # returns an Array of random Individuals
     #
@@ -77,42 +73,39 @@ module Nudge
   
   class ResampleValuesOperator < SearchOperator
     
-    # returns an Array of clones of Individuals randomly selected from the crowd passed in
-    #   the first (required) parameter is an Array of Individuals
-    #   the second (optional) parameter is how many samples to take, and defaults to 1
-    #
-    #   For example, if
-    #     @currentPopulation = [a list of 300 Individuals]
-    #     myRandomSampler = ResampleAndCloneOperator.new(@currentPopulation)
-    #     myRandomSampler.generate()::
-    #       produces a list of 1 Individual, which is a clone of somebody from @currentPopulation
-    #     myRandomGuesser.generate(11)::
-    #       returns a list of 11 Individuals cloned from @currentPopulation, possibly including repeats
-    
-    def generate(crowd, howManyCopies = 1, parameter_overrides = {})
+    def generate(crowd, howManyCopies = 1, overridden_options = {})
       crowd.each {|dude| raise(ArgumentError) if !dude.kind_of?(Individual) }
       
       result = Batch.new
-      tempParams = @params.merge(parameter_overrides)
+      regenerating_options = @incoming_options.merge(overridden_options)
       crowd.each do |dude|
-        wildtype = dude.program.listing
         howManyCopies.times do
-          novelty = ""
-          wildtype.each_line do |line|
-            line = line.sub(/\((.*)\)/,
-              "(#{IntType.random_value(tempParams)})") if line.include?("sample int")
-            line = line.sub(/\((.*)\)/,
-              "(#{BoolType.random_value(tempParams)})") if line.include?("sample bool")
-            line = line.sub(/\((.*)\)/,
-              "(#{FloatType.random_value(tempParams)})") if line.include?("sample float")
-            novelty << line
+          wildtype_program = dude.program
+          starting_footnotes = wildtype_program.footnote_section.split( /^(?=«)/ )
+          breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»\s*(.*)\s*/m
+          type_value_pairs = starting_footnotes.collect {|fn| fn.match(breaker)[1..2]}
+          
+          mutant_genome = wildtype_program.code_section
+          
+          type_value_pairs.each do |pair|
+            
+            begin
+              type_name = pair[0]
+              type_class = "#{type_name}_type".camelize.constantize
+              reduced_size = regenerating_options[:target_size_in_points] || rand(dude.points/2)
+              reduced_option = {target_size_in_points:reduced_size}
+              resampled_value = type_class.any_value(regenerating_options.merge(reduced_option)).to_s
+            rescue NameError
+              resampled_value = pair[1]
+            end            
+            mutant_genome << "\n«#{pair[0].strip}» #{resampled_value.strip}"
           end
-          mutant = Individual.new(novelty)
+          mutant = Individual.new(mutant_genome)
           mutant.progress = dude.progress + 1
           result << mutant
         end
       end
-      result
+      return result
     end
   end
   
@@ -207,7 +200,7 @@ module Nudge
       crowd.each do |dude|
         howManyCopies.times do
           where = rand(dude.points)+1
-          variant = dude.delete_point(where)
+          variant = dude.delete_point_or_clone(where)
           baby = Individual.new(variant)
           baby.progress = dude.progress + 1
           result << baby
@@ -220,11 +213,6 @@ module Nudge
   
   
   class PointMutationOperator < SearchOperator
-    attr_accessor :incoming_options
-    
-    def initialize(options ={})
-      @incoming_options = options
-    end
     
     def generate(crowd, howManyCopies = 1, overridden_options ={})
       raise(ArgumentError) if !crowd.kind_of?(Array)

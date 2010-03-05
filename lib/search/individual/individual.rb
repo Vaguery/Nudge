@@ -84,6 +84,14 @@ module Nudge
     
     
     def delete_point_or_clone(which)
+      
+      if (which < 1 || which > self.points)
+        result = self.program.deep_copy
+      else
+        result = self.program.delete_point(which)
+      end
+      
+      return result
     end
     
     

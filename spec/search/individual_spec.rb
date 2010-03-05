@@ -193,23 +193,41 @@ describe "Individual" do
   
   describe "delete_point_or_clone" do
     before(:each) do
-      @clipper = Individual.new("block {do some1 \n do some2 \n block {\n do some3}}")
+      @clipper = Individual.new("block {do some1 \n do some2 \n block {\n value «a»}}\n«a» b")
     end
     
-    it "should return a NudgeProgram"
+    it "should return a NudgeProgram" do
+      @clipper.delete_point_or_clone(2).should be_a_kind_of(NudgeProgram)
+    end
     
-    it "should return a clone of the calling Individual's program if the point is out of bounds"
+    it "should return a clone of the calling Individual's program if the point is out of bounds" do
+      @clipper.delete_point_or_clone(-12).listing.should == @clipper.genome
+      @clipper.delete_point_or_clone(912).listing.should == @clipper.genome
+    end
     
+    it "should return a NudgeProgram with at least one fewer program points (if the range is OK)" do
+      @clipper.delete_point_or_clone(2).points.should < @clipper.points
+    end
     
-    it "should return a NudgeProgram with at least one fewer program points (if the range is OK)"
+    it "should delete the expected specific point (and any subpoints it has)" do
+      @clipper.delete_point_or_clone(2).listing.should ==
+        "block {\n  do some2\n  block {\n    value «a»}} \n«a» b"
+      @clipper.delete_point_or_clone(4).listing.should ==
+        "block {\n  do some1\n  do some2}"
+    end
     
-    it "should delete the expected specific point (and any subpoints it has)"
+    it "should return NudgeProgram.new('') when the entire program is deleted" do
+      @clipper.delete_point_or_clone(1).listing.should == "block {}"
+    end
     
-    it "should return NudgeProgram.new('block {}') when the entire program is deleted"
+    it "should delete the footnotes associated with a point it deletes" do
+      @clipper.delete_point_or_clone(4).footnote_section.should == ""
+    end
     
-    it "should delete the footnotes associated with a point it deletes"
-    
-    it "should not delete extra footnotes"
+    it "should not delete extra footnotes" do
+      unclear_on_concept = Individual.new("value «a»\n«b» c")
+      unclear_on_concept.delete_point_or_clone(1).footnote_section.should == "«b» c"
+    end
   end
   
   

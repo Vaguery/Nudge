@@ -159,7 +159,8 @@ module Nudge
       raise ArgumentError,"Cannot delete #{which}th program point" if which > self.points
       
       if which == 1
-        result = NudgeProgram.new("")
+        result = NudgeProgram.new("block {}")
+        result.footnotes = self.footnotes
       else
         result = self.deep_copy
         to_delete = result[which]

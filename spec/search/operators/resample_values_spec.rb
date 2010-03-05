@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "./../../spec_helper")
 include Nudge
 
@@ -8,18 +9,19 @@ describe "ResampleValuesOperator search operator" do
   end
   
   it "should be possible to pass in stored parameters" do
-    lambda{ResampleValuesOperator.new(:randomIntegerLowerBound => 12)}.should_not raise_error
-    rs = ResampleValuesOperator.new({:boolTrueProbability => 0.2})
-    rs.params.should include(:boolTrueProbability)
+    lambda{ResampleValuesOperator.new(randomIntegerLowerBound: 12)}.should_not raise_error
+    rs = ResampleValuesOperator.new({boolTrueProbability: 0.2})
+    rs.incoming_options.should include(:boolTrueProbability)
   end
   
   describe "generate" do
     before(:each) do
-      @rs = ResampleValuesOperator.new({:boolTrueProbability => 0.2})
-      @intDude = Individual.new("block {sample int(3)}")
-      @boolDude = Individual.new("block {sample bool(false)}")
-      @floatDude = Individual.new("block {sample float(-991.2213)}")
-      @complicatedDude = Individual.new("block {sample int(3) sample bool(false) block {sample float(0.0)}}")
+      @rs = ResampleValuesOperator.new({boolTrueProbability: 0.2})
+      @intDude = Individual.new("block {value «int»}\n«int» 3")
+      @boolDude = Individual.new("block {value «bool»}\n«bool» false")
+      @floatDude = Individual.new("block {value «float»}\n«float» -991.2213")
+      @complicatedDude = Individual.new(
+        "block {value «int» value «bool» block {value «float»}}\n«int» 3\n«bool» false\n«float» 0.0")
     end
     
     it "should require a Batch as a first parameter" do
@@ -37,36 +39,36 @@ describe "ResampleValuesOperator search operator" do
       @rs.generate([@intDude, @intDude]).length.should == 2
     end
     
-    it "should call #random_value for each line in each individual that is a 'sample'" do
-      IntType.should_receive(:random_value).and_return(777)
+    it "should call #any_value for each line in each individual that is a 'sample'" do
+      IntType.should_receive(:any_value).and_return(777)
       newGuys = @rs.generate([@intDude])
-      BoolType.should_receive(:random_value).and_return(false)
+      
+      BoolType.should_receive(:any_value).and_return(false)
       newGuys = @rs.generate([@boolDude])
-      FloatType.should_receive(:random_value).and_return(9.999)
+      
+      FloatType.should_receive(:any_value).and_return(9.999)
       newGuys = @rs.generate([@floatDude])
-      IntType.should_receive(:random_value).and_return(777)
-      BoolType.should_receive(:random_value).and_return(false)
-      FloatType.should_receive(:random_value).and_return(9.999)
+      
+      IntType.should_receive(:any_value).and_return(777)
+      BoolType.should_receive(:any_value).and_return(false)
+      FloatType.should_receive(:any_value).and_return(9.999)
       newGuys = @rs.generate([@complicatedDude])
       
-      IntType.should_receive(:random_value).and_return(1,2)
-      BoolType.should_receive(:random_value).and_return(false,true)
-      FloatType.should_receive(:random_value).and_return(1.0,2.0)
-      newGuys = @rs.generate([@intDude,@boolDude,@floatDude,@complicatedDude],1)
-      newGuys[0].genome.should include "1"
-      newGuys[1].genome.should include "false"
-      newGuys[2].genome.should include "1.0"
-      newGuys[3].genome.should include "2.0"
+      IntType.should_receive(:any_value).and_return(1,2)
+      BoolType.should_receive(:any_value).and_return(false,true)
+      FloatType.should_receive(:any_value).and_return(1.0,2.0)
+      oldGuys = [@intDude,@boolDude,@floatDude,@complicatedDude]
+      newGuys = @rs.generate(oldGuys,1)
     end
     
     it "should be possible to pass in a higher integer, and get that many variants for each input" do
-      IntType.should_receive(:random_value).and_return(11,22,33)
+      IntType.should_receive(:any_value).and_return(11,22,33)
       newGuys = @rs.generate([@intDude],3)
       newGuys[0].genome.should include("11")
       newGuys[1].genome.should include("22")
       newGuys[2].genome.should include("33")
       
-      IntType.should_receive(:random_value).and_return(4,5,6,7)
+      IntType.should_receive(:any_value).and_return(4,5,6,7)
       newGuys = @rs.generate([@intDude, @intDude],2)
     end
     
@@ -80,13 +82,13 @@ describe "ResampleValuesOperator search operator" do
       
       resampleLimited = ResampleValuesOperator.new(wholeLottaParams)
       
-      IntType.should_receive(:random_value).with(wholeLottaParams)
+      IntType.should_receive(:any_value).with(hash_including(wholeLottaParams))
       newGuys = resampleLimited.generate([@intDude])
       
-      BoolType.should_receive(:random_value).with(wholeLottaParams)
+      BoolType.should_receive(:any_value).with(hash_including(wholeLottaParams))
       newGuys = resampleLimited.generate([@boolDude])
       
-      FloatType.should_receive(:random_value).with(wholeLottaParams)
+      FloatType.should_receive(:any_value).with(hash_including(wholeLottaParams))
       newGuys = resampleLimited.generate([@floatDude])
     end
     
@@ -121,6 +123,13 @@ describe "ResampleValuesOperator search operator" do
       @complicatedDude.progress = 192
       @rs.generate([@complicatedDude],5).each {|clone| clone.progress.should == 193}
     end
+    
+    it "should leave unrecognized types with footnote values in place" do
+      hunh = Individual.new("value «foo»\n«foo» bar")
+      ResampleValuesOperator.new.generate([hunh])[0].genome.should include("bar")
+    end
+    
+    it "should work with CodeType footnotes, and reduce the number of points in each successive call"
   end
   
 end

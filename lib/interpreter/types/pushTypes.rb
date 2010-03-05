@@ -68,7 +68,7 @@ module NudgeType
     end
 
     def self.any_value(options ={})
-      self.random_value
+      self.random_value(options)
     end
   end
 
@@ -92,7 +92,7 @@ module NudgeType
     end
     
     def self.any_value(options ={})
-      self.random_value
+      self.random_value(options)
     end
   end
 
@@ -122,7 +122,7 @@ module NudgeType
     end
     
     def self.any_value(options ={})
-      self.random_value
+      self.random_value(options)
     end
   end
 end
