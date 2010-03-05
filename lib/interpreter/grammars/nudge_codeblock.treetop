@@ -1,0 +1,17 @@
+require 'nudge'
+
+
+grammar NudgeCodeblock
+  include NudgeCommon
+  include NudgeReference
+  include NudgeInstruction
+  include NudgeValue
+  
+  rule codesection
+    value / instruction / reference / (block_statement <CodeblockParseNode>)
+  end
+  
+  rule block_statement
+    'block' spcs? '{' spcs? block_contents:(codesection spcs?)* '}' 
+  end
+end

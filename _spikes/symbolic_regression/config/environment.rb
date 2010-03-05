@@ -1,49 +1,40 @@
-Nudge::Config.setup do |experiment|
+Nudge::Config.setup do |factory|
   
   # set up instructions
-  experiment.instructions =
-    [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction, IntSubtractInstruction,
-    IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-    IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-    IntMinInstruction, IntPopInstruction, IntRotateInstruction, IntShoveInstruction,
-    IntDepthInstruction, IntSwapInstruction, IntYankInstruction, IntYankdupInstruction, IntAbsInstruction,
-    IntIfInstruction, IntNegativeInstruction, BoolEqualQInstruction, BoolAndInstruction,
-    BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-    BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-    BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-    BoolYankdupInstruction, BoolXorInstruction]
+  factory.instructions =
+    [99]
     
   
   # set up variable names
-  experiment.variable_names = ["x1", "x2"]
+  factory.variable_names = ["x1", "x2"]
   
   # set up types
-  experiment.types = [IntType, BoolType]
+  factory.types = [IntType, BoolType]
   
   # set up stations
-  experiment.build_station("generator1",
+  factory.build_station("generator1",
     :capacity => 1,
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
-        :instructions => experiment.instructions,
-        :references => experiment.variable_names,
-        :types => experiment.types).generate(1,:points => rand(20)+10)
+        :instructions => factory.instructions,
+        :references => factory.variable_names,
+        :types => factory.types).generate(1,:points => rand(20)+10)
       },
     :promotion_rule => Proc.new {|anybody| true}
   )
     
-  experiment.build_station("generator2",
+  factory.build_station("generator2",
     :capacity => 1,
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
-        :instructions => experiment.instructions,
-        :references => experiment.variable_names,
-        :types => experiment.types).generate(1,:points => rand(30)+20)
+        :instructions => factory.instructions,
+        :references => factory.variable_names,
+        :types => factory.types).generate(1,:points => rand(30)+20)
       },
     :promotion_rule => Proc.new {|anybody| true}
   )
   
-  experiment.build_station("level1",
+  factory.build_station("level1",
     :capacity => 100,
     :generate_rule => Proc.new do |pop|
       if pop.length > 80
@@ -85,7 +76,7 @@ Nudge::Config.setup do |experiment|
           )
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
         myCases = (-10..10).collect do |i|
-          TestCase.new(:bindings => {"x1" => LiteralPoint.new("int",i)},
+          TestCase.new(:bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -117,7 +108,7 @@ Nudge::Config.setup do |experiment|
     :promotion_rule => Proc.new {|dude| dude.progress > 10}
   )
   
-  experiment.build_station("level2",
+  factory.build_station("level2",
     :capacity => 100,
     :generate_rule => Proc.new do |pop|
 
@@ -155,7 +146,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -188,7 +179,7 @@ Nudge::Config.setup do |experiment|
   )
   
   
-  experiment.build_station("level3",
+  factory.build_station("level3",
     :capacity => 100,
     :generate_rule => Proc.new do |pop|
 
@@ -226,7 +217,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -259,7 +250,7 @@ Nudge::Config.setup do |experiment|
   )
   
   
-  experiment.build_station("level4",
+  factory.build_station("level4",
     :capacity => 100,
     :generate_rule => Proc.new do |pop|
       
@@ -296,7 +287,7 @@ Nudge::Config.setup do |experiment|
         
         myCases = (-10..10).collect do |i|
           TestCase.new(
-            :bindings => {"x1" => LiteralPoint.new("int",i)},
+            :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
           )
@@ -331,10 +322,10 @@ Nudge::Config.setup do |experiment|
   
   
   
-  experiment.connect_stations("generator1", "level1")
-  experiment.connect_stations("generator2", "level1")
-  experiment.connect_stations("level1", "level2")
-  experiment.connect_stations("level2", "level3")
-  experiment.connect_stations("level3", "level4")
+  factory.connect_stations("generator1", "level1")
+  factory.connect_stations("generator2", "level1")
+  factory.connect_stations("level1", "level2")
+  factory.connect_stations("level2", "level3")
+  factory.connect_stations("level3", "level4")
   
 end

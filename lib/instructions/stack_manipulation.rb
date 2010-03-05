@@ -163,10 +163,10 @@ module DuplicateInstruction
     needs @target_stack, 1
   end
   def setup
-    @arg1 = @context.stacks[@target_stack].peek.value
+    @arg1 = @context.stacks[@target_stack].peek
   end
   def derive
-    @result = LiteralPoint.new(@target_stack.to_s,@arg1)
+    @result = @arg1.clone
   end
   def cleanup
     pushes @target_stack, @result
@@ -322,7 +322,7 @@ module DepthInstruction
   def setup
   end
   def derive
-    @result = LiteralPoint.new("int",@context.stacks[@target_stack].depth)
+    @result = ValuePoint.new("int",@context.stacks[@target_stack].depth.to_s)
   end
   def cleanup
     pushes :int, @result

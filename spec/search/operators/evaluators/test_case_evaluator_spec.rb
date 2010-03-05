@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "./../../../spec_helper")
 include Nudge
 
@@ -49,17 +50,17 @@ describe TestCaseEvaluator do
     before(:each) do
       @tce = TestCaseEvaluator.new(name:"error")
       @dudes = Batch[
-        Individual.new("sample int(12)"),
-        Individual.new("sample int(-9912)"),
-        Individual.new("sample bool(false)"),
-        Individual.new("block { sample int(99) sample int(12)}")
+        Individual.new("value «int»\n«int» 12"),
+        Individual.new("value «int»\n«int» -9912"),
+        Individual.new("value «bool»\n«bool» false"),
+        Individual.new("block { value «int» value «int»}\n«int» 99\n«int» 12")
       ]
       @cases = [
-        TestCase.new(:bindings => {"x" => LiteralPoint.new("int",77)},
+        TestCase.new(:bindings => {"x" => ValuePoint.new("int",77)},
           :expectations => {"y" => 12},
           :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
         ),
-        TestCase.new(:bindings => {"x" => LiteralPoint.new("int",78)},
+        TestCase.new(:bindings => {"x" => ValuePoint.new("int",78)},
           :expectations => {"y" => 13},
           :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
         )
@@ -69,10 +70,6 @@ describe TestCaseEvaluator do
     it "should raise an exception if the batch argument isn't a Batch" do
       lambda{@tce.evaluate()}.should raise_error(ArgumentError)
       lambda{@tce.evaluate(@dudes)}.should_not raise_error(ArgumentError)
-    end
-    
-    it "should raise an exception if it can't evaluate an Individual" do
-      lambda{@tce.evaluate(Batch[Individual.new("blah_de_blah")])}.should raise_error(ArgumentError)
     end
     
     it "should assign a numeric score to all the Individuals in the Batch" do

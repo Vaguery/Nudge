@@ -59,7 +59,7 @@ module Nudge
     
     
     def add_individual(newDude)
-      newDude.station = self
+      newDude.station_name = self
       @population << newDude
     end
     
@@ -75,7 +75,7 @@ module Nudge
       movedDude = @population[popIndex]
       Station.stations[newStationName].population << movedDude
       @population.delete_at(popIndex)
-      movedDude.station = Station.stations[newStationName]
+      movedDude.station_name = Station.stations[newStationName]
     end
     
     

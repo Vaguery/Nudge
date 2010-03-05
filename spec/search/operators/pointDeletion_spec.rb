@@ -26,7 +26,7 @@ describe "PointDeleteOperator search operator" do
     end
     
     it "should use Individual#delete_point to produce the variants" do
-      @dude1.should_receive(:delete_point).and_return("do parseable")
+      @dude1.should_receive(:delete_point_or_clone).and_return("do parseable")
       @zapper.generate([@dude1])
     end
     
@@ -53,5 +53,10 @@ describe "PointDeleteOperator search operator" do
       @dude1.progress = 195
       @zapper.generate([@dude1])[0].progress.should == 196
     end
+    
+    it "should handle moving the footnotes correctly"
+    
+    it "should maintain unused footnotes correctly"
+    
   end
 end

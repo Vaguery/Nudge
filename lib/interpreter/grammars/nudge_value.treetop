@@ -1,0 +1,14 @@
+# encoding: utf-8
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeValue
+  include NudgeCommon
+  
+  rule value
+    'value' spcs? '«' footnote_type '»' <ValueParseNode>
+  end
+  
+  rule footnote_type
+    alphas_and_underscores
+  end
+end

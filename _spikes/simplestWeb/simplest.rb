@@ -3,7 +3,7 @@ require '../../lib/nudge'
 
 include Nudge
 
-Spike = Experiment.new(name:"spiker")
+Spike = Factory.new(name:"spiker")
 
 Spike.instructions = []
 Spike.types = []

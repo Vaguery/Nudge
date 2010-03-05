@@ -65,7 +65,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @int1 = LiteralPoint.new("int", 1)
+        @int1 = ValuePoint.new("int", 1)
       end
 
       describe "\#preconditions?" do
@@ -99,7 +99,7 @@ theseInstructions.each do |instName|
           it "should raise the right exceptions if it tries to divide by zero" do
             @context.clear_stacks
             @i1 = instName.new(@context)
-            div0[instName].each {|i| @context.stacks[:int].push(LiteralPoint.new("int", i))}
+            div0[instName].each {|i| @context.stacks[:int].push(ValuePoint.new("int", i))}
             @i1.setup
             lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
           end
@@ -112,7 +112,7 @@ theseInstructions.each do |instName|
           examples.each do |inputs, expected|
             params = inputs.inspect
             it "should produce #{expected} given #{params}" do
-            inputs.each {|i| @context.stacks[:int].push(LiteralPoint.new("int", i))}
+            inputs.each {|i| @context.stacks[:int].push(ValuePoint.new("int", i))}
             @i1.go
             @context.stacks[:int].peek.value.should == expected
           end

@@ -3,7 +3,7 @@ include Nudge
 
 describe "resample_and_clone operator" do
   before(:each) do
-    @myGuesser = RandomGuessOperator.new(:types => [IntType], :instructions => [IntAddInstruction])
+    @myGuesser = RandomGuessOperator.new(type_names: ["int"], instruction_names: ["int_add"])
     @mySampler = ResampleAndCloneOperator.new
   end
   
@@ -35,10 +35,16 @@ describe "resample_and_clone operator" do
     newDudes[0].genome.should == newDudes[1].genome
   end
   
+  it "should not return links to the original program copies in the new clones" do
+    pop = @myGuesser.generate(3)
+    newDudes = @mySampler.generate(pop)
+    pop.collect {|old_dude| old_dude.program.object_id}.should_not include(newDudes[0].program.object_id)
+  end
+  
   it "should have a parsed genome as its #program attribute" do
     pop = @myGuesser.generate(3)
     newDudes = @mySampler.generate(pop)
-    newDudes[0].program.should be_a_kind_of(CodeBlock)
+    newDudes[0].program.should be_a_kind_of(NudgeProgram)
   end
   
   it "should increment the #progress of each clone" do
@@ -47,4 +53,8 @@ describe "resample_and_clone operator" do
     newDudes = @mySampler.generate(pop)
     newDudes.each {|kid| kid.progress.should == 13}
   end
+  
+  it "should handle footnotes correctly"
+  
+  it "should use a deep copy to clone new guys, not just clone"
 end

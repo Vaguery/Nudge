@@ -1,7 +1,10 @@
 block {
-  literal int(8)
-  literal int(9)
+  value «int»
+  value «int»
   do int_multiply
   block {
-    sample int(-2)
+    value «int»
     do int_divide}}
+«int» 8
+«int» 9
+«int» -2

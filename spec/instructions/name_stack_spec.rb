@@ -44,7 +44,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @name1 = ChannelPoint.new("a")
+        @name1 = ReferencePoint.new("a")
       end
     
       describe "\#preconditions?" do
@@ -72,7 +72,7 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:name stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
+              inputs.each {|i| @context.stacks[:name].push(ReferencePoint.new(i))}
               @i1.go
               finalStackState.reverse.each {|i| @context.stacks[:name].pop.value.should == i}
             end
@@ -104,7 +104,7 @@ describe NameDepthInstruction do
     before(:each) do
       @i1 = NameDepthInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("d")
+      @name1 = ReferencePoint.new("d")
     end
     
     describe "\#preconditions?" do
@@ -147,7 +147,7 @@ describe NameFlushInstruction do
     before(:each) do
       @i1 = NameFlushInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("xx")
+      @name1 = ReferencePoint.new("xx")
     end
     
     describe "\#preconditions?" do
@@ -188,12 +188,12 @@ describe NameShoveInstruction do
     before(:each) do
       @i1 = NameShoveInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("abc")
+      @name1 = ReferencePoint.new("abc")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :name" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @context.stacks[:name].push(@name1)
         @i1.preconditions?.should == true
       end
@@ -203,32 +203,32 @@ describe NameShoveInstruction do
       before(:each) do
         @context.clear_stacks
         11.times {@context.stacks[:name].push(@name1)}
-        @context.stacks[:name].push(ChannelPoint.new("xyz")) # making it 12 deep
+        @context.stacks[:name].push(ReferencePoint.new("xyz")) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         @context.stacks[:name].depth.should == 12
         @context.stacks[:name].peek.value.should == "xyz"
       end
       
       it "should not move the top item if the integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:name].depth.should == 12
         @context.stacks[:name].peek.value.should == "xyz"
       end
       
       it "should move the top item farther down if the value is less than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         @context.stacks[:name].depth.should == 12
         @context.stacks[:name].entries[0].value.should == "xyz"
       end
       
       it "should move the top item to the bottom if the value is more than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         @context.stacks[:name].depth.should == 12
         @context.stacks[:name].entries[11].value.should == "abc"
@@ -259,12 +259,12 @@ describe NameYankInstruction do
     before(:each) do
       @i1 = NameYankInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and at least one :int" do
-        @context.stacks[:name].push(ChannelPoint.new("g"))
+        @context.stacks[:name].push(ReferencePoint.new("g"))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -273,32 +273,32 @@ describe NameYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        ('d'..'f').each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
+        ('d'..'f').each {|i| @context.stacks[:name].push(ReferencePoint.new(i))}
       end
       
       it "should not change anything if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['d', 'e', 'f']
       end
       
       it "should not change anything if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['d', 'e', 'f']
       end
       
       it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['e', 'f', 'd']
       end
       
       it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['d', 'f', 'e']
@@ -328,12 +328,12 @@ describe NameYankdupInstruction do
     before(:each) do
       @i1 = NameYankdupInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :name" do
-        @context.stacks[:name].push(ChannelPoint.new('x'))
+        @context.stacks[:name].push(ReferencePoint.new('x'))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -342,37 +342,37 @@ describe NameYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        ('m'..'q').each {|i| @context.stacks[:name].push(ChannelPoint.new(i))}
+        ('m'..'q').each {|i| @context.stacks[:name].push(ReferencePoint.new(i))}
       end
       
       it "should duplicate the top item if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['m', 'n', 'o', 'p', 'q', 'q']
       end
       
       it "should duplicate the top item if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['m', 'n', 'o', 'p', 'q', 'q']
       end
       
       it "should clone the bottom item and push it if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['m', 'n', 'o', 'p', 'q', 'm']
       end
       
       it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['m', 'n', 'o', 'p', 'q', 'o']
         
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         and_now = @context.stacks[:name].entries.collect {|i| i.value}
         and_now.should == ['m', 'n', 'o', 'p', 'q', 'o', 'n']

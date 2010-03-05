@@ -5,7 +5,7 @@ class IntRandomInstruction < Instruction
   def setup
   end
   def derive
-    @result = LiteralPoint.new("int", IntType.any_value)
+    @result = ValuePoint.new("int", IntType.any_value)
   end
   def cleanup
     pushes :int, @result
@@ -20,7 +20,7 @@ class BoolRandomInstruction < Instruction
   def setup
   end
   def derive
-    @result = LiteralPoint.new("bool", BoolType.any_value)
+    @result = ValuePoint.new("bool", BoolType.any_value)
   end
   def cleanup
     pushes :bool, @result
@@ -35,7 +35,7 @@ class FloatRandomInstruction < Instruction
   def setup
   end
   def derive
-    @result = LiteralPoint.new("float", FloatType.any_value)
+    @result = ValuePoint.new("float", FloatType.any_value)
   end
   def cleanup
     pushes :float, @result

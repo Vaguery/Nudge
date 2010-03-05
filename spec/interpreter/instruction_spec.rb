@@ -33,6 +33,14 @@ describe "InstructionPoint" do
     end
   end
   
+  describe "#listing_parts" do
+    it "should return an Array containing (1) InstructionPoint#tidy and (2) an empty string" do
+      myIP = InstructionPoint.new("bah_8")
+      myIP.listing_parts.should == [myIP.tidy,""]
+    end
+  end
+  
+  
   [["plant_water","PlantWaterInstruction"],["opinion_greaterthan?", "OpinionGreaterthan?Instruction"]].each do |inp|
     it "should know the appropriate class name for the Instruction singleton for #{inp}" do
       pointName = inp[0]
@@ -61,37 +69,6 @@ describe "InstructionPoint" do
       context.enable(IntAddInstruction)
       context.instructions_library[IntAddInstruction].should_receive(:go)
       myI = InstructionPoint.new("int_add").go(context)
-    end
-  end
-  
-  describe "randomize" do
-    before(:each) do
-      @context = Interpreter.new
-      @context.enable_all_instructions
-    end
-    
-    it "should return one of the active instructions" do
-      myInstrP = InstructionPoint.new("float_multiply")
-      @context.disable_all_instructions
-      @context.enable(IntAddInstruction)
-      myInstrP.randomize(@context)
-      myInstrP.name.should == "int_add"
-    end
-  end
-  
-  describe "any" do
-    before(:each) do
-      @context = Interpreter.new
-      @context.enable_all_instructions
-    end
-    
-    it "should return a new instance of an instruction, invoking randomize" do
-      someI = InstructionPoint.any(@context)
-      someI.should be_a_kind_of(InstructionPoint)
-      @context.disable_all_instructions
-      @context.enable(FloatSubtractInstruction)
-      someI = InstructionPoint.any(@context)
-      someI.name.should == "float_subtract"
     end
   end
 end

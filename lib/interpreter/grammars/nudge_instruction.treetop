@@ -1,0 +1,14 @@
+#encoding: utf-8
+require 'interpreter/grammars/nudge_common'
+
+grammar NudgeInstruction
+  include NudgeCommon
+  
+  rule instruction
+    'do' spcs opcode <InstructionParseNode>
+  end
+  
+  rule opcode
+    alphas_and_underscores
+  end
+end

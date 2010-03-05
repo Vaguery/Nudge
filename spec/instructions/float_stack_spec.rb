@@ -44,7 +44,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @float1 = LiteralPoint.new("float", 1.0)
+        @float1 = ValuePoint.new("float", 1.0)
       end
     
       describe "\#preconditions?" do
@@ -72,7 +72,7 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:float stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+              inputs.each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
               @i1.go
               finalStackState.reverse.each {|i| @context.stacks[:float].pop.value.should == i}
             end
@@ -104,7 +104,7 @@ describe FloatDepthInstruction do
     before(:each) do
       @i1 = FloatDepthInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @float1 = ValuePoint.new("float", 1)
     end
     
     describe "\#preconditions?" do
@@ -147,7 +147,7 @@ describe FloatFlushInstruction do
     before(:each) do
       @i1 = FloatFlushInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 1)
+      @float1 = ValuePoint.new("float", 1)
     end
     
     describe "\#preconditions?" do
@@ -188,12 +188,12 @@ describe FloatShoveInstruction do
     before(:each) do
       @i1 = FloatShoveInstruction.new(@context)
       @context.clear_stacks
-      @float1 = LiteralPoint.new("float", 9.9)
+      @float1 = ValuePoint.new("float", 9.9)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :float" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @context.stacks[:float].push(@float1)
         @i1.preconditions?.should == true
       end
@@ -203,32 +203,32 @@ describe FloatShoveInstruction do
       before(:each) do
         @context.clear_stacks
         11.times {@context.stacks[:float].push(@float1)}
-        @context.stacks[:float].push(LiteralPoint.new("float", 1.1)) # making it 12 deep
+        @context.stacks[:float].push(ValuePoint.new("float", 1.1)) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         @context.stacks[:float].depth.should == 12
         @context.stacks[:float].peek.value.should == 1.1
       end
       
       it "should not move the top item if the integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:float].depth.should == 12
         @context.stacks[:float].peek.value.should == 1.1
       end
       
       it "should move the top item farther down if the value is less than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         @context.stacks[:float].depth.should == 12
         @context.stacks[:float].entries[0].value.should == 1.1
       end
       
       it "should move the top item to the bottom if the value is more than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         @context.stacks[:float].depth.should == 12
         @context.stacks[:float].entries[11].value.should == 9.9
@@ -259,12 +259,12 @@ describe FloatYankInstruction do
     before(:each) do
       @i1 = FloatYankInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :float and at least one :int" do
-        @context.stacks[:float].push(LiteralPoint.new("float", -99.99))
+        @context.stacks[:float].push(ValuePoint.new("float", -99.99))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -273,32 +273,32 @@ describe FloatYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:float].push(LiteralPoint.new("float",i*0.5))}
+        (1..3).each {|i| @context.stacks[:float].push(ValuePoint.new("float",i*0.5))}
       end
       
       it "should not change anything if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [0.5,1.0,1.5]
       end
       
       it "should not change anything if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [0.5,1.0,1.5]
       end
       
       it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,1.5, 0.5]
       end
       
       it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [0.5,1.5, 1.0]
@@ -328,12 +328,12 @@ describe FloatYankdupInstruction do
     before(:each) do
       @i1 = FloatYankdupInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :float" do
-        @context.stacks[:float].push(LiteralPoint.new("float", 1.1))
+        @context.stacks[:float].push(ValuePoint.new("float", 1.1))
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -342,37 +342,37 @@ describe FloatYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..3).each {|i| @context.stacks[:float].push(LiteralPoint.new("float",i*1.0))}
+        (1..3).each {|i| @context.stacks[:float].push(ValuePoint.new("float",i*1.0))}
       end
       
       it "should duplicate the top item if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 3.0]
       end
       
       it "should duplicate the top item if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 3.0]
       end
       
       it "should clone the bottom item and push it if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0]
       end
       
       it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0]
         
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:float].entries.collect {|i| i.value}
         and_now.should == [1.0,2.0,3.0, 1.0, 2.0]

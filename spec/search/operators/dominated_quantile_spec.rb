@@ -51,7 +51,7 @@ describe DominatedQuantileSampler do
   
   describe "#generate" do
     before(:each) do
-      @dudes = Batch[Individual.new("block {}"), Individual.new("do int_add")]
+      @dudes = Batch[Individual.new("do int_subtract"), Individual.new("do int_add")]
       @dudes[0].scores["first"] = 120
       @dudes[1].scores["first"] = 2
       @dudes[0].scores["second"] = 2

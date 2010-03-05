@@ -48,7 +48,7 @@ theseInstructions.each do |instName|
     describe "\#go" do
       before(:each) do
         @i1 = instName.new(@context)
-        @bool1 = LiteralPoint.new("bool", false)
+        @bool1 = ValuePoint.new("bool", false)
       end
 
       describe "\#preconditions?" do
@@ -85,7 +85,7 @@ theseInstructions.each do |instName|
           examples.each do |inputs, expected|
             params = inputs.inspect
             it "should produce #{expected} given #{params}" do
-              inputs.each {|i| @context.stacks[:bool].push(LiteralPoint.new("bool", i))}
+              inputs.each {|i| @context.stacks[:bool].push(ValuePoint.new("bool", i))}
               @i1.go
               @context.stacks[:bool].peek.value.should == expected
             end

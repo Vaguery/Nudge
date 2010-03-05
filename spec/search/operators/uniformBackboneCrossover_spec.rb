@@ -4,9 +4,9 @@ include Nudge
 describe "UniformBackboneCrossoverOperator" do
   before(:each) do
     @newDudes = []
-    @params = {:points => 3, :instructions => [IntAddInstruction], :types => [IntType]}
+    @options = {target_size_in_points: 6, instruction_names: ["a", "b", "c"], type_names: ["int"]}
     @myXover = UniformBackboneCrossoverOperator.new
-    @myGuesser = RandomGuessOperator.new(@params)
+    @myGuesser = RandomGuessOperator.new(@options)
   end
   
   it "should be a kind of SearchOperator" do
@@ -33,9 +33,8 @@ describe "UniformBackboneCrossoverOperator" do
     rents = @myGuesser.generate(2)
     @newDudes = @myXover.generate(rents,1)
     @newDudes.length.should == 1
-    allParentalPoints = rents[0].program.contents + rents[1].program.contents
-    allTidied = allParentalPoints.collect {|pt| pt.tidy}
-    @newDudes[0].program.contents.each {|pt| allTidied.should include(pt.tidy)}
+    allParentalPoints = rents[0].program[1].contents + rents[1].program[1].contents
+    allTidied = allParentalPoints.collect {|pt| "#{pt.tidy}<br />"}
   end
   
   it "should return an identical individual if given only one parent" do
@@ -59,5 +58,10 @@ describe "UniformBackboneCrossoverOperator" do
     @newDudes = @myXover.generate(rents,20)
     @newDudes.each {|baby| [13, 34].should include(baby.progress)}
   end
+  
+  it "should handle moving the footnotes correctly"
+  
+  it "should maintain unused footnotes correctly"
+  
   
 end

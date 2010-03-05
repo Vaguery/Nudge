@@ -5,7 +5,7 @@ require APP_ROOT + '/config/environment.rb'
 
 include Nudge
 
-spike_experiment = Experiment.new(name:"spike")
+spike_factory = Factory.new(name:"spike")
 
 # couchDB crap
 
@@ -22,14 +22,14 @@ spike_experiment = Experiment.new(name:"spike")
     Station.stations.each {|name, station| puts "#{name}"; station.core_cycle}
   end
   
-  Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}
-  
-  ["level1","level2","level3","level4"].each do |station|
-    if Station.stations[station].population.length > 20
-      sorted = Station.stations[station].population.sort_by {|dude| dude.scores["errors"] || 100000}
-      (0..20).each {|i| puts "#{sorted[i].scores}:\n#{sorted[i].genome}"}
-    end
-  end
-  
-  Station.stations["level1"].cull_all
+  # Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}
+  # 
+  # ["level1","level2","level3","level4"].each do |station|
+  #   if Station.stations[station].population.length > 20
+  #     sorted = Station.stations[station].population.sort_by {|dude| dude.scores["errors"] || 100000}
+  #     (0..20).each {|i| puts "#{sorted[i].scores}:\n#{sorted[i].genome}"}
+  #   end
+  # end
+  # 
+  # Station.stations["level1"].cull_all
 end

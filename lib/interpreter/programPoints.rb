@@ -1,52 +1,28 @@
+#encoding: utf-8
 module Nudge
+  include Enumerable
   
   class ProgramPoint
     def points
       1
     end
+    
+    def each
+      yield self
+    end
   end
   
   
-  class CodeBlock < ProgramPoint
-    @@parser = NudgeLanguageParser.new
+  class CodeblockPoint < ProgramPoint
+    attr_accessor :contents
     
-    def initialize(code = "block {}")
-      @listing = code
-    end
-    
-    def listing=(rawCode)
-      @listing = rawCode
-    end
-    
-    def listing
-      @listing ||= "block {}"
-    end
-    
-    def value
-      @listing
-    end
-    
-    def contents=(newArray)
-      @contents = newArray
-    end
-    
-    def contents
-      @contents ||= self.reparse
-    end
-    
-    def reparse
-      clone = @@parser.parse(@listing).to_points
-      @listing = clone.listing
-      return clone.contents
+    def initialize(contents = [])
+      raise(ArgumentError,"CodeblockPoint must be passed an Array") unless contents.kind_of?(Array)
+      @contents = contents
     end
     
     def points
-      if @contents
-        @listing.split(/\n/).length
-      else
-        self.reparse
-        @listing.split(/\n/).length
-      end
+      @contents.inject(1) {|count, daughter| count + daughter.points}
     end
     
     def go(context)
@@ -60,101 +36,83 @@ module Nudge
       tt += "}"
       return tt
     end
+    
+    def listing_parts
+      fn = self.contents.inject("\n") do |fn_accumulator, branch|
+        rhs = branch.listing_parts[1].empty? ? "" :  "\n#{branch.listing_parts[1]}"
+        fn_accumulator + rhs
+      end
+      return [self.tidy, fn.strip]
+    end
+    
+    def each
+      yield self
+      @contents.each do |child|
+        child.each {|c| yield c}
+      end
+    end
   end
   
   
-  class LiteralPoint < ProgramPoint
-    attr_accessor :type, :value
+  
+  
+  class ValuePoint < ProgramPoint
+    attr_accessor :type, :raw
+    attr_reader :value
     
-    def initialize(type,value)
+    def initialize(type,representation=nil)
+      raise(ArgumentError, "Type must be a symbol or string") unless [Symbol,String].include?(type.class)
       @type = type.to_sym
-      @value = value
+      if representation != nil
+        representation = representation.to_s
+      end     
+      @raw = representation
     end
     
     def go(context)
       context.stacks[self.type].push(self)
     end
     
-    def tidy(level=1)
-      "literal " + @type.to_s + " (" + @value.to_s + ")"
+    def points
+      1
     end
     
-    def randomize(context)
-      raise(ArgumentError,"Random code cannot be created") if context.types == [CodeType]
-      newType = context.types.sample
-      @type = newType.to_nudgecode
-      if newType != CodeType
-        @value = newType.any_value
+    def nudgetype(typename=@type)
+      "#{typename.to_s.camelize}Type"
+    end
+    
+    def nudgetype_defined?(typename=@type)
+      Nudge.const_defined?(nudgetype(typename).to_sym)
+    end
+    
+    def value
+      if @raw && nudgetype_defined?
+        @value ||= nudgetype.constantize.from_s(@raw)
       else
-        @value = newType.any_value(context)
+        nil
       end
     end
     
-    def self.any(context)
-      tmp = LiteralPoint.new("int", 1)
-      tmp.randomize(context)
-      return tmp
-    end
-    
-    def listing
-      self.tidy
-    end
-  end
-  
-  
-  class Erc < ProgramPoint
-    attr_accessor :type, :value
-    def initialize(type, value)
-      @type = type.to_sym
-      @value = value
-    end
-    
-    def to_literal()
-      LiteralPoint.new(@type,@value)
-    end
-    
-    def go(context)
-      self.to_literal.go(context)
-    end
-    
     def tidy(level=1)
-      "sample " + @type.to_s + " (" + @value.to_s + ")"
+      "value «" + @type.to_s + "»"
     end
     
     def randomize(context)
       newType = context.types.sample
       @type = newType.to_nudgecode
-      if newType != CodeType
-        @value = newType.any_value
-      else
-        @value = newType.any_value(context)
-      end
+      @raw = newType.any_value
     end
     
-    def resample
-      @value = "#{@type.to_s.capitalize}Type".constantize.any_value
-    end
-    
-    def self.any(context)
-      tmp = Erc.new(context.types[0].to_s.slice(0..-5).downcase,0)
-      tmp.randomize(context)
-      return tmp
-    end
-    
-    def listing
-      self.tidy
+    def listing_parts
+      fn = @raw ? "«#{self.type}» #{self.raw}" : ""
+      return [self.tidy, fn]
     end
   end
   
   
-  class ChannelPoint < ProgramPoint
-    
-    def self.any(context)
-      tmp = ChannelPoint.new("e")
-      tmp.randomize(context)
-      return tmp
-    end
-    
+  
+  
+  class ReferencePoint < ProgramPoint    
     attr_accessor :name
     alias value name
     
@@ -172,6 +130,10 @@ module Nudge
       end
     end
     
+    def points
+      1
+    end
+    
     def tidy(level=1)
       "ref " + @name
     end
@@ -181,10 +143,12 @@ module Nudge
       @name = which
     end
     
-    def listing
-      self.tidy
+    def listing_parts
+      [self.tidy,""]
     end
   end
+  
+  
   
   
   class InstructionPoint < ProgramPoint
@@ -207,6 +171,10 @@ module Nudge
       "do " + @name
     end
     
+    def points
+      1
+    end
+    
     class InstructionNotFoundError < NameError
     end
     
@@ -222,14 +190,8 @@ module Nudge
       @name = instructionName.slice(0..-12).underscore
     end
     
-    def self.any(context)
-      tmp = InstructionPoint.new("int_add")
-      tmp.randomize(context)
-      return tmp
-    end
-    
-    def listing
-      self.tidy
+    def listing_parts
+      [self.tidy,""]
     end
   end
   

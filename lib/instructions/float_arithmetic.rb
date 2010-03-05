@@ -7,7 +7,7 @@ class FloatAddInstruction < Instruction
     @arg2 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1 + @arg2)
+    @result = ValuePoint.new("float", @arg1 + @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -24,7 +24,7 @@ class FloatMultiplyInstruction < Instruction
     @arg2 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1 * @arg2)
+    @result = ValuePoint.new("float", @arg1 * @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -41,7 +41,7 @@ class FloatSubtractInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1 - @arg2)
+    @result = ValuePoint.new("float", @arg1 - @arg2)
   end
   def cleanup
     pushes :float, @result
@@ -60,7 +60,7 @@ class FloatDivideInstruction < Instruction
   def derive
     if @arg2 != 0.0
       @quotient = @arg1 / @arg2
-      @result = LiteralPoint.new("float", @quotient)
+      @result = ValuePoint.new("float", @quotient)
     else
       raise InstructionMethodError
     end
@@ -80,7 +80,7 @@ class FloatMaxInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", [@arg1, @arg2].max)
+    @result = ValuePoint.new("float", [@arg1, @arg2].max)
   end
   def cleanup
     pushes :float, @result
@@ -97,7 +97,7 @@ class FloatMinInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", [@arg1, @arg2].min)
+    @result = ValuePoint.new("float", [@arg1, @arg2].min)
   end
   def cleanup
     pushes :float, @result
@@ -113,7 +113,7 @@ class FloatNegativeInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", -@arg1)
+    @result = ValuePoint.new("float", -@arg1)
   end
   def cleanup
     pushes :float, @result
@@ -129,7 +129,7 @@ class FloatAbsInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", @arg1.abs)
+    @result = ValuePoint.new("float", @arg1.abs)
   end
   def cleanup
     pushes :float, @result
@@ -147,7 +147,7 @@ class FloatPowerInstruction < Instruction
   end
   def derive
     if !(@base**@exp).nan?
-      @result = LiteralPoint.new("float", @base**@exp)
+      @result = ValuePoint.new("float", @base**@exp)
     else
       raise Instruction::NaNResultError
     end
@@ -168,7 +168,7 @@ class FloatSqrtInstruction < Instruction
   end
   def derive
     if @arg1 >= 0.0
-      @result = LiteralPoint.new("float", Math.sqrt(@arg1))
+      @result = ValuePoint.new("float", Math.sqrt(@arg1))
     else
       raise Instruction::NaNResultError
     end
@@ -190,7 +190,7 @@ class FloatModuloInstruction < Instruction
   def derive
     if @arg2 != 0
       @mod = @arg1 % @arg2
-      @result = LiteralPoint.new("float", @mod)
+      @result = ValuePoint.new("float", @mod)
     else
       raise InstructionMethodError
     end

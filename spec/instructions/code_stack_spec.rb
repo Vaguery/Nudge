@@ -21,6 +21,7 @@ resultTuples = {
   CodeDuplicateInstruction => {["block {}"] => ["block {}", "block {}"]},
   CodeRotateInstruction => {["block {}", "do int_add", "sample int(2)"] => ["do int_add", "sample int(2)", "block {}"]}
   }
+  
     
 theseInstructions.each do |instName|
   describe instName do
@@ -44,12 +45,12 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @code1 = CodeBlock.new("block {}")
+        @empty_block_code_value = ValuePoint.new("code", "block {}")
       end
     
       describe "\#preconditions?" do
         it "should check that there are enough parameters" do
-          8.times {@context.stacks[:code].push(@code1)}
+          8.times {@context.stacks[:code].push(@empty_block_code_value)}
           @i1.preconditions?.should == true
         end
         
@@ -59,7 +60,7 @@ theseInstructions.each do |instName|
         end
         
         it "should successfully run #go only if all preconditions are met" do
-          7.times {@context.stacks[:code].push(@code1)}
+          7.times {@context.stacks[:code].push(@empty_block_code_value)}
           @i1.should_receive(:cleanup)
           @i1.go
         end
@@ -72,9 +73,9 @@ theseInstructions.each do |instName|
             params = inputs.inspect
             expected = finalStackState.inspect
             it "should end up with #{expected} on the \:code stack, starting with #{params}" do
-              inputs.each {|i| @context.stacks[:code].push(ChannelPoint.new(i))}
+              inputs.each {|i| @context.stacks[:code].push(ValuePoint.new("code",i))}
               @i1.go
-              finalStackState.reverse.each {|i| @context.stacks[:code].pop.value.should == i}
+              finalStackState.reverse.each {|i| @context.stacks[:code].pop.raw.should == i}
             end
           end
         end
@@ -104,7 +105,7 @@ describe CodeDepthInstruction do
     before(:each) do
       @i1 = CodeDepthInstruction.new(@context)
       @context.clear_stacks
-      @code1 = CodeBlock.new("block {}")
+      @empty_block_code_value = ValuePoint.new("code", "block {}")
     end
     
     describe "\#preconditions?" do
@@ -118,7 +119,7 @@ describe CodeDepthInstruction do
         @context.stacks[:int].depth.should == 0
         @i1.go # there are no code literals
         @context.stacks[:int].peek.value.should == 0
-        7.times {@context.stacks[:code].push @code1}
+        7.times {@context.stacks[:code].push @empty_block_code_value}
         @i1.go
         @context.stacks[:int].peek.value.should == 7
       end
@@ -147,7 +148,7 @@ describe CodeFlushInstruction do
     before(:each) do
       @i1 = CodeFlushInstruction.new(@context)
       @context.clear_stacks
-      @code1 = CodeBlock.new("do int_add")
+      @empty_block_code_value = ValuePoint.new("code", "block {}")
     end
     
     describe "\#preconditions?" do
@@ -158,7 +159,7 @@ describe CodeFlushInstruction do
     
     describe "\#cleanup" do
       it "should remove all items on the stack" do
-        11.times {@context.stacks[:code].push(@code1)}
+        11.times {@context.stacks[:code].push(@empty_block_code_value)}
         @context.stacks[:code].depth.should == 11
         @i1.go
         @context.stacks[:code].depth.should == 0
@@ -188,13 +189,14 @@ describe CodeShoveInstruction do
     before(:each) do
       @i1 = CodeShoveInstruction.new(@context)
       @context.clear_stacks
-      @code1 = CodeBlock.new("block {}")
+      @empty_block_code_value = ValuePoint.new("code", "block {}")
+      
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :code" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
-        @context.stacks[:code].push(@code1)
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
+        @context.stacks[:code].push(@empty_block_code_value)
         @i1.preconditions?.should == true
       end
     end
@@ -202,33 +204,33 @@ describe CodeShoveInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        11.times {@context.stacks[:code].push(@code1)}
-        @context.stacks[:code].push(CodeBlock.new("do int_add")) # making it 12 deep
+        11.times {@context.stacks[:code].push(@empty_block_code_value)}
+        @context.stacks[:code].push(ValuePoint.new("code","do int_add")) # making it 12 deep
       end
       
       it "should not move the top item if the integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         @context.stacks[:code].depth.should == 12
         @context.stacks[:code].peek.value.should == "do int_add"
       end
       
       it "should not move the top item if the integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         @context.stacks[:code].depth.should == 12
         @context.stacks[:code].peek.value.should == "do int_add"
       end
       
       it "should move the top item farther down if the value is less than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         @context.stacks[:code].depth.should == 12
         @context.stacks[:code].entries[0].value.should == "do int_add"
       end
       
       it "should move the top item to the bottom if the value is more than the depth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         @context.stacks[:code].depth.should == 12
         @context.stacks[:code].entries[11].value.should == "block {}"
@@ -259,12 +261,13 @@ describe CodeYankInstruction do
     before(:each) do
       @i1 = CodeYankInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
+      @empty_block_code_value = ValuePoint.new("code", "block {}")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and at least one :int" do
-        @context.stacks[:code].push(CodeBlock.new("block {}"))
+        @context.stacks[:code].push(@empty_block_code_value)
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -273,35 +276,35 @@ describe CodeYankInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (4..6).each {|i| @context.stacks[:code].push(CodeBlock.new("sample int(#{i})"))}
+        (4..6).each {|i| @context.stacks[:code].push(ValuePoint.new("code","ref a_#{i}"))}
       end
       
       it "should not change anything if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
-        and_now.should == ["sample int(4)", "sample int(5)", "sample int(6)"]
+        and_now.should == ["ref a_4", "ref a_5", "ref a_6"]
       end
       
       it "should not change anything if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
-        and_now.should == ["sample int(4)", "sample int(5)", "sample int(6)"]
+        and_now.should == ["ref a_4", "ref a_5", "ref a_6"]
       end
       
       it "should pull the last item on the stack to the top if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
-        and_now.should == ["sample int(5)", "sample int(6)", "sample int(4)"]
+        and_now.should == ["ref a_5", "ref a_6", "ref a_4"]
       end
       
       it "should yank the indicated item to the top of the stack, counting from the 'top' 'down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
-        and_now.should == ["sample int(4)", "sample int(6)", "sample int(5)"]
+        and_now.should == ["ref a_4", "ref a_6", "ref a_5"]
       end
     end
   end
@@ -328,12 +331,13 @@ describe CodeYankdupInstruction do
     before(:each) do
       @i1 = CodeYankdupInstruction.new(@context)
       @context.clear_stacks
-      @int1 = LiteralPoint.new("int", 3)
+      @int1 = ValuePoint.new("int", 3)
+      @empty_block_code_value = ValuePoint.new("code", "block {}")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :int and at least one :code" do
-        @context.stacks[:code].push(CodeBlock.new('block {}'))
+        @context.stacks[:code].push(@empty_block_code_value)
         @context.stacks[:int].push(@int1)
         @i1.preconditions?.should == true
       end
@@ -342,37 +346,37 @@ describe CodeYankdupInstruction do
     describe "\#cleanup" do
       before(:each) do
         @context.clear_stacks
-        (1..5).each {|i| @context.stacks[:code].push(LiteralPoint.new("int", i))}
+        (1..5).each {|i| @context.stacks[:code].push(ValuePoint.new("int", i))}
       end
       
       it "should duplicate the top item if the position integer is negative" do
-        @context.stacks[:int].push(LiteralPoint.new("int", -99))
+        @context.stacks[:int].push(ValuePoint.new("int", -99))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
         and_now.should == [1,2,3,4,5, 5]
       end
       
       it "should duplicate the top item if the position integer is zero" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 0))
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
         and_now.should == [1,2,3,4,5, 5]
       end
       
       it "should clone the bottom item and push it if the position is more than the stackdepth" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 1000))
+        @context.stacks[:int].push(ValuePoint.new("int", 1000))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
         and_now.should == [1,2,3,4,5, 1]
       end
       
       it "should push a copy of the indicated item to the top of the stack, counting from the 'top down'" do
-        @context.stacks[:int].push(LiteralPoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
         and_now.should == [1,2,3,4,5, 3]
         
-        @context.stacks[:int].push(LiteralPoint.new("int", 4))
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
         @i1.go
         and_now = @context.stacks[:code].entries.collect {|i| i.value}
         and_now.should == [1,2,3,4,5, 3,2]

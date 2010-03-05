@@ -71,7 +71,7 @@ theseInstructions.each do |instName|
       before(:each) do
         @i1 = instName.new(@context)
         @context.clear_stacks
-        @float1 = LiteralPoint.new("float", 12.12)
+        @float1 = ValuePoint.new("float", 12.12)
       end
 
       describe "\#preconditions?" do
@@ -105,7 +105,7 @@ theseInstructions.each do |instName|
           it "should raise the right exceptions if it tries to divide by zero" do
             @context.clear_stacks
             @i1 = instName.new(@context)
-            div0[instName].each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+            div0[instName].each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
             @i1.setup
             lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
           end
@@ -118,7 +118,7 @@ theseInstructions.each do |instName|
           examples.each do |inputs, expected|
             params = inputs.inspect
             it "should produce #{expected} given #{params}" do
-            inputs.each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+            inputs.each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
             @i1.go
             @context.stacks[:float].peek.value.should be_close(expected,0.000001)
           end
@@ -132,7 +132,7 @@ end
 describe "FloatPowerInstruction should raise a NaNResultError when it takes a root of a neg" do
   it "should description" do
     @context = Interpreter.new
-    [-6.82,-0.2].each {|i| @context.stacks[:float].push(LiteralPoint.new("float", i))}
+    [-6.82,-0.2].each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
     lambda{FloatPowerInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
   end
 end
@@ -141,7 +141,7 @@ describe "FloatSqrtInstruction should raise a NaNResultError when it takes a roo
   it "should description" do
     @context = Interpreter.new
     [-6.82, -16.0].each do |i|
-      @context.stacks[:float].push(LiteralPoint.new("float", i))
+      @context.stacks[:float].push(ValuePoint.new("float", i))
       lambda{FloatSqrtInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
     end
   end

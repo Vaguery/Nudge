@@ -1,23 +1,31 @@
 NUDGECODE:
 
 block {
-  literal «1»
-  literal «2»
+  value «float»
+  value «code»
   block {
-    sample «3»
-    sample «4»
+    value «image»
+    value «int»
   }
 }
 
-# local values:
-«1» float: 9.128
-«2» code: block {literal code «5» block {sample bool «6»}}
-«3» image: file:///881727183.jpg
-«4» int: 881
-«5» code: block { do int_add do int_multiply }
-«6» bool: false
+«float»  9.128
+«code» block {value «code» block {value «bool»}}
+«image» file:///881727183.jpg
+«int» 881
+«code» block { do int_add do int_multiply }
+«bool» false
 
 # local values can include references to other local values, but can never backtrack
-# syntax check: are all local values assigned?
-# syntax check: are all local values strings?
+
+# the difference between the string "«foo»" and a reference to a foo footnote depends on the evaluation of the context it's in: a «string» or a «code» value
+
+# syntax check: are all values assigned?
+  If not, the missed ones have nil values! They'll disappear upon evaluation
+
+# syntax check: are all footnote references valid strings?
+  If malformed, the point's value can't be assigned
+
 # semantic check: are there no backward-references?
+  Footnotes are consumed, top-to-bottom by type, as the Interpreter matches them;
+  there can't be any second references to anything

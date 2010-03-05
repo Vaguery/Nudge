@@ -24,7 +24,7 @@ describe "stack" do
   
   
   describe "pushing and popping" do
-    it "should allow an object to be pushed" do
+    it "should allow any object to be pushed" do
       @myStack.push(12)
       @myStack.entries[0].should == 12
     end

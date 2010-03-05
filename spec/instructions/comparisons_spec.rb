@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -5,8 +6,8 @@ describe "IntEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = IntEqualQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do
@@ -61,8 +62,8 @@ describe "IntLessThanQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = IntLessThanQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have a #context" do
@@ -123,8 +124,8 @@ describe "IntGreaterThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = IntGreaterThanQInstruction.new(@context)
-    @int1 = LiteralPoint.new("int", 1)
-    @int2 = LiteralPoint.new("int", 2)
+    @int1 = ValuePoint.new("int", 1)
+    @int2 = ValuePoint.new("int", 2)
   end
   
   it "should have its #context set correctly" do
@@ -185,8 +186,8 @@ describe "FloatGreaterThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatGreaterThanQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its context set" do
@@ -247,8 +248,8 @@ describe "FloatLessThanQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatLessThanQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its context set" do
@@ -309,8 +310,8 @@ describe "FloatEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new    
     @i1 = FloatEqualQInstruction.new(@context)
-    @float1 = LiteralPoint.new("float", 1.0)
-    @float2 = LiteralPoint.new("float", 2.0)
+    @float1 = ValuePoint.new("float", 1.0)
+    @float2 = ValuePoint.new("float", 2.0)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do
@@ -365,9 +366,9 @@ describe "ExecEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = ExecEqualQInstruction.new(@context)
-    @thing1 = "block { do int_add  sample float(0.5) block { } }"
-    @thing2 = "block {do int_add sample float(0.5) block {}}"
-    @thing3 = "block {do int_add sample float(0.25) block {}}"
+    @thing1 = "block { do int_add  value «float» block { } }"
+    @thing2 = "block {do int_add value «float» block {}}"
+    @thing3 = "block {do int_add value «bool» block {}}"
     @context.reset("block {#{@thing1} #{@thing2} #{@thing3} #{@thing2}}")
     @context.step
   end
@@ -404,9 +405,9 @@ describe "NameEqualQInstruction" do
   before(:each) do
     @context = Interpreter.new
     @i1 = NameEqualQInstruction.new(@context)
-    @thing1 = ChannelPoint.new("x")
-    @thing2 = ChannelPoint.new("x")
-    @thing3 = ChannelPoint.new("not_x")
+    @thing1 = ReferencePoint.new("x")
+    @thing2 = ReferencePoint.new("x")
+    @thing3 = ReferencePoint.new("not_x")
     @thing1.go(@context)
     @thing2.go(@context)
     @thing3.go(@context)
@@ -445,8 +446,8 @@ describe CodeEqualQInstruction do
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeEqualQInstruction.new(@context)
-    @thing1 = ChannelPoint.new("x")
-    @thing2 = LiteralPoint.new("int", 991)
+    @thing1 = ValuePoint.new("bool", false)
+    @thing2 = ValuePoint.new("int", 991)
   end
   
   it "should have its #context set to that Interpreter instance it's in" do

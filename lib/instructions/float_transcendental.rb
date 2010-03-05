@@ -6,7 +6,7 @@ class FloatSineInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", Math.sin(@arg1))
+    @result = ValuePoint.new("float", Math.sin(@arg1))
   end
   def cleanup
     pushes :float, @result
@@ -22,7 +22,7 @@ class FloatCosineInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", Math.cos(@arg1))
+    @result = ValuePoint.new("float", Math.cos(@arg1))
   end
   def cleanup
     pushes :float, @result
@@ -38,7 +38,7 @@ class FloatTangentInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-    @result = LiteralPoint.new("float", Math.tan(@arg1))
+    @result = ValuePoint.new("float", Math.tan(@arg1))
   end
   def cleanup
     pushes :float, @result

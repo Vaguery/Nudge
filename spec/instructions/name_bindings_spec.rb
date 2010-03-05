@@ -21,13 +21,13 @@ describe IntDefineInstruction do
     before(:each) do
       @i1 = IntDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("xyz")
+      @name1 = ReferencePoint.new("xyz")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and one :int" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:int].push(LiteralPoint.new("int", 123))
+        @context.stacks[:int].push(ValuePoint.new("int", 123))
         @i1.preconditions?.should == true
       end
     end
@@ -40,7 +40,7 @@ describe IntDefineInstruction do
       
       it "should bind the top :int to the top :name" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:int].push(LiteralPoint.new("int", 123))
+        @context.stacks[:int].push(ValuePoint.new("int", 123))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:int].depth.should == 0
@@ -49,11 +49,11 @@ describe IntDefineInstruction do
       end
       
       it "should overwrite the binding if it already exists" do
-        @context.bind_name("xyz", LiteralPoint.new("bool", false))
+        @context.bind_name("xyz", ValuePoint.new("bool", false))
         @context.names["xyz"].value.should == false
         
         @context.stacks[:name].push(@name1)
-        @context.stacks[:int].push(LiteralPoint.new("int", 123))
+        @context.stacks[:int].push(ValuePoint.new("int", 123))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:int].depth.should == 0
@@ -85,13 +85,13 @@ describe BoolDefineInstruction do
     before(:each) do
       @i1 = BoolDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("xyz")
+      @name1 = ReferencePoint.new("xyz")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and one :int" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @context.stacks[:bool].push(ValuePoint.new("bool", false))
         @i1.preconditions?.should == true
       end
     end
@@ -104,7 +104,7 @@ describe BoolDefineInstruction do
       
       it "should bind the top :int to the top :name" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @context.stacks[:bool].push(ValuePoint.new("bool", false))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:bool].depth.should == 0
@@ -113,11 +113,11 @@ describe BoolDefineInstruction do
       end
       
       it "should overwrite the binding if it already exists" do
-        @context.bind_name("xyz", LiteralPoint.new("float", 3.3))
+        @context.bind_name("xyz", ValuePoint.new("float", 3.3))
         @context.names["xyz"].value.should == 3.3
         
         @context.stacks[:name].push(@name1)
-        @context.stacks[:bool].push(LiteralPoint.new("bool", false))
+        @context.stacks[:bool].push(ValuePoint.new("bool", false))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:bool].depth.should == 0
@@ -149,13 +149,13 @@ describe FloatDefineInstruction do
     before(:each) do
       @i1 = FloatDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("xyz")
+      @name1 = ReferencePoint.new("xyz")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and one :int" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:float].push(LiteralPoint.new("float", -11.11))
+        @context.stacks[:float].push(ValuePoint.new("float", -11.11))
         @i1.preconditions?.should == true
       end
     end
@@ -168,7 +168,7 @@ describe FloatDefineInstruction do
       
       it "should bind the top :int to the top :name" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:float].push(LiteralPoint.new("float", -11.11))
+        @context.stacks[:float].push(ValuePoint.new("float", -11.11))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:float].depth.should == 0
@@ -177,11 +177,11 @@ describe FloatDefineInstruction do
       end
       
       it "should overwrite the binding if it already exists" do
-        @context.bind_name("xyz", LiteralPoint.new("int", 999))
+        @context.bind_name("xyz", ValuePoint.new("int", 999))
         @context.names["xyz"].value.should == 999
         
         @context.stacks[:name].push(@name1)
-        @context.stacks[:float].push(LiteralPoint.new("float", -11.11))
+        @context.stacks[:float].push(ValuePoint.new("float", -11.11))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:float].depth.should == 0
@@ -213,13 +213,13 @@ describe ExecDefineInstruction do
     before(:each) do
       @i1 = ExecDefineInstruction.new(@context)
       @context.clear_stacks
-      @name1 = ChannelPoint.new("xyz")
+      @name1 = ReferencePoint.new("xyz")
     end
     
     describe "\#preconditions?" do
       it "should check that there is one :name and one :int" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:exec].push(LiteralPoint.new("int", 22))
+        @context.stacks[:exec].push(ValuePoint.new("int", 22))
         @i1.preconditions?.should == true
       end
     end
@@ -232,7 +232,7 @@ describe ExecDefineInstruction do
       
       it "should bind the top :int to the top :name" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:exec].push(LiteralPoint.new("int", 22))
+        @context.stacks[:exec].push(ValuePoint.new("int", 22))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:exec].depth.should == 0
@@ -241,11 +241,11 @@ describe ExecDefineInstruction do
       end
       
       it "should overwrite the binding if it already exists" do
-        @context.bind_name("xyz", LiteralPoint.new("int", 999))
+        @context.bind_name("xyz", ValuePoint.new("int", 999))
         @context.names["xyz"].value.should == 999
         
         @context.stacks[:name].push(@name1)
-        @context.stacks[:exec].push(LiteralPoint.new("int", 22))
+        @context.stacks[:exec].push(ValuePoint.new("int", 22))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:exec].depth.should == 0

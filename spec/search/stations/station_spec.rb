@@ -138,7 +138,7 @@ describe "Station" do
       loc1 = Station.new("mordor")
       dude1 = Individual.new("ref f")
       loc1.add_individual dude1
-      dude1.station.should == loc1
+      dude1.station_name.should == loc1
     end
     
     it "should be a private method"
@@ -160,9 +160,9 @@ describe "Station" do
     end
     
     it "should change the #station attribute of the moved Individual" do
-      @dude1.station.should == @loc1
+      @dude1.station_name.should == @loc1
       @loc1.transfer(0,"rivendell")
-      @dude1.station.should == @loc2
+      @dude1.station_name.should == @loc2
     end
     
     it "should bounds check the popIndex parameter and raise an error if impossible" do

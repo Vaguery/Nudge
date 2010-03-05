@@ -5,7 +5,7 @@ class NameRandomBoundInstruction < Instruction
   def setup
   end
   def derive
-    @result = ChannelPoint.new("placeholder")
+    @result = ReferencePoint.new("placeholder")
     @result.randomize(@context)
   end
   def cleanup
@@ -22,7 +22,7 @@ class NameNextInstruction < Instruction
     @new_name = @context.next_name
   end
   def derive
-    @result = ChannelPoint.new(@new_name)
+    @result = ReferencePoint.new(@new_name)
   end
   def cleanup
     pushes :exec, @result

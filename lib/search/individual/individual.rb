@@ -1,19 +1,13 @@
 require 'couchrest'
 
 module Nudge
-  
-  class Individual
-    def self.helperParser
-      @helperParser ||= NudgeLanguageParser.new()
-    end
-    
+  class Individual    
     def self.get(db_url, individual_id)
       # connect
       db = CouchRest.database!(db_url)
       
       # search
       couchDoc = db.get(individual_id.to_s)
-      puts couchDoc
       
       # create new guy
       newDude = self.new(couchDoc["genome"])
@@ -23,28 +17,49 @@ module Nudge
       
       return newDude
     end
-      
-    attr_accessor :genome, :scores, :progress, :ancestors, :station, :program, :timestamp
+    
+    
+    attr_accessor :scores, :progress, :ancestors, :station_name, :program, :timestamp
     attr_reader :id
     
-    def initialize(listing)
-      @helperParser = @genome = listing
-      raise(ArgumentError, "Nudge program cannot be parsed") if Individual.helperParser.parse(genome) == nil
-      @program = Individual.helperParser.parse(genome).to_points
+    
+    def initialize(code="block {}")
+      if code.kind_of?(String)
+        @program = NudgeProgram.new(code)
+      elsif code.kind_of?(NudgeProgram)
+        @program = code
+      else
+        raise(ArgumentError, "Individuals cannot be made from #{code.class} objects")
+      end
+        
       @scores = Hash.new
-      @timestamp = Time.now.to_i
+      @timestamp = Time.now
       @progress = 0
       @ancestors = []
-      @station = ""
+      @station_name = ""
     end
+    
+    
+    def genome
+      self.program.listing
+    end
+    
+    
+    def parses?
+      self.program.parses?
+    end
+    
     
     def known_scores
       return self.scores.keys.sort
     end
     
+    
+    
     def points
       return self.program.points
     end
+    
     
     def score_vector(template = self.known_scores)
       vector = []
@@ -68,70 +83,41 @@ module Nudge
     end
     
     
-    def delete_point(which)
-      return self.program.listing if (which < 1 || which > self.program.points)
-      return "block {}" if which == 1
-      chunks = isolate_point(which)
-      variant = chunks[:left] + chunks[:right]
-      return variant
-    end
-    
-    
-    def replace_point(which, newCode = "")
-      raise(ArgumentError, "program points can only be replaced by nonempty strings") if newCode == ""
-      return self.program.listing if (which < 1 || which > self.program.points)
-      chunks = isolate_point(which)
-      variant =  (chunks[:left] || "") + " #{newCode} " + (chunks[:right] || "")
-      return variant
-    end
-    
-    
-    def isolate_point(which)
-      raise(ArgumentError, "point specified is out of range in this genome") if
-        (which < 1 || which > self.program.points)
-      result = {}
+    def delete_point_or_clone(which)
       
-      # we're going to work in an array so we can do abacus-like manipulations
-      workingCopy = self.program.listing.split("\n")
-      posn = which - 1
-      
-      # look at the point itself now
-      # if it's a block, pull in more points from 'the right' until the braces balance here
-      if workingCopy[posn].include?("block")
-        leftCount = workingCopy[posn].count("{")
-        rightCount = workingCopy[posn].count("}")
-        while leftCount > rightCount do
-          workingCopy[posn] += (workingCopy[posn+1])
-          workingCopy.delete_at(posn+1)
-          leftCount = workingCopy[posn].count("{")
-          rightCount = workingCopy[posn].count("}")
-        end
+      if (which < 1 || which > self.points)
+        result = self.program.deep_copy
+      else
+        result = self.program.delete_point(which)
       end
       
-      # whether the point is a block or not, we want to avoid taking extra closing braces
-      # so we will peel off extra right braces into new elements in our workingCopy array
-      leftCount = workingCopy[posn].count("{")
-      rightCount = workingCopy[posn].count("}")
-      while leftCount < rightCount do
-        workingCopy[posn] = workingCopy[posn].strip
-        workingCopy = workingCopy.insert(posn+1,"}")
-        workingCopy[posn] = workingCopy[posn].chomp("}")
-        leftCount = workingCopy[posn].count("{")
-        rightCount = workingCopy[posn].count("}")
-      end
-      
-      # we'll return an array of three strings
-      # everything in the genome to the left of the point
-      # the isolated point itself
-      # everything to the right of the point from the genome
-      # noting that if which==1, we will have empty left & right, and return the entire codeblock
-      result[:middle] = workingCopy[posn]
-      if which > 1
-        result[:left] = workingCopy[0..posn-1].join
-        result[:right] = workingCopy[posn+1..-1].join
-      end
       return result
     end
+    
+    
+    def replace_point_or_clone(which, object)
+      if object.kind_of?(String)
+        prog = NudgeProgram.new(object)
+        if !prog.parses?
+          raise(ArgumentError, "Replacement point cannot be parsed")
+        else
+          new_point = prog.linked_code
+        end
+      elsif object.kind_of?(ProgramPoint)
+        new_point = object
+      else
+        raise(ArgumentError, "Program points cannot be replaced by #{object.class} objects")
+      end
+      
+      if (which < 1 || which > self.points)
+        result = self.program.deep_copy
+      else
+        result = self.program.replace_point(which,new_point)
+      end
+      
+      return result
+    end
+    
     
     def write
       where = CouchRest.database!(@station.database)

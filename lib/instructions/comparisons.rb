@@ -7,7 +7,7 @@ class IntEqualQInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 == @arg2)
+      @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -24,7 +24,7 @@ class IntLessThanQInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 < @arg2)
+      @result = ValuePoint.new("bool", @arg1 < @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -41,7 +41,7 @@ class IntGreaterThanQInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 > @arg2)
+      @result = ValuePoint.new("bool", @arg1 > @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -58,7 +58,7 @@ class FloatEqualQInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 == @arg2)
+      @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -75,7 +75,7 @@ class FloatGreaterThanQInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 > @arg2)
+      @result = ValuePoint.new("bool", @arg1 > @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -92,7 +92,7 @@ class FloatLessThanQInstruction < Instruction
     @arg1 = @context.stacks[:float].pop.value
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 < @arg2)
+      @result = ValuePoint.new("bool", @arg1 < @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -109,7 +109,7 @@ class ExecEqualQInstruction < Instruction
     @arg1 = @context.stacks[:exec].pop.tidy
   end
   def derive
-      @result = LiteralPoint.new("bool", @arg1 == @arg2)
+      @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -126,7 +126,7 @@ class NameEqualQInstruction < Instruction
     @arg1 = @context.stacks[:name].pop.value
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 == @arg2)
+    @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
@@ -143,7 +143,7 @@ class CodeEqualQInstruction < Instruction
     @arg1 = @context.stacks[:code].pop.tidy
   end
   def derive
-    @result = LiteralPoint.new("bool", @arg1 == @arg2)
+    @result = ValuePoint.new("bool", @arg1 == @arg2)
   end
   def cleanup
     pushes :bool, @result
