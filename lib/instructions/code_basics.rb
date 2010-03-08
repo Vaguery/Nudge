@@ -31,6 +31,25 @@ class CodeNullQInstruction < Instruction
 end
 
 
+class CodeAtomQInstruction < Instruction
+  def preconditions?
+    needs :code, 1
+  end
+  def setup
+    arg_listing = @context.stacks[:code].pop.value
+    @arg1 = NudgeProgram.new(arg_listing)
+  end
+  def derive
+    atomQ = @arg1.parses? && @arg1.points == 1
+    @result = ValuePoint.new("bool", atomQ)
+  end
+  def cleanup
+    pushes :bool, @result
+  end
+end
+
+
+
 class CodeLengthInstruction < Instruction
   def preconditions?
     needs :code, 1
@@ -54,18 +73,19 @@ class CodeLengthInstruction < Instruction
 end
 
 
-# class BoolOrInstruction < Instruction
-#   def preconditions?
-#     needs :bool, 2
-#   end
-#   def setup
-#     @arg1 = @context.stacks[:bool].pop.value
-#     @arg2 = @context.stacks[:bool].pop.value
-#   end
-#   def derive
-#     @result = ValuePoint.new("bool", @arg1 || @arg2)
-#   end
-#   def cleanup
-#     pushes :bool, @result
-#   end
-# end
+class CodeQuoteInstruction < Instruction
+  def preconditions?
+    needs :exec, 1
+  end
+  def setup
+    next_point = @context.stacks[:exec].pop
+    top,bottom = next_point.listing_parts
+    @parsed = NudgeProgram.new("#{top.strip}\n#{bottom.strip}")
+  end
+  def derive
+      @result = ValuePoint.new("code", @parsed.listing)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
