@@ -24,6 +24,7 @@ module DefineInstruction
   end
   
   def derive
+    raise "External variables cannot be redefined" if @context.variables[@bound_name] != nil
   end
   
   def cleanup

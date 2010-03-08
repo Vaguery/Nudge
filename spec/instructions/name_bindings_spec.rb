@@ -60,6 +60,19 @@ describe IntDefineInstruction do
         @context.names.length.should_not == 0        
         @context.names["xyz"].value.should == 123
       end
+      
+      it "should not re-bind a name that is a variable, though" do
+        @context.bind_variable("xyz", ValuePoint.new("bool", false))
+        @context.stacks[:int].push(ValuePoint.new("int", 456))
+        @context.stacks[:name].push(ReferencePoint.new("xyz"))
+        lambda{@i1.go}.should raise_error
+      end
+      
+      it "should raise an exception if it's binding the name to anything but a ValuePoint" do
+        @context.stacks[:int].push(9912) #the actual number
+        @context.stacks[:name].push(@name1)
+        lambda{@i1.go}.should raise_error
+      end
     end
   end
 end
@@ -89,7 +102,7 @@ describe BoolDefineInstruction do
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :name and one :int" do
+      it "should check that there is one :name and one :bool" do
         @context.stacks[:name].push(@name1)
         @context.stacks[:bool].push(ValuePoint.new("bool", false))
         @i1.preconditions?.should == true
@@ -102,7 +115,7 @@ describe BoolDefineInstruction do
         @context.reset_names
       end
       
-      it "should bind the top :int to the top :name" do
+      it "should bind the top :bool to the top :name" do
         @context.stacks[:name].push(@name1)
         @context.stacks[:bool].push(ValuePoint.new("bool", false))
         @i1.go
@@ -124,6 +137,14 @@ describe BoolDefineInstruction do
         @context.names.length.should_not == 0        
         @context.names["xyz"].value.should == false
       end
+      
+      it "should not re-bind a name that is a variable, though" do
+        @context.bind_variable("xyz", ValuePoint.new("bool", false))
+        @context.stacks[:bool].push(ValuePoint.new("bool", 456))
+        @context.stacks[:name].push(ReferencePoint.new("xyz"))
+        lambda{@i1.go}.should raise_error
+      end
+      
     end
   end
 end
@@ -153,7 +174,7 @@ describe FloatDefineInstruction do
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :name and one :int" do
+      it "should check that there is one :name and one :float" do
         @context.stacks[:name].push(@name1)
         @context.stacks[:float].push(ValuePoint.new("float", -11.11))
         @i1.preconditions?.should == true
@@ -166,7 +187,7 @@ describe FloatDefineInstruction do
         @context.reset_names
       end
       
-      it "should bind the top :int to the top :name" do
+      it "should bind the top :float to the top :name" do
         @context.stacks[:name].push(@name1)
         @context.stacks[:float].push(ValuePoint.new("float", -11.11))
         @i1.go
@@ -188,6 +209,14 @@ describe FloatDefineInstruction do
         @context.names.length.should_not == 0        
         @context.names["xyz"].value.should == -11.11
       end
+      
+      it "should not re-bind a name that is a variable, though" do
+        @context.bind_variable("xyz", ValuePoint.new("bool", false))
+        @context.stacks[:float].push(ValuePoint.new("float", 4.56))
+        @context.stacks[:name].push(ReferencePoint.new("xyz"))
+        lambda{@i1.go}.should raise_error
+      end
+      
     end
   end
 end
@@ -251,6 +280,13 @@ describe ExecDefineInstruction do
         @context.stacks[:exec].depth.should == 0
         @context.names.length.should_not == 0        
         @context.names["xyz"].value.should == 22
+      end
+      
+      it "should not re-bind a name that is a variable, though" do
+        @context.bind_variable("xyz", ValuePoint.new("bool", false))
+        @context.stacks[:exec].push(ValuePoint.new("int", 456))
+        @context.stacks[:name].push(ReferencePoint.new("xyz"))
+        lambda{@i1.go}.should raise_error
       end
     end
   end
