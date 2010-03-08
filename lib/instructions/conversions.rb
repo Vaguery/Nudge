@@ -1,3 +1,4 @@
+#encoding: utf-8
 class IntFromBoolInstruction < Instruction
   def preconditions?
     needs :bool, 1
@@ -28,6 +29,23 @@ class FloatFromBoolInstruction < Instruction
     pushes :float, @result
   end
 end
+
+
+class CodeFromBoolInstruction < Instruction
+  def preconditions?
+    needs :bool, 1
+  end
+  def setup
+    @arg = @context.stacks[:bool].pop.value
+  end
+  def derive
+    @result = ValuePoint.new("code", "value «bool»\n«bool» #{@arg}")
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
 
 
 class IntFromFloatInstruction < Instruction
@@ -78,6 +96,24 @@ class BoolFromIntInstruction < Instruction
 end
 
 
+class CodeFromIntInstruction < Instruction
+  def preconditions?
+    needs :int, 1
+  end
+  def setup
+    @arg = @context.stacks[:int].pop.value
+  end
+  def derive
+    @result = ValuePoint.new("code", "value «int»\n«int» #{@arg}")
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
+
+
+
 class BoolFromFloatInstruction < Instruction
   def preconditions?
     needs :float, 1
@@ -92,3 +128,20 @@ class BoolFromFloatInstruction < Instruction
     pushes :bool, @result
   end
 end
+
+
+class CodeFromFloatInstruction < Instruction
+  def preconditions?
+    needs :float, 1
+  end
+  def setup
+    @arg = @context.stacks[:float].pop.value
+  end
+  def derive
+    @result = ValuePoint.new("code", "value «float»\n«float» #{@arg}")
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+

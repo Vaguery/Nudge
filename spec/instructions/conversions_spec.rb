@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -7,7 +8,10 @@ theseInstructions = [
   IntFromFloatInstruction,
   FloatFromIntInstruction,
   FloatFromBoolInstruction,
-  BoolFromFloatInstruction
+  BoolFromFloatInstruction,
+  CodeFromFloatInstruction,
+  CodeFromIntInstruction,
+  CodeFromBoolInstruction
   ]
 
 itNeeds = {
@@ -16,7 +20,10 @@ itNeeds = {
   BoolFromIntInstruction => {"stack" => :int, "stackname" => "int", "type" => IntType, "becomes" => :bool},
   BoolFromFloatInstruction => {"stack" => :float, "stackname" => "float", "type" => FloatType, "becomes" => :bool},
   FloatFromIntInstruction => {"stack" => :int, "stackname" => "int", "type" => IntType, "becomes" => :float},
-  FloatFromBoolInstruction => {"stack" => :bool, "stackname" => "bool", "type" => BoolType, "becomes" => :float}
+  FloatFromBoolInstruction => {"stack" => :bool, "stackname" => "bool", "type" => BoolType, "becomes" => :float},
+  CodeFromFloatInstruction => {"stack" => :float, "stackname" => "float", "type" => FloatType, "becomes" => :code},
+  CodeFromIntInstruction => {"stack" => :int, "stackname" => "int", "type" => IntType, "becomes" => :code},
+  CodeFromBoolInstruction => {"stack" => :bool, "stackname" => "bool", "type" => BoolType, "becomes" => :code}
 }
   
 whatHappens = {
@@ -25,7 +32,10 @@ whatHappens = {
   BoolFromIntInstruction => {0 => false, -2 => true, 122 => true},
   BoolFromFloatInstruction => {0.0 => false, -2.2 => true, 122.2 => true},
   FloatFromIntInstruction => {0 => 0.0, -2 => -2.0, 99 => 99.0},
-  FloatFromBoolInstruction => {false => 0.0, true => 1.0}
+  FloatFromBoolInstruction => {false => 0.0, true => 1.0},
+  CodeFromFloatInstruction => {1.3 => "value «float»\n«float» 1.3", -2.8 => "value «float»\n«float» -2.8"},
+  CodeFromIntInstruction => {1882 => "value «int»\n«int» 1882", -9111 => "value «int»\n«int» -9111"},
+  CodeFromBoolInstruction => {false => "value «bool»\n«bool» false", true => "value «bool»\n«bool» true"}
 }
 
 
@@ -54,6 +64,7 @@ theseInstructions.each do |instName|
         @stackSymbol = itNeeds[instName]["stack"]
         @stackName = itNeeds[instName]["stackname"]
         @someValue = itNeeds[instName]["type"].any_value
+        @it_becomes = itNeeds[instName]["becomes"]
         @myStarter = ValuePoint.new(@stackName,@someValue)
       end
       
@@ -82,6 +93,8 @@ theseInstructions.each do |instName|
             whatHappens[instName].each do |k,v|
               it "\'#{k}\' becomes #{itNeeds[instName]["becomes"]} \'#{v}\'" do
                 @context.stacks[@stackSymbol].push(ValuePoint.new(@stackName,k))
+                @i1.go
+                @context.stacks[@it_becomes].peek.value.should == v
               end
             end
           end
