@@ -22,12 +22,14 @@ module IfInstruction
   end
 end
 
+
 class IntIfInstruction < Instruction
   include IfInstruction
   def initialize(context)
     super(context, :int)
   end
 end
+
 
 class FloatIfInstruction < Instruction
   include IfInstruction
@@ -36,9 +38,31 @@ class FloatIfInstruction < Instruction
   end
 end
 
+
 class ExecIfInstruction < Instruction
   include IfInstruction
   def initialize(context)
     super(context, :exec)
   end
+end
+
+
+class CodeIfInstruction < Instruction
+  def preconditions?
+    needs :code, 2
+    needs :bool, 1
+  end
+  def setup
+    @stay = @context.stacks[:bool].pop.value
+    @ifFalse = @context.stacks[:code].pop.value
+    @ifTrue = @context.stacks[:code].pop.value
+  end
+  def derive
+    which = @stay ? @ifTrue : @ifFalse
+    @result = NudgeProgram.new(which).linked_code
+  end
+  def cleanup
+    pushes :exec, @result
+  end
+  
 end
