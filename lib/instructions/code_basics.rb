@@ -60,17 +60,36 @@ class CodeLengthInstruction < Instruction
   end
   def derive
     if @parsed.linked_code kind_of?(CodeblockPoint)
-      @result = ValuePoint.new("int", @parsed[1].contents.length)
+      len = @parsed[1].contents.length
     elsif @parsed.parses? == false
-      @result = 0
+      len = ValuePoint.new("int", 0)
     else
-      @result = 1
+      len = 1
     end
+    ValuePoint.new("int", len)
   end
   def cleanup
     pushes :int, @result
   end
 end
+
+
+class CodePointsInstruction < Instruction
+  def preconditions?
+    needs :code, 1
+  end
+  def setup
+    arg_listing = @context.stacks[:code].pop.value
+    @parsed = NudgeProgram.new(arg_listing)
+  end
+  def derive
+    @result = ValuePoint.new("int",@parsed.points)
+  end
+  def cleanup
+    pushes :int, @result
+  end
+end
+
 
 
 class CodeQuoteInstruction < Instruction

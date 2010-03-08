@@ -145,3 +145,20 @@ class CodeFromFloatInstruction < Instruction
   end
 end
 
+
+class CodeFromNameInstruction < Instruction
+  def preconditions?
+    needs :name, 1
+  end
+  def setup
+    @arg = @context.stacks[:name].pop.name
+  end
+  def derive
+    @result = ValuePoint.new("code", "ref #{@arg}")
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
+
