@@ -45,6 +45,11 @@ module Nudge
       return [self.tidy, fn.strip]
     end
     
+    def listing
+      t,b = listing_parts
+      return "#{t} \n#{b}".strip
+    end
+    
     def each
       yield self
       @contents.each do |child|
@@ -107,6 +112,11 @@ module Nudge
       fn = @raw ? "«#{self.type}» #{self.raw}" : ""
       return [self.tidy, fn]
     end
+    
+    def listing
+      pts = self.listing_parts
+      return "value «#{self.type}» \n«#{self.type}» #{self.raw.strip}".strip
+    end
   end
   
   
@@ -146,6 +156,11 @@ module Nudge
     def listing_parts
       [self.tidy,""]
     end
+    
+    def listing
+      return self.tidy
+    end
+    
   end
   
   
@@ -193,6 +208,11 @@ module Nudge
     def listing_parts
       [self.tidy,""]
     end
+    
+    def listing
+      return self.tidy
+    end
+    
   end
   
 end

@@ -40,6 +40,12 @@ describe "InstructionPoint" do
     end
   end
   
+  describe "#listing" do
+    it "should work just like #tidy" do
+      InstructionPoint.new("low_ball").listing.should == "do low_ball"
+    end
+  end
+  
   
   [["plant_water","PlantWaterInstruction"],["opinion_greaterthan?", "OpinionGreaterthan?Instruction"]].each do |inp|
     it "should know the appropriate class name for the Instruction singleton for #{inp}" do

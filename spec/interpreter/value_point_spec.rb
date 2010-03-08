@@ -139,4 +139,14 @@ describe "ValuePoint" do
       myFUcode.listing_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
     end
   end
+  
+  describe "listing" do
+    it "should return a combined string composed of the #listing_parts separated by a newline" do
+      mat = ValuePoint.new("matrix", "[1,3, 5;\t9,2, 11; \t92,-221,2]")
+      mat.listing.should == "value «matrix» \n«matrix» [1,3, 5;\t9,2, 11; \t92,-221,2]"
+      
+      num = ValuePoint.new("int", 812)
+      num.listing.should == "value «int» \n«int» 812"
+    end
+  end
 end

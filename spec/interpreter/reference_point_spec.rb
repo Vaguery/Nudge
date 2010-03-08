@@ -58,6 +58,12 @@ describe "ReferencePoint" do
     end
   end
   
+  describe "listing" do
+    it "should work just like #tidy" do
+      ReferencePoint.new("jump_a2").listing.should == "ref jump_a2" 
+    end
+  end
+  
   describe "#listing_parts" do
     it "should return an Array containing (1) ReferencePoint#tidy and (2) an empty string" do
       myRP = ReferencePoint.new("bah_8")

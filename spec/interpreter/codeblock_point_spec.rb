@@ -39,6 +39,7 @@ describe "listing_parts" do
     end
   end
   
+  
   context "when there need to be footnotes" do
     it "should work for blocks containing nil-valued ValuePoints" do
       CodeblockPoint.new([ValuePoint.new("foo")]).listing_parts.should ==
@@ -68,6 +69,17 @@ describe "listing_parts" do
     end
   end
 end
+
+
+describe "#listing" do
+  it "should return a single string with the tidied code and footnotes block, surrounding a newline" do
+    simple_tricky = magicCodeblockPointMaker(
+      "block { value «code»}\n«code» value «code»\n«int» 123\n«code» value «int»")
+    simple_tricky.listing.should include(simple_tricky.listing_parts[0])
+    simple_tricky.listing.should include(simple_tricky.listing_parts[1])
+  end
+end
+
 
 describe "#go" do
   describe "should split at the root #contents level and push IN REVERSE ORDER back onto :exec" do
