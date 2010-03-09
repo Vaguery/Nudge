@@ -14,6 +14,7 @@ class CodeNoopInstruction < Instruction
 end
 
 
+
 class CodeNullQInstruction < Instruction
   def preconditions?
     needs :code, 1
@@ -29,6 +30,7 @@ class CodeNullQInstruction < Instruction
     pushes :bool, @result
   end
 end
+
 
 
 class CodeAtomQInstruction < Instruction
@@ -72,6 +74,7 @@ class CodeLengthInstruction < Instruction
     pushes :int, @result
   end
 end
+
 
 
 class CodePointsInstruction < Instruction
@@ -155,3 +158,50 @@ class CodeDefineInstruction < Instruction
   end
 end
 
+
+
+class CodeNthInstruction < Instruction
+  def preconditions?
+    needs :int, 1
+    needs :code, 1
+  end
+  def setup
+    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.stacks[:code].pop.value
+  end
+  def derive
+    tree = NudgeProgram.new(@arg2)
+    if tree.linked_code.kind_of?(CodeblockPoint)
+      pts = tree[1].contents.length
+      val = tree[1].contents[@arg1 % pts]
+    else
+      val = tree
+    end
+    @result = ValuePoint.new("code", val.listing)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
+
+class CodeCdrInstruction < Instruction
+  def preconditions?
+    needs :code, 1
+  end
+  def setup
+    @arg = @context.stacks[:code].pop.value
+  end
+  def derive
+    tree = NudgeProgram.new(@arg)
+    if tree.linked_code.kind_of?(CodeblockPoint) && (tree.points > 2)
+      new_tree = tree.delete_point(2)
+    else
+      new_tree = CodeblockPoint.new([])
+    end
+    @result = ValuePoint.new("code", new_tree.listing)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end

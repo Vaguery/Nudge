@@ -368,11 +368,147 @@ describe CodeNameLookupInstruction do
         @context.stacks[:name].depth.should == 0
       end
       
+      it "should work for bindings to other ProgramPoint subclasses" do
+        @context.stacks[:name].push(ReferencePoint.new("vja"))
+        @context.names["vja"].should == nil
+        @context.bind_name("vja", NudgeProgram.new("block {ref x do int_add block {ref y}}").linked_code)
+        @context.names["vja"].listing.should == "block {\n  ref x\n  do int_add\n  block {\n    ref y}}"
+        @i1.go
+        @context.stacks[:code].depth.should == 1
+        @context.stacks[:code].peek.listing.should ==
+          "value «code» \n«code» block {\n  ref x\n  do int_add\n  block {\n    ref y}}"
+        @context.stacks[:code].peek.should be_a_kind_of(ValuePoint)
+        @context.stacks[:name].depth.should == 0
+        
+      end
+      
       it "should return an empty «code» ValuePoint if there is no binding" do
         @context.stacks[:name].push(ReferencePoint.new("b2"))
         @i1.go
         @context.stacks[:code].depth.should == 1
         @context.stacks[:code].peek.listing.should == "value «code» \n«code»"
+      end
+    end
+  end
+end
+
+
+
+describe CodeNthInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeNthInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = CodeNthInstruction.new(@context)
+    end
+    
+    describe "\#preconditions?" do
+      it "should need at least one item on the :int stack and :code stacks" do
+        @context.clear_stacks
+        lambda{@i1.preconditions?}.should raise_error
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
+        @context.stacks[:code].push(ValuePoint.new("code", "block {ref a ref b ref c}"))
+        lambda{@i1.preconditions?}.should_not raise_error
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.stacks[:code].push(ValuePoint.new("code", "block {ref a ref b ref c}"))
+      end
+      
+      it "should get the Nth item from the backbone of the top :code value" do
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "ref b"
+      end
+      
+      it "should use the top :int modulo the length of the backbone" do
+        @context.stacks[:int].push(ValuePoint.new("int", 11))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "ref c"        
+      end
+      
+      it "should work for negative values too" do
+        @context.stacks[:int].push(ValuePoint.new("int", -8172))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "ref a"
+      end
+      it "should return the top :code value itself if it's not a CodeblockPoint" do
+        @context.stacks[:code].push(ValuePoint.new("code", "do int_rob"))
+        @context.stacks[:int].push(ValuePoint.new("int", 21))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "do int_rob"
+        
+      end
+    end
+  end
+end
+
+
+
+describe CodeCdrInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeCdrInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = CodeCdrInstruction.new(@context)
+    end
+    
+    describe "\#preconditions?" do
+      it "should need at least one item on the :code stack" do
+        @context.clear_stacks
+        lambda{@i1.preconditions?}.should raise_error
+        @context.stacks[:code].push(ValuePoint.new("code", "block {ref a ref b ref c}"))
+        lambda{@i1.preconditions?}.should_not raise_error
+      end
+    end
+    
+    describe "\#cleanup" do
+      it "should remove the first item from the top :code item's backbone block" do
+        @context.stacks[:code].push(ValuePoint.new("code", "block {ref a ref b ref c}"))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block {\n  ref b\n  ref c}"
+      end
+      
+      it "should push an empty block {} program if the item isn't a CodeblockPoint" do
+        @context.stacks[:code].push(ValuePoint.new("code", "ref a"))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block {}"        
+      end
+      
+      it "should push an empty block {} program if the item doesn't have enough points to remove 1" do
+        @context.stacks[:code].push(ValuePoint.new("code", "block {}"))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block {}"        
       end
     end
   end

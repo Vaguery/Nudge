@@ -111,8 +111,6 @@ describe "initialization" do
       lambda {@ii.bind_variable("x", ReferencePoint.new("x2"))}.should_not raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", InstructionPoint.new("matrix_a"))}.should_not raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", CodeblockPoint.new([]))}.should_not raise_error(ArgumentError)
-      
-      
     end
     
     it "should remove an new entry when #unbind_variable is called" do
