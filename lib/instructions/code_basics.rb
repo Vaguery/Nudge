@@ -185,6 +185,30 @@ class CodeNthInstruction < Instruction
 end
 
 
+
+class CodeNthPointInstruction < Instruction
+  def preconditions?
+    needs :int, 1
+    needs :code, 1
+  end
+  def setup
+    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.stacks[:code].pop.value
+  end
+  def derive
+    tree = NudgeProgram.new(@arg2)
+    tree_size = tree.points
+    which = (@arg1-1) % tree_size + 1
+    pt = tree[which]
+    @result = ValuePoint.new("code", pt.listing)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
+
+
 class CodeCdrInstruction < Instruction
   def preconditions?
     needs :code, 1
