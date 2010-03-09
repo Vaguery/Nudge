@@ -116,12 +116,14 @@ module Nudge
     
     
     def bind_variable(name, value)
-      raise(ArgumentError, "Variables can only be bound to ValuePoints") unless value.kind_of?(ValuePoint)
+      raise(ArgumentError, "Variables can only be bound to ProgramPoints") unless
+        value.kind_of?(ProgramPoint)
       @variables[name] = value
     end
     
     def bind_name(name, value)
-      raise(ArgumentError, "Names can only be bound to ValuePoints") unless value.kind_of?(ValuePoint)
+      raise(ArgumentError, "Names can only be bound to ProgramPoints") unless
+        value.kind_of?(ProgramPoint)
       @names[name] = value
     end
     

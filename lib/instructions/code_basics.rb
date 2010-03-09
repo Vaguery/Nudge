@@ -102,12 +102,36 @@ class CodeQuoteInstruction < Instruction
     @parsed = NudgeProgram.new("#{top.strip}\n#{bottom.strip}")
   end
   def derive
-      @result = ValuePoint.new("code", @parsed.listing)
+    @result = ValuePoint.new("code", @parsed.listing)
   end
   def cleanup
     pushes :code, @result
   end
 end
+
+
+
+class CodeNameLookupInstruction < Instruction
+  def preconditions?
+    needs :name, 1
+  end
+  def setup
+    @the_reference = @context.stacks[:name].pop.value
+  end
+  def derive
+    bound_value = @context.variables[@the_reference] || @context.names[@the_reference] || nil
+    if bound_value != nil
+      @result = ValuePoint.new("code", bound_value.listing)
+    else
+      @result = ValuePoint.new("code", "")
+    end
+  end
+  def cleanup
+    pushes :code, @result
+  end
+  
+end
+
 
 
 class CodeDefineInstruction < Instruction

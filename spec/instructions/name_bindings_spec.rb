@@ -246,9 +246,9 @@ describe ExecDefineInstruction do
     end
     
     describe "\#preconditions?" do
-      it "should check that there is one :name and one :int" do
+      it "should check that there is one :name and one :exec item" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:exec].push(ValuePoint.new("int", 22))
+        @context.stacks[:exec].push(CodeblockPoint.new([]))
         @i1.preconditions?.should == true
       end
     end
@@ -259,14 +259,16 @@ describe ExecDefineInstruction do
         @context.reset_names
       end
       
-      it "should bind the top :int to the top :name" do
+      it "should bind the top :exec item to the top :name" do
         @context.stacks[:name].push(@name1)
-        @context.stacks[:exec].push(ValuePoint.new("int", 22))
+        @context.stacks[:exec].push(CodeblockPoint.new([]))
         @i1.go
         @context.stacks[:name].depth.should == 0
         @context.stacks[:exec].depth.should == 0
         @context.names.length.should_not == 0        
-        @context.names["xyz"].value.should == 22
+        @context.names["xyz"].listing.should == "block {}"
+        @context.names["xyz"].should be_a_kind_of(CodeblockPoint)
+        
       end
       
       it "should overwrite the binding if it already exists" do

@@ -102,10 +102,17 @@ describe "initialization" do
       @ii.variables["x"].raw.should == "88"
     end
     
-    it "should raise an exception if the bound value is anything but a ValuePoint" do
+    it "should raise an exception if the bound value is anything but a ProgramPoint" do
       lambda {@ii.bind_variable("x", 88)}.should raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", [1,2])}.should raise_error(ArgumentError)
       lambda {@ii.bind_variable("x", nil)}.should raise_error(ArgumentError)
+      
+      lambda {@ii.bind_variable("x", ValuePoint.new("int", 88))}.should_not raise_error(ArgumentError)
+      lambda {@ii.bind_variable("x", ReferencePoint.new("x2"))}.should_not raise_error(ArgumentError)
+      lambda {@ii.bind_variable("x", InstructionPoint.new("matrix_a"))}.should_not raise_error(ArgumentError)
+      lambda {@ii.bind_variable("x", CodeblockPoint.new([]))}.should_not raise_error(ArgumentError)
+      
+      
     end
     
     it "should remove an new entry when #unbind_variable is called" do
