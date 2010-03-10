@@ -252,3 +252,25 @@ class CodeCarInstruction < Instruction
     pushes :code, @result
   end
 end
+
+
+
+class CodeExecuteInstruction < Instruction
+  def preconditions?
+    needs :code, 1
+  end
+  def setup
+    @arg = @context.stacks[:code].pop.value
+  end
+  def derive
+    that_becomes = NudgeProgram.new(@arg)
+    if that_becomes.parses?
+      @result = NudgeProgram.new(@arg).linked_code
+    else
+      @result = CodeblockPoint.new([])
+    end
+  end
+  def cleanup
+    pushes :exec, @result
+  end
+end
