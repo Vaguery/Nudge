@@ -697,3 +697,46 @@ describe CodeExecuteInstruction do
 end
 
 
+describe CodeInstructionsInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeInstructionsInstruction.new(@context)
+  end
+  
+  it "should have the right context" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @context = Interpreter.new
+      @i1 = CodeInstructionsInstruction.new(@context)
+    end
+    
+    describe "\#preconditions?" do
+      it "doesn't need any preconditions to be met, actually" do
+        lambda{@i1.preconditions?}.should_not raise_error
+      end
+    end
+    
+    describe "\#cleanup" do
+      it "should push a block containing every active instruction" do
+        # @context.disable_all_instructions
+        @context.enable(CodeInstructionsInstruction)
+        @context.enable(IntAddInstruction)
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block { do code_instructions do int_add}"
+        
+        @context.enable(ExecPopInstruction)
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block { do code_instructions do int_add do exec_pop}"
+      end
+    end
+  end
+end
