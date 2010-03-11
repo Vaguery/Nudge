@@ -10,7 +10,8 @@ theseInstructions = [
   IntMaxInstruction, 
   IntMinInstruction, 
   IntAbsInstruction,
-  IntNegativeInstruction
+  IntNegativeInstruction,
+  IntPowerInstruction
   ]
   
 intsTheyNeed = {
@@ -22,7 +23,8 @@ intsTheyNeed = {
   IntMaxInstruction => 2, 
   IntMinInstruction => 2, 
   IntAbsInstruction => 1,
-  IntNegativeInstruction => 1
+  IntNegativeInstruction => 1,
+  IntPowerInstruction => 2
   }
   
 resultTuples = {
@@ -34,7 +36,8 @@ resultTuples = {
   IntMaxInstruction => {[-2,-3] => -2}, 
   IntMinInstruction => {[-3,-2] => -3}, 
   IntAbsInstruction => {[-3] => 3,[-0] => 0 },
-  IntNegativeInstruction => {[-2] => 2, [912] => -912}
+  IntNegativeInstruction => {[-2] => 2, [912] => -912},
+  IntPowerInstruction => {[8,2] => 64, [19,7] => 893871739, [-10,2] => 100, [-10,-2] => 0, [5, -9] => 0}
   }
   
 div0 = {

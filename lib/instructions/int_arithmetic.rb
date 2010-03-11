@@ -14,6 +14,8 @@ class IntAddInstruction < Instruction
   end
 end
 
+
+
 class IntMultiplyInstruction < Instruction
   def preconditions?
     needs :int, 2
@@ -29,6 +31,7 @@ class IntMultiplyInstruction < Instruction
     pushes :int, @result
   end
 end
+
 
 
 class IntDivideInstruction < Instruction
@@ -53,6 +56,7 @@ class IntDivideInstruction < Instruction
 end
 
 
+
 class IntSubtractInstruction < Instruction
   def preconditions?
     needs :int, 2
@@ -69,6 +73,7 @@ class IntSubtractInstruction < Instruction
     pushes :int, @result
   end
 end
+
 
 
 class IntModuloInstruction < Instruction
@@ -93,6 +98,7 @@ class IntModuloInstruction < Instruction
 end
 
 
+
 class IntMaxInstruction < Instruction
   def preconditions?
     needs :int, 2
@@ -109,6 +115,7 @@ class IntMaxInstruction < Instruction
     pushes :int, @result
   end
 end
+
 
 
 class IntMinInstruction < Instruction
@@ -129,6 +136,7 @@ class IntMinInstruction < Instruction
 end
 
 
+
 class IntAbsInstruction < Instruction
   def preconditions?
     needs :int, 1
@@ -144,6 +152,8 @@ class IntAbsInstruction < Instruction
   end
 end
 
+
+
 class IntNegativeInstruction < Instruction
   def preconditions?
     needs :int, 1
@@ -158,3 +168,22 @@ class IntNegativeInstruction < Instruction
     pushes :int, @result
   end
 end
+
+
+
+class IntPowerInstruction < Instruction
+  def preconditions?
+    needs :int, 2
+  end
+  def setup
+    @arg2 = @context.stacks[:int].pop.value
+    @arg1 = @context.stacks[:int].pop.value
+  end
+  def derive
+      @result = ValuePoint.new("int", (@arg1**@arg2).to_i)
+  end
+  def cleanup
+    pushes :int, @result
+  end
+end
+
