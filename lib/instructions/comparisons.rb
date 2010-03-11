@@ -105,16 +105,19 @@ class ExecEqualQInstruction < Instruction
     needs :exec, 2
   end
   def setup
-    @arg2 = @context.stacks[:exec].pop.tidy
-    @arg1 = @context.stacks[:exec].pop.tidy
+    @arg2 = @context.stacks[:exec].pop.value
+    @arg1 = @context.stacks[:exec].pop.value
   end
   def derive
-      @result = ValuePoint.new("bool", @arg1 == @arg2)
+    x1 = NudgeProgram.new(@arg1).listing
+    x2 = NudgeProgram.new(@arg2).listing
+    @result = ValuePoint.new("bool", x1 == x2)
   end
   def cleanup
     pushes :bool, @result
   end
 end
+
 
 
 class NameEqualQInstruction < Instruction
@@ -139,11 +142,13 @@ class CodeEqualQInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.tidy
-    @arg1 = @context.stacks[:code].pop.tidy
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
-    @result = ValuePoint.new("bool", @arg1 == @arg2)
+    c1 = NudgeProgram.new(@arg1).listing
+    c2 = NudgeProgram.new(@arg2).listing
+    @result = ValuePoint.new("bool", c1 == c2)
   end
   def cleanup
     pushes :bool, @result
