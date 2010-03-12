@@ -32,34 +32,42 @@ class Instruction
     @context = context
   end
   
-  def needs(stackName, minimum)
-    iNeed = @context.stacks[stackName]
-    
-    if @context.stacks[stackName].depth < minimum
-       raise NotEnoughStackItems, "Stack #{stackName} too small: needs at least #{minimum} items"
-      return false
+  
+  def needs(infrastructure, minimum = 1)
+    unless infrastructure.is_a?(Symbol)
+      raise(MissingInstructionError, "#{self.class} needs #{infrastructure}") unless
+        @context.instructions.include?(infrastructure)
     else
-      return true
+      iNeed = @context.stacks[infrastructure]
+      if @context.stacks[infrastructure].depth < minimum
+        raise NotEnoughStackItems, "Stack #{infrastructure} too small: needs at least #{minimum} items"
+      else
+        return true
+      end
     end
   end
-
+  
+  
   def pushes(stackName, literal)
     @context.stacks[stackName].push literal
   end
   
+  
   def go
-    begin
     if self.preconditions?
       self.setup
       self.derive
       self.cleanup
     end
-    rescue NotEnoughStackItems
-      logError("NOOP: Parameter shortage")
-    rescue InstructionMethodError
-       logError("NOOP: Calculation error")
-    end
+  rescue NotEnoughStackItems, MissingInstructionError => exc
+    msg = ValuePoint.new("error", exc.message)
+    pushes :error, msg
+  rescue InstructionMethodError
+  rescue NaNResultError => exc
+    msg = ValuePoint.new("error", exc.message)
+    pushes :error, msg
   end
+  
   
   def preconditions?
     raise "Your Instruction class should define its own #preconditions? method"
@@ -75,10 +83,6 @@ class Instruction
   
   def cleanup
     raise "Your Instruction class should define its own #cleanup method"
-  end
-  
-  def logError(msg)
-    # STDERR.puts msg
   end
   
 end

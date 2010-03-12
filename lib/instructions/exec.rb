@@ -127,9 +127,7 @@ end
 
 class ExecDoCountInstruction < Instruction
   def preconditions?
-    unless @context.instructions.include?(ExecDoRangeInstruction)
-      raise(MissingInstructionError, "exec_do_range must be active to use exec_do_count") 
-    end
+    needs ExecDoRangeInstruction
     needs :exec, 1
     needs :int, 1
   end

@@ -149,7 +149,7 @@ class FloatPowerInstruction < Instruction
     if !(@base**@exp).nan?
       @result = ValuePoint.new("float", @base**@exp)
     else
-      raise Instruction::NaNResultError
+      raise Instruction::NaNResultError, "#{self.class} did not return a float"
     end
     
   end
@@ -170,7 +170,7 @@ class FloatSqrtInstruction < Instruction
     if @arg1 >= 0.0
       @result = ValuePoint.new("float", Math.sqrt(@arg1))
     else
-      raise Instruction::NaNResultError
+      raise Instruction::NaNResultError, "#{self.class} did not return a float"
     end
   end
   def cleanup

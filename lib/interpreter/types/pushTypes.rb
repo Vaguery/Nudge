@@ -71,10 +71,10 @@ module NudgeType
       self.random_value(options)
     end
   end
-
-
-
-
+  
+  
+  
+  
   class BoolType
     extend TypeBehaviors
 

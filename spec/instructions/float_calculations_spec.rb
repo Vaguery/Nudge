@@ -129,20 +129,22 @@ theseInstructions.each do |instName|
   end
 end
 
-describe "FloatPowerInstruction should raise a NaNResultError when it takes a root of a neg" do
-  it "should description" do
-    @context = Interpreter.new
-    [-6.82,-0.2].each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
-    lambda{FloatPowerInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
+describe "FloatPowerInstruction" do
+  it "should push an :error item when it takes a root of a neg" do
+    context = Interpreter.new
+    [-6.82,-0.2].each {|i| context.stacks[:float].push(ValuePoint.new("float", i))}
+    lambda{FloatPowerInstruction.new(context).go}.should_not raise_error
+    context.stacks[:error].peek.listing.should include("FloatPowerInstruction did not return a float")
   end
 end
 
-describe "FloatSqrtInstruction should raise a NaNResultError when it takes a root of a neg" do
-  it "should description" do
-    @context = Interpreter.new
+describe "FloatSqrtInstruction" do
+  it "should raise a NaNResultError when it takes a root of a neg" do
+    context = Interpreter.new
     [-6.82, -16.0].each do |i|
-      @context.stacks[:float].push(ValuePoint.new("float", i))
-      lambda{FloatSqrtInstruction.new(@context).go}.should raise_error(Instruction::NaNResultError)
+      context.stacks[:float].push(ValuePoint.new("float", i))
+      lambda{FloatSqrtInstruction.new(context).go}.should_not raise_error
+      context.stacks[:error].peek.listing.should include("FloatSqrtInstruction did not return a float")
     end
   end
 end
