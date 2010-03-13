@@ -320,7 +320,13 @@ describe CodeDefineInstruction do
         @context.stacks[:error].depth.should == 1
       end
       
-      it "should check for unparseable code values"
+      it "should work for unparseable code values" do
+        @context.stacks[:name].push(ReferencePoint.new("c3"))
+        @context.stacks[:code].push(ValuePoint.new("code", "some random crap"))
+        @i1.go
+        @context.names["c3"].should == nil
+        @context.stacks[:error].peek.listing.should include "CodeDefineInstruction cannot parse"
+      end
     end
   end
 end

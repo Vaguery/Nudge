@@ -14,7 +14,7 @@ module Nudge
   class Interpreter
     attr_accessor :program, :stepLimit, :steps
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
-    attr_accessor :last_name, :evaluate_channels
+    attr_accessor :last_name, :evaluate_references
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(params = {})
@@ -32,7 +32,7 @@ module Nudge
       @variables = Hash.new
       @steps = 0
       @last_name = "refAAAAA"
-      @evaluate_channels = true
+      @evaluate_references = true
       @stacks =  Hash.new {|hash, key| hash[key] = Stack.new(key) }
       
       # set it all up here
@@ -51,7 +51,7 @@ module Nudge
       self.clear_stacks
       @steps = 0
       @stacks[:exec].push(NudgeProgram.new(program).linked_code)
-      @evaluate_channels = true
+      @evaluate_references = true
     end
     
     

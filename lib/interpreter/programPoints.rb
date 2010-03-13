@@ -78,6 +78,12 @@ module Nudge
       context.stacks[self.type].push(self)
     end
     
+    
+    def clone
+      ValuePoint.new(@type, @raw.dup)
+    end
+    
+    
     def points
       1
     end
@@ -131,12 +137,12 @@ module Nudge
     end
     
     def go(context)
-      lookedUp = context.lookup(@name) if context.evaluate_channels
+      lookedUp = context.lookup(@name) if context.evaluate_references
       if lookedUp
         context.stacks[:exec].push(lookedUp)
       else
         context.stacks[:name].push(self)
-        context.evaluate_channels = true
+        context.evaluate_references = true
       end
     end
     

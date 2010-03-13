@@ -38,7 +38,7 @@ class NameDisableLookupInstruction < Instruction
   def derive
   end
   def cleanup
-    @context.evaluate_channels = false
+    @context.evaluate_references = false
   end
 end
 

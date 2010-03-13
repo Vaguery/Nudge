@@ -175,6 +175,7 @@ class CodeDefineInstruction < Instruction
       raise InstructionMethodError, "#{self.class} cannot change the value of a variable"
     else
       new_value = NudgeProgram.new(@code).linked_code
+      raise InstructionMethodError, "#{self.class} cannot parse '#{@code}'" if new_value.nil?
       @context.names[@ref] = new_value
     end
   end

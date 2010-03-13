@@ -684,7 +684,7 @@ module YankdupInstruction
   end
   
   def cleanup
-    moved_value = @context.stacks[@target_stack].entries[@which].dup
+    moved_value = @context.stacks[@target_stack].entries[@which].clone
     @context.stacks[@target_stack].push(moved_value)
   end
 end

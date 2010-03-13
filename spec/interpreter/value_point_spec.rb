@@ -103,7 +103,7 @@ describe "ValuePoint" do
       @ii.step
       @ii.stacks[:int].depth.should == 1
     end
-
+    
     it "should push the value onto the right stack" do
       @ii.stacks[:exec].push(ValuePoint.new("int",3))
       @ii.stacks[:exec].push(ValuePoint.new("float",2.2))
@@ -121,6 +121,20 @@ describe "ValuePoint" do
     it "should print 'value «type»' for ValuePoint#tidy" do
       myL = ValuePoint.new("float", -99.121001)
       myL.tidy.should == "value «float»"
+    end
+  end
+  
+  
+  describe "#clone" do
+    it "should return a new object" do
+      myL = ValuePoint.new("float", 128.1)
+      ValuePoint.should_receive(:new)
+      myL.clone
+    end
+    
+    it "should have an identical raw value, but not be the same string object" do
+      myL = ValuePoint.new("float", 1228.1)
+      myL.clone.raw.object_id.should_not == myL.raw.object_id
     end
   end
   

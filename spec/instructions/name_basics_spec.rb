@@ -140,16 +140,16 @@ describe NameDisableLookupInstruction do
       it "should switch off channel lookup until one NAME is encountered" do
         3.times {@context.stacks[:exec].push(ReferencePoint.new("zzzz"))}
         
-        @context.evaluate_channels.should == true
+        @context.evaluate_references.should == true
         2.times {@context.step} # looks up 'zzzz', pushes to :exec; pushes to :int
         @context.stacks[:int].peek.value.should == 99
         
         @i1.go
-        @context.evaluate_channels.should == false
+        @context.evaluate_references.should == false
         
         @context.step # doesn't look it up, pushes ReferencePoint to :name
         @context.stacks[:name].peek.value.should == "zzzz"
-        @context.evaluate_channels.should == true
+        @context.evaluate_references.should == true
         2.times {@context.step} # looks up 'zzzz' again, pushes to :exec; pushes to :int
         @context.stacks[:int].depth.should == 2
       end
