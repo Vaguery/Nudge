@@ -133,11 +133,9 @@ class ExecDoCountInstruction < Instruction
   end
   
   def setup
-    if @context.stacks[:int].peek.value < 1
-      raise InstructionMethodError
-    end
     @destination = @context.stacks[:int].pop
     @code = @context.stacks[:exec].pop
+    raise InstructionMethodError, "#{self.class} needs a positive argument" if @destination.value < 1
   end
   
   def derive

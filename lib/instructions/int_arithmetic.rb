@@ -47,7 +47,7 @@ class IntDivideInstruction < Instruction
       @quotient = @arg1 / @arg2
       @result = ValuePoint.new("int", @quotient)
     else
-      raise InstructionMethodError
+      raise InstructionMethodError, "#{self.class} cannot divide by 0"
     end
   end
   def cleanup
@@ -89,7 +89,7 @@ class IntModuloInstruction < Instruction
       @mod = @arg1 % @arg2
       @result = ValuePoint.new("int", @mod)
     else
-      raise InstructionMethodError
+      raise InstructionMethodError, "#{self.class} cannot calculate modulo 0"
     end
   end
   def cleanup

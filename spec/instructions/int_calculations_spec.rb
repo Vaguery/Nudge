@@ -103,8 +103,8 @@ theseInstructions.each do |instName|
             @context.clear_stacks
             @i1 = instName.new(@context)
             div0[instName].each {|i| @context.stacks[:int].push(ValuePoint.new("int", i))}
-            @i1.setup
-            lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
+            @i1.go
+            @context.stacks[:error].depth.should == 1
           end
         end
       end

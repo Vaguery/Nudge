@@ -677,6 +677,10 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].push(ValuePoint.new("int", -19))
         @i1.go
         
+        puts @context.stacks[:int].depth
+        puts @context.stacks[:exec].depth
+        
+        
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == -2
         @context.stacks[:exec].depth.should == 2
@@ -842,10 +846,10 @@ describe ExecDoCountInstruction do
     end
     
     describe "\#preconditions?" do
-      it "should check that there are two :ints and at least one :exec item" do
+      it "should check that there are two :ints, 1+ :exec item, and knows ExecDoRangeInstruction" do
         @context.stacks[:int].push(ValuePoint.new("int", 3))
-        @context.stacks[:int].push(ValuePoint.new("int", 3))
-        @context.enable(ExecDoRangeInstruction)
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
+        @context.stacks[:exec].push(ReferencePoint.new("x"))
         @i1.preconditions?.should == true
       end
       
@@ -853,7 +857,9 @@ describe ExecDoCountInstruction do
         @context.disable(ExecDoRangeInstruction)
         @context.stacks[:int].push(ValuePoint.new("int", 3))
         @context.stacks[:int].push(ValuePoint.new("int", 3))
-        lambda{@i1.preconditions?}.should raise_error
+        lambda{@i1.go}.should_not raise_error
+        @context.stacks[:error].peek.listing.should include(
+          "ExecDoCountInstruction needs ExecDoRangeInstruction")
       end
     end
     
@@ -863,19 +869,16 @@ describe ExecDoCountInstruction do
         @context.enable(ExecDoRangeInstruction)
       end
       
-      it "should not work if the int is negative or zero" do
+      it "should create an :error entry if the int is negative or zero" do
         @context.stacks[:int].push(ValuePoint.new("int", -213))
         @i1.go
-        @context.stacks[:int].depth.should == 1
-        @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing_parts.should == ["block {}",""]
+        @context.stacks[:exec].depth.should == 0
         
         @context.reset("block {}")
         @context.stacks[:int].push(ValuePoint.new("int", 0))
         @i1.go
-        @context.stacks[:int].depth.should == 1
-        @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing_parts.should == ["block {}",""]
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 0
       end
       
       it "should push a 0 onto :int, and an exec_do_range block onto :exec" do

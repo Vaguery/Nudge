@@ -65,7 +65,8 @@ describe IntDefineInstruction do
         @context.bind_variable("xyz", ValuePoint.new("bool", false))
         @context.stacks[:int].push(ValuePoint.new("int", 456))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
-        lambda{@i1.go}.should raise_error
+        @i1.go
+        @context.stacks[:error].peek.listing.should include("cannot redefine a variable")
       end
       
       it "should raise an exception if it's binding the name to anything but a ValuePoint" do
@@ -142,7 +143,8 @@ describe BoolDefineInstruction do
         @context.bind_variable("xyz", ValuePoint.new("bool", false))
         @context.stacks[:bool].push(ValuePoint.new("bool", 456))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
-        lambda{@i1.go}.should raise_error
+        @i1.go
+        @context.stacks[:error].peek.listing.should include "cannot redefine a variable"
       end
       
     end
@@ -214,7 +216,8 @@ describe FloatDefineInstruction do
         @context.bind_variable("xyz", ValuePoint.new("bool", false))
         @context.stacks[:float].push(ValuePoint.new("float", 4.56))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
-        lambda{@i1.go}.should raise_error
+        @i1.go
+        @context.stacks[:error].depth.should == 1
       end
       
     end
@@ -288,7 +291,8 @@ describe ExecDefineInstruction do
         @context.bind_variable("xyz", ValuePoint.new("bool", false))
         @context.stacks[:exec].push(ValuePoint.new("int", 456))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
-        lambda{@i1.go}.should raise_error
+        @i1.go
+        @context.stacks[:error].depth.should == 1
       end
     end
   end

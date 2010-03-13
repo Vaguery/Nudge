@@ -24,7 +24,8 @@ module DefineInstruction
   end
   
   def derive
-    raise "External variables cannot be redefined" if @context.variables[@bound_name] != nil
+    raise Instruction::InstructionMethodError, "#{self.class} cannot redefine a variable" if
+      @context.variables[@bound_name] != nil
   end
   
   def cleanup

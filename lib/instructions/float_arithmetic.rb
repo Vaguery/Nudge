@@ -62,7 +62,7 @@ class FloatDivideInstruction < Instruction
       @quotient = @arg1 / @arg2
       @result = ValuePoint.new("float", @quotient)
     else
-      raise InstructionMethodError
+      raise NaNResultError, "#{self.class} cannot divide by 0.0"
     end
   end
   def cleanup
@@ -192,7 +192,7 @@ class FloatModuloInstruction < Instruction
       @mod = @arg1 % @arg2
       @result = ValuePoint.new("float", @mod)
     else
-      raise InstructionMethodError
+      raise NaNResultError, "#{self.class} attempted modulo 0.0"
     end
   end
   def cleanup

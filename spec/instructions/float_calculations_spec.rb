@@ -102,12 +102,12 @@ theseInstructions.each do |instName|
         end
         
         if div0.include? instName
-          it "should raise the right exceptions if it tries to divide by zero" do
+          it "should push an error if it tries to divide by zero" do
             @context.clear_stacks
             @i1 = instName.new(@context)
             div0[instName].each {|i| @context.stacks[:float].push(ValuePoint.new("float", i))}
-            @i1.setup
-            lambda{@i1.derive}.should raise_error(Instruction::InstructionMethodError)
+            @i1.go
+            @context.stacks[:error].depth.should == 1
           end
         end
       end

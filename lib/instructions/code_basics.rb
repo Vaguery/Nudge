@@ -172,7 +172,7 @@ class CodeDefineInstruction < Instruction
   end
   def derive
     if @context.variables.keys.include?(@ref)
-      raise "cannot change the value of a variable"
+      raise InstructionMethodError, "#{self.class} cannot change the value of a variable"
     else
       new_value = NudgeProgram.new(@code).linked_code
       @context.names[@ref] = new_value

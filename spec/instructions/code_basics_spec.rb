@@ -316,7 +316,8 @@ describe CodeDefineInstruction do
         @context.stacks[:name].push(ReferencePoint.new("c3"))
         @context.stacks[:code].push(ValuePoint.new("code", "block {}"))
         @context.variables["c3"] = CodeblockPoint.new([])
-        lambda{@i1.go}.should raise_error
+        @i1.go
+        @context.stacks[:error].depth.should == 1
       end
       
       it "should check for unparseable code values"
