@@ -180,7 +180,8 @@ class IntPowerInstruction < Instruction
     @arg1 = @context.stacks[:int].pop.value
   end
   def derive
-      @result = ValuePoint.new("int", (@arg1**@arg2).to_i)
+    raise NaNResultError,"#{self.class} attempted negative root of 0" if @arg1 == 0 && @arg2 < 0
+    @result = ValuePoint.new("int", (@arg1**@arg2).to_i)
   end
   def cleanup
     pushes :int, @result

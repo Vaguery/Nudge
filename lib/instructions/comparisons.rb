@@ -105,8 +105,8 @@ class ExecEqualQInstruction < Instruction
     needs :exec, 2
   end
   def setup
-    @arg2 = @context.stacks[:exec].pop.value
-    @arg1 = @context.stacks[:exec].pop.value
+    @arg2 = @context.stacks[:exec].pop.listing
+    @arg1 = @context.stacks[:exec].pop.listing
   end
   def derive
     x1 = NudgeProgram.new(@arg1).listing

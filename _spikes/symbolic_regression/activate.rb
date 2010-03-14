@@ -1,9 +1,10 @@
 APP_ROOT = File.dirname(__FILE__)
 
-require '../../lib/nudge.rb'
+require './../../lib/nudge.rb'
 require APP_ROOT + '/config/environment.rb'
 
 include Nudge
+
 
 spike_factory = Factory.new(name:"spike")
 
@@ -13,14 +14,19 @@ spike_factory = Factory.new(name:"spike")
 
 # run forever, checking config now and then
 5.times do
-  50.times do 
+  
+  100.times do 
     [Station.stations["generator1"],Station.stations["generator2"]].each {|station| station.core_cycle}
   end
   
   10.times do |gen|
     puts "\nGeneration #{gen}\n"
-    Station.stations.each {|name, station| puts "#{name}"; station.core_cycle}
+    Station.stations.each {|name, station| puts "#{name}, pop:#{station.population.length}"; station.core_cycle}
+    result = RubyProf.stop
+    
+    Station.stations["level1"].cull_all if Station.stations["level1"].population.length > 1500
   end
+  
   
   # Station.stations.each {|name, station| puts "#{name} has population: #{station.population.length}"}
   # 

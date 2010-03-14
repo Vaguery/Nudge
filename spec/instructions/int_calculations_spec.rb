@@ -126,3 +126,15 @@ theseInstructions.each do |instName|
     
   end
 end
+
+
+describe "FloatDomainError: Infinity" do
+  it "should push an error if a math routine returns 'Infinity'" do
+    context = Interpreter.new
+    context.stacks[:int].push(ValuePoint.new("int", 10**10))
+    context.stacks[:int].push(ValuePoint.new("int", 10**10))
+    IntPowerInstruction.new(context).go
+    context.stacks[:error].peek.listing.should include("Infinity")
+    context.stacks[:int].depth.should == 0
+  end
+end

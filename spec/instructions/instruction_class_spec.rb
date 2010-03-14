@@ -19,7 +19,6 @@ describe "capturing errors" do
   describe "NotEnoughStackItems" do
     describe "#preconditions?" do
       it "should push an :error ValuePoint onto the :error stacks when NotEnoughStackItems is raised" do
-        
         context = Interpreter.new
         i1 = IntAddInstruction.new(context)
         lambda{i1.go}.should_not raise_error
@@ -37,4 +36,5 @@ describe "capturing errors" do
       context.stacks[:error].peek.listing.should include "needs IntAddInstruction"
     end
   end
+  
 end

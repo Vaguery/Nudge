@@ -1,3 +1,5 @@
+require 'nudge'
+
 # classic generational GP
 
 @params = # types, instructions, variable names, config settings for random code, &c
@@ -44,8 +46,8 @@ generationalGP_culler =
 
 source = SearchDaemon.new(
           :capacity => 0,
-          :promote => {true}
-          :activation => {true}
+          :promote => {true},
+          :activation => {true},
           :generator => initial_generator,
           :cull_by => {},
           :connects_to => coreLooper)

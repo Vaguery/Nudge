@@ -1,3 +1,4 @@
+
 Nudge::Config.setup do |factory|
   
   # set up instructions
@@ -9,16 +10,15 @@ Nudge::Config.setup do |factory|
   factory.variable_names = ["x1", "x2"]
   
   # set up types
-  factory.types = [IntType, BoolType]
+  factory.types = ["int", "bool", "float", "code"]
   
   # set up stations
   factory.build_station("generator1",
     :capacity => 1,
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
-        :instructions => factory.instructions,
-        :references => factory.variable_names,
-        :types => factory.types).generate(1,:points => rand(20)+10)
+        :reference_names => factory.variable_names,
+        :type_names => factory.types).generate(1,:target_size_in_points => rand(50)+10)
       },
     :promotion_rule => Proc.new {|anybody| true}
   )
@@ -27,9 +27,8 @@ Nudge::Config.setup do |factory|
     :capacity => 1,
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
-        :instructions => factory.instructions,
-        :references => factory.variable_names,
-        :types => factory.types).generate(1,:points => rand(30)+20)
+        :reference_names => factory.variable_names,
+        :type_names => factory.types).generate(1,:target_size_in_points => rand(20)+10)
       },
     :promotion_rule => Proc.new {|anybody| true}
   )
@@ -38,44 +37,22 @@ Nudge::Config.setup do |factory|
     :capacity => 100,
     :generate_rule => Proc.new do |pop|
       if pop.length > 80
-        bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
-        bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
+        bw = pop.minmax {|a,b| (a.scores["errors11"] || 10000) <=> (b.scores["errors11"] || 10000) }
+        # bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         
         mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
-        instructions:[IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
-        IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-        IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-        IntMinInstruction, IntPopInstruction, IntRotateInstruction,IntShoveInstruction,
-        IntDepthInstruction, IntSwapInstruction, IntYankInstruction, IntYankdupInstruction,IntAbsInstruction,
-        IntIfInstruction, IntNegativeInstruction, BoolEqualQInstruction, BoolAndInstruction,
-        BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-        BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-        BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-        BoolYankdupInstruction, BoolXorInstruction],
-        types:[IntType, BoolType],
-        references:["x1","x2"])
+        type_names:factory.types,
+        reference_names:factory.variable_names)
         mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
-        :name => "errors",
-        :instructions =>
-          [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
-          IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-          IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-          IntMinInstruction, IntPopInstruction, IntRotateInstruction,IntShoveInstruction,
-          IntDepthInstruction, IntSwapInstruction, IntYankInstruction,
-          IntYankdupInstruction,IntAbsInstruction, IntIfInstruction, IntNegativeInstruction,
-          BoolEqualQInstruction, BoolAndInstruction,
-          BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-          BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-          BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-          BoolYankdupInstruction, BoolXorInstruction],
-          :references => ["x1", "x2"],
-          :types => [IntType, BoolType]
+        :name => "errors11",
+          type_names:factory.types,
+          reference_names:factory.variable_names
           )
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
-        myCases = (-10..10).collect do |i|
+        myCases = (-5..5).collect do |i|
           TestCase.new(:bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
             :gauges => {"y" => Proc.new {|interp| interp.stacks[:int].peek}}
@@ -83,9 +60,9 @@ Nudge::Config.setup do |factory|
         end
       
         newGuys = Batch.new
-        10.times do
-          puts "."
-          tourney = mySampler.generate(pop,10) # pick 10 dudes at random from the population
+        5.times do
+          puts "#{pop.length}\n"
+          tourney = mySampler.generate(pop,4) # pick dudes at random from the population
           tourney = myEvaluator.evaluate(tourney, myCases, deterministic:true) # evaluate them
           tourney = myPointsEvaluator.evaluate(tourney)
         
@@ -97,8 +74,10 @@ Nudge::Config.setup do |factory|
           mutantBabies = myEvaluator.evaluate(babies, myCases, deterministic:true) # evaluate
           mutantBabies = myPointsEvaluator.evaluate(mutantBabies)
         
-          bestInShow = mySelector.generate(tourney + babies + mutantBabies)
+          bestInShow = mySelector.generate(tourney + babies + mutantBabies, template:["errors11"])
           newGuys += bestInShow # retain only the best
+          
+          bestInShow.each {|dude| puts "#{dude.scores}, progress:#{dude.progress}"}
         end        
         newGuys
       else
@@ -113,34 +92,20 @@ Nudge::Config.setup do |factory|
     :generate_rule => Proc.new do |pop|
 
       if pop.length > 70
-        bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
-        bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
+        bw = pop.minmax {|a,b| (a.scores["errors21"] || 10000) <=> (b.scores["errors21"] || 10000) }
+        # bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         
         mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
-        instructions:[IntAddInstruction, IntSubtractInstruction,
-          IntMultiplyInstruction, IntDivideInstruction],
-        types:[IntType, BoolType],
-        references:["x1","x2"])
+        type_names:factory.types,
+        reference_names:factory.variable_names)
         
         mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
-          :name => "errors",
-          :instructions =>
-          [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
-          IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-          IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-          IntMinInstruction, IntPopInstruction, IntRotateInstruction,IntShoveInstruction,
-          IntDepthInstruction, IntSwapInstruction, IntYankInstruction,
-          IntYankdupInstruction,IntAbsInstruction, IntIfInstruction, IntNegativeInstruction,
-          BoolEqualQInstruction, BoolAndInstruction,
-          BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-          BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-          BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-          BoolYankdupInstruction, BoolXorInstruction],
-          :references => ["x1", "x2"],
-          :types => [IntType, BoolType]
+          :name => "errors21",
+          type_names:factory.types,
+          reference_names:factory.variable_names
         )
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
         
@@ -153,9 +118,9 @@ Nudge::Config.setup do |factory|
         end
       
         newGuys = Batch.new
-        10.times do
-          puts "."
-          tourney = mySampler.generate(pop,8) # pick 6 dudes at random from the population
+        5.times do
+          puts "#{pop.length}\n"
+          tourney = mySampler.generate(pop,6) # pick 6 dudes at random from the population
           tourney = myEvaluator.evaluate(tourney, myCases, deterministic:true) # evaluate them
           tourney = myPointsEvaluator.evaluate(tourney)
         
@@ -167,8 +132,10 @@ Nudge::Config.setup do |factory|
           mutantBabies = myEvaluator.evaluate(babies, myCases, deterministic:true) # evaluate
           mutantBabies = myPointsEvaluator.evaluate(mutantBabies)
         
-          bestInShow = mySelector.generate(tourney + babies + mutantBabies)
+          bestInShow = mySelector.generate(tourney + babies + mutantBabies, template:["errors21"])
           newGuys += bestInShow # retain only the best
+          
+          bestInShow.each {|dude| puts "#{dude.scores}, progress:#{dude.progress}"}
         end
         newGuys
       else
@@ -184,38 +151,23 @@ Nudge::Config.setup do |factory|
     :generate_rule => Proc.new do |pop|
 
       if pop.length > 70
-        bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
-        bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
+        bw = pop.minmax {|a,b| (a.scores["errors31"] || 10000) <=> (b.scores["errors31"] || 10000) }
+        # bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
 
         mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
-        instructions:[IntAddInstruction, IntSubtractInstruction,
-          IntMultiplyInstruction, IntDivideInstruction],
-        types:[IntType, BoolType],
-        references:["x1","x2"])
+        type_names:factory.types,
+        reference_names:factory.variable_names)
         
         mySelector = NondominatedSubsetSelector.new
         myEvaluator = TestCaseEvaluator.new(
-          :name => "errors",
-          :instructions =>
-          [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
-          IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-          IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-          IntMinInstruction, IntPopInstruction, IntRotateInstruction,IntShoveInstruction,
-          IntDepthInstruction, IntSwapInstruction, IntYankInstruction,
-          IntYankdupInstruction,IntAbsInstruction, IntIfInstruction, IntNegativeInstruction,
-          BoolEqualQInstruction, BoolAndInstruction,
-          BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-          BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-          BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-          BoolYankdupInstruction, BoolXorInstruction],
-          :references => ["x1", "x2"],
-          :types => [IntType, BoolType]
-        )
+          :name => "errors31",
+          type_names:factory.types,
+          reference_names:factory.variable_names)
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
         
-        myCases = (-10..10).collect do |i|
+        myCases = (-20..10).collect do |i|
           TestCase.new(
             :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
@@ -224,8 +176,8 @@ Nudge::Config.setup do |factory|
         end
       
         newGuys = Batch.new
-        10.times do
-          puts "."
+        5.times do
+          puts "#{pop.length}\n"
           tourney = mySampler.generate(pop,8) # pick 8 dudes at random from the population
           tourney = myEvaluator.evaluate(tourney, myCases, deterministic:true) # evaluate them
           tourney = myPointsEvaluator.evaluate(tourney)
@@ -238,8 +190,10 @@ Nudge::Config.setup do |factory|
           mutantBabies = myEvaluator.evaluate(babies, myCases, deterministic:true) # evaluate
           mutantBabies = myPointsEvaluator.evaluate(mutantBabies)
         
-          bestInShow = mySelector.generate(tourney + babies + mutantBabies)
+          bestInShow = mySelector.generate(tourney + babies + mutantBabies, template:["errors31"])
           newGuys += bestInShow # retain only the best
+          
+          bestInShow.each {|dude| puts "#{dude.scores}, progress:#{dude.progress}"}
         end
         newGuys
       else
@@ -255,37 +209,23 @@ Nudge::Config.setup do |factory|
     :generate_rule => Proc.new do |pop|
       
       if pop.length > 70
-        bw = pop.minmax {|a,b| (a.scores["errors"] || 10000) <=> (b.scores["errors"] || 10000) }
-        bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
+        bw = pop.minmax {|a,b| (a.scores["errors41"] || 10000) <=> (b.scores["errors41"] || 10000) }
+        # bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new
         myMutator = PointMutationOperator.new(
-        instructions:[IntAddInstruction, IntSubtractInstruction,
-          IntMultiplyInstruction, IntDivideInstruction],
-        types:[IntType, BoolType],
-        references:["x1","x2"])
+        type_names:factory.types,
+        reference_names:factory.variable_names)
         
-        mySelector = NondominatedSubsetSelector.new
+        mySelector = NondominatedSubsetSelector.new()
         myEvaluator = TestCaseEvaluator.new(
-          :name => "errors",
-          :instructions =>
-          [IntModuloInstruction, IntMultiplyInstruction, IntAddInstruction,IntSubtractInstruction,
-          IntDivideInstruction, IntLessThanQInstruction, IntEqualQInstruction, IntGreaterThanQInstruction,
-          IntDuplicateInstruction, IntFlushInstruction, IntFromBoolInstruction, IntMaxInstruction,
-          IntMinInstruction, IntPopInstruction, IntRotateInstruction,IntShoveInstruction,
-          IntDepthInstruction, IntSwapInstruction, IntYankInstruction,
-          IntYankdupInstruction,IntAbsInstruction, IntIfInstruction, IntNegativeInstruction,
-          BoolEqualQInstruction, BoolAndInstruction,
-          BoolDuplicateInstruction, BoolFlushInstruction, BoolFromIntInstruction, BoolNotInstruction,
-          BoolOrInstruction, BoolPopInstruction, BoolRotateInstruction,
-          BoolShoveInstruction, BoolDepthInstruction, BoolSwapInstruction, BoolYankInstruction,
-          BoolYankdupInstruction, BoolXorInstruction],
-          :references => ["x1", "x2"],
-          :types => [IntType, BoolType]
+          :name => "errors41",
+          type_names:factory.types,
+          reference_names:factory.variable_names
         )
         myPointsEvaluator = ProgramPointEvaluator.new(:name => "points")
         
-        myCases = (-10..10).collect do |i|
+        myCases = (-20..20).collect do |i|
           TestCase.new(
             :bindings => {"x1" => ValuePoint.new("int",i)},
             :expectations => {"y" => 2*i*i*i - 8*i*i + 6 * i + 91},
@@ -294,22 +234,24 @@ Nudge::Config.setup do |factory|
         end
       
         newGuys = Batch.new
-        10.times do
-          puts "."
-          tourney = mySampler.generate(pop,2) # pick 2 dudes at random from the population
+        5.times do
+          puts "#{pop.length}\n"
+          tourney = mySampler.generate(pop,6) # pick 6 dudes at random from the population
           tourney = myEvaluator.evaluate(tourney, myCases, deterministic:true) # evaluate them
           tourney = myPointsEvaluator.evaluate(tourney)
-        
+
           babies = myCrossover.generate(tourney, 10) # create 10 babies from those
           babies = myEvaluator.evaluate(babies, myCases, deterministic:true) # evaluate them
           babies = myPointsEvaluator.evaluate(babies)
-        
+
           mutantBabies = myMutator.generate(babies, 10) # make 10 mutants of the babies
           mutantBabies = myEvaluator.evaluate(babies, myCases, deterministic:true) # evaluate
           mutantBabies = myPointsEvaluator.evaluate(mutantBabies)
-        
+
           bestInShow = mySelector.generate(tourney + babies + mutantBabies)
           newGuys += bestInShow # retain only the best
+          
+          bestInShow.each {|dude| puts "#{dude.scores}, progress:#{dude.progress}"}
         end
         newGuys
       else

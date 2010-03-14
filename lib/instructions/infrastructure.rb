@@ -59,7 +59,8 @@ class Instruction
       self.derive
       self.cleanup
     end
-  rescue NotEnoughStackItems, MissingInstructionError, InstructionMethodError, NaNResultError => exc
+  rescue NotEnoughStackItems, MissingInstructionError,
+    InstructionMethodError, NaNResultError, FloatDomainError => exc
     msg = ValuePoint.new("error", exc.message)
     pushes :error, msg
   end
