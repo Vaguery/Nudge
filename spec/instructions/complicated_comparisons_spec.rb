@@ -99,8 +99,8 @@ describe ExecEqualQInstruction do
   end
   
   it "should not depend on the values, but the tidied program listings of the :code items" do
-    thing1 = ValuePoint.new("code", "block { value «int» ref a}\n«int» 9182")
-    thing2 = ValuePoint.new("code", "block {\nvalue   «int» ref \na  }\n«int»\t9182\n")
+    thing1 = NudgeProgram.new("block { value   «int» ref a  }\n«int» 9182").linked_code
+    thing2 = NudgeProgram.new("block {\nvalue   «int»\tref \na  }\n«int» 9182").linked_code
     @context.stacks[:exec].push thing1
     @context.stacks[:exec].push thing2
     @i1.go

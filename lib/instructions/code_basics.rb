@@ -1,3 +1,4 @@
+#encoding: utf-8
 class CodeNoopInstruction < Instruction
   def preconditions?
     true
@@ -20,7 +21,7 @@ class CodeNullQInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.stacks[:code].pop.listing
+    arg_listing = @context.stacks[:code].pop.value
     @arg1 = NudgeProgram.new(arg_listing).listing
   end
   def derive
@@ -38,7 +39,7 @@ class CodeAtomQInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.stacks[:code].pop.listing
+    arg_listing = @context.stacks[:code].pop.value
     @arg1 = NudgeProgram.new(arg_listing)
   end
   def derive
@@ -82,7 +83,7 @@ class CodePointsInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.stacks[:code].pop.listing
+    arg_listing = @context.stacks[:code].pop.value
     @parsed = NudgeProgram.new(arg_listing)
   end
   def derive
@@ -100,7 +101,7 @@ class CodeBackbonePointsInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.stacks[:code].pop.listing
+    arg_listing = @context.stacks[:code].pop.value
     @parsed = NudgeProgram.new(arg_listing)
   end
   def derive
@@ -168,7 +169,7 @@ class CodeDefineInstruction < Instruction
   end
   def setup
     @ref = @context.stacks[:name].pop.name
-    @code = @context.stacks[:code].pop.listing
+    @code = @context.stacks[:code].pop.value
   end
   def derive
     if @context.variables.keys.include?(@ref)
@@ -192,7 +193,7 @@ class CodeNthInstruction < Instruction
   end
   def setup
     @arg1 = @context.stacks[:int].pop.value
-    @arg2 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
   end
   def derive
     tree = NudgeProgram.new(@arg2)
@@ -218,7 +219,7 @@ class CodeNthPointInstruction < Instruction
   end
   def setup
     @arg1 = @context.stacks[:int].pop.value
-    @arg2 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
   end
   def derive
     tree = NudgeProgram.new(@arg2)
@@ -239,7 +240,7 @@ class CodeCdrInstruction < Instruction
     needs :code, 1
   end
   def setup
-    @arg = @context.stacks[:code].pop.listing
+    @arg = @context.stacks[:code].pop.value
   end
   def derive
     tree = NudgeProgram.new(@arg)
@@ -262,7 +263,7 @@ class CodeCarInstruction < Instruction
     needs :code, 1
   end
   def setup
-    @arg = @context.stacks[:code].pop.listing
+    @arg = @context.stacks[:code].pop.value
   end
   def derive
     tree = NudgeProgram.new(@arg)
@@ -284,8 +285,8 @@ class CodeListInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.listing
-    @arg1 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
     t1 = NudgeProgram.new(@arg1).linked_code
@@ -305,8 +306,8 @@ class CodeConcatenateInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.listing
-    @arg1 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
     t1 = NudgeProgram.new(@arg1)
@@ -341,7 +342,7 @@ class CodeExecuteInstruction < Instruction
     needs :code, 1
   end
   def setup
-    @arg = @context.stacks[:code].pop.listing
+    @arg = @context.stacks[:code].pop.value
   end
   def derive
     that_becomes = NudgeProgram.new(@arg)
@@ -381,8 +382,8 @@ class CodeMemberQInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.listing
-    @arg1 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
     looking_for_this = NudgeProgram.new(@arg1)
@@ -410,8 +411,8 @@ class CodeContainsQInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.listing
-    @arg1 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
     looking_for_this = NudgeProgram.new(@arg1)
@@ -434,8 +435,8 @@ class CodePositionInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.listing
-    @arg1 = @context.stacks[:code].pop.listing
+    @arg2 = @context.stacks[:code].pop.value
+    @arg1 = @context.stacks[:code].pop.value
   end
   def derive
     looking_for_this = NudgeProgram.new(@arg1).linked_code

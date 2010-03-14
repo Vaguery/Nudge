@@ -22,7 +22,6 @@ spike_factory = Factory.new(name:"spike")
   10.times do |gen|
     puts "\nGeneration #{gen}\n"
     Station.stations.each {|name, station| puts "#{name}, pop:#{station.population.length}"; station.core_cycle}
-    result = RubyProf.stop
     
     Station.stations["level1"].cull_all if Station.stations["level1"].population.length > 1500
   end

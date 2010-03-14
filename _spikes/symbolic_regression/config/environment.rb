@@ -1,10 +1,6 @@
 
 Nudge::Config.setup do |factory|
   
-  # set up instructions
-  factory.instructions =
-    [99]
-    
   
   # set up variable names
   factory.variable_names = ["x1", "x2"]
@@ -12,14 +8,18 @@ Nudge::Config.setup do |factory|
   # set up types
   factory.types = ["int", "bool", "float", "code"]
   
+  # set up instructions
+  factory.instructions = Instruction.all_instructions.find_all {|i| i.to_s.include?("Int")}
+  
   # set up stations
   factory.build_station("generator1",
     :capacity => 1,
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
         :reference_names => factory.variable_names,
-        :type_names => factory.types).generate(1,:target_size_in_points => rand(50)+10)
-      },
+        :type_names => factory.types).
+        generate(
+          1,:target_size_in_points => rand(50)+10)},
     :promotion_rule => Proc.new {|anybody| true}
   )
     
@@ -28,7 +28,8 @@ Nudge::Config.setup do |factory|
     :cull_trigger => Proc.new {false},
     :generate_rule => Proc.new {|placeholder| RandomGuessOperator.new(
         :reference_names => factory.variable_names,
-        :type_names => factory.types).generate(1,:target_size_in_points => rand(20)+10)
+        :type_names => factory.types).
+        generate(1,:target_size_in_points => rand(20)+10)
       },
     :promotion_rule => Proc.new {|anybody| true}
   )
@@ -38,7 +39,7 @@ Nudge::Config.setup do |factory|
     :generate_rule => Proc.new do |pop|
       if pop.length > 80
         bw = pop.minmax {|a,b| (a.scores["errors11"] || 10000) <=> (b.scores["errors11"] || 10000) }
-        # bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
+        bw.each {|dude| puts "#{dude.progress}: #{dude.scores} [#{dude.genome}]\n\n"}
         
         mySampler = ResampleAndCloneOperator.new
         myCrossover = PointCrossoverOperator.new

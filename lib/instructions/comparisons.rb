@@ -109,9 +109,9 @@ class ExecEqualQInstruction < Instruction
     @arg1 = @context.stacks[:exec].pop.listing
   end
   def derive
-    x1 = NudgeProgram.new(@arg1).listing
-    x2 = NudgeProgram.new(@arg2).listing
-    @result = ValuePoint.new("bool", x1 == x2)
+    x1 = NudgeProgram.new(@arg1)
+    x2 = NudgeProgram.new(@arg2)
+    @result = ValuePoint.new("bool", x1.listing == x2.listing)
   end
   def cleanup
     pushes :bool, @result
