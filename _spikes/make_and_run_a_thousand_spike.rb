@@ -15,7 +15,7 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
 1000.times do
   t1 = Time.now
   pts = rand(300)+10
-  dude = CodeType.any_value(target_size_in_points:pts, type_names:["int", "float", "bool", "code"], instruction_names:safe_instructions)
+  dude = CodeType.any_value(target_size_in_points:pts, type_names:["int", "float", "bool"], instruction_names:safe_instructions)
   runner.reset(dude)
   t2 = Time.now
   runner.run
