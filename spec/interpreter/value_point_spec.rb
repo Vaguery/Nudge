@@ -53,10 +53,9 @@ describe "ValuePoint" do
       ValuePoint.new("bool",nil).value.should == nil
     end
     
-    it "should return nil as a value if the type is not defined" do
+    it "should return the raw string as a value if the type is not defined" do
       left_field = ValuePoint.new("foo", "some weird thing")
-      left_field.value.should == nil
-      left_field.raw.should == "some weird thing"
+      left_field.value.should == "some weird thing"
     end
     
   end
@@ -113,6 +112,14 @@ describe "ValuePoint" do
       @ii.stacks.should include(:int)
       @ii.stacks.should include(:float)
       @ii.stacks.should include(:fiddle)
+    end
+    
+    it "should push an :error if there is no associated value" do
+      context = Interpreter.new
+      unbound = ValuePoint.new("int")
+      unbound.go(context)
+      context.stacks[:int].depth.should == 0
+      context.stacks[:error].peek.value.should == "int point has no value string"
     end
   end
   

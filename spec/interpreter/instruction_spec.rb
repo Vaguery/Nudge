@@ -63,8 +63,8 @@ describe "InstructionPoint" do
         myI = InstructionPoint.new("my_thing")
         myI.classLookup.should == MyThingInstruction
       end
-
-      it "should raise a InstructionNotFoundError if the class doesn't exist" do
+      
+      it "should raise an InstructionNotFoundError if the class doesn't exist" do
         myI = InstructionPoint.new("foo_baz")
         lambda{myI.classLookup}.should raise_error(InstructionPoint::InstructionNotFoundError)
       end
@@ -76,5 +76,22 @@ describe "InstructionPoint" do
       context.instructions_library[IntAddInstruction].should_receive(:go)
       myI = InstructionPoint.new("int_add").go(context)
     end
+    
+    it "should push an :error ValuePoint if the instruction is not active" do
+      context = Interpreter.new
+      context.disable(IntAddInstruction)
+      myI = InstructionPoint.new("int_add").go(context)
+      context.stacks[:error].depth.should == 1
+      context.stacks[:error].peek.raw.should ==
+        "IntAddInstruction is not an active instruction in this context"
+    end
+    
+    it "should push an :error ValuePoint if the instruction doesn't exist" do
+      context = Interpreter.new
+      myI = InstructionPoint.new("i_will_fail").go(context)
+      context.stacks[:error].depth.should == 1
+      context.stacks[:error].peek.raw.should include("IWillFailInstruction")
+    end
+    
   end
 end

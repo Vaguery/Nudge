@@ -78,7 +78,7 @@ theseInstructions.each do |instName|
           @context.stacks[:bool].depth.should == 0
         end
       end
-
+      
       describe "\#cleanup" do
         describe "should push the result" do
           examples = resultTuples[instName]

@@ -70,12 +70,20 @@ module Nudge
       @type = type.to_sym
       if representation != nil
         representation = representation.to_s
-      end     
+      end
       @raw = representation
     end
     
     def go(context)
+      raise(UnassignedValuePointError, "#{self.type} point has no value string") if self.value == nil
       context.stacks[self.type].push(self)
+      rescue UnassignedValuePointError => exc
+        msg = ValuePoint.new("error", exc.message)
+        context.stacks[:error].push msg
+    end
+    
+    
+    class UnassignedValuePointError < RuntimeError
     end
     
     
@@ -100,7 +108,7 @@ module Nudge
       if @raw && nudgetype_defined?
         @value ||= nudgetype.constantize.from_s(@raw)
       else
-        nil
+        @raw
       end
     end
     
@@ -185,7 +193,7 @@ module Nudge
     def classLookup
       self.className.constantize
     rescue NameError
-      raise InstructionNotFoundError, "#{self.className} not found"
+      raise InstructionNotFoundError, "#{self.className} is not an active instruction in this context"
     end
     
     def tidy(level=1)
@@ -202,8 +210,9 @@ module Nudge
     def go(context)
       className = self.classLookup
       context.instructions_library[className].go
-    rescue InstructionNotFoundError
-      return
+    rescue InstructionNotFoundError => exc
+      msg = ValuePoint.new("error", exc.message)
+      context.stacks[:error].push msg
     end
     
     def randomize(context)

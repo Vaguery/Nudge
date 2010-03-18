@@ -24,7 +24,8 @@ module Nudge
       @stepLimit = params[:step_limit] || 3000
       
       instructions = params[:instructions] || []
-      @instructions_library = Hash.new
+      @instructions_library = Hash.new {|hash, key| raise InstructionPoint::InstructionNotFoundError,
+        "#{key} is not an active instruction in this context"}
       instructions.each {|i| self.enable(i)}
       
       # private parts
