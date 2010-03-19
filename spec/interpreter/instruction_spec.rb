@@ -94,4 +94,39 @@ describe "InstructionPoint" do
     end
     
   end
+  
+  
+  describe "#needs" do
+    it "should check the stack depth" do
+      context = Interpreter.new
+      2.times {context.stacks[:foo].push ValuePoint.new("foo")}
+      dummy = Instruction.new(context)
+      context.stacks[:foo].should_receive(:depth).and_return(2)
+      dummy.needs(:foo)
+    end
+    
+    it "should check there's at least one thing on a stack, if the number isn't specified" do
+      context = Interpreter.new
+      2.times {context.stacks[:foo].push ValuePoint.new("foo")}
+      dummy = Instruction.new(context)
+      lambda{dummy.needs :foo}.should_not raise_error
+      lambda{dummy.needs :bar}.should raise_error
+    end
+    
+    it "should check there's enough things on a stack, if the number is specified" do
+      context = Interpreter.new
+      2.times {context.stacks[:foo].push ValuePoint.new("foo")}
+      dummy = Instruction.new(context)
+      lambda{dummy.needs :foo, 2}.should_not raise_error
+      lambda{dummy.needs :foo, 9}.should raise_error
+    end
+    
+    it "should return 'true' if it works" do
+      context = Interpreter.new
+      1.times {context.stacks[:foo].push ValuePoint.new("foo")}
+      dummy = Instruction.new(context)
+      dummy.needs(:foo).should == true
+      lambda{dummy.needs :foo, 2}.should raise_error
+    end
+  end
 end
