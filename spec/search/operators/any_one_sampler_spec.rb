@@ -5,7 +5,7 @@ describe AnyOneSampler do
   before(:each) do
     @ao = AnyOneSampler.new
   end
-    
+  
   
   describe "#generate" do
     before(:each) do

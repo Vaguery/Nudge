@@ -41,7 +41,7 @@ describe "ValuePoint" do
   
   
   describe "#value" do
-    it "should use the #from_s method from the appropriate NudgeType" do
+    it "should use the #from_s method from the appropriate NudgeType, if defined" do
       ValuePoint.new("int",9912).value.should == 9912
       ValuePoint.new("float",1.2).value.should == 1.2
       ValuePoint.new("bool",false).value.should == false

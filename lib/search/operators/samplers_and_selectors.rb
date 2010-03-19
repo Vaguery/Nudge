@@ -48,6 +48,9 @@ module Nudge
   end
   
   
+  
+  
+  
   class NondominatedSubsetSelector < Sampler
     
     def generate(crowd, template = all_shared_scores(crowd))
@@ -64,6 +67,9 @@ module Nudge
       return result
     end
   end
+  
+  
+  
   
   
   class DominatedQuantileSampler < Sampler
