@@ -34,7 +34,6 @@ class NudgeScanner
           contents << ch
         end
         contents.chop!
-        # puts "•#{point}• block {#{contents}}"
         result << scannit(contents)# unless (contents == "")
       else
         result << ss.matched

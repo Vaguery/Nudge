@@ -235,7 +235,7 @@ describe "Nudge Program parsing" do
     it "should leave nil values if it runs out of footnotes" do
       simple = NudgeProgram.new("value «int»")
       simple.linked_code.should be_a_kind_of(ValuePoint)
-      simple.linked_code.raw.should == nil
+      simple.linked_code.value.should == nil
     end
     
     describe "listing" do
