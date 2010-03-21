@@ -35,17 +35,21 @@ class Instruction
   
   def needs(infrastructure, minimum = 1)
     unless infrastructure.is_a?(Symbol)
+      raise(InstructionNotFoundError, "#{infrastructure.to_s} is not a known Instruction") unless
+        Object.const_defined?(infrastructure.to_s)
       raise(MissingInstructionError, "#{self.class} needs #{infrastructure}") unless
         @context.instructions.include?(infrastructure)
     else
       iNeed = @context.stacks[infrastructure]
       if @context.stacks[infrastructure].depth < minimum
-        raise NotEnoughStackItems, "Stack #{infrastructure.to_s} too small: #{self.class.to_nudgecode} needs at least #{minimum} items"
-      else
-        return true
+        raise NotEnoughStackItems,
+          "Stack #{infrastructure.to_s} too small: #{self.class.to_nudgecode} needs at least #{minimum} items"
       end
     end
+    return true
   end
+  
+  
   
   
   def pushes(stackName, literal)

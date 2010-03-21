@@ -128,5 +128,28 @@ describe "InstructionPoint" do
       dummy.needs(:foo).should == true
       lambda{dummy.needs :foo, 2}.should raise_error
     end
+    
+    it "should alternately accept an instruction class name (in constant form)" do
+      context = Interpreter.new
+      context.enable(IntAddInstruction)
+      dummy = Instruction.new(context)
+      lambda{dummy.needs(IntAddInstruction)}.should_not raise_error
+    end
+    
+    it "should return true if that instruction class constant is an active instruction" do
+      context = Interpreter.new
+      context.enable(IntAddInstruction)
+      dummy = Instruction.new(context)
+      dummy.needs(IntAddInstruction).should == true
+    end
+    
+    it "should raise an exception if the class is not active" do
+      context = Interpreter.new
+      context.disable(IntAddInstruction)
+      dummy = Instruction.new(context)
+      lambda{dummy.needs(IntAddInstruction)}.should raise_error(Instruction::MissingInstructionError)
+    end
+    
+    it "should raise a MissingInstructionError if the class is not defined"
   end
 end

@@ -16,6 +16,7 @@ module Nudge
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
     attr_accessor :last_name, :evaluate_references
     
+    
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(params = {})
       initialProgram = params[:program] || nil
@@ -40,6 +41,7 @@ module Nudge
       self.reset(initialProgram)
     end
     
+    
     # Resets the Interpreter state:
     # * clears all the Stacks (including the <b>:exec</b> Stack)
     # * loads a new program,
@@ -62,12 +64,14 @@ module Nudge
       @stacks = Hash.new {|hash, key| hash[key] = Stack.new(key) }
     end
     
+    
     # Checks to see if either stopping condition applies:
     # 1. Is the <b>:exec</b> stack empty?
     # 2. Are the number of steps greater than self.stepLimit?
     def notDone?
       @stacks[:exec].depth > 0 && @steps < @stepLimit
     end
+    
     
     # Execute one cycle of the Push3 interpreter rule:
     # 1. check termination conditions with self.notDone()?
@@ -82,9 +86,11 @@ module Nudge
       end
     end
     
+    
     def instructions
       @instructions_library.keys
     end
+    
     
     # invoke self.step() until a termination condition is true
     def run
@@ -93,13 +99,16 @@ module Nudge
       end
     end
     
+    
     def lookup(name)
       @variables[name] || @names[name]
     end
     
+    
     def references
       @names.merge(@variables).keys
     end
+    
     
     def enable(item)
       if item.superclass == Instruction
@@ -108,6 +117,7 @@ module Nudge
         @types |= [item]
       end
     end
+    
     
     def active?(item)
       if item.superclass == Instruction
@@ -124,11 +134,13 @@ module Nudge
       @variables[name] = value
     end
     
+    
     def bind_name(name, value)
       raise(ArgumentError, "Names can only be bound to ProgramPoints") unless
         value.kind_of?(ProgramPoint)
       @names[name] = value
     end
+    
     
     def next_name
       @last_name = @last_name.next
@@ -139,23 +151,28 @@ module Nudge
       @variables.delete(name)
     end
     
+    
     def unbind_name(name)
       @names.delete(name)
     end
+    
     
     def reset_variables
       @variables = Hash.new
     end
     
+    
     def reset_names
       @names = Hash.new
     end
+    
     
     def enable_all_instructions
       Instruction.all_instructions.each do |i|
         @instructions_library[i] = i.new(self)
       end
     end
+    
     
     def enable_all_types
       @types = NudgeType.all_types
@@ -170,9 +187,11 @@ module Nudge
       end
     end
     
+    
     def disable_all_instructions
       @instructions_library = Hash.new
     end
+    
     
     def disable_all_types
       @types = []
