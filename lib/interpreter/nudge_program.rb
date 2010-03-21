@@ -52,6 +52,7 @@ module Nudge
         @linked_code = @parser.parse(@code_section).to_point
         depth_first_association!
       else
+        # FIXME: This causes an occasional error in CodeListInstruction
         @linked_code = nil
       end
     end

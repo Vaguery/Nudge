@@ -293,6 +293,7 @@ class CodeListInstruction < Instruction
   def derive
     t1 = NudgeProgram.new(@arg1).linked_code
     t2 = NudgeProgram.new(@arg2).linked_code
+    puts "••••••••• #{t1.inspect}\n •••••••••• #{t2.inspect}"
     listed = CodeblockPoint.new([t1,t2]).listing
     @result = ValuePoint.new("code", listed)
   end

@@ -40,7 +40,7 @@ class Instruction
     else
       iNeed = @context.stacks[infrastructure]
       if @context.stacks[infrastructure].depth < minimum
-        raise NotEnoughStackItems, "Stack #{infrastructure.to_s} too small: needs at least #{minimum} items"
+        raise NotEnoughStackItems, "Stack #{infrastructure.to_s} too small: #{self.class.to_nudgecode} needs at least #{minimum} items"
       else
         return true
       end
