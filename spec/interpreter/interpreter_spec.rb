@@ -262,5 +262,42 @@ describe "running" do
   
 end
 
-describe "channel setup" do
+
+describe "resetting" do
+  it "should clear the steps" do
+    ii = Interpreter.new(program:"block {ref a ref b}")
+    ii.run
+    ii.steps.should == 3
+    ii.reset
+    ii.steps.should == 0
+  end
+  
+  it "should clear all names" do
+    ii = Interpreter.new
+    ii.bind_name("a", ValuePoint.new("int",3))
+    ii.names.keys.should == ["a"]
+    ii.reset
+    ii.names.keys.should == []
+  end
+  
+  it "should clear all stacks, except the program" do
+    ii = Interpreter.new
+    ii.stacks[:foo].push(ValuePoint.new("foo", "100101"))
+    ii.reset
+    ii.stacks[:foo].depth.should == 0
+  end
+  
+  it "should clear the program, if none is given" do
+    ii = Interpreter.new(program:"block {}")
+    ii.reset
+    ii.program.should == nil
+  end
+  
+  it "should not affect variable bindings" do
+    ii = Interpreter.new
+    ii.bind_variable("a", ValuePoint.new("int",3))
+    ii.variables.keys.should == ["a"]
+    ii.reset
+    ii.variables.keys.should == ["a"]
+  end
 end

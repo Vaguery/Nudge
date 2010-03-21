@@ -289,11 +289,11 @@ class CodeListInstruction < Instruction
     @arg1 = @context.stacks[:code].pop.value
   end
   def derive
-    t1 = NudgeProgram.new(@arg1).linked_code
-    t2 = NudgeProgram.new(@arg2).linked_code
-    puts "••••••••• #{t1.inspect}\n •••••••••• #{t2.inspect}"
-    listed = CodeblockPoint.new([t1,t2]).listing
-    @result = ValuePoint.new("code", listed)
+    listed = []
+    listed << NudgeProgram.new(@arg1).linked_code unless @arg1 == ""
+    listed << NudgeProgram.new(@arg2).linked_code unless @arg2 == ""
+    combined = CodeblockPoint.new(listed).listing
+    @result = ValuePoint.new("code", combined)
   end
   def cleanup
     pushes :code, @result

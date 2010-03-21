@@ -10,12 +10,11 @@ runner = Interpreter.new(
 
 puts "pts, length, steps, init_time, run_time, stacks, stack_items, error_items"
 
-# safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|i| i.to_nudgecode}
-safe_instructions = [CodeListInstruction, IntAddInstruction, IntSubtractInstruction].collect {|i| i.to_nudgecode}
+safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|i| i.to_nudgecode}
 
 1000.times do
   t1 = Time.now
-  pts = rand(300)+10
+  pts = rand(40)+10
   dude = CodeType.any_value(target_size_in_points:pts, type_names:["int", "float", "bool", "code"], instruction_names:safe_instructions)
   runner.reset(dude)
   t2 = Time.now
@@ -26,8 +25,7 @@ safe_instructions = [CodeListInstruction, IntAddInstruction, IntSubtractInstruct
   er = runner.stacks[:error].depth
   puts "#{pts}, #{NudgeProgram.new(dude).listing.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}"
   
-  if runner.steps > 500
-    all = runner.stacks[:error].entries.collect {|e| e.value}
-    all.uniq.each {|e| puts ">>    #{e}"}
+  if runner.steps > 100
+    puts dude
   end
 end

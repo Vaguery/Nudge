@@ -52,6 +52,7 @@ module Nudge
     def reset(program=nil)
       @program = program
       self.clear_stacks
+      self.reset_names
       if program
         @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       end
