@@ -199,7 +199,7 @@ class CodeNthInstruction < Instruction
     tree = NudgeProgram.new(@arg2)
     if tree.linked_code.kind_of?(CodeblockPoint)
       pts = tree[1].contents.length
-      raise (InstructionMethodError, "#{self.class} can't work on empty blocks") if pts < 1
+      raise InstructionMethodError, "#{self.class} can't work on empty blocks" if pts < 1
       val = tree[1].contents[@arg1 % pts]
     else
       val = tree
@@ -225,6 +225,7 @@ class CodeNthPointInstruction < Instruction
   def derive
     tree = NudgeProgram.new(@arg2)
     tree_size = tree.points
+    raise InstructionMethodError, "#{self.class} divied by zero" if tree_size < 1
     which = (@arg1-1) % tree_size + 1
     pt = tree[which]
     @result = ValuePoint.new("code", pt.listing)

@@ -25,9 +25,8 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
   er = runner.stacks[:error].depth
   puts "#{pts}, #{NudgeProgram.new(dude).listing.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}"
   
-  # if runner.steps == 10000
-  #   
-  #   puts "#{NudgeProgram.new(dude).listing}"
-  #   break
-  # end
+  if runner.steps > 500
+    all = runner.stacks[:error].entries.collect {|e| e.value}
+    all.uniq.each {|e| puts ">>    #{e}"}
+  end
 end
