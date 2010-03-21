@@ -13,6 +13,30 @@ module Nudge
   end
   
   
+  class NilPoint < ProgramPoint
+    def listing_parts
+      ["",""]
+    end
+    
+    def listing
+      ""
+    end
+    
+    def tidy
+      ""
+    end
+    
+    def go(context = nil)
+    end
+    
+    def points
+      0
+    end
+  end
+  
+  
+  
+  
   class CodeblockPoint < ProgramPoint
     attr_accessor :contents
     

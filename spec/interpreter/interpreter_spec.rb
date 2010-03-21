@@ -255,6 +255,7 @@ describe "running" do
   
   it "should do nothing if the :exec stack starts empty" do
     @ii.reset()
+    puts @ii.stacks[:exec].depth
     @ii.run
     @ii.steps.should == 0
   end

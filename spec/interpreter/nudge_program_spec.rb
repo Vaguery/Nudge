@@ -145,6 +145,10 @@ describe "Nudge Program parsing" do
       NudgeProgram.new("value «idjit»").linked_code.should be_a_kind_of(ValuePoint)
     end
     
+    it "should return a NilPoint if the code can't be interpreted" do
+      NudgeProgram.new("some random junk that ain't a program").linked_code.should be_a_kind_of(NilPoint)
+    end
+    
     it "should be a CodeblockPoint with #contents set appropriately if it's a multiline program" do
       lt = NudgeProgram.new("block {ref a\nref b}")
       lt.linked_code.should be_a_kind_of(CodeblockPoint)
@@ -380,7 +384,7 @@ block { value «int» value «code» value «int»}
     it "should interpret an empty string as no code at all" do
       huh = NudgeProgram.new("")
       huh.code_section.should == ""
-      huh.linked_code.should == nil
+      huh.linked_code.should be_a_kind_of(NilPoint)
       huh.footnote_section.should == ""
       huh.footnotes.should == {} # they didn't get used
     end
@@ -388,7 +392,7 @@ block { value «int» value «code» value «int»}
     it "should interpret an unparseable codesection as no code at all, but keep the footnotes" do
       got_nuthin = NudgeProgram.new("block { hunh \n«int» 2")
       got_nuthin.code_section.should == "block { hunh"
-      got_nuthin.linked_code.should == nil
+      got_nuthin.linked_code.should be_a_kind_of(NilPoint)
       got_nuthin.footnote_section.should == "«int» 2"
       got_nuthin.footnotes.should == {:int => ["2"]} # it's not been used
     end

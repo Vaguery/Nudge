@@ -18,7 +18,7 @@ module Nudge
     
     # A program to be interpreted can be passed in as an optional parameter
     def initialize(params = {})
-      initialProgram = params[:program] || ""
+      initialProgram = params[:program] || nil
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @stepLimit = params[:step_limit] || 3000
@@ -47,11 +47,13 @@ module Nudge
     #    * if it parses, pushes it onto the <b>:exec</b> Stack
     #    * (and if it doesn't parse, leaves all stacks empty)
     # * resets the @step counter.
-    def reset(program="")
+    def reset(program=nil)
       @program = program
       self.clear_stacks
+      if program
+        @stacks[:exec].push(NudgeProgram.new(program).linked_code)
+      end
       @steps = 0
-      @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       @evaluate_references = true
     end
     

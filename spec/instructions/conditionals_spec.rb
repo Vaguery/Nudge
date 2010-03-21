@@ -126,6 +126,7 @@ describe ExecIfInstruction do
   describe "\#go" do
     before(:each) do
       @context = Interpreter.new
+      @context.reset
       @context.enable(ExecIfInstruction)
       @i1 = ExecIfInstruction.new(@context)
       @v1 = ValuePoint.new("float",  1.0)
@@ -181,6 +182,7 @@ describe CodeIfInstruction do
   describe "\#go" do
     before(:each) do
       @context = Interpreter.new
+      @context.reset
       @context.enable(CodeIfInstruction)
       @i1 = CodeIfInstruction.new(@context)
       @v1 = ValuePoint.new("code", "do my_thing")

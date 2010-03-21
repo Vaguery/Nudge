@@ -169,7 +169,11 @@ describe CodeQuoteInstruction do
       @context = Interpreter.new
       @i1 = CodeQuoteInstruction.new(@context)
     end
-
+    
+    after(:each) do
+      @context.clear_stacks
+    end
+    
     describe "\#preconditions?" do
       it "should need at least one item on the :exec stack" do
         @context.stacks[:exec].push(ReferencePoint.new("hi_there"))
@@ -326,7 +330,8 @@ describe CodeDefineInstruction do
         @context.stacks[:code].push(ValuePoint.new("code", "some random crap"))
         @i1.go
         @context.names["c3"].should == nil
-        @context.stacks[:error].peek.listing.should include "CodeDefineInstruction cannot parse"
+        @context.stacks[:error].depth.should == 1
+        @context.stacks[:error].peek.value.should include "code_define cannot parse"
       end
     end
   end

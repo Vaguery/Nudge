@@ -21,8 +21,7 @@ describe NameRandomBoundInstruction do
     before(:each) do
       @i1 = NameRandomBoundInstruction.new(@context)
       @bar = ValuePoint.new("int", 99)
-      @context.reset_names
-      @context.reset_variables
+      @context.reset
     end
     
     describe "\#preconditions?" do

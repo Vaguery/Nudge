@@ -125,12 +125,10 @@ class CodeQuoteInstruction < Instruction
     needs :exec, 1
   end
   def setup
-    next_point = @context.stacks[:exec].pop
-    top,bottom = next_point.listing_parts
-    @parsed = NudgeProgram.new("#{top.strip}\n#{bottom.strip}")
+    @arg = @context.stacks[:exec].pop
   end
   def derive
-    @result = ValuePoint.new("code", @parsed.listing)
+    @result = ValuePoint.new("code", @arg.listing)
   end
   def cleanup
     pushes :code, @result
@@ -173,10 +171,10 @@ class CodeDefineInstruction < Instruction
   end
   def derive
     if @context.variables.keys.include?(@ref)
-      raise InstructionMethodError, "#{self.class} cannot change the value of a variable"
+      raise InstructionMethodError, "#{self.class.to_nudgecode} cannot change the value of a variable"
     else
       new_value = NudgeProgram.new(@code).linked_code
-      raise InstructionMethodError, "#{self.class} cannot parse '#{@code}'" if new_value.nil?
+      raise InstructionMethodError, "#{self.class.to_nudgecode} cannot parse '#{@code}'" if new_value.is_a?(NilPoint)
       @context.names[@ref] = new_value
     end
   end

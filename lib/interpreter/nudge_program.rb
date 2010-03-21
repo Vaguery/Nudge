@@ -53,7 +53,7 @@ module Nudge
         depth_first_association!
       else
         # FIXME: This causes an occasional error in CodeListInstruction
-        @linked_code = nil
+        @linked_code = NilPoint.new
       end
     end
     
@@ -201,12 +201,12 @@ module Nudge
     
     
     def listing
-      if @linked_code != nil
+      if @linked_code.kind_of? NilPoint
+        return ""
+      else
         code_section, footnote_section = @linked_code.listing_parts
         unused_footnotes.each {|fn| footnote_section += "\n#{fn}"}
         return (code_section.strip + " \n" + footnote_section.strip).strip
-      else
-        return ""
       end
     end
     
