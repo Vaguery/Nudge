@@ -1269,3 +1269,328 @@ describe CodePositionInstruction do
     end
   end
 end
+
+
+
+describe CodeDoRangeInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeDoRangeInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = CodeDoRangeInstruction.new(@context)
+      @context.reset("block {}")
+      @context.enable(CodeDoRangeInstruction)
+      @context.enable(ExecDoRangeInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there are two :ints and at least one :code item" do
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref x1"))
+        @i1.preconditions?.should == true
+      end
+      
+      it "should check that the ExecDoRangeInstruction is enabled" do
+        @context.disable(ExecDoRangeInstruction)
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref x1"))
+        lambda{@i1.preconditions?}.should raise_error
+        @context.enable(ExecDoRangeInstruction)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset
+      end
+      
+      it "should finish if the :ints are identical, pushing an :int and a copy of the codeblock" do
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref x1"))
+        @i1.go
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 3
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "ref x1"
+      end
+      
+      it "should increment the counter if the counter < destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref x2"))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 1
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "ref x2"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x2} \n«int» 2\n«int» 3"
+        
+        @context.run # get 'er done
+        
+        @context.stacks[:int].depth.should == 3
+        @context.stacks[:int].peek.value.should == 3
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:name].depth.should == 3
+      end
+      
+      it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(ValuePoint.new("int", 2))
+        @context.stacks[:int].push(ValuePoint.new("int", -12))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref x3"))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 1
+        @context.stacks[:int].peek.value.should == 2
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "ref x3"
+        @context.stacks[:exec].entries[0].listing.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x3} \n«int» 1\n«int» -12"
+        
+        @context.run # get 'er done
+        
+        @context.stacks[:int].depth.should == 15
+        @context.stacks[:int].peek.value.should == -12
+        
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:name].depth.should == 15
+        (@context.stacks[:name].entries.collect {|e| e.value}).uniq.should == ["x3"]
+      end
+      
+      it "should 'continue' until counter and destination are the same value" do
+        @context.stacks[:int].push(ValuePoint.new("int", 1))
+        @context.stacks[:int].push(ValuePoint.new("int", 100))
+        @context.stacks[:code].push(ValuePoint.new("code", "value «float» \n«float» 1.1"))
+        
+        @i1.go
+        @context.run # finish it off
+        @context.stacks[:int].depth.should == 100
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:float].depth.should == 100
+      end
+    end
+  end
+end
+
+
+describe CodeDoCountInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeDoCountInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = CodeDoCountInstruction.new(@context)
+      @context.reset
+      @context.enable(CodeDoCountInstruction)
+      @context.enable(ExecDoRangeInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there is one :int and 1 :code item" do
+        lambda{@i1.preconditions?}.should raise_error
+        @context.stacks[:int].push(ValuePoint.new("int", 4))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref b1"))
+        @i1.preconditions?.should == true
+      end
+      
+      it "should check that the @context knows about exec_do_range" do
+        @context.disable(ExecDoRangeInstruction)
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref b1"))
+        lambda{@i1.preconditions?}.should raise_error
+        @context.enable(ExecDoRangeInstruction)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset
+        @context.enable(CodeDoCountInstruction)
+        @context.enable(ExecDoRangeInstruction)
+      end
+      
+      it "should create an :error entry if the int is negative or zero" do
+        @context.stacks[:int].push(ValuePoint.new("int", -9182))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref b2"))
+        @i1.go
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:error].peek.value.should == "code_do_count needs a positive argument"
+        
+        @context.reset
+        @context.stacks[:int].push(ValuePoint.new("int", 0))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref b3"))
+        @i1.go
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:error].peek.value.should == "code_do_count needs a positive argument"
+      end
+      
+      it "should push a 0 onto :int, and an exec_do_range block onto :exec" do
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "ref b4"))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].entries[0].listing.should ==
+          "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref b4} \n«int» 0\n«int» 2"
+          
+        @context.run
+        @context.stacks[:int].depth.should == 3
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:name].depth.should == 3
+      end
+    end
+  end
+end
+
+
+
+
+describe CodeDoTimesInstruction do
+  before(:each) do
+    @context = Interpreter.new
+    @i1 = CodeDoTimesInstruction.new(@context)
+  end
+  
+  it "should check its context is set" do
+    @i1.context.should == @context
+  end
+  
+  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
+    it "should respond to \##{methodName}" do
+      @i1.should respond_to(methodName)
+    end   
+  end
+  
+  describe "\#go" do
+    before(:each) do
+      @i1 = CodeDoTimesInstruction.new(@context)
+      @context.reset
+      @context.enable(CodeDoTimesInstruction)
+      @context.enable(ExecDoTimesInstruction)
+    end
+    
+    describe "\#preconditions?" do
+      it "should check that there are two :ints and at least one :code item" do
+        lambda{@i1.preconditions?}.should raise_error
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        lambda{@i1.preconditions?}.should raise_error
+        @context.stacks[:code].push(ValuePoint.new("code", "do nothing_now"))
+        @i1.preconditions?.should == true
+      end
+      
+      it "should check that ExecDoTimesInstruction is enabled" do
+        @context.disable(ExecDoTimesInstruction)
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "do nothing_now"))
+        lambda{@i1.preconditions?}.should raise_error
+        @context.enable(ExecDoTimesInstruction)
+        @i1.preconditions?.should == true
+      end
+    end
+    
+    describe "\#cleanup" do
+      before(:each) do
+        @context.reset
+      end
+      
+      it "should finish if the :ints are identical, leaving only a copy of the codeblock" do
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:int].push(ValuePoint.new("int", 3))
+        @context.stacks[:code].push(ValuePoint.new("code", "do nothing_now"))
+        
+        @i1.go
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 1
+        @context.stacks[:exec].peek.listing.should == "do nothing_now"
+      end
+      
+      it "should increment the counter if the counter < destination, and push a bunch of stuff" do
+        @context.stacks[:int].push(ValuePoint.new("int", 7))
+        @context.stacks[:int].push(ValuePoint.new("int", 9))
+        @context.stacks[:code].push(ValuePoint.new("code", "do nothing_now"))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[1].listing.should == "do nothing_now"
+        @context.stacks[:exec].entries[0].listing.should ==
+          "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  do nothing_now} \n«int» 8\n«int» 9"
+      end
+      
+      it "should run the number of times specified" do
+        @context.stacks[:int].push(ValuePoint.new("int", 7))
+        @context.stacks[:int].push(ValuePoint.new("int", 9))
+        @context.stacks[:code].push(ValuePoint.new("code", "do nothing_now"))
+        @i1.go
+        @context.run
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:error].depth.should == 3
+        @context.stacks[:error].peek.value.should include("NothingNowInstruction is not")
+      end
+      
+      it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
+        @context.stacks[:code].push(ValuePoint.new("code","value «float»\n«float» 0.1"))
+        @context.stacks[:int].push(ValuePoint.new("int", -11))
+        @context.stacks[:int].push(ValuePoint.new("int", -19))
+        @i1.go
+        
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 2
+        @context.stacks[:exec].entries[0].listing.should include "\n«int» -12\n«int» -19\n«float» 0.1"
+        
+        @context.run
+
+        @context.stacks[:int].depth.should == 0
+        @context.stacks[:exec].depth.should == 0
+        @context.stacks[:float].depth.should == 9
+        @context.stacks[:float].peek.value.should == 0.1
+      end
+      
+      it "should 'continue' until counter and destination are the same value" do
+        @context.stacks[:int].push(ValuePoint.new("int", 11001))
+        @context.stacks[:int].push(ValuePoint.new("int", 11100))
+        @context.stacks[:code].push(ValuePoint.new("code","value «float»\n«float» 0.9"))
+        @i1.go
+        @context.run # finish it off
+        @context.stacks[:float].depth.should == 100
+        @context.stacks[:exec].depth.should == 0
+      end
+    end
+  end
+end

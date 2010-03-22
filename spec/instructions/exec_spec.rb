@@ -677,10 +677,6 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].push(ValuePoint.new("int", -19))
         @i1.go
         
-        puts @context.stacks[:int].depth
-        puts @context.stacks[:exec].depth
-        
-        
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == -2
         @context.stacks[:exec].depth.should == 2
@@ -890,6 +886,10 @@ describe ExecDoCountInstruction do
         @context.stacks[:exec].entries[0].listing_parts.should ==
           ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}",
             "«int» 0\n«int» 2"]
+            
+        @context.run
+        @context.stacks[:int].depth.should == 3
+        @context.stacks[:exec].depth.should == 0
       end
     end
   end

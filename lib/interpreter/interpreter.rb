@@ -1,15 +1,16 @@
 #encoding: utf-8
 module Nudge
   
-  # The Interpreter class executes the Push3 language loop:
+  # The Interpreter class executes the Push3-like language loop:
   # 1. Pop the top item off the <b>:exec</b> Stack
   # 2. If it is a(n)...
-  #    * ... InstructionPoint, execute its go() method;
+  #    * ... InstructionPoint, execute that instruction's go() method;
   #    * ... ValuePoint, push its value to the Stack it names;
   #    * ... ReferencePoint (Variable or Name), ...
   #       * ... if it's bound to a value, push the bound value onto the <b>:exec</b> Stack;
   #       * ... if it's not bound, push the name itself onto the <b>:name</b> Stack;
   #    * ... CodeblockPoint, push its #contents (in the same order) back onto the <b>:exec</b> Stack
+  #    * ... NilPoint, do nothing
   
   class Interpreter
     attr_accessor :program, :stepLimit, :steps
