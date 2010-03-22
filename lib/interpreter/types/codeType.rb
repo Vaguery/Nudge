@@ -113,7 +113,7 @@ module NudgeType
           begin
             type_name = @type_names.sample || 'unknown'
             type_class = "#{type_name}_type".camelize.constantize
-            reduced_size = rand(@target_size_in_points/2)
+            reduced_size = rand(@target_size_in_points/4)
             reduced_option = {target_size_in_points:reduced_size}
             sampled_value = type_class.any_value(@incoming_options.merge(reduced_option)).to_s
           rescue NameError

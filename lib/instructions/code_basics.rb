@@ -59,12 +59,12 @@ class CodeLengthInstruction < Instruction
   end
   def setup
     arg_listing = @context.stacks[:code].pop.listing
-    @parsed = NudgeProgram.new(arg_listing)
+    @arg1 = NudgeProgram.new(arg_listing)
   end
   def derive
-    if @parsed.linked_code.kind_of?(CodeblockPoint)
-      len = @parsed[1].contents.length
-    elsif @parsed.parses? == false
+    if @arg1.linked_code.kind_of?(CodeblockPoint)
+      len = @arg1[1].contents.length
+    elsif @arg1.parses? == false
       len = ValuePoint.new("int", 0)
     else
       len = 1
@@ -155,7 +155,6 @@ class CodeNameLookupInstruction < Instruction
   def cleanup
     pushes :code, @result
   end
-  
 end
 
 
@@ -357,6 +356,31 @@ class CodeExecuteInstruction < Instruction
     pushes :exec, @result
   end
 end
+
+
+
+
+class CodeExecuteThenPopInstruction < Instruction
+  def preconditions?
+    needs CodePopInstruction
+    needs :code, 1
+  end
+  def setup
+    @arg = @context.stacks[:code].peek.value # does not pop the stack initially!
+  end
+  def derive
+    that_becomes = NudgeProgram.new(@arg)
+    if that_becomes.parses?
+      @result = CodeblockPoint.new([NudgeProgram.new(@arg).linked_code,InstructionPoint.new("code_pop")])
+    else
+      @result = CodeblockPoint.new([InstructionPoint.new("code_pop")])
+    end
+  end
+  def cleanup
+    pushes :exec, @result
+  end
+end
+
 
 
 
