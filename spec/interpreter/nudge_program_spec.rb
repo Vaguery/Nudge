@@ -613,9 +613,6 @@ block { value «int» value «code» value «int»}
       unclear_on_concept = NudgeProgram.new("value «int»\n«bool» false")
       unclear_on_concept.replace_point(1,ReferencePoint.new("x")).footnote_section.should == "«bool» false"
     end
-    
-    
-    
   end
   
   
@@ -688,4 +685,90 @@ block { value «int» value «code» value «int»}
       unclear_on_concept.delete_point(1).listing.should == "block {} \n«bool» false"
     end
   end
+  
+  
+  describe "#insert_point_before method" do
+    before(:each) do
+      @bigger_tree = "block { value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+      @deeper_tree = "block { block {ref a block {ref b}} ref c}"
+      @starter = NudgeProgram.new(@bigger_tree)
+      @new_chunk = ReferencePoint.new("HI")
+    end
+    
+    it "should raise an ArgumentError if the index is 0 or less" do
+      lambda{@starter.insert_point_before(0,@new_chunk)}.should raise_error(ArgumentError)
+      lambda{@starter.insert_point_before(1,@new_chunk)}.should_not raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the index is bigger than old_code.points" do
+      lambda{@starter.insert_point_before(4,@new_chunk)}.should_not raise_error(ArgumentError)
+      lambda{@starter.insert_point_before(5,@new_chunk)}.should raise_error(ArgumentError)
+    end
+    
+    it "should raise an ArgumentError if the second argument isn't a ProgramPoint" do
+      lambda{@starter.insert_point_before(3,"not valid")}.should raise_error(ArgumentError)
+    end
+    
+    it "should create a block around the new code and the old code if pos = 1" do
+      in_the_front = @starter.insert_point_before(1,@new_chunk)
+      in_the_front.linked_code.should be_a_kind_of(CodeblockPoint)
+      in_the_front[2].should be_a_kind_of(ReferencePoint)
+      in_the_front[3].should be_a_kind_of(CodeblockPoint)
+      in_the_front.points.should == 1 + @starter.points + 1 # from the insertion
+    end
+    
+    it "should create a block around the old code and the new code if pos = old.pts+1" do
+      in_the_back = @starter.insert_point_before(4,@new_chunk)
+      in_the_back.linked_code.should be_a_kind_of(CodeblockPoint)
+      in_the_back[2].should be_a_kind_of(CodeblockPoint)
+      in_the_back[5].should be_a_kind_of(ReferencePoint)
+      in_the_back.points.should == 1 + @starter.points + 1 # from the insertion
+    end
+    
+    it "should return a new NudgeProgram with the right ProgramPoint inserted in its linked_code" do
+      in_the_midst = @starter.insert_point_before(2,@new_chunk)
+      # "block { ref HI value «code» value «int»}\n«int»1\n«code» value «int»\n«int» 2"
+      
+      in_the_midst.linked_code.should be_a_kind_of(CodeblockPoint)
+      in_the_midst[2].should be_a_kind_of(ReferencePoint)
+      in_the_midst[3].should be_a_kind_of(ValuePoint)
+      in_the_midst.points.should == @starter.points + 1 # from the insertion
+    end
+    
+    
+    it "should not change the invoking NudgeProgram" do
+      old_code = @starter.listing
+      in_the_midst = @starter.insert_point_before(2,@new_chunk)
+      @starter.listing.should == old_code
+      in_the_midst.listing.should_not == old_code
+    end
+    
+    it "should return a new NudgeProgram" do
+      old_id = @starter.object_id
+      in_the_midst = @starter.insert_point_before(2,@new_chunk)
+      in_the_midst.object_id.should_not == old_id
+    end
+    
+    it "should produce the expected footnotes in the resulting program" do
+      complicated = @starter.insert_point_before(3,@starter.linked_code.clone)
+      complicated.listing.should == "block {\n  value «code»\n  block {\n    value «code»\n    value «int»}\n  value «int»} \n«code» value «int»\n«int» 1\n«code» value «int»\n«int» 1\n«int» 2\n«int» 2"
+    end
+    
+    it "should synchronize the #raw_code, #footnote_section #code_section strings" do
+      complicated = @starter.insert_point_before(3,@starter.linked_code.clone)
+      complicated.raw_code.should_not == @starter.raw_code
+      complicated.raw_code.should == complicated.listing
+      complicated.footnote_section.should_not == @starter.footnote_section
+      complicated.footnote_section.should ==
+        "«code» value «int»\n«int» 1\n«code» value «int»\n«int» 1\n«int» 2\n«int» 2"
+      complicated.code_section.should_not == @starter.code_section
+    end
+    
+    it "should work correctly with unused footnotes" do
+      wordy = NudgeProgram.new("block {}\n«foo» bar")
+      interrupted = wordy.insert_point_before(1,@starter.linked_code)
+      interrupted.footnote_section.should include("foo")
+    end
+  end
+  
 end

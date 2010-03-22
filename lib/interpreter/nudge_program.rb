@@ -52,7 +52,6 @@ module Nudge
         @linked_code = @parser.parse(@code_section).to_point
         depth_first_association!
       else
-        # FIXME: This causes an occasional error in CodeListInstruction
         @linked_code = NilPoint.new
       end
     end
@@ -151,6 +150,32 @@ module Nudge
       
       result.cleanup_strings_from_linked_code!
       return result
+    end
+    
+    
+    
+    def insert_point_before(which, new_junk)
+      raise ArgumentError,"Cannot insert at #{which}th position" if which < 1
+      raise ArgumentError,"Cannot insert before #{which}th program point" if which > (self.points+1)
+      raise ArgumentError,"Cannot insert #{new_junk.class}" unless new_junk.kind_of?(ProgramPoint)
+      
+      copy = self.deep_copy
+      
+      case which
+      when 1
+        copy.linked_code = CodeblockPoint.new([new_junk, copy.linked_code])
+      when copy.points+1
+        copy.linked_code = CodeblockPoint.new([copy.linked_code, new_junk])
+      else
+        stick_before_this = copy[which]
+        parent_node = copy.linked_code.detect do |wrapper|
+          wrapper.contents.include?(stick_before_this) if wrapper.respond_to?(:contents)
+        end
+        parent_index = parent_node.contents.find_index(stick_before_this)
+        parent_node.contents.insert(parent_index, new_junk)
+      end
+      copy.cleanup_strings_from_linked_code!
+      return copy
     end
     
     
