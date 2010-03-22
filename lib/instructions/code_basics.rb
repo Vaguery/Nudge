@@ -641,3 +641,34 @@ class CodeDiscrepancyInstruction < Instruction
     pushes :int, @result
   end
 end
+
+
+
+# Pushes the "container" of the second CODE stack item within the first CODE stack item onto the CODE stack. If second item contains the first anywhere (i.e. in any nested list) then the container is the smallest sub-list that contains but is not equal to the first instance. For example, if the top piece of code is "( B ( C ( A ) ) ( D ( A ) ) )" and the second piece of code is "( A )" then this pushes ( C ( A ) ). Pushes an empty list if there is no such container
+
+
+class CodeContainerInstruction < Instruction
+  def preconditions?
+    needs :code, 2
+  end
+  def setup
+    @searching_in_this = @context.stacks[:code].pop.value
+    @searching_for_this = @context.stacks[:code].pop.value
+  end
+  def derive
+    needle = NudgeProgram.new(@searching_for_this).linked_code.listing
+    haystack_program = NudgeProgram.new(@searching_in_this)
+    haystack = haystack_program.linked_code
+    
+    if needle == haystack.listing
+      result_value = "block {}"
+    else
+      where = haystack.find_index {|point| point.listing == needle}
+      result_value = where.nil? ? "block {}" : haystack_program[where].listing
+    end
+    @result = ValuePoint.new("code", result_value)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
