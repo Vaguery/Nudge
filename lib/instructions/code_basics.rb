@@ -183,7 +183,7 @@ end
 
 
 
-class CodeNthInstruction < Instruction
+class CodeNthInstruction < Instruction 
   def preconditions?
     needs :int, 1
     needs :code, 1
@@ -210,7 +210,7 @@ end
 
 
 
-class CodeNthPointInstruction < Instruction
+class CodeNthPointInstruction < Instruction # was CODE.EXTRACT in Push3
   def preconditions?
     needs :int, 1
     needs :code, 1
@@ -231,6 +231,40 @@ class CodeNthPointInstruction < Instruction
     pushes :code, @result
   end
 end
+
+
+
+class CodeReplaceNthPointInstruction < Instruction # was CODE.INSERT in Push3
+  def preconditions?
+    needs :int, 1
+    needs :code, 2
+  end
+  def setup
+    @where = @context.stacks[:int].pop.value
+    @accept = @context.stacks[:code].pop.value
+    @insert = @context.stacks[:code].pop.value
+  end
+  def derive
+    acceptor = NudgeProgram.new(@accept)
+    raise InstructionMethodError,
+      "#{self.class.to_nudgecode} cannot work with unparseable code" unless acceptor.parses?
+    insertion = NudgeProgram.new(@insert)
+    raise InstructionMethodError,
+      "#{self.class.to_nudgecode} cannot work with unparseable code" unless insertion.parses?
+    scale = acceptor.points
+    which_pt = if @where < 1 || @where > scale
+      (@where % acceptor.points) + 1
+    else
+      @where
+    end
+    new_tree = acceptor.replace_point(which_pt, insertion.linked_code).listing
+    @result = ValuePoint.new("code", new_tree)
+  end
+  def cleanup
+    pushes :code, @result
+  end
+end
+
 
 
 
