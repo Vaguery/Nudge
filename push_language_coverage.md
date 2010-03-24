@@ -130,48 +130,48 @@ EXEC.YANKDUP:        ExecYankdupInstruction
 
 CODE instructions
 
-CODE.=: 
-CODE.APPEND: 
-CODE.ATOM: 
-CODE.CAR: 
-CODE.CDR: 
-CODE.CONS: 
-CODE.CONTAINER: 
-CODE.CONTAINS: 
-CODE.DEFINE: 
-CODE.DEFINITION: 
-CODE.DISCREPANCY: 
-CODE.DO: 
-CODE.DO*: 
-CODE.DO*COUNT:
-CODE.DO*RANGE: 
-CODE.DO*TIMES: 
+CODE.=:              CodeEqualQInstruction
+CODE.APPEND:         CodeConcatenateInstruction
+CODE.ATOM:           CodeAtomQInstruction
+CODE.CAR:            CodeCarInstruction
+CODE.CDR:            CodeCdrInstruction
+CODE.CONS:           CodeConsInstruction
+CODE.CONTAINER:      CodeContainerInstruction
+CODE.CONTAINS:       CodeContainsQInstruction
+CODE.DEFINE:         CodeDefineInstruction
+CODE.DEFINITION:     CodeNameLookupInstruction
+CODE.DISCREPANCY:    CodeDiscrepancyInstruction
+CODE.DO:             CodeExecuteInstruction
+CODE.DO*:            CodeExecuteThenPopInstruction
+CODE.DO*COUNT:       CodeDoCountInstruction
+CODE.DO*RANGE:       CodeDoRangeInstruction
+CODE.DO*TIMES:       CodeDoTimesInstruction
 CODE.DUP:            CodeDuplicateInstruction
-CODE.EXTRACT: 
+CODE.EXTRACT:        CodeNthPointInstruction
 CODE.FLUSH:          CodeFlushInstruction
-CODE.FROMBOOLEAN: 
-CODE.FROMFLOAT: 
-CODE.FROMINTEGER: 
-CODE.FROMNAME: 
-CODE.IF: 
-CODE.INSERT: 
-CODE.INSTRUCTIONS: 
-CODE.LENGTH: 
-CODE.LIST: 
-CODE.MEMBER: 
+CODE.FROMBOOLEAN:    CodeFromBoolInstruction
+CODE.FROMFLOAT:      CodeFromFloatInstruction
+CODE.FROMINTEGER:    CodeFromIntInstruction
+CODE.FROMNAME:       CodeFromNameInstruction
+CODE.IF:             CodeIfInstruction
+CODE.INSERT:         CodeReplaceNthPointInstruction
+CODE.INSTRUCTIONS:   CodeInstructionsInstruction
+CODE.LENGTH:         CodeLengthInstruction
+CODE.LIST:           CodeListInstruction
+CODE.MEMBER:         CodeMemberQInstruction
 CODE.NOOP:           CodeNoopInstruction
-CODE.NTH: 
-CODE.NTHCDR: 
-CODE.NULL: 
+CODE.NTH:            CodeNthInstruction
+CODE.NTHCDR:         CodeNthCdrInstruction
+CODE.NULL:           CodeNullQInstruction
 CODE.POP:            CodePopInstruction
-CODE.POSITION: 
-CODE.QUOTE: 
-CODE.RAND: 
+CODE.POSITION:       CodePositionInstruction
+CODE.QUOTE:          CodeQuoteInstruction
+CODE.RAND:           
 CODE.ROT:            CodeRotateInstruction
 CODE.SHOVE:          CodeShoveInstruction
-CODE.SIZE: 
+CODE.SIZE:           CodePointsInstruction
 CODE.STACKDEPTH:     CodeDepthInstruction
-CODE.SUBST: 
+CODE.SUBST:          CodeGsubInstruction
 CODE.SWAP:           CodeSwapInstruction
 CODE.YANK:           CodeYankInstruction
 CODE.YANKDUP:        CodeYankdupInstruction

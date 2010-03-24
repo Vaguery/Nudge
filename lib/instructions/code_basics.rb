@@ -137,7 +137,7 @@ end
 
 
 
-class CodeNameLookupInstruction < Instruction
+class CodeNameLookupInstruction < Instruction  # was Push3 CODE.DEFINITION
   def preconditions?
     needs :name, 1
   end
