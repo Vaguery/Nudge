@@ -1,0 +1,26 @@
+4349, 19, 24, 10000, 0.006284, 0.505575, 7, 814, 793
+block {
+  ref aaa001
+  value «bool»
+  ref aaa002
+  block {}
+  do int_duplicate
+  do code_rotate
+  value «code»
+  value «int»
+  value «int»
+  value «float»
+  ref aaa003
+  ref aaa004
+  block {
+    do bool_define
+    do code_do_range
+    ref aaa005
+    value «float»
+    do name_flush}} 
+«bool» false
+«code» do exec_do_times
+«int» -4
+«int» -28
+«float» -916.287002378489
+«float» 322.853090817558

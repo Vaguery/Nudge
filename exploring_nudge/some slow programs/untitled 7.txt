@@ -1,0 +1,14 @@
+7598, 11, 12, 10000, 0.003402, 0.273832, 5, 2399, 1
+block {
+  ref aaa001
+  block {
+    value «float»
+    value «int»
+    block {}
+    block {
+      ref aaa002
+      do exec_do_count
+      do exec_do_range
+      do int_shove}}} 
+«float» 354.316193911688
+«int» 48

@@ -1,0 +1,39 @@
+9477, 29, 37, 10000, 0.00858, 0.30553, 7, 1207, 2
+block {
+  value «float»
+  ref aaa001
+  value «bool»
+  ref aaa002
+  value «int»
+  value «float»
+  value «code»
+  value «int»
+  value «int»
+  block {
+    value «int»
+    block {}}
+  do bool_and
+  block {
+    ref aaa003
+    block {
+      ref aaa004
+      ref aaa005}
+    block {
+      do bool_pop
+      do exec_do_count}}
+  block {
+    do bool_pop
+    value «bool»
+    do int_negative
+    do exec_duplicate}
+  block {
+    ref aaa006}} 
+«float» -402.059616130861
+«bool» false
+«int» 90
+«float» 827.13692684244
+«code» block {do name_equal_q ref aaa001 do float_subtract do code_contains_q ref aaa002 }
+«int» -23
+«int» 41
+«int» 82
+«bool» true

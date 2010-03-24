@@ -1,0 +1,20 @@
+9845, 18, 18, 44, 0.0056, 0.40625, 7, 21, 15
+block {
+  ref aaa001
+  ref aaa002
+  block {
+    value «bool»
+    do code_instructions
+    ref aaa003
+    ref aaa004
+    do code_execute
+    block {
+      block {}}
+    ref aaa005
+    ref aaa006
+    block {}
+    block {
+      do bool_not
+      block {
+        ref aaa007}}}} 
+«bool» true

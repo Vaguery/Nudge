@@ -1,0 +1,51 @@
+5804, 39, 49, 2345, 0.013829, 11.350183, 7, 307, 105
+block {
+  ref aaa001
+  ref aaa002
+  value «code»
+  ref aaa003
+  block {
+    do int_duplicate
+    ref aaa004
+    do float_equal_q
+    do exec_yank
+    block {
+      block {}}
+    value «code»
+    do float_subtract}
+  ref aaa005
+  value «int»
+  ref aaa006
+  value «bool»
+  do int_power
+  do bool_rotate
+  do float_random
+  do exec_do_count
+  block {
+    do int_abs
+    ref aaa007
+    block {
+      value «int»}
+    do code_list
+    do code_define
+    block {
+      do code_list
+      value «bool»}}
+  block {
+    block {}}
+  value «code»
+  value «float»
+  ref aaa008
+  value «int»
+  do code_rotate} 
+«code» 
+«code» block {value «code» do exec_duplicate ref aaa001 do float_shove value «code» }
+«code» 
+«code»
+«int» 97
+«bool» false
+«int» 78
+«bool» true
+«code» 
+«float» -125.61289190774
+«int» 59

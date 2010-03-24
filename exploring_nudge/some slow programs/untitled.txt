@@ -1,0 +1,42 @@
+158, 31, 40, 10000, 0.010593, 7.754989, 4, 2521, 0
+block {
+  ref aaa001
+  block {
+    ref aaa002
+    ref aaa003
+    value «code»
+    ref aaa004
+    block {
+      value «int»
+      do code_execute_then_pop}
+    block {}}
+  ref aaa005
+  ref aaa006
+  do code_contains_q
+  block {
+    value «int»
+    do bool_not
+    block {}
+    value «code»
+    do code_quote}
+  do int_depth
+  do code_swap
+  value «int»
+  do name_flush
+  do float_power
+  do bool_random
+  value «int»
+  ref aaa007
+  value «int»
+  value «bool»
+  value «bool»} 
+«code» block {block {do code_execute_then_pop }}
+«int» 97
+«int» 23
+«code» block {value «code» block {ref aaa001 }}
+«code»
+«int» 55
+«int» 20
+«int» -11
+«bool» false
+«bool» false
