@@ -2,7 +2,6 @@ $: << File.join(File.dirname(__FILE__), "/../lib")
 
 require 'rubygems'
 require 'treetop'
-require 'polyglot'
 require 'active_support'
 
 require 'interpreter/grammars/nudge_common'

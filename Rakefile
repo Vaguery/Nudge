@@ -13,7 +13,6 @@ begin
     gemspec.required_ruby_version = '>= 1.9.1'
     
     gemspec.add_dependency('treetop', '>= 1.4.3')
-    gemspec.add_dependency('polyglot', '>= 0.2.9')
     gemspec.add_dependency('activesupport', '>= 2.3.5')
   end
   
