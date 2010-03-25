@@ -201,8 +201,163 @@ describe "initialization" do
       @ii.types.length.should == 1
     end
   end
-  
 end
+
+
+describe "Interpreter#peek" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #peek method" do
+    @ii.stacks[:donut].push(ValuePoint.new("donut", "0"))
+    lambda{@ii.peek(:donut)}.should_not raise_error
+    @ii.peek(:donut).value.should == "0"
+  end
+  
+  it "should return nil if the stack doesn't exist" do
+    lambda{@ii.peek(:nonexistent)}.should_not raise_error
+    @ii.peek(:nonexistent).should == nil
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.peek("not there")}.should raise_error(ArgumentError)
+    lambda{@ii.peek(99)}.should raise_error(ArgumentError)
+  end
+end
+
+
+
+describe "Interpreter#peek_value" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #peek method" do
+    @ii.stacks[:donut].push(ValuePoint.new("donut", "0"))
+    lambda{@ii.peek_value(:donut)}.should_not raise_error
+    @ii.stacks[:donut].push(ValuePoint.new("donut", "O"))
+    @ii.peek_value(:donut).should == "O"
+  end
+  
+  it "should return the value, not the entire ValuePoint" do
+    @ii.stacks[:int].push(ValuePoint.new("int", "8817"))
+    @ii.peek_value(:int).should == 8817
+  end
+  
+  
+  it "should return nil if the stack doesn't exist" do
+    lambda{@ii.peek_value(:nonexistent)}.should_not raise_error
+    @ii.peek_value(:nonexistent).should == nil
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.peek_value("not there")}.should raise_error(ArgumentError)
+    lambda{@ii.peek_value(99)}.should raise_error(ArgumentError)
+  end
+end
+
+
+describe "Interpreter#pop" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #pop method" do
+    @ii.stacks[:crown].push(ValuePoint.new("crown", "WWW"))
+    lambda{@ii.pop(:crown)}.should_not raise_error
+    
+    @ii.stacks[:crown].push(ValuePoint.new("crown", "WWW"))
+    got_crown = @ii.pop(:crown)
+    got_crown.should be_a_kind_of(ValuePoint)
+    got_crown.value.should == "WWW"
+  end
+  
+  it "should return nil if the stack doesn't exist" do
+    lambda{@ii.pop(:nonexistent)}.should_not raise_error
+    @ii.pop(:nonexistent).should == nil
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.pop("not there")}.should raise_error(ArgumentError)
+    lambda{@ii.pop(99)}.should raise_error(ArgumentError)
+  end
+end
+
+
+describe "Interpreter#pop_value" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #pop method" do
+    @ii.stacks[:box].push(ValuePoint.new("box", "[_]"))
+    lambda{@ii.pop_value(:box)}.should_not raise_error
+    
+    @ii.stacks[:box].push(ValuePoint.new("box", "[_]"))
+    holder = @ii.pop_value(:box)
+    holder.should be_a_kind_of(String)
+    holder.should == "[_]"
+  end
+  
+  it "should return nil if the stack doesn't exist" do
+    lambda{@ii.pop_value(:nonexistent)}.should_not raise_error
+    @ii.pop_value(:nonexistent).should == nil
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.pop_value("not there")}.should raise_error(ArgumentError)
+    lambda{@ii.pop_value(99)}.should raise_error(ArgumentError)
+  end
+end
+
+
+describe "Interpreter#push" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #push method" do
+    lambda{@ii.push(:int,"9")}.should_not raise_error
+    
+    @ii.push(:foo,"bar")
+    @ii.pop_value(:foo).should == "bar"
+    
+    @ii.push(:baz,"qux")
+    @ii.peek(:baz).should be_a_kind_of(ValuePoint)
+    @ii.peek(:baz).value.should == "qux"
+  end
+  
+  it "should allow passing in valid non-string values for that type" do
+    @ii.push(:int,9182)
+    @ii.pop_value(:int).should == 9182
+    
+    @ii.push(:float,8.765)
+    @ii.pop_value(:float).should == 8.765
+    
+    @ii.push(:bool,true)
+    @ii.pop_value(:bool).should == true
+    
+    @ii.push(:bool,false)
+    @ii.peek(:bool).raw.should == "false"
+  end
+  
+  it "should have a default value of an empty string" do
+    @ii.push(:matrix)
+    @ii.pop(:matrix).raw.should == ""
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.push("backwards", :int)}.should raise_error(ArgumentError)
+    lambda{@ii.push("int")}.should raise_error(ArgumentError)
+  end
+end
+
 
 describe "stepping" do
   before(:each) do

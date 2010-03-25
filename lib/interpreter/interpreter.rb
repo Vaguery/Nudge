@@ -67,6 +67,34 @@ module Nudge
     end
     
     
+    def peek(stackname)
+      @stacks[stackname].peek
+    end
+    
+    
+    def peek_value(stackname)
+      item = @stacks[stackname].peek
+      item.nil? ? nil : item.value
+    end
+    
+    
+    def pop(stackname)
+      @stacks[stackname].pop
+    end
+    
+    
+    def pop_value(stackname)
+      item = @stacks[stackname].pop
+      item.nil? ? nil : item.value
+    end
+    
+    
+    def push(stackname, value="")
+      @stacks[stackname].push(ValuePoint.new(stackname, value))
+    end
+    
+    
+    
     # Checks to see if either stopping condition applies:
     # 1. Is the <b>:exec</b> stack empty?
     # 2. Are the number of steps greater than self.stepLimit?
