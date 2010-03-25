@@ -1,10 +1,10 @@
 # Nudge Language Interpreter in Ruby
 
-Nudge is a flexible programming language descended from the [Push 3.0 language](http://hampshire.edu/lspector/push3-description.html "Push 3"). It's an extensible stack-based language with a very simple interpreter structure, but a lot of functionality.
+Nudge is a flexible programming language descended from [Push 3.0](http://hampshire.edu/lspector/push3-description.html "Push 3"). It's an extensible stack-based language with a very simple interpreter structure, but a lot of functionality.
 
-Like Push, Nudge is _usable_ by human beings, but it's actually designed for genetic programming applications. Unlike Push, we've incorporated a lot of syntactic sugar to make it a bit more human-readable (even when machine-generated), and we've provided a simple mechanism to manage problem-specific variables and simplfy writing new instructions.
+Like Push, Nudge is _usable_ by human beings, but it's actually designed for genetic programming applications. Unlike Push, we've incorporated a lot of syntactic sugar to make it a bit more human-readable (even when machine-generated), and this library implements simple mechanisms for passing in problem-specific variables and extending the core language by writing new instructions.
 
-See the project Wiki for a more thorough explanation.
+See the project [[Wiki]] for a more thorough explanation.
 
 ## Getting started
 
