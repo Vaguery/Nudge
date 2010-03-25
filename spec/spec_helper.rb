@@ -1,5 +1,7 @@
 #encoding: utf-8
 $: << File.join(File.dirname(__FILE__), "/../lib") 
+$: << File.join(File.dirname(__FILE__), "/../lib/instructions") 
+
 
 require 'spec'
 require 'interpreter/treetophelpers'

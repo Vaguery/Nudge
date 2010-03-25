@@ -21,14 +21,15 @@ require 'interpreter/types/pushTypes'
 require 'interpreter/types/codeType'
 require 'interpreter/stack'
 require 'interpreter/programPoints'
-require 'search/helpers'
+
 
 require 'instructions/infrastructure'
+
+
 require 'instructions/stack_manipulation'
 require 'instructions/int_arithmetic'
 require 'instructions/float_arithmetic'
 require 'instructions/float_transcendental'
-require 'instructions/bool_basics'
 require 'instructions/comparisons'
 require 'instructions/conditionals'
 require 'instructions/conversions'
@@ -38,7 +39,13 @@ require 'instructions/name_bindings'
 require 'instructions/name_basics'
 require 'instructions/code_basics'
 
+require 'instructions/bool/bool_and'
+require 'instructions/bool/bool_equal_q'
+require 'instructions/bool/bool_not'
+require 'instructions/bool/bool_or'
+require 'instructions/bool/bool_xor'
 
+require 'search/helpers'
 require 'search/individual/individual'
 require 'search/individual/batch'
 require 'search/operators/basic_operators'
