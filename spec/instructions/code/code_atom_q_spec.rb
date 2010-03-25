@@ -5,8 +5,8 @@ include Nudge
 
 
 describe CodeAtomQInstruction do
-  it_should_behave_like "every Nudge Instruction"
   
+  it_should_behave_like "every Nudge Instruction"
   
   before(:each) do
     @context = Interpreter.new
