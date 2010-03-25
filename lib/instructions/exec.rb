@@ -3,7 +3,7 @@ class ExecYInstruction < Instruction
     needs :exec, 1
   end
   def setup
-    @arg1 = @context.stacks[:exec].pop
+    @arg1 = @context.pop(:exec)
   end
   def derive
     @recurser = CodeblockPoint.new([InstructionPoint.new("exec_y"),@arg1])
@@ -20,8 +20,8 @@ class ExecKInstruction < Instruction
     needs :exec, 2
   end
   def setup
-    @keep = @context.stacks[:exec].pop
-    @discard = @context.stacks[:exec].pop
+    @keep = @context.pop(:exec)
+    @discard = @context.pop(:exec)
   end
   def derive
   end
@@ -36,9 +36,9 @@ class ExecSInstruction < Instruction
     needs :exec, 3
   end
   def setup
-    @argA = @context.stacks[:exec].pop
-    @argB = @context.stacks[:exec].pop
-    @argC = @context.stacks[:exec].pop
+    @argA = @context.pop(:exec)
+    @argB = @context.pop(:exec)
+    @argC = @context.pop(:exec)
   end
   def derive  
     @s_result = CodeblockPoint.new([@argB,@argC])
@@ -58,9 +58,9 @@ class ExecDoRangeInstruction < Instruction
   end
   
   def setup
-    @destination = @context.stacks[:int].pop
-    @counter = @context.stacks[:int].pop
-    @code = @context.stacks[:exec].pop
+    @destination = @context.pop(:int)
+    @counter = @context.pop(:int)
+    @code = @context.pop(:exec)
   end
   
   def derive
@@ -96,9 +96,9 @@ class ExecDoTimesInstruction < Instruction
   end
   
   def setup
-    @destination = @context.stacks[:int].pop
-    @counter = @context.stacks[:int].pop
-    @code = @context.stacks[:exec].pop
+    @destination = @context.pop(:int)
+    @counter = @context.pop(:int)
+    @code = @context.pop(:exec)
   end
   
   def derive
@@ -133,12 +133,12 @@ class ExecDoCountInstruction < Instruction
   end
   
   def setup
-    @destination = @context.stacks[:int].pop
-    @code = @context.stacks[:exec].pop
-    raise InstructionMethodError, "#{self.class} needs a positive argument" if @destination.value < 1
+    @destination = @context.pop(:int)
+    @code = @context.pop(:exec)
   end
   
   def derive
+    raise InstructionMethodError, "#{self.class} needs a positive argument" if @destination.value < 1
     @one_less = ValuePoint.new("int",@destination.value-1)
   end
   

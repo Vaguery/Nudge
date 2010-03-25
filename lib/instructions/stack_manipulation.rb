@@ -10,7 +10,7 @@ module PopInstruction
     needs @target_stack, 1
   end
   def setup
-    @result = @context.stacks[@target_stack].pop
+    @result = @context.pop(@target_stack)
   end
   def derive
   end
@@ -84,8 +84,8 @@ module SwapInstruction
     needs @target_stack, 2
   end
   def setup
-    @result1 = @context.stacks[@target_stack].pop
-    @result2 = @context.stacks[@target_stack].pop
+    @result1 = @context.pop(@target_stack)
+    @result2 = @context.pop(@target_stack)
   end
   def derive
   end
@@ -163,7 +163,7 @@ module DuplicateInstruction
     needs @target_stack, 1
   end
   def setup
-    @arg1 = @context.stacks[@target_stack].peek
+    @arg1 = @context.peek(@target_stack)
   end
   def derive
     @result = @arg1.clone
@@ -239,10 +239,10 @@ module RotateInstruction
   def preconditions?
     needs @target_stack, 3
   end
-  def setup
-    @arg3 = @context.stacks[@target_stack].pop
-    @arg2 = @context.stacks[@target_stack].pop
-    @arg1 = @context.stacks[@target_stack].pop
+  def setup                           
+    @arg3 = @context.pop(@target_stack)
+    @arg2 = @context.pop(@target_stack)
+    @arg1 = @context.pop(@target_stack)
   end
   def derive
   end
@@ -481,8 +481,8 @@ module ShoveInstruction
   end
   
   def setup
-    @how_far = @context.stacks[:int].pop.value
-    @result = @context.stacks[@target_stack].pop
+    @how_far = @context.pop_value(:int)
+    @result = @context.pop(@target_stack)
   end
   
   def derive
@@ -575,7 +575,7 @@ module YankInstruction
   end
   
   def setup
-    @from_where = @context.stacks[:int].pop.value
+    @from_where = @context.pop_value(:int)
   end
   
   def derive
@@ -668,7 +668,7 @@ module YankdupInstruction
   end
   
   def setup
-    @from_where = @context.stacks[:int].pop.value
+    @from_where = @context.pop_value(:int)
   end
   
   def derive

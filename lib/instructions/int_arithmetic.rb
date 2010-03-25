@@ -3,11 +3,11 @@ class IntAddInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg1 = @context.stacks[:int].pop
-    @arg2 = @context.stacks[:int].pop
+    @arg1 = @context.pop_value(:int)
+    @arg2 = @context.pop_value(:int)
   end
   def derive
-    @result = ValuePoint.new("int", @arg1.value + @arg2.value)
+    @result = ValuePoint.new("int", @arg1 + @arg2)
   end
   def cleanup
     pushes :int, @result
@@ -21,11 +21,11 @@ class IntMultiplyInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg1 = @context.stacks[:int].pop
-    @arg2 = @context.stacks[:int].pop
+    @arg1 = @context.pop_value(:int)
+    @arg2 = @context.pop_value(:int)
   end
   def derive
-    @result = ValuePoint.new("int", @arg1.value * @arg2.value)
+    @result = ValuePoint.new("int", @arg1 * @arg2)
   end
   def cleanup
     pushes :int, @result
@@ -39,8 +39,8 @@ class IntDivideInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
     if @arg2 != 0
@@ -62,8 +62,8 @@ class IntSubtractInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @diff = @arg1-@arg2
@@ -81,8 +81,8 @@ class IntModuloInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
     if @arg2 != 0
@@ -104,8 +104,8 @@ class IntMaxInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @max = [@arg1,@arg2].max
@@ -123,8 +123,8 @@ class IntMinInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @min = [@arg1,@arg2].min
@@ -142,7 +142,7 @@ class IntAbsInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg1 = @context.stacks[:int].pop.value
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @result = ValuePoint.new("int", @arg1.abs)
@@ -159,7 +159,7 @@ class IntNegativeInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg1 = @context.stacks[:int].pop.value
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @result = ValuePoint.new("int", -@arg1)
@@ -176,8 +176,8 @@ class IntPowerInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
     raise NaNResultError,"#{self.class} attempted negative root of 0" if @arg1 == 0 && @arg2 < 0

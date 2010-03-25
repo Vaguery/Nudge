@@ -19,8 +19,8 @@ module DefineInstruction
   end
   
   def setup
-    @bound_name = @context.stacks[:name].pop.value
-    @new_value = @context.stacks[@target_stack].pop
+    @bound_name = @context.pop_value(:name)
+    @new_value =  @context.pop(@target_stack)
   end
   
   def derive
