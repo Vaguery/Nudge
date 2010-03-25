@@ -4,19 +4,12 @@ include Nudge
 
 
 describe CodeBackbonePointsInstruction do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeBackbonePointsInstruction.new(@context)
-  end
-  
-  it "should have the right context" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
   end
   
   describe "\#go" do
@@ -25,12 +18,6 @@ describe CodeBackbonePointsInstruction do
       @i1 = CodeBackbonePointsInstruction.new(@context)
     end
 
-    describe "\#preconditions?" do
-      it "should need at least one item on the :code stack" do
-        @context.stacks[:code].push(ValuePoint.new("code","block {}"))
-        @i1.preconditions?.should == true
-      end
-    end
 
     describe "\#cleanup" do
       it "should push an :int counting points in the backbone of the top :code item" do

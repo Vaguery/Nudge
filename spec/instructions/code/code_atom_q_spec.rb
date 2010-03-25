@@ -5,34 +5,20 @@ include Nudge
 
 
 describe CodeAtomQInstruction do
+  it_should_behave_like "every Nudge Instruction"
+  
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeAtomQInstruction.new(@context)
   end
-  
-  it "should have the right context" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
-  end
-  
+    
   describe "\#go" do
     before(:each) do
       @context = Interpreter.new
       @i1 = CodeAtomQInstruction.new(@context)
     end
-
-    describe "\#preconditions?" do
-      it "should need at least one item on the :code stack" do
-        @context.stacks[:code].push(ValuePoint.new("code","ref a"))
-        @i1.preconditions?.should == true
-      end
-    end
-
+    
     describe "\#cleanup" do
       it "should push a :bool indicating whether the :code value is an atom or not" do
         @context.stacks[:code].push(ValuePoint.new("code","ref x"))

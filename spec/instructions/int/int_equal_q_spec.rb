@@ -3,6 +3,9 @@ require File.join(File.dirname(__FILE__), "../../spec_helper")
 include Nudge
 
 describe "IntEqualQInstruction" do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new    
     @i1 = IntEqualQInstruction.new(@context)
@@ -10,15 +13,6 @@ describe "IntEqualQInstruction" do
     @int2 = ValuePoint.new("int", 2)
   end
   
-  it "should have its #context set to that Interpreter instance it's in" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
-  end 
   
   it "should check that there are enough parameters" do
     6.times {@context.stacks[:int].push(@int1)}

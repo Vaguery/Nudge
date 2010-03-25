@@ -3,20 +3,14 @@ include Nudge
 
 
 describe FloatDepthInstruction do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatDepthInstruction.new(@context)
   end
   
-  it "should have its context set" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
-  end
   
   describe "\#go" do
     before(:each) do

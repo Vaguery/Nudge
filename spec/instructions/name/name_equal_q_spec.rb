@@ -4,6 +4,9 @@ include Nudge
 
 
 describe "NameEqualQInstruction" do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = NameEqualQInstruction.new(@context)
@@ -16,15 +19,6 @@ describe "NameEqualQInstruction" do
     @thing1.go(@context)
   end
   
-  it "should have its #context set to that Interpreter instance it's in" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
-  end 
   
   it "should check that there are enough parameters" do
     @i1.preconditions?.should == true

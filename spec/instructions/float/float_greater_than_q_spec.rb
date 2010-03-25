@@ -4,6 +4,9 @@ include Nudge
 
 
 describe "FloatGreaterThanQInstruction" do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = FloatGreaterThanQInstruction.new(@context)
@@ -11,15 +14,6 @@ describe "FloatGreaterThanQInstruction" do
     @float2 = ValuePoint.new("float", 2.0)
   end
   
-  it "should have its context set" do
-    @i1.context.should == @context
-  end
-  
-  [:preconditions?, :setup, :derive, :cleanup].each do |methodName|
-    it "should respond to \##{methodName}" do
-      @i1.should respond_to(methodName)
-    end   
-  end 
   
   it "should check that there are enough parameters" do
     6.times {@context.stacks[:float].push(@float1)}

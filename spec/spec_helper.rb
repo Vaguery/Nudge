@@ -20,3 +20,23 @@ def load_grammar(name)
   Treetop.load(File.join(File.dirname(__FILE__), '..',
     'lib', 'interpreter', 'grammars', "nudge_#{name}.treetop"))
 end
+
+
+shared_examples_for "every Nudge Instruction" do
+  
+  it "should respond to \#preconditions?" do
+    @i1.should respond_to(:preconditions?)
+  end
+  
+  it "should respond to \#setup" do
+    @i1.should respond_to(:setup)
+  end   
+  
+  it "should respond to \#derive" do
+    @i1.should respond_to(:derive)
+  end   
+  
+  it "should respond to \#celanup" do
+    @i1.should respond_to(:cleanup)
+  end   
+end

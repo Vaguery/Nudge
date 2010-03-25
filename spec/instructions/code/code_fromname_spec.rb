@@ -2,7 +2,10 @@
 require File.join(File.dirname(__FILE__), "../../spec_helper")
 include Nudge
 
-describe CodeFromNameInstruction do # needs unique specs because it's manipulating ReferencePoints
+describe CodeFromNameInstruction do
+  
+  it_should_behave_like "every Nudge Instruction"
+  
   before(:each) do
     @context = Interpreter.new
     @i1 = CodeFromNameInstruction.new(@context)
