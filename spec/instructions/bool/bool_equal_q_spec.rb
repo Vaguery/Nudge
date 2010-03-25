@@ -11,7 +11,7 @@ describe BoolEqualQInstruction do
     @i1 = BoolEqualQInstruction.new(@context)
   end
   
-
+  
   describe "\#go" do
     before(:each) do
       @i1 = BoolEqualQInstruction.new(@context)
