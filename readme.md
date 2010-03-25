@@ -4,7 +4,7 @@ Nudge is a flexible programming language descended from [Push 3.0](http://hampsh
 
 Like Push, Nudge is _usable_ by human beings, but it's actually designed for genetic programming applications. Unlike Push, we've incorporated a lot of syntactic sugar to make it a bit more human-readable (even when machine-generated), and this library implements simple mechanisms for passing in problem-specific variables and extending the core language by writing new instructions.
 
-See the project [[Wiki]] for a more thorough explanation.
+See the [project Wiki](http://github.com/Vaguery/Nudge/wikis) for a more thorough explanation.
 
 ## Getting started
 
