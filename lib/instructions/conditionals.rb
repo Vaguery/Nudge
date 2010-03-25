@@ -11,9 +11,9 @@ module IfInstruction
     needs :bool, 1
   end
   def setup
-    @stay = @context.stacks[:bool].pop.value
-    @ifFalse = @context.stacks[@target_stack].pop
-    @ifTrue = @context.stacks[@target_stack].pop
+    @stay = @context.pop_value(:bool)
+    @ifFalse = @context.pop(@target_stack)
+    @ifTrue = @context.pop(@target_stack)
   end
   def derive
   end
@@ -53,9 +53,9 @@ class CodeIfInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @stay = @context.stacks[:bool].pop.value
-    @ifFalse = @context.stacks[:code].pop.value
-    @ifTrue = @context.stacks[:code].pop.value
+    @stay = @context.pop_value(:bool)
+    @ifFalse = @context.pop_value(:code)
+    @ifTrue = @context.pop_value(:code)
   end
   def derive
     which = @stay ? @ifTrue : @ifFalse

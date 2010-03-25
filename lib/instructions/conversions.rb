@@ -4,7 +4,7 @@ class IntFromBoolInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg = @context.stacks[:bool].pop.value
+    @arg = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("int", @arg ? 1 : 0)
@@ -20,7 +20,7 @@ class FloatFromBoolInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg = @context.stacks[:bool].pop.value
+    @arg = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("float", @arg ? 1.0 : 0.0)
@@ -36,7 +36,7 @@ class CodeFromBoolInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg = @context.stacks[:bool].pop.value
+    @arg = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("code", "value «bool»\n«bool» #{@arg}")
@@ -53,7 +53,7 @@ class IntFromFloatInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg = @context.stacks[:float].pop.value
+    @arg = @context.pop_value(:float)
   end
   def derive
     @result = ValuePoint.new("int", @arg.to_i)
@@ -69,7 +69,7 @@ class FloatFromIntInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg = @context.stacks[:int].pop.value
+    @arg = @context.pop_value(:int)
   end
   def derive
     @result = ValuePoint.new("float", @arg.to_f)
@@ -85,7 +85,7 @@ class BoolFromIntInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg = @context.stacks[:int].pop.value
+    @arg = @context.pop_value(:int)
   end
   def derive
     @result = ValuePoint.new("bool", @arg != 0)
@@ -101,7 +101,7 @@ class CodeFromIntInstruction < Instruction
     needs :int, 1
   end
   def setup
-    @arg = @context.stacks[:int].pop.value
+    @arg = @context.pop_value(:int)
   end
   def derive
     @result = ValuePoint.new("code", "value «int»\n«int» #{@arg}")
@@ -119,7 +119,7 @@ class BoolFromFloatInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg = @context.stacks[:float].pop.value
+    @arg = @context.pop_value(:float)
   end
   def derive
     @result = ValuePoint.new("bool", @arg != 0.0)
@@ -135,7 +135,7 @@ class CodeFromFloatInstruction < Instruction
     needs :float, 1
   end
   def setup
-    @arg = @context.stacks[:float].pop.value
+    @arg = @context.pop_value(:float)
   end
   def derive
     @result = ValuePoint.new("code", "value «float»\n«float» #{@arg}")
@@ -151,7 +151,7 @@ class CodeFromNameInstruction < Instruction
     needs :name, 1
   end
   def setup
-    @arg = @context.stacks[:name].pop.name
+    @arg = @context.pop(:name).name
   end
   def derive
     @result = ValuePoint.new("code", "ref #{@arg}")

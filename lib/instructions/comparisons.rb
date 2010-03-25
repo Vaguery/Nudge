@@ -3,8 +3,8 @@ class IntEqualQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 == @arg2)
@@ -20,8 +20,8 @@ class IntLessThanQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 < @arg2)
@@ -37,8 +37,8 @@ class IntGreaterThanQInstruction < Instruction
     needs :int, 2
   end
   def setup
-    @arg2 = @context.stacks[:int].pop.value
-    @arg1 = @context.stacks[:int].pop.value
+    @arg2 = @context.pop_value(:int)
+    @arg1 = @context.pop_value(:int)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 > @arg2)
@@ -54,8 +54,8 @@ class FloatEqualQInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = @context.stacks[:float].pop.value
-    @arg1 = @context.stacks[:float].pop.value
+    @arg2 = @context.pop_value(:float)
+    @arg1 = @context.pop_value(:float)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 == @arg2)
@@ -71,8 +71,8 @@ class FloatGreaterThanQInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = @context.stacks[:float].pop.value
-    @arg1 = @context.stacks[:float].pop.value
+    @arg2 = @context.pop_value(:float)
+    @arg1 = @context.pop_value(:float)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 > @arg2)
@@ -88,8 +88,8 @@ class FloatLessThanQInstruction < Instruction
     needs :float, 2
   end
   def setup
-    @arg2 = @context.stacks[:float].pop.value
-    @arg1 = @context.stacks[:float].pop.value
+    @arg2 = @context.pop_value(:float)
+    @arg1 = @context.pop_value(:float)
   end
   def derive
       @result = ValuePoint.new("bool", @arg1 < @arg2)
@@ -105,8 +105,8 @@ class ExecEqualQInstruction < Instruction
     needs :exec, 2
   end
   def setup
-    @arg2 = @context.stacks[:exec].pop.listing
-    @arg1 = @context.stacks[:exec].pop.listing
+    @arg2 = @context.pop(:exec).listing
+    @arg1 = @context.pop(:exec).listing
   end
   def derive
     x1 = NudgeProgram.new(@arg1)
@@ -125,8 +125,8 @@ class NameEqualQInstruction < Instruction
     needs :name, 2
   end
   def setup
-    @arg2 = @context.stacks[:name].pop.value
-    @arg1 = @context.stacks[:name].pop.value
+    @arg2 = @context.pop_value(:name)
+    @arg1 = @context.pop_value(:name)
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 == @arg2)
@@ -142,8 +142,8 @@ class CodeEqualQInstruction < Instruction
     needs :code, 2
   end
   def setup
-    @arg2 = @context.stacks[:code].pop.value
-    @arg1 = @context.stacks[:code].pop.value
+    @arg2 = @context.pop_value(:code)
+    @arg1 = @context.pop_value(:code)
   end
   def derive
     c1 = NudgeProgram.new(@arg1).listing
