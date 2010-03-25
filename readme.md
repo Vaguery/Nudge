@@ -1,19 +1,13 @@
-# Pragmatic Genetic Programming
+# Nudge Language Interpreter in Ruby
 
-The first release of the Pragmatic GP package will include a Ruby implementation of a [Push 3.0 language interpreter](http://hampshire.edu/lspector/push3-description.html "Push 3"), a framework for setting up and managing straightforward genetic programming projects using an [ALPS](http://idesign.ucsc.edu/projects/alps.html "ALPS algorithms")-based algorithm, and a simple architecture for monitoring and exploring the results of GP runs as they arise.
-
-This is a complete rewrite of an earlier project written in Python, and is really just a huge down-to-the-roots refactoring that relies on a lot of Ruby's more convenient metaprogramming features.
-
-We're building this from the bottom up, so it doesn't "work" in the sense you might expect. At the moment, only the specs pass. There isn't any centralized run behavior in place yet, though that will be coming soon.
+Nudge is a flexible programming language descended from the [Push 3.0 language](http://hampshire.edu/lspector/push3-description.html "Push 3"). It's a stack-based language with a very simple interpreter, and 
 
 ## Requirements
 
-For the time being requirements need to be installed by hand.
+The interpreter code relies heavily on functional programming features of Ruby 1.9+. If you have not yet installed Ruby 1.9, I'd recommend using [rvm](http://rvm.beginrescueend.com/) to set up a special "sandbox" version of 1.9 until you're ready to upgrade your development or production machine.
 
-First, the codebase increasingly relies on features of ruby 1.9.1. If you'd like to work with it, I'd recommend using [rvm](http://rvm.beginrescueend.com/) to set it up to work alongside the other version(s) of the Ruby interpreter your system may depend on.
-
-You'll need to download and install [couchDB](http://couchdb.apache.org/), and have it running before launching a full-fledged Nudge Experiment.
-
-To run and verify the codebase, you'll need to have recent versions of the following gems: [haml](http://haml-lang.com/), [sinatra](http://www.sinatrarb.com/), [treetop](http://treetop.rubyforge.org/), [activesupport](http://as.rubyonrails.org/), and [couchrest](http://github.com/jchris/couchrest); [rspec](http://rspec.info/), [cucumber](http://cukes.info/) and [fakeweb](http://fakeweb.rubyforge.org/) to be able to run the specs and confirm the codebase works on your system.
-
-If as we are you're developing with TextMate, you'll need to make sure your 'PATH' variable in the application is set correctly by adding the path to your *active* ruby binary and gems to the front.
+The following gems need to be present to run the code:
+  * [treetop](http://treetop.rubyforge.org/)
+  * [activesupport](http://as.rubyonrails.org/)
+  
+and you will want [rspec](http://rspec.info/) to be able to run the specs and confirm the codebase works on your system.

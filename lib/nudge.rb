@@ -22,9 +22,7 @@ require 'interpreter/types/codeType'
 require 'interpreter/stack'
 require 'interpreter/programPoints'
 
-
 require 'instructions/infrastructure'
-
 
 require 'instructions/stack_manipulation'
 require 'instructions/int_arithmetic'
@@ -39,19 +37,15 @@ require 'instructions/name_bindings'
 require 'instructions/name_basics'
 require 'instructions/code_basics'
 
+# Dir.glob('instructions/bool/*.rb').each do |specfile|
+#   require specfile
+#   puts specfile
+# end
+
 require 'instructions/bool/bool_and'
 require 'instructions/bool/bool_equal_q'
 require 'instructions/bool/bool_not'
 require 'instructions/bool/bool_or'
 require 'instructions/bool/bool_xor'
-
-require 'search/helpers'
-require 'search/individual/individual'
-require 'search/individual/batch'
-require 'search/operators/basic_operators'
-require 'search/operators/samplers_and_selectors'
-require 'search/operators/evaluators'
-require 'search/stations/station'
-require 'search/factories/factory'
 
 include NudgeType

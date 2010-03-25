@@ -1,2 +1,0 @@
-class ProgramLength < Evaluator
-end

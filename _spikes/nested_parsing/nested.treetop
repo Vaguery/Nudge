@@ -1,6 +1,0 @@
-grammar NestedCode
-    rule literal
-        "literal" ws* 
-    end
-    
-end
