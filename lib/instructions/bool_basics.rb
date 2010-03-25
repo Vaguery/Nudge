@@ -3,8 +3,8 @@ class BoolAndInstruction < Instruction
     needs :bool, 2
   end
   def setup
-    @arg1 = @context.stacks[:bool].pop.value
-    @arg2 = @context.stacks[:bool].pop.value
+    @arg1 = @context.pop_value(:bool)
+    @arg2 = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 && @arg2)
@@ -20,8 +20,8 @@ class BoolOrInstruction < Instruction
     needs :bool, 2
   end
   def setup
-    @arg1 = @context.stacks[:bool].pop.value
-    @arg2 = @context.stacks[:bool].pop.value
+    @arg1 = @context.pop_value(:bool)
+    @arg2 = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 || @arg2)
@@ -37,8 +37,8 @@ class BoolXorInstruction < Instruction
     needs :bool, 2
   end
   def setup
-    @arg1 = @context.stacks[:bool].pop.value
-    @arg2 = @context.stacks[:bool].pop.value
+    @arg1 = @context.pop_value(:bool)
+    @arg2 = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 != @arg2)
@@ -55,8 +55,8 @@ class BoolEqualQInstruction < Instruction
     needs :bool, 2
   end
   def setup
-    @arg1 = @context.stacks[:bool].pop.value
-    @arg2 = @context.stacks[:bool].pop.value
+    @arg1 = @context.pop_value(:bool)
+    @arg2 = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 == @arg2)
@@ -74,7 +74,7 @@ class BoolNotInstruction < Instruction
     needs :bool, 1
   end
   def setup
-    @arg1 = @context.stacks[:bool].pop.value
+    @arg1 = @context.pop_value(:bool)
   end
   def derive
     @result = ValuePoint.new("bool", !@arg1)
