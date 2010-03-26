@@ -16,7 +16,7 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
 10000.times do |i|
   
     t1 = Time.now
-    pts = rand(30)+10
+    pts = rand(200)+10
     dude = CodeType.any_value(target_size_in_points:pts, type_names:["int", "float", "bool", "code"], instruction_names:safe_instructions)
     runner.reset(dude)
     t2 = Time.now
@@ -28,7 +28,7 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
   
     puts "#{i}, #{pts}, #{NudgeProgram.new(dude).listing.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}"
   
-    if t3-t2 > 0.25
+    if t3-t2 > 0.1
       puts NudgeProgram.new(dude).listing
     end
 end

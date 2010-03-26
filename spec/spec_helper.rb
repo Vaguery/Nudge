@@ -8,8 +8,8 @@ require 'pp'
 require 'nudge'
 require 'erb'
 
-include TreetopParserMatchers
-include TrekGrammarParsingMatchers
+# include TreetopParserMatchers
+# include TrekGrammarParsingMatchers
 
 def fixture(name, data = binding)
   text = File.read(File.join(File.dirname(__FILE__), "/fixtures/#{name}.example"))
