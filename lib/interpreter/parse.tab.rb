@@ -15,7 +15,7 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
   def self.from(string)
     nt = NudgeTree.new(string)
     result = nt.send(:do_parse)
-    result # , nt.footnotes]
+    {tree:result, unused:nt.footnotes}
   end
   
   attr_accessor :footnotes
@@ -36,7 +36,7 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
     ss = StringScanner.new(@string.slice!((split_point - 1)..-1))
     
     while ss.scan(/\n/)
-      @footnotes[ss.scan(/«[\p{Alpha}][_\p{Alnum}]*»/u)[1..-2]] << ss.scan(/[^\n]*/) # <-- /\n«/
+      @footnotes[ss.scan(/«[\p{Alpha}][_\p{Alnum}]*»/u)[1..-2]] << ss.scan(/[^\n]*/).strip # <-- /\n«/
     end
   end
   

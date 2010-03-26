@@ -58,7 +58,7 @@ describe "Nudge Program parser" do
   
   it "should parse well-formed footnotes" do
     lambda{NudgeTree.from("value «code»\n«int» 9\n«code» value «int»")}.should_not raise_error
-    NudgeTree.from("value «code»\n«int» 9\n«code» value «int»").should be_a_kind_of(ValuePoint)
+    NudgeTree.from("value «code»\n«int» 9\n«code» value «int»")[:tree].should be_a_kind_of(ValuePoint)
   end
   
   it "should work with multi-line footnotes" do
@@ -70,8 +70,17 @@ describe "Nudge Program parser" do
     lambda{NudgeTree.from("value «code» «int extra» 9\n«code» value «int»")}.should raise_error(ParseError)
   end
   
+  it "should strip whitespace off footnote values"
+  
   it "should not parse a footnotes-only string" do
     lambda{NudgeTree.from("\n«int» 9\n«code» value «int»")}.should raise_error(ParseError)
     lambda{NudgeTree.from("«int» 9\n«code» value «int»")}.should raise_error(ParseError)
-  end 
+  end
+  
+  it "should return extra footnotes" do
+    hash = NudgeTree.from("do unrelated\n«int» 9\n«code» value «int»")
+    hash[:tree].listing.should == "do unrelated"
+    hash[:unused].should == {"int"=>["9"], "code"=>["value «int»"]}
+  end
+  
 end
