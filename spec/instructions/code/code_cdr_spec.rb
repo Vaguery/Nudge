@@ -4,6 +4,7 @@ include Nudge
 
 
 describe CodeCdrInstruction do
+  
   it_should_behave_like "every Nudge Instruction"
   
   before(:each) do
