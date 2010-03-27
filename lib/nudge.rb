@@ -35,9 +35,6 @@ Dir.glob(File.dirname(__FILE__) + '/instructions/int/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/float/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/name/*') {|file| require file}
 
-require 'instructions/int_arithmetic'
-require 'instructions/float_arithmetic'
-require 'instructions/float_transcendental'
 require 'instructions/conversions'
 require 'instructions/random_value'
 require 'instructions/exec'
