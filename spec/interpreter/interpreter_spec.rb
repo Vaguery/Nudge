@@ -230,6 +230,31 @@ describe "Interpreter#peek" do
 end
 
 
+describe "Interpreter#depth" do
+  before(:each) do
+    @ii = Interpreter.new()
+    @ii.clear_stacks
+  end
+  
+  it "should invoke a particular stack's #depth method" do
+    30.times { @ii.stacks[:donut].push(ValuePoint.new("donut", "0")) }
+    lambda{@ii.depth(:donut)}.should_not raise_error
+    @ii.depth(:donut).should == 30
+  end
+  
+  it "should return 0 if the stack doesn't exist" do
+    lambda{@ii.depth(:nonexistent)}.should_not raise_error
+    @ii.depth(:nonexistent).should == 0
+  end
+  
+  it "should validate the stackname as a symbol" do
+    lambda{@ii.depth("not there")}.should raise_error(ArgumentError)
+    lambda{@ii.depth(99)}.should raise_error(ArgumentError)
+  end
+end
+
+
+
 
 describe "Interpreter#peek_value" do
   before(:each) do

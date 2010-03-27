@@ -67,6 +67,11 @@ module Nudge
     end
     
     
+    def depth(stackname)
+      @stacks[stackname].depth
+    end
+    
+    
     def peek(stackname)
       @stacks[stackname].peek
     end
