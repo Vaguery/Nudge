@@ -57,7 +57,6 @@ describe NameUnbindInstruction do
         @context.names.keys.should include("abc")
         @context.stacks[:error].depth.should == 0
       end
-      
     end
   end
 end
