@@ -256,14 +256,14 @@ describe "Code Type" do
         end
         
         it "should generate any needed sub-footnote values from within other footnote values" do
-          pending
           nestable = StringRewritingGenerator.new(
-            type_names:["int", "code"],
-            probabilities:{b:0,v:10,r:0,i:0}
-          )
-          diceroll = nestable.filled_framework('b{vvvvvv}')
-          puts diceroll[:code_part].scan(/«(...|....)»/).inspect
-          puts diceroll[:footnote_part].inspect
+            type_names:["int", "code"], probabilities:{b:0,v:10,r:0,i:0})
+          # test this by generating a pile of nested footnotes and cycling them through the parser
+          diceroll = nestable.filled_framework('b{vvvvvvvvvvvvv}')
+          as_nudge = NudgeProgram.new("#{diceroll[:code_part]}\n#{diceroll[:footnote_part]}")
+          cycled = as_nudge.listing
+          cycled.scan(/«(...|....)»/).should ==
+            (diceroll[:code_part]+diceroll[:footnote_part]).scan(/«(...|....)»/)
         end      
       end
     end

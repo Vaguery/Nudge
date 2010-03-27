@@ -59,7 +59,7 @@ describe IntPowerInstruction do
       end
     end
     
-    describe "FloatDomainError: Infinity" do
+    describe "very large results (Infinity)" do
       it "should push an error if a math routine returns 'Infinity'" do
         context = Interpreter.new
         context.stacks[:int].push(ValuePoint.new("int", 10**10))

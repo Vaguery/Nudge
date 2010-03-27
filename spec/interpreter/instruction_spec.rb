@@ -150,6 +150,10 @@ describe "InstructionPoint" do
       lambda{dummy.needs(IntAddInstruction)}.should raise_error(Instruction::MissingInstructionError)
     end
     
-    it "should raise a MissingInstructionError if the class is not defined"
+    it "should raise an ActiveSupport exception if the class is not defined" do
+      context = Interpreter.new
+      lambda{Instruction.new(context).needs(FooBazInstruction)}.should raise_error(ArgumentError,
+        "Anonymous modules have no name to be referenced by")
+    end
   end
 end
