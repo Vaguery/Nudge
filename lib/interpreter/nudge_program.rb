@@ -9,7 +9,6 @@ module Nudge
     attr_accessor :linked_code,:footnotes
     attr_accessor :raw_code
     attr_accessor :code_section, :footnote_section
-    attr_reader :parser
     attr_reader :points
     
     
@@ -17,7 +16,6 @@ module Nudge
       raise(ArgumentError, "NudgeProgram.new should be passed a string") unless sourcecode.kind_of?(String)
       @raw_code = sourcecode
       program_split!
-      @parser = NudgeCodeblockParser.new
       relink_code!
       @points = self.points
     end
@@ -49,7 +47,7 @@ module Nudge
     
     def relink_code!
       if parses?
-        @linked_code = @parser.parse(@code_section).to_point
+        @linked_code = NudgeCodeblockParser.new.parse(@code_section).to_point
         depth_first_association!
       else
         @linked_code = NilPoint.new
@@ -76,7 +74,7 @@ module Nudge
     def pursue_more_footnotes(codepoint_as_string, collected_footnotes = "")
       local_footnotes = ""
       if self.contains_valuepoints?(codepoint_as_string)
-        local_parsetree = @parser.parse(codepoint_as_string)
+        local_parsetree = NudgeCodeblockParser.new.parse(codepoint_as_string)
         if local_parsetree != nil
           local_subtree = local_parsetree.to_point
           if local_subtree.kind_of?(CodeblockPoint)
@@ -213,7 +211,7 @@ module Nudge
     
     
     def parses?(program_blueprint = @code_section)
-      (@parser.parse(program_blueprint) != nil)
+      (NudgeCodeblockParser.new.parse(program_blueprint) != nil)
     end
     
     
