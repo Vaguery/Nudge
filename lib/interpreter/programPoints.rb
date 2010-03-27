@@ -14,11 +14,11 @@ module Nudge
   
   
   class NilPoint < ProgramPoint
-    def listing_parts
+    def blueprint_parts
       ["",""]
     end
     
-    def listing
+    def blueprint
       ""
     end
     
@@ -61,16 +61,16 @@ module Nudge
       return tt
     end
     
-    def listing_parts
+    def blueprint_parts
       fn = self.contents.inject("\n") do |fn_accumulator, branch|
-        rhs = branch.listing_parts[1].empty? ? "" :  "\n#{branch.listing_parts[1]}"
+        rhs = branch.blueprint_parts[1].empty? ? "" :  "\n#{branch.blueprint_parts[1]}"
         fn_accumulator + rhs
       end
       return [self.tidy, fn.strip]
     end
     
-    def listing
-      t,b = listing_parts
+    def blueprint
+      t,b = blueprint_parts
       return "#{t} \n#{b}".strip
     end
     
@@ -146,13 +146,13 @@ module Nudge
       @raw = newType.any_value
     end
     
-    def listing_parts
+    def blueprint_parts
       fn = @raw ? "«#{self.type}» #{self.raw}" : ""
       return [self.tidy, fn]
     end
     
-    def listing
-      pts = self.listing_parts
+    def blueprint
+      pts = self.blueprint_parts
       return "value «#{self.type}» \n«#{self.type}» #{self.raw.strip}".strip
     end
   end
@@ -191,11 +191,11 @@ module Nudge
       @name = which
     end
     
-    def listing_parts
+    def blueprint_parts
       [self.tidy,""]
     end
     
-    def listing
+    def blueprint
       return self.tidy
     end
     
@@ -244,11 +244,11 @@ module Nudge
       @name = instructionName.slice(0..-12).underscore
     end
     
-    def listing_parts
+    def blueprint_parts
       [self.tidy,""]
     end
     
-    def listing
+    def blueprint
       return self.tidy
     end
     

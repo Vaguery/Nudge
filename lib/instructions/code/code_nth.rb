@@ -16,7 +16,7 @@ class CodeNthInstruction < Instruction
     else
       val = tree
     end
-    @result = ValuePoint.new("code", val.listing)
+    @result = ValuePoint.new("code", val.blueprint)
   end
   def cleanup
     pushes :code, @result

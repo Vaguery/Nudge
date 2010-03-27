@@ -10,7 +10,7 @@ class CodePositionInstruction < Instruction
     looking_for_this = NudgeProgram.new(@arg1).linked_code
     inside_this = NudgeProgram.new(@arg2).linked_code
     if inside_this && looking_for_this
-      index = inside_this.find_index {|point| point.listing == looking_for_this.listing} || -2
+      index = inside_this.find_index {|point| point.blueprint == looking_for_this.blueprint} || -2
     else
       index = -2
     end

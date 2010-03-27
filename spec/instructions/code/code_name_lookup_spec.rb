@@ -33,10 +33,10 @@ describe CodeNameLookupInstruction do
         @context.stacks[:name].push(ReferencePoint.new("foo"))
         @context.names["foo"].should == nil
         @context.bind_name("foo", ValuePoint.new("int",1987))
-        @context.names["foo"].listing.should == "value «int» \n«int» 1987"
+        @context.names["foo"].blueprint.should == "value «int» \n«int» 1987"
         @i1.go
         @context.stacks[:code].depth.should == 1
-        @context.stacks[:code].peek.listing.should == "value «code» \n«code» value «int» \n«int» 1987"
+        @context.stacks[:code].peek.blueprint.should == "value «code» \n«code» value «int» \n«int» 1987"
         @context.stacks[:name].depth.should == 0
       end
       
@@ -44,10 +44,10 @@ describe CodeNameLookupInstruction do
         @context.stacks[:name].push(ReferencePoint.new("vja"))
         @context.names["vja"].should == nil
         @context.bind_name("vja", NudgeProgram.new("block {ref x do int_add block {ref y}}").linked_code)
-        @context.names["vja"].listing.should == "block {\n  ref x\n  do int_add\n  block {\n    ref y}}"
+        @context.names["vja"].blueprint.should == "block {\n  ref x\n  do int_add\n  block {\n    ref y}}"
         @i1.go
         @context.stacks[:code].depth.should == 1
-        @context.stacks[:code].peek.listing.should ==
+        @context.stacks[:code].peek.blueprint.should ==
           "value «code» \n«code» block {\n  ref x\n  do int_add\n  block {\n    ref y}}"
         @context.stacks[:code].peek.should be_a_kind_of(ValuePoint)
         @context.stacks[:name].depth.should == 0
@@ -58,7 +58,7 @@ describe CodeNameLookupInstruction do
         @context.stacks[:name].push(ReferencePoint.new("b2"))
         @i1.go
         @context.stacks[:code].depth.should == 1
-        @context.stacks[:code].peek.listing.should == "value «code» \n«code»"
+        @context.stacks[:code].peek.blueprint.should == "value «code» \n«code»"
       end
     end
   end

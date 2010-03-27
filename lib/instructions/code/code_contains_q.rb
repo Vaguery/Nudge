@@ -10,7 +10,7 @@ class CodeContainsQInstruction < Instruction
     looking_for_this = NudgeProgram.new(@arg1)
     tree = NudgeProgram.new(@arg2)
     if tree.parses? && looking_for_this.parses?
-      found = tree.linked_code.any? {|point| point.listing == looking_for_this.listing}
+      found = tree.linked_code.any? {|point| point.blueprint == looking_for_this.blueprint}
     else
       found = false
     end

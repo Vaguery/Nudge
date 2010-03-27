@@ -261,7 +261,7 @@ describe "Code Type" do
           # test this by generating a pile of nested footnotes and cycling them through the parser
           diceroll = nestable.filled_framework('b{vvvvvvvvvvvvv}')
           as_nudge = NudgeProgram.new("#{diceroll[:code_part]}\n#{diceroll[:footnote_part]}")
-          cycled = as_nudge.listing
+          cycled = as_nudge.blueprint
           cycled.scan(/«(...|....)»/).should ==
             (diceroll[:code_part]+diceroll[:footnote_part]).scan(/«(...|....)»/)
         end      

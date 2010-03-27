@@ -146,28 +146,28 @@ describe "ValuePoint" do
   end
   
   
-  describe "#listing_parts" do
+  describe "#blueprint_parts" do
     it "should description return an Array with two parts: (1) self#tidy (2) the footnotes as a string" do
       myL = ValuePoint.new("float", "-99.121001")
-      myL.listing_parts.should == ["value «float»","«float» -99.121001"]
+      myL.blueprint_parts.should == ["value «float»","«float» -99.121001"]
       myURI = ValuePoint.new("uri", "http://googol.com")
-      myURI.listing_parts.should == ["value «uri»","«uri» http://googol.com"]
+      myURI.blueprint_parts.should == ["value «uri»","«uri» http://googol.com"]
       
       myHuh = ValuePoint.new("missing")
-      myHuh.listing_parts.should == ["value «missing»",""]
+      myHuh.blueprint_parts.should == ["value «missing»",""]
       
       myFUcode = ValuePoint.new("code", "block { value «code»}\n«code» value «int»\n«int» 8")
-      myFUcode.listing_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
+      myFUcode.blueprint_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
     end
   end
   
-  describe "listing" do
-    it "should return a combined string composed of the #listing_parts separated by a newline" do
+  describe "blueprint" do
+    it "should return a combined string composed of the #blueprint_parts separated by a newline" do
       mat = ValuePoint.new("matrix", "[1,3, 5;\t9,2, 11; \t92,-221,2]")
-      mat.listing.should == "value «matrix» \n«matrix» [1,3, 5;\t9,2, 11; \t92,-221,2]"
+      mat.blueprint.should == "value «matrix» \n«matrix» [1,3, 5;\t9,2, 11; \t92,-221,2]"
       
       num = ValuePoint.new("int", 812)
-      num.listing.should == "value «int» \n«int» 812"
+      num.blueprint.should == "value «int» \n«int» 812"
     end
   end
 end

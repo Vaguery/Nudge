@@ -40,7 +40,7 @@ describe ExecDefineInstruction do
         @context.stacks[:name].depth.should == 0
         @context.stacks[:exec].depth.should == 0
         @context.names.length.should_not == 0        
-        @context.names["xyz"].listing.should == "block {}"
+        @context.names["xyz"].blueprint.should == "block {}"
         @context.names["xyz"].should be_a_kind_of(CodeblockPoint)
         
       end

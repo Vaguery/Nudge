@@ -5,8 +5,8 @@ class CodePointsInstruction < Instruction
   end
   
   def setup
-    arg_listing = @context.pop_value(:code)
-    @parsed = NudgeProgram.new(arg_listing)
+    arg_blueprint = @context.pop_value(:code)
+    @parsed = NudgeProgram.new(arg_blueprint)
   end
   
   def derive

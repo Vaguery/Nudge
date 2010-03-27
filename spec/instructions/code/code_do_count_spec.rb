@@ -70,7 +70,7 @@ describe CodeDoCountInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].entries[0].listing.should ==
+        @context.stacks[:exec].entries[0].blueprint.should ==
           "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref b4} \n«int» 0\n«int» 2"
           
         @context.run

@@ -12,7 +12,7 @@ class CodeCdrInstruction < Instruction
     else
       new_tree = CodeblockPoint.new([])
     end
-    @result = ValuePoint.new("code", new_tree.listing)
+    @result = ValuePoint.new("code", new_tree.blueprint)
   end
   def cleanup
     pushes :code, @result

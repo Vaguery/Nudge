@@ -19,7 +19,7 @@ class CodeConcatenateInstruction < Instruction
       else
         new_tree = [t1.linked_code, t2.linked_code]
       end
-      listed = CodeblockPoint.new(new_tree).listing
+      listed = CodeblockPoint.new(new_tree).blueprint
       @result = ValuePoint.new("code", listed)
     else
       @result = ValuePoint.new("code", "block {}")

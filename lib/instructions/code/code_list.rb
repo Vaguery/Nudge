@@ -10,7 +10,7 @@ class CodeListInstruction < Instruction
     listed = []
     listed << NudgeProgram.new(@arg1).linked_code unless @arg1 == ""
     listed << NudgeProgram.new(@arg2).linked_code unless @arg2 == ""
-    combined = CodeblockPoint.new(listed).listing
+    combined = CodeblockPoint.new(listed).blueprint
     @result = ValuePoint.new("code", combined)
   end
   def cleanup

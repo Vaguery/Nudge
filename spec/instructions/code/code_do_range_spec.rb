@@ -52,7 +52,7 @@ describe CodeDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 3
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "ref x1"
+        @context.stacks[:exec].peek.blueprint.should == "ref x1"
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do
@@ -64,8 +64,8 @@ describe CodeDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "ref x2"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x2} \n«int» 2\n«int» 3"
+        @context.stacks[:exec].entries[1].blueprint.should == "ref x2"
+        @context.stacks[:exec].entries[0].blueprint.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x2} \n«int» 2\n«int» 3"
         
         @context.run # get 'er done
         
@@ -84,8 +84,8 @@ describe CodeDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 2
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "ref x3"
-        @context.stacks[:exec].entries[0].listing.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x3} \n«int» 1\n«int» -12"
+        @context.stacks[:exec].entries[1].blueprint.should == "ref x3"
+        @context.stacks[:exec].entries[0].blueprint.should == "block {\n  value «int»\n  value «int»\n  do exec_do_range\n  ref x3} \n«int» 1\n«int» -12"
         
         @context.run # get 'er done
         

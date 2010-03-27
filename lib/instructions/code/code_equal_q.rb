@@ -7,8 +7,8 @@ class CodeEqualQInstruction < Instruction
     @arg1 = @context.pop_value(:code)
   end
   def derive
-    c1 = NudgeProgram.new(@arg1).listing
-    c2 = NudgeProgram.new(@arg2).listing
+    c1 = NudgeProgram.new(@arg1).blueprint
+    c2 = NudgeProgram.new(@arg2).blueprint
     @result = ValuePoint.new("bool", c1 == c2)
   end
   def cleanup

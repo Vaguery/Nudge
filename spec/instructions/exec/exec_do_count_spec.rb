@@ -37,7 +37,7 @@ describe ExecDoCountInstruction do
         @context.stacks[:int].push(ValuePoint.new("int", 3))
         @context.stacks[:int].push(ValuePoint.new("int", 3))
         lambda{@i1.go}.should_not raise_error
-        @context.stacks[:error].peek.listing.should include(
+        @context.stacks[:error].peek.blueprint.should include(
           "ExecDoCountInstruction needs ExecDoRangeInstruction")
       end
     end
@@ -66,7 +66,7 @@ describe ExecDoCountInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].entries[0].listing_parts.should ==
+        @context.stacks[:exec].entries[0].blueprint_parts.should ==
           ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}",
             "«int» 0\n«int» 2"]
             

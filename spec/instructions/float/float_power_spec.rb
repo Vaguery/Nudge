@@ -52,7 +52,7 @@ describe FloatPowerInstruction do
       context = Interpreter.new
       [-6.82,-0.2].each {|i| context.stacks[:float].push(ValuePoint.new("float", i))}
       lambda{FloatPowerInstruction.new(context).go}.should_not raise_error
-      context.stacks[:error].peek.listing.should include("float_power did not return a float")
+      context.stacks[:error].peek.blueprint.should include("float_power did not return a float")
     end
     
   end

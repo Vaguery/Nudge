@@ -5,7 +5,7 @@ Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treet
 
 module Nudge
   class NudgeProgram
-    
+
     attr_accessor :linked_code,:footnotes
     attr_accessor :raw_code
     attr_accessor :code_section, :footnote_section
@@ -125,7 +125,7 @@ module Nudge
     
     
     def deep_copy
-      NudgeProgram.new(self.listing)
+      NudgeProgram.new(self.blueprint)
     end
     
     
@@ -204,7 +204,7 @@ module Nudge
     
     
     def cleanup_strings_from_linked_code!
-      @raw_code = self.listing
+      @raw_code = self.blueprint
       split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
       @code_section = split_at_first_guillemet[0].strip
       @footnote_section = split_at_first_guillemet[2].strip
@@ -212,8 +212,8 @@ module Nudge
     
     
     
-    def parses?(program_listing = @code_section)
-      (@parser.parse(program_listing) != nil)
+    def parses?(program_blueprint = @code_section)
+      (@parser.parse(program_blueprint) != nil)
     end
     
     
@@ -225,24 +225,23 @@ module Nudge
     
     
     
-    def listing
+    def blueprint
       if @linked_code.kind_of? NilPoint
         return ""
       else
-        code_section, footnote_section = @linked_code.listing_parts
+        code_section, footnote_section = @linked_code.blueprint_parts
         unused_footnotes.each {|fn| footnote_section += "\n#{fn}"}
         return (code_section.strip + " \n" + footnote_section.strip).strip
       end
     end
     
     
-    
-    def contains_codevalues?(program_listing = @raw_code)
-      (program_listing =~ /value\s*«code»/) != nil
+    def contains_codevalues?(program_blueprint = @raw_code)
+      (program_blueprint =~ /value\s*«code»/) != nil
     end
     
-    def contains_valuepoints?(program_listing = @raw_code)
-      (program_listing =~ /value\s*«[\p{Alpha}][_\p{Alnum}]*»/) != nil
+    def contains_valuepoints?(program_blueprint = @raw_code)
+      (program_blueprint =~ /value\s*«[\p{Alpha}][_\p{Alnum}]*»/) != nil
     end
     
     

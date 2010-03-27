@@ -17,7 +17,7 @@ class CodeConsInstruction < Instruction
       raise InstructionMethodError,
         "#{self.class.to_nudgecode} cannot parse the arguments"
     end
-    @result = ValuePoint.new("code", consed_tree.listing)
+    @result = ValuePoint.new("code", consed_tree.blueprint)
   end
   def cleanup
     pushes :code, @result

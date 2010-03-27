@@ -3,7 +3,7 @@ class CodeQuoteInstruction < Instruction
     needs :exec, 1
   end
   def setup
-    @arg = @context.pop(:exec).listing
+    @arg = @context.pop(:exec).blueprint
   end
   def derive
     @result = ValuePoint.new("code", @arg)

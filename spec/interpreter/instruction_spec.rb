@@ -33,16 +33,16 @@ describe "InstructionPoint" do
     end
   end
   
-  describe "#listing_parts" do
+  describe "#blueprint_parts" do
     it "should return an Array containing (1) InstructionPoint#tidy and (2) an empty string" do
       myIP = InstructionPoint.new("bah_8")
-      myIP.listing_parts.should == [myIP.tidy,""]
+      myIP.blueprint_parts.should == [myIP.tidy,""]
     end
   end
   
-  describe "#listing" do
+  describe "#blueprint" do
     it "should work just like #tidy" do
-      InstructionPoint.new("low_ball").listing.should == "do low_ball"
+      InstructionPoint.new("low_ball").blueprint.should == "do low_ball"
     end
   end
   

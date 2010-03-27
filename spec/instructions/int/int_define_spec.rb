@@ -60,7 +60,7 @@ describe IntDefineInstruction do
         @context.stacks[:int].push(ValuePoint.new("int", 456))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
         @i1.go
-        @context.stacks[:error].peek.listing.should include("cannot redefine a variable")
+        @context.stacks[:error].peek.blueprint.should include("cannot redefine a variable")
       end
       
       it "should raise an exception if it's binding the name to anything but a ValuePoint" do

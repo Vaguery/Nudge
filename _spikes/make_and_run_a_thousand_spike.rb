@@ -26,10 +26,10 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
     stacked = runner.stacks.inject(0) {|sum,(k,v)| sum + v.depth}
     er = runner.stacks[:error].depth
   
-    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).listing.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}"
+    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}"
   
     if t3-t2 > 0.1
-      puts NudgeProgram.new(dude).listing
+      puts NudgeProgram.new(dude).blueprint
     end
 end
 

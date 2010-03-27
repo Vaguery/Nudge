@@ -24,10 +24,10 @@ class CodeGsubInstruction < Instruction # was CODE.SUBST in Push3
     
     found_at = [] # need to iterate through the tree the slow way to capture the indices (I think)
     host.linked_code.each_with_index do |point, index|
-      found_at << (index+1) if point.listing == old_tree.listing
+      found_at << (index+1) if point.blueprint == old_tree.blueprint
     end
     found_at.reverse.each {|index| host = host.replace_point(index, new_tree.linked_code)}
-    @result = ValuePoint.new("code", host.listing)
+    @result = ValuePoint.new("code", host.blueprint)
   end
   def cleanup
     pushes :code, @result

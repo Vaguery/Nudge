@@ -31,7 +31,7 @@ describe CodePositionInstruction do
     end
     
     describe "\#cleanup" do
-      it "should push a the point in the top item which has the same #listing as the second item" do
+      it "should push a the point in the top item which has the same #blueprint as the second item" do
         @context.stacks[:code].push(ValuePoint.new("code", "do a"))
         @context.stacks[:code].push(ValuePoint.new("code", "block {do a do b}"))
         @i1.go

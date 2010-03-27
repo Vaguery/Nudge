@@ -55,7 +55,7 @@ describe CodeDoTimesInstruction do
         @i1.go
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 1
-        @context.stacks[:exec].peek.listing.should == "do nothing_now"
+        @context.stacks[:exec].peek.blueprint.should == "do nothing_now"
       end
       
       it "should increment the counter if the counter < destination, and push a bunch of stuff" do
@@ -66,8 +66,8 @@ describe CodeDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing.should == "do nothing_now"
-        @context.stacks[:exec].entries[0].listing.should ==
+        @context.stacks[:exec].entries[1].blueprint.should == "do nothing_now"
+        @context.stacks[:exec].entries[0].blueprint.should ==
           "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  do nothing_now} \n«int» 8\n«int» 9"
       end
       
@@ -92,7 +92,7 @@ describe CodeDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[0].listing.should include "\n«int» -12\n«int» -19\n«float» 0.1"
+        @context.stacks[:exec].entries[0].blueprint.should include "\n«int» -12\n«int» -19\n«float» 0.1"
         
         @context.run
 

@@ -58,16 +58,16 @@ describe "ReferencePoint" do
     end
   end
   
-  describe "listing" do
+  describe "blueprint" do
     it "should work just like #tidy" do
-      ReferencePoint.new("jump_a2").listing.should == "ref jump_a2" 
+      ReferencePoint.new("jump_a2").blueprint.should == "ref jump_a2" 
     end
   end
   
-  describe "#listing_parts" do
+  describe "#blueprint_parts" do
     it "should return an Array containing (1) ReferencePoint#tidy and (2) an empty string" do
       myRP = ReferencePoint.new("bah_8")
-      myRP.listing_parts.should == [myRP.tidy,""]
+      myRP.blueprint_parts.should == [myRP.tidy,""]
     end
   end  
 end

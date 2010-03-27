@@ -51,8 +51,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 2\n«int» 3"]
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 2\n«int» 3"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
         
@@ -60,8 +60,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].peek.value.should == 2
         
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 3\n«int» 3"]
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» 3\n«int» 3"]
       end
       
       it "should decrement the counter if the counter > destination, and push a bunch of stuff" do
@@ -72,8 +72,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].depth.should == 1
         @context.stacks[:int].peek.value.should == -2
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -3\n«int» -19"]
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -3\n«int» -19"]
         
         5.times {@context.step} # block {}; unwrap; push counter; push dest; run exec_do_range
         
@@ -81,8 +81,8 @@ describe ExecDoRangeInstruction do
         @context.stacks[:int].peek.value.should == -3
         
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -4\n«int» -19"]
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == ["block {\n  value «int»\n  value «int»\n  do exec_do_range\n  block {}}","«int» -4\n«int» -19"]
       end
       
       it "should 'continue' until counter and destination are the same value" do

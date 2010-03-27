@@ -21,7 +21,7 @@ class CodeReplaceNthPointInstruction < Instruction # was CODE.INSERT in Push3
     else
       @where
     end
-    new_tree = acceptor.replace_point(which_pt, insertion.linked_code).listing
+    new_tree = acceptor.replace_point(which_pt, insertion.linked_code).blueprint
     @result = ValuePoint.new("code", new_tree)
   end
   def cleanup

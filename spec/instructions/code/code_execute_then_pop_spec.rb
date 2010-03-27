@@ -42,19 +42,19 @@ describe CodeExecuteThenPopInstruction do
       it "should push a new block based on the code from the top of the :code stack" do
         @context.stacks[:code].push(ValuePoint.new("code", "do foo_bar"))
         @i1.go
-        @context.stacks[:exec].peek.listing.should == "block {\n  do foo_bar\n  do code_pop}"
+        @context.stacks[:exec].peek.blueprint.should == "block {\n  do foo_bar\n  do code_pop}"
         @context.stacks[:exec].peek.should be_a_kind_of(CodeblockPoint)
         
         @context.stacks[:code].push(ValuePoint.new("code", "block {ref x}"))
         @i1.go
-        @context.stacks[:exec].peek.listing.should == "block {\n  block {\n    ref x}\n  do code_pop}"
+        @context.stacks[:exec].peek.blueprint.should == "block {\n  block {\n    ref x}\n  do code_pop}"
         @context.stacks[:exec].peek.should be_a_kind_of(CodeblockPoint)
       end
       
       it "push a block containing 'do code_pop' if the code point can't be parsed" do
         @context.stacks[:code].push(ValuePoint.new("code", "whatever you say boss"))
         @i1.go
-        @context.stacks[:exec].peek.listing.should == "block {\n  do code_pop}"
+        @context.stacks[:exec].peek.blueprint.should == "block {\n  do code_pop}"
       end
     end
   end

@@ -13,7 +13,7 @@ class CodeNthPointInstruction < Instruction # was CODE.EXTRACT in Push3
     raise InstructionMethodError, "#{self.class} divied by zero" if tree_size < 1
     which = (@arg1-1) % tree_size + 1
     pt = tree[which]
-    @result = ValuePoint.new("code", pt.listing)
+    @result = ValuePoint.new("code", pt.blueprint)
   end
   def cleanup
     pushes :code, @result

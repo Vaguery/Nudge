@@ -52,8 +52,8 @@ describe ExecDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == [
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == [
           "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  block {}}",
           "«int» 2\n«int» 3"]
         
@@ -61,8 +61,8 @@ describe ExecDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["block {}",""]
-        @context.stacks[:exec].entries[0].listing_parts.should == [
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["block {}",""]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == [
           "block {\n  value «int»\n  value «int»\n  do exec_do_times\n  block {}}",
           "«int» 3\n«int» 3"]
       end
@@ -75,8 +75,8 @@ describe ExecDoTimesInstruction do
         
         @context.stacks[:int].depth.should == 0
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»","«float» 0.1"]
-        @context.stacks[:exec].entries[0].listing_parts.should == 
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["value «float»","«float» 0.1"]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == 
           ["block {\n  value «int»\n  value «int»\n  do exec_do_times\n  value «float»}",
             "«int» -3\n«int» -19\n«float» 0.1"]
         
@@ -85,8 +85,8 @@ describe ExecDoTimesInstruction do
         @context.stacks[:int].depth.should == 0
         @context.stacks[:float].depth.should == 1
         @context.stacks[:exec].depth.should == 2
-        @context.stacks[:exec].entries[1].listing_parts.should == ["value «float»","«float» 0.1"]
-        @context.stacks[:exec].entries[0].listing_parts.should == 
+        @context.stacks[:exec].entries[1].blueprint_parts.should == ["value «float»","«float» 0.1"]
+        @context.stacks[:exec].entries[0].blueprint_parts.should == 
           ["block {\n  value «int»\n  value «int»\n  do exec_do_times\n  value «float»}",
             "«int» -4\n«int» -19\n«float» 0.1"]
       end

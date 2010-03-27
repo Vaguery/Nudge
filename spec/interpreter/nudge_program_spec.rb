@@ -21,7 +21,7 @@ describe "Nudge Program parsing" do
     
     it "should be possible to initialize it with an empty string" do
       lambda{NudgeProgram.new("")}.should_not raise_error
-      NudgeProgram.new("").listing.should == ""
+      NudgeProgram.new("").blueprint.should == ""
     end
   end
   
@@ -242,36 +242,36 @@ describe "Nudge Program parsing" do
       simple.linked_code.value.should == nil
     end
     
-    describe "listing" do
+    describe "blueprint" do
       it "should produce the same thing as #tidy for a ReferencePoint program" do
         justrp = NudgeProgram.new("ref g8")
-        justrp.listing.should == "ref g8"
+        justrp.blueprint.should == "ref g8"
       end
       
       it "should produce the same thing as #tidy for an InstructionPoint program" do
         justrp = NudgeProgram.new("do my_word")
-        justrp.listing.should == "do my_word"
+        justrp.blueprint.should == "do my_word"
       end
       
       it "should produce the same thing as #tidy for a CodeblockPoint program without footnotes" do
         tree1 = NudgeProgram.new("block {\t\t ref g}")
-        tree1.listing.should == "block {\n  ref g}"
+        tree1.blueprint.should == "block {\n  ref g}"
         tree2 = NudgeProgram.new("block {\t\t do a\ndo b\n \n do c\n do d}")
-        tree2.listing.should == tree2.tidy
+        tree2.blueprint.should == tree2.tidy
       end
       
       it "should produce the same thing as #tidy for a CodeblockPoint program with unassigned footnotes" do
         dangling = NudgeProgram.new("block {\t\t value «a»\nvalue «b»\n \n value «c»}")
-        dangling.listing.should == dangling.tidy
+        dangling.blueprint.should == dangling.tidy
       end
       
       it "should put out the tidy form AND the footnotes in the right order" do
         withfn = NudgeProgram.new("value \t\t«int» \n«int» \t\t\n 0")
-        withfn.listing.should == "value «int» \n«int» 0"
+        withfn.blueprint.should == "value «int» \n«int» 0"
         
         nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
-        once_around = NudgeProgram.new(nasty).listing
-        once_around.should == NudgeProgram.new(once_around).listing
+        once_around = NudgeProgram.new(nasty).blueprint
+        once_around.should == NudgeProgram.new(once_around).blueprint
       end
     end
     
@@ -295,7 +295,7 @@ block { value «int» value «code» value «int»}
         we_think.linked_code.contents[1].raw.should ==
           "value «code»\n«code» value «int»\n«int» 33"
         we_think.linked_code.contents[2].raw.should == "444"
-        we_think.listing.should == 
+        we_think.blueprint.should == 
         "block {\n  value «int»\n  value «code»\n  value «int»} " +
         "\n«int» 2\n«code» value «code»\n«code» value «int»\n«int» 33\n«int» 444"
       end
@@ -333,7 +333,7 @@ block { value «int» value «code» value «int»}
       end
     end
     
-    it "should determine if the listing contains any ValuePoints if it is type code" do
+    it "should determine if the blueprint contains any ValuePoints if it is type code" do
       @staged_program.should_receive(:contains_valuepoints?).with("block {}")
       reprocess_using(@boring)
     end
@@ -373,8 +373,8 @@ block { value «int» value «code» value «int»}
       NudgeProgram.new(@all_used).unused_footnotes.should be_empty
     end
     
-    it "should preserve the unused footnotes at the end of #listing" do
-      NudgeProgram.new(@all_extras).listing.should include("«bar» baz")
+    it "should preserve the unused footnotes at the end of #blueprint" do
+      NudgeProgram.new(@all_extras).blueprint.should include("«bar» baz")
     end
   end
   
@@ -442,14 +442,14 @@ block { value «int» value «code» value «int»}
   end
   
   
-  describe "maintaining integrity through parsing and listing cycles" do
+  describe "maintaining integrity through parsing and blueprint cycles" do
     before(:each) do
       @extras = "block {\nvalue «code»\nvalue «code»\nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3\n«bar» baz"
     end
     
     it "should have all the same footnotes it started with" do
       original_fn = @extras.partition( /^(?=«)/ )[2].split( /^(?=«)/ ).collect {|fn| fn.strip}
-      new_fn = NudgeProgram.new(@extras).listing.partition( /^(?=«)/ )[2].
+      new_fn = NudgeProgram.new(@extras).blueprint.partition( /^(?=«)/ )[2].
         split( /^(?=«)/ ).collect {|fn| fn.strip}
       
       # original_fn.length.should == new_fn.length
@@ -484,7 +484,7 @@ block { value «int» value «code» value «int»}
       caught = NudgeProgram.new(@bigger_tree)[3]
       caught.should be_a_kind_of(ValuePoint)
       caught.value.should == 2
-      NudgeProgram.new(@bigger_tree)[2].listing_parts[1].should == "«code» value «int»\n«int» 1"
+      NudgeProgram.new(@bigger_tree)[2].blueprint_parts[1].should == "«code» value «int»\n«int» 1"
     end
   end
   
@@ -547,7 +547,7 @@ block { value «int» value «code» value «int»}
     it "should return a new NudgeProgram based on the new code if which=1" do
       result = @starter.replace_point(1,@new_chunk)
       result.should be_a_kind_of(NudgeProgram)
-      result.listing.should == "ref HI"
+      result.blueprint.should == "ref HI"
     end
     
     it "should not damage the invoking NudgeProgram" do
@@ -565,19 +565,19 @@ block { value «int» value «code» value «int»}
       reffy = NudgeProgram.new(@deeper_tree)
       
       result = reffy.replace_point(2,@new_chunk)
-      result.listing.should == "block {\n  ref HI\n  ref c}"     
+      result.blueprint.should == "block {\n  ref HI\n  ref c}"     
       
       result = reffy.replace_point(3,@new_chunk)
-      result.listing.should == "block {\n  block {\n    ref HI\n    block {\n      ref b}}\n  ref c}"
+      result.blueprint.should == "block {\n  block {\n    ref HI\n    block {\n      ref b}}\n  ref c}"
       
       result = reffy.replace_point(4,@new_chunk)
-      result.listing.should == "block {\n  block {\n    ref a\n    ref HI}\n  ref c}"
+      result.blueprint.should == "block {\n  block {\n    ref a\n    ref HI}\n  ref c}"
       
       result = reffy.replace_point(5,@new_chunk)
-      result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref HI}}\n  ref c}"
+      result.blueprint.should == "block {\n  block {\n    ref a\n    block {\n      ref HI}}\n  ref c}"
       
       result = reffy.replace_point(6,@new_chunk)
-      result.listing.should == "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref HI}"
+      result.blueprint.should == "block {\n  block {\n    ref a\n    block {\n      ref b}}\n  ref HI}"
     end
     
     it "should produce the expected footnotes in the resulting program" do
@@ -585,13 +585,13 @@ block { value «int» value «code» value «int»}
         "block {value «code» value «code»}\n«code»block {value «int»}\n«int» 7\n«code» value «bool»")
       addedvalue = ValuePoint.new("foo","•••")
       
-      valueful.replace_point(1,addedvalue).listing.should ==
+      valueful.replace_point(1,addedvalue).blueprint.should ==
         "value «foo» \n«foo» •••"
         
-      valueful.replace_point(2,addedvalue).listing.should ==
+      valueful.replace_point(2,addedvalue).blueprint.should ==
         "block {\n  value «foo»\n  value «code»} \n«foo» •••\n«code» value «bool»"
       
-      valueful.replace_point(3,addedvalue).listing.should ==
+      valueful.replace_point(3,addedvalue).blueprint.should ==
         "block {\n  value «code»\n  value «foo»} \n«code» block {value «int»}\n«int» 7\n«foo» •••"
     end 
     
@@ -603,7 +603,7 @@ block { value «int» value «code» value «int»}
       
       revised = starting_from.replace_point(1,CodeblockPoint.new)
       
-      revised.listing.should == "block {} \n«baz» qux"
+      revised.blueprint.should == "block {} \n«baz» qux"
       revised.raw_code.should == "block {} \n«baz» qux"
       revised.footnote_section.should == "«baz» qux"
       revised.code_section.should == "block {}"
@@ -636,14 +636,14 @@ block { value «int» value «code» value «int»}
     it "should return a NudgeProgram with code 'block {}' if which=1" do
       result = @tree_with_values.delete_point(1)
       result.should be_a_kind_of(NudgeProgram)
-      result.listing.should == "block {}"
+      result.blueprint.should == "block {}"
       result.linked_code.should_not == nil
     end
     
     it "should not damage the invoking NudgeProgram" do
-      starting = @tree_with_values.listing
+      starting = @tree_with_values.blueprint
       result = @tree_with_values.delete_point(1)
-      @tree_with_values.listing.should == starting
+      @tree_with_values.blueprint.should == starting
     end
     
     it "should return a new NudgeProgram" do
@@ -654,35 +654,35 @@ block { value «int» value «code» value «int»}
     it "should return a new NudgeProgram with the right ProgramPoint deleted" do
       # "block {\n  block {\n    block {\n      block {\n        block {\n          block {\n            ref a}}}}}}"
       result = @lodgepole_tree.delete_point(1)
-      result.listing.should == "block {}"
+      result.blueprint.should == "block {}"
       
       result = @lodgepole_tree.delete_point(2)
-      result.listing.should == "block {}"     
+      result.blueprint.should == "block {}"     
       
       result = @lodgepole_tree.delete_point(4)
-      result.listing.should == "block {\n  block {\n    block {}}}"     
+      result.blueprint.should == "block {\n  block {\n    block {}}}"     
       
       result = @lodgepole_tree.delete_point(7)
-      result.listing.should == "block {\n  block {\n    block {\n      block {\n        block {\n          block {}}}}}}"     
+      result.blueprint.should == "block {\n  block {\n    block {\n      block {\n        block {\n          block {}}}}}}"     
     end
     
     it "should leave the expected footnotes in the resulting program" do
       valueful = NudgeProgram.new(
         "block {value «code» value «code»}\n«code»block {value «int»}\n«int» 7\n«code» value «bool»")
       
-      valueful.delete_point(1).listing.should ==
+      valueful.delete_point(1).blueprint.should ==
         "block {}"
         
-      valueful.delete_point(2).listing.should ==
+      valueful.delete_point(2).blueprint.should ==
         "block {\n  value «code»} \n«code» value «bool»"
         
-      valueful.delete_point(3).listing.should ==
+      valueful.delete_point(3).blueprint.should ==
         "block {\n  value «code»} \n«code» block {value «int»}\n«int» 7"
     end
     
     it "should not delete unused footnotes" do
       unclear_on_concept = NudgeProgram.new("value «int»\n«bool» false")
-      unclear_on_concept.delete_point(1).listing.should == "block {} \n«bool» false"
+      unclear_on_concept.delete_point(1).blueprint.should == "block {} \n«bool» false"
     end
   end
   
@@ -737,10 +737,10 @@ block { value «int» value «code» value «int»}
     
     
     it "should not change the invoking NudgeProgram" do
-      old_code = @starter.listing
+      old_code = @starter.blueprint
       in_the_midst = @starter.insert_point_before(2,@new_chunk)
-      @starter.listing.should == old_code
-      in_the_midst.listing.should_not == old_code
+      @starter.blueprint.should == old_code
+      in_the_midst.blueprint.should_not == old_code
     end
     
     it "should return a new NudgeProgram" do
@@ -751,13 +751,13 @@ block { value «int» value «code» value «int»}
     
     it "should produce the expected footnotes in the resulting program" do
       complicated = @starter.insert_point_before(3,@starter.linked_code.clone)
-      complicated.listing.should == "block {\n  value «code»\n  block {\n    value «code»\n    value «int»}\n  value «int»} \n«code» value «int»\n«int» 1\n«code» value «int»\n«int» 1\n«int» 2\n«int» 2"
+      complicated.blueprint.should == "block {\n  value «code»\n  block {\n    value «code»\n    value «int»}\n  value «int»} \n«code» value «int»\n«int» 1\n«code» value «int»\n«int» 1\n«int» 2\n«int» 2"
     end
     
     it "should synchronize the #raw_code, #footnote_section #code_section strings" do
       complicated = @starter.insert_point_before(3,@starter.linked_code.clone)
       complicated.raw_code.should_not == @starter.raw_code
-      complicated.raw_code.should == complicated.listing
+      complicated.raw_code.should == complicated.blueprint
       complicated.footnote_section.should_not == @starter.footnote_section
       complicated.footnote_section.should ==
         "«code» value «int»\n«int» 1\n«code» value «int»\n«int» 1\n«int» 2\n«int» 2"

@@ -10,15 +10,15 @@ class CodeContainerInstruction < Instruction
     @searching_for_this = @context.pop_value(:code)
   end
   def derive
-    needle = NudgeProgram.new(@searching_for_this).linked_code.listing
+    needle = NudgeProgram.new(@searching_for_this).linked_code.blueprint
     haystack_program = NudgeProgram.new(@searching_in_this)
     haystack = haystack_program.linked_code
     
-    if needle == haystack.listing
+    if needle == haystack.blueprint
       result_value = "block {}"
     else
-      where = haystack.find_index {|point| point.listing == needle}
-      result_value = where.nil? ? "block {}" : haystack_program[where].listing
+      where = haystack.find_index {|point| point.blueprint == needle}
+      result_value = where.nil? ? "block {}" : haystack_program[where].blueprint
     end
     @result = ValuePoint.new("code", result_value)
   end

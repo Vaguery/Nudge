@@ -65,7 +65,7 @@ describe IntPowerInstruction do
         context.stacks[:int].push(ValuePoint.new("int", 10**10))
         context.stacks[:int].push(ValuePoint.new("int", 10**10))
         IntPowerInstruction.new(context).go
-        context.peek(:error).listing.should include("Infinity")
+        context.peek(:error).blueprint.should include("Infinity")
         context.stacks[:int].depth.should == 0
       end
     end

@@ -41,7 +41,7 @@ describe CodeDefineInstruction do
         @context.stacks[:code].depth.should == 0
         @context.stacks[:name].depth.should == 0
         @context.names["a1"].should be_a_kind_of(CodeblockPoint)
-        @context.names["a1"].listing.should == "block {\n  do it}"
+        @context.names["a1"].blueprint.should == "block {\n  do it}"
       end
       
       it "should re-assign the binding if there already is one" do
@@ -52,7 +52,7 @@ describe CodeDefineInstruction do
         @context.stacks[:code].depth.should == 0
         @context.stacks[:name].depth.should == 0
         @context.names["b2"].should be_a_kind_of(InstructionPoint)
-        @context.names["b2"].listing.should == "do nothing"
+        @context.names["b2"].blueprint.should == "do nothing"
       end
       
       it "should not work if the name is a variable (as opposed to a local)" do

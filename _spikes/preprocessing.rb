@@ -17,7 +17,7 @@ block {
 
 ENDME
 
-listing, spacer, fn = program.partition( /^(?=«)/ )
+blueprint, spacer, fn = program.partition( /^(?=«)/ )
 
 eachfn = fn.split( /^(?=«)/ )
 
@@ -25,7 +25,7 @@ breaker = /^«([a-zA-Z][a-zA-Z0-9_]*)»(.*)/m
 
 pieces = eachfn.collect {|fn| fn.match(breaker)[1..2]}
 
-puts  listing 
+puts  blueprint 
 puts "\nchunks:\n" + eachfn.inspect
 puts "\nsliced chunks:\n"
 pieces.each do |fn|

@@ -3,8 +3,8 @@ class CodeNullQInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.pop_value(:code)
-    @arg1 = NudgeProgram.new(arg_listing).listing
+    arg_blueprint = @context.pop_value(:code)
+    @arg1 = NudgeProgram.new(arg_blueprint).blueprint
   end
   def derive
     @result = ValuePoint.new("bool", @arg1 == "block {}")

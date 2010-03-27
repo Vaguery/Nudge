@@ -22,7 +22,7 @@ describe "capturing errors" do
         context = Interpreter.new
         i1 = IntAddInstruction.new(context)
         lambda{i1.go}.should_not raise_error
-        context.stacks[:error].peek.listing.should include "int too small"
+        context.stacks[:error].peek.blueprint.should include "int too small"
       end
     end
   end
@@ -33,7 +33,7 @@ describe "capturing errors" do
       context.disable(IntAddInstruction)
       i1 = TestingInterdependencyInstruction.new(context)
       lambda{i1.go}.should_not raise_error
-      context.stacks[:error].peek.listing.should include "needs IntAddInstruction"
+      context.stacks[:error].peek.blueprint.should include "needs IntAddInstruction"
     end
   end
   

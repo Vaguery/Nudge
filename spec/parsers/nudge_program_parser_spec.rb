@@ -79,7 +79,7 @@ describe "Nudge Program parser" do
   
   it "should return extra footnotes" do
     hash = NudgeTree.from("do unrelated\n«int» 9\n«code» value «int»")
-    hash[:tree].listing.should == "do unrelated"
+    hash[:tree].blueprint.should == "do unrelated"
     hash[:unused].should == {"int"=>["9"], "code"=>["value «int»"]}
   end
   

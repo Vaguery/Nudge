@@ -2,8 +2,8 @@
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
-def magicCodeblockPointMaker(program_listing)
-  my_kludge = NudgeProgram.new(program_listing)
+def magicCodeblockPointMaker(program_blueprint)
+  my_kludge = NudgeProgram.new(program_blueprint)
   return my_kludge.linked_code
 end
 
@@ -28,13 +28,13 @@ describe "tidy" do
 end
 
 
-describe "listing_parts" do
+describe "blueprint_parts" do
   context "when there are no footnotes" do
     it "should produce an Array with (1) self.tidy and (2) an empty string" do
-      CodeblockPoint.new([]).listing_parts.should == ["block {}",""]
-      CodeblockPoint.new([CodeblockPoint.new([CodeblockPoint.new])]).listing_parts.should ==
+      CodeblockPoint.new([]).blueprint_parts.should == ["block {}",""]
+      CodeblockPoint.new([CodeblockPoint.new([CodeblockPoint.new])]).blueprint_parts.should ==
         ["block {\n  block {\n    block {}}}",""]        
-      CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")]).listing_parts.should ==
+      CodeblockPoint.new([ReferencePoint.new("a"), InstructionPoint.new("b")]).blueprint_parts.should ==
         ["block {\n  ref a\n  do b}",""]
     end
   end
@@ -42,41 +42,41 @@ describe "listing_parts" do
   
   context "when there need to be footnotes" do
     it "should work for blocks containing nil-valued ValuePoints" do
-      CodeblockPoint.new([ValuePoint.new("foo")]).listing_parts.should ==
+      CodeblockPoint.new([ValuePoint.new("foo")]).blueprint_parts.should ==
         ["block {\n  value «foo»}",""]
       annoyinglyWordy = magicCodeblockPointMaker("block { block { block { value «foo»}}}")
-      annoyinglyWordy.listing_parts.should ==
+      annoyinglyWordy.blueprint_parts.should ==
         ["block {\n  block {\n    block {\n      value «foo»}}}",""]
     end
     
     it "should work with footnotes from the root" do
       simple1 = magicCodeblockPointMaker("block { value «foo»} \n«foo» bar")
-      simple1.listing_parts.should ==
+      simple1.blueprint_parts.should ==
         ["block {\n  value «foo»}","«foo» bar"]
       nested = magicCodeblockPointMaker("block { block { value «foo»} ref x} \n«foo» bar")
-      nested.listing_parts[1].should == "«foo» bar"
+      nested.blueprint_parts[1].should == "«foo» bar"
     end
     
     it "should return the footnotes in depth-first order" do
       listed = magicCodeblockPointMaker("block { value «c» value «b» value «a»} \n«a» 1\n«b» 2\n«c» 3")
-      listed.listing_parts[1].should == "«c» 3\n«b» 2\n«a» 1"
+      listed.blueprint_parts[1].should == "«c» 3\n«b» 2\n«a» 1"
     end
     
     it "should work with nested «code» footnotes" do
       simple_tricky = "block { value «code»}\n«code» value «code»\n«int» 123\n«code» value «int»"
       simple_tricky = magicCodeblockPointMaker(simple_tricky)
-      simple_tricky.listing_parts[1].should == "«code» value «code»\n«code» value «int»\n«int» 123"
+      simple_tricky.blueprint_parts[1].should == "«code» value «code»\n«code» value «int»\n«int» 123"
     end
   end
 end
 
 
-describe "#listing" do
+describe "#blueprint" do
   it "should return a single string with the tidied code and footnotes block, surrounding a newline" do
     simple_tricky = magicCodeblockPointMaker(
       "block { value «code»}\n«code» value «code»\n«int» 123\n«code» value «int»")
-    simple_tricky.listing.should include(simple_tricky.listing_parts[0])
-    simple_tricky.listing.should include(simple_tricky.listing_parts[1])
+    simple_tricky.blueprint.should include(simple_tricky.blueprint_parts[0])
+    simple_tricky.blueprint.should include(simple_tricky.blueprint_parts[1])
   end
 end
 

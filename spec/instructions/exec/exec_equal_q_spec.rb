@@ -39,7 +39,7 @@ describe ExecEqualQInstruction do
     @context.stacks[:bool].peek.value.should == false
   end
   
-  it "should not depend on the values, but the tidied program listings of the :code items" do
+  it "should not depend on the values, but the tidied program blueprints of the :code items" do
     thing1 = NudgeProgram.new("block { value   «int» ref a  }\n«int» 9182").linked_code
     thing2 = NudgeProgram.new("block {\nvalue   «int»\tref \na  }\n«int» 9182").linked_code
     @context.stacks[:exec].push thing1

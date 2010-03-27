@@ -3,8 +3,8 @@ class CodeAtomQInstruction < Instruction
     needs :code, 1
   end
   def setup
-    arg_listing = @context.pop_value(:code)
-    @arg1 = NudgeProgram.new(arg_listing)
+    arg_blueprint = @context.pop_value(:code)
+    @arg1 = NudgeProgram.new(arg_blueprint)
   end
   def derive
     atomQ = @arg1.parses? && @arg1.points == 1

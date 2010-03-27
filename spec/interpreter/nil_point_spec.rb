@@ -7,12 +7,12 @@ describe NilPoint do
     lambda{NilPoint.new}.should_not raise_error
   end
   
-  it "should respond to #listing_parts with an array of empty strings" do
-    NilPoint.new.listing_parts.should == ["",""]
+  it "should respond to #blueprint_parts with an array of empty strings" do
+    NilPoint.new.blueprint_parts.should == ["",""]
   end
   
-  it "should respond to #listing with an empty string" do
-    NilPoint.new.listing.should == ""
+  it "should respond to #blueprint with an empty string" do
+    NilPoint.new.blueprint.should == ""
   end
   
   it "should respond to #tidy with an empty string" do

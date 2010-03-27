@@ -38,7 +38,7 @@ describe CodeEqualQInstruction do
     @context.stacks[:bool].peek.value.should == false
   end
   
-  it "should not depend on the values, but the tidied program listings of the :code items" do
+  it "should not depend on the values, but the tidied program blueprints of the :code items" do
     thing1 = ValuePoint.new("code", "block { value «int» ref a}\n«int» 9182")
     thing2 = ValuePoint.new("code", "block {\nvalue   «int» ref \na  }\n«int»\t9182\n")
     @context.stacks[:code].push thing1

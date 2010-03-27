@@ -61,7 +61,7 @@ describe BoolDefineInstruction do
         @context.stacks[:bool].push(ValuePoint.new("bool", 456))
         @context.stacks[:name].push(ReferencePoint.new("xyz"))
         @i1.go
-        @context.stacks[:error].peek.listing.should include "cannot redefine a variable"
+        @context.stacks[:error].peek.blueprint.should include "cannot redefine a variable"
       end
       
     end

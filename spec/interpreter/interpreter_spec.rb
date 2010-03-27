@@ -29,7 +29,7 @@ describe "initialization" do
     @ii.stacks.should include(:robot)
   end
   
-  it "should respond to #reset(listing) by parsing the listing and pushing it onto its exec stack" do
+  it "should respond to #reset(blueprint) by parsing the blueprint and pushing it onto its exec stack" do
     myCode = "ref x"
     @ii.reset(myCode)
     @ii.stacks.should include(:exec)
@@ -57,7 +57,7 @@ describe "initialization" do
     whatGotPushed.contents[2].contents[0].name.should == "baz"
   end
   
-  it "should accept a listing, which should default to an empty string" do
+  it "should accept a blueprint, which should default to an empty string" do
     Interpreter.new(program:"value «int» \n«int» 7").program.should == "value «int» \n«int» 7"
     # Interpreter.new().program.should == ""
   end

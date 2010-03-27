@@ -11,9 +11,9 @@ class CodeMemberQInstruction < Instruction
     tree = NudgeProgram.new(@arg2)
     if tree.parses? && looking_for_this.parses?
       if tree.linked_code.kind_of?(CodeblockPoint)
-        found = tree[1].contents.any? {|branch| branch.listing == looking_for_this.listing}
+        found = tree[1].contents.any? {|branch| branch.blueprint == looking_for_this.blueprint}
       else
-        found = (tree.listing == looking_for_this.listing)
+        found = (tree.blueprint == looking_for_this.blueprint)
       end
     else
       found = false

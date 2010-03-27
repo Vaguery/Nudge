@@ -53,7 +53,7 @@ describe FloatSqrtInstruction do
       [-6.82, -16.0].each do |i|
         context.stacks[:float].push(ValuePoint.new("float", i))
         lambda{FloatSqrtInstruction.new(context).go}.should_not raise_error
-        context.stacks[:error].peek.listing.should include("float_sqrt did not return a float")
+        context.stacks[:error].peek.blueprint.should include("float_sqrt did not return a float")
       end
     end
   end

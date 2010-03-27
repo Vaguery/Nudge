@@ -8,7 +8,7 @@ class CodeNameLookupInstruction < Instruction  # was Push3 CODE.DEFINITION
   def derive
     bound_value = @context.variables[@the_reference] || @context.names[@the_reference] || nil
     if bound_value != nil
-      @result = ValuePoint.new("code", bound_value.listing)
+      @result = ValuePoint.new("code", bound_value.blueprint)
     else
       @result = ValuePoint.new("code", "")
     end

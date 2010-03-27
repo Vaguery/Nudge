@@ -15,9 +15,9 @@ class CodeDiscrepancyInstruction < Instruction
     @arg1 = @context.pop_value(:code)
   end
   def derive
-     # collect string listings of every point
-    parts_of_1 = NudgeProgram.new(@arg1).linked_code.collect {|pt| pt.listing}
-    parts_of_2 = NudgeProgram.new(@arg2).linked_code.collect {|pt| pt.listing}
+     # collect string blueprints of every point
+    parts_of_1 = NudgeProgram.new(@arg1).linked_code.collect {|pt| pt.blueprint}
+    parts_of_2 = NudgeProgram.new(@arg2).linked_code.collect {|pt| pt.blueprint}
     unique_parts = (parts_of_1.uniq + parts_of_2.uniq).reject {|i| i == ""}
     summed_differences = unique_parts.inject(0) {|sum, uniq_string| sum +
       (parts_of_2.count(uniq_string) - parts_of_1.count(uniq_string)).abs}
