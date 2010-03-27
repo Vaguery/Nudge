@@ -25,7 +25,7 @@ module Nudge
       @types = params[:types] || NudgeType.all_types
       @stepLimit = params[:step_limit] || 3000
       
-      instructions = params[:instructions] || []
+      instructions = params[:instructions] || Instruction.all_instructions
       @instructions_library = Hash.new {|hash, key| raise InstructionPoint::InstructionNotFoundError,
         "#{key} is not an active instruction in this context"}
       instructions.each {|i| self.enable(i)}

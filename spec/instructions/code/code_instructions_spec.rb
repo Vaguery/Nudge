@@ -27,7 +27,7 @@ describe CodeInstructionsInstruction do
     
     describe "\#cleanup" do
       it "should push a block containing every active instruction" do
-        # @context.disable_all_instructions
+        @context.disable_all_instructions
         @context.enable(CodeInstructionsInstruction)
         @context.enable(IntAddInstruction)
         @i1.go

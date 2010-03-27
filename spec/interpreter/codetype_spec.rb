@@ -218,8 +218,6 @@ describe "Code Type" do
         two_choices.filled_framework('b{vv}')[:footnote_part].should == "«baz» \n«qux»"
       end
       
-      it "should not fail when given a class that exists but has no #any_value method"
-      
       it "should generate a footnote if there is a defined random_value method for that type" do
         one_choice = StringRewritingGenerator.new(type_names:["int"])
         IntType.should_receive(:any_value).and_return(129)
@@ -250,27 +248,24 @@ describe "Code Type" do
           # writing the rspec matcher for the actual test would be better
         end
         
-        it "should add footnotes at the end of :footnote_part in the order they're added in code"
+        it "should add footnotes at the end of :footnote_part in the order they're added in code" do
+          three_types = StringRewritingGenerator.new(type_names:["int", "bool", "float"])
+          diceroll = three_types.filled_framework('b{vvvvvvvvv}')
+          diceroll[:code_part].scan(/«(...|....)»/).should ==
+            diceroll[:footnote_part].scan(/«(...|....)»/)
+        end
         
-        it "should generate any needed sub-footnote values from within other footnote values"
-        
-        it "should not generate an infinite tree of sub-footnotes"
-        
-        # it "should do what I say" do
-        #   my_fave = 
-        #   StringRewritingGenerator.new(target_size_in_points:100,
-        #     type_names:["code","bool","int"],
-        #     reference_names:["x1","x2","x3","g","planck_constant"],
-        #     probabilities:{b:11,v:10,r:4,i:9})
-        #   puts NudgeProgram.new(my_fave.generate).listing.gsub(" ","&nbsp;").gsub("\n","<br />")
-        # end
-        
+        it "should generate any needed sub-footnote values from within other footnote values" do
+          pending
+          nestable = StringRewritingGenerator.new(
+            type_names:["int", "code"],
+            probabilities:{b:0,v:10,r:0,i:0}
+          )
+          diceroll = nestable.filled_framework('b{vvvvvv}')
+          puts diceroll[:code_part].scan(/«(...|....)»/).inspect
+          puts diceroll[:footnote_part].inspect
+        end      
       end
-      
-      
-      
-      
-      
     end
     
     

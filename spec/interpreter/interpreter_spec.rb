@@ -12,8 +12,8 @@ describe "initialization" do
     @ii.stacks.should == {}
   end
   
-  it "should keep have an empty #instructions Hash" do
-    @ii.instructions_library.should == {}
+  it "should keep have (by default) a complete #instructions Hash" do
+    @ii.instructions_library.should_not == {}
   end
   
   it "should automatically create an entry if an unmentioned stack is referenced by a method" do
@@ -63,6 +63,7 @@ describe "initialization" do
   end
   
   it "should have an #enable method that works for Instructions, adding them to the #instructions hash" do
+    @ii.disable_all_instructions
     @ii.instructions_library.should == {}
     @ii.enable(IntAddInstruction)
     @ii.instructions_library[IntAddInstruction].should_not== nil
@@ -71,6 +72,7 @@ describe "initialization" do
   end
   
   it "should have an #enable_all_instructions method" do
+    @ii.disable_all_instructions
     @ii.instructions_library.should == {}
     @ii.enable_all_instructions
     @ii.instructions_library.keys.should == Instruction.all_instructions
