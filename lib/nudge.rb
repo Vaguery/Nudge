@@ -28,19 +28,24 @@ require 'interpreter/programPoints'
 
 require 'instructions/infrastructure'
 
-require 'instructions/stack_manipulation'
+Dir.glob(File.dirname(__FILE__) + '/instructions/bool/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/code/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/exec/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/int/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/float/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/name/*') {|file| require file}
+
 require 'instructions/int_arithmetic'
 require 'instructions/float_arithmetic'
 require 'instructions/float_transcendental'
-require 'instructions/comparisons'
-require 'instructions/conditionals'
 require 'instructions/conversions'
 require 'instructions/random_value'
 require 'instructions/exec'
 require 'instructions/name_bindings'
 require 'instructions/name_basics'
 
-Dir.glob(File.dirname(__FILE__) + '/instructions/bool/*') {|file| require file}
-Dir.glob(File.dirname(__FILE__) + '/instructions/code/*') {|file| require file}
+
+
+
 
 include NudgeType
