@@ -6,7 +6,6 @@ require 'active_support'
 
 require 'interpreter/parse.tab'
 
-
 require 'interpreter/grammars/nudge_common'
 
 require 'interpreter/grammars/nudge_value_helpers'
@@ -35,14 +34,6 @@ Dir.glob(File.dirname(__FILE__) + '/instructions/int/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/float/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/name/*') {|file| require file}
 
-require 'instructions/conversions'
-require 'instructions/random_value'
-require 'instructions/exec'
-require 'instructions/name_bindings'
-require 'instructions/name_basics'
-
-
-
-
+Dir.glob(File.dirname(__FILE__) + '/instructions/conversion/*') {|file| require file}
 
 include NudgeType
