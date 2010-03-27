@@ -1,3 +1,4 @@
+#encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
@@ -76,6 +77,40 @@ describe "stack" do
       @myStack.push(1)
       @myStack.push(2)
       @myStack.depth.should == 2
+    end
+  end
+  
+  
+  describe "inspect" do
+    it "should return the entries wrapped in brackets" do
+      inspectable_me = Stack.new(:foo)
+      3.times {inspectable_me.push(ValuePoint.new("foo", rand(1000)))}
+      inspectable_me.inspect.first.should == "["
+      inspectable_me.inspect.last.should == "]"
+    end
+    
+    it "should return them top-to-bottom" do
+      inspectable_me = Stack.new(:foo)
+      inspectable_me.push(ValuePoint.new("foo", 'bottom'))
+      inspectable_me.push(ValuePoint.new("foo", 'top'))
+      inspectable_me.inspect.should =~ /(.+)top(.+)bottom\]/um
+    end
+    
+    it "should return a string containing every entry" do
+      inspectable_me = Stack.new(:foo)
+      (-2..2).each {|i| inspectable_me.push(ValuePoint.new("foo", i))}
+      (inspectable_me.inspect.scan(/(-\d|\d)/)).flatten.collect {|n| n.to_i}.should ==
+        [2,1,0,-1,-2]
+    end
+    
+    it "should return the type and value of each entry" do
+      inspectable_me = Stack.new(:foo)
+      inspectable_me.push(ValuePoint.new("a", '1'))
+      inspectable_me.push(ValuePoint.new("b", '2'))
+      inspectable_me.push(ValuePoint.new("c", '3'))
+      inspectable_me.push(ValuePoint.new("d", '4'))
+      
+      inspectable_me.inspect.should == "[\n«d» 4,\n«c» 3,\n«b» 2,\n«a» 1]"
     end
   end
 end

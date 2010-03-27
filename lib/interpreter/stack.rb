@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Nudge
   
   # Nudge Stacks are Arrays with some added convenience functions.
@@ -32,6 +33,13 @@ module Nudge
     # Stack#depth returns the number of items
     def depth
       @entries.length
+    end
+    
+    def inspect
+      result = @entries.reverse.inject("[") do |return_string, item|
+        return_string << "\n«#{item.type}» #{item.value},"
+      end
+      result.chop+"]"
     end
     
   end
