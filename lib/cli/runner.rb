@@ -6,16 +6,27 @@ module Nudge
     attr_accessor :raw_code
     attr_accessor :nudge_program
     attr_accessor :interpreter
+    attr_accessor :options
+    attr_accessor :result
+    
     
     def initialize(filename, options={})
       @filename = filename
-      @raw_code = IO.open(filename)
-      @nudge_program = NudgeProgram.new(@raw_code)
-      @interpreter = Interpreter.new
+      @nudge_program = NudgeProgram.new("")
+      @options = options
+      @interpreter = Interpreter.new(@options)
     end
-  end
-  
-  class CliArgParser
+    
+    
+    def setup
+      @raw_code = IO.open(@filename)
+      @interpreter.reset(@raw_code)
+    end
+    
+    
+    def run
+      return @interpreter.run
+    end
   end
   
 end
