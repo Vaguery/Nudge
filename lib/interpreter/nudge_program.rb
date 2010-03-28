@@ -5,6 +5,12 @@ Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treet
 
 module Nudge
   class NudgeProgram
+    
+    def self.random(options = {})
+      sourcecode = CodeType.any_value(options)
+      NudgeProgram.new(sourcecode)
+    end
+    
 
     attr_accessor :linked_code,:footnotes
     attr_accessor :raw_code
@@ -19,6 +25,8 @@ module Nudge
       relink_code!
       @points = self.points
     end
+    
+    
     
     
     
