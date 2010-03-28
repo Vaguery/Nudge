@@ -483,3 +483,69 @@ describe "resetting" do
     ii.variables.keys.should == ["a"]
   end
 end
+
+
+describe "sensors" do
+  before(:each) do
+    @ii = Interpreter.new
+  end
+  
+  describe "register_sensor" do
+    it "should add a sensor block to the #sensors Hash" do
+      lambda{@ii.register_sensor("y") {}}.should_not raise_error
+      @ii.sensors.length.should == 1
+      @ii.sensors["y"].should be_a_kind_of(Proc)
+    end
+    
+    it "should take a string name, validated as such" do
+      lambda{@ii.register_sensor("z")}.should_not raise_error
+      lambda{@ii.register_sensor(8)}.should raise_error(ArgumentError)
+    end
+    
+    it "should take a block, which is called when the sensor is fired" do
+      @ii.register_sensor("y") {|x| 9}
+      @ii.sensors["y"].call.should == 9
+    end
+    
+    it "should have access to the Interpreter state through a parameter" do
+      @ii.push(:int, 10202)
+      @ii.register_sensor("x1") {|interpreter| interpreter.peek_value(:int)}
+      @ii.sensors["x1"].call(@ii).should == 10202
+    end
+  end
+  
+  describe "clear_sensors" do
+    it "should reset the #sensors Hash to empty" do
+      @ii.register_sensor("y1") {|x| 1}
+      @ii.register_sensor("y2") {|x| 2}
+      @ii.register_sensor("y3") {|x| 4}
+      @ii.sensors.keys.should == ["y1", "y2", "y3"]
+      @ii.reset_sensors
+      @ii.sensors.should == {}
+    end
+  end
+  
+  describe "Interpreter#fire_all_sensors(name)" do
+    it "should call all registered sensors and return a Hash of results" do
+      @ii.register_sensor("y1") {|x| 1}
+      @ii.register_sensor("y2") {|x| 2}
+      @ii.register_sensor("y3") {|x| 4}
+      @ii.fire_all_sensors.should == {"y1"=>1, "y2"=>2, "y3"=>4}
+    end
+    
+    it "should return an empty Hash if nothing is registered" do
+      @ii.fire_all_sensors.should == {}
+    end
+  end
+  
+  describe "interrogating Interpreter state" do
+    it "should be possible to read anything about the Interpreter state" do
+      @ii.reset("block {value «int» value «int»}\n«int» 88\n«int» 11")
+      @ii.register_sensor("steps") {|me| me.steps}
+      @ii.register_sensor("top_int") {|me| me.pop_value(:int)}
+      @ii.register_sensor("second_int") {|me| me.pop_value(:int)}
+      @ii.run
+      @ii.fire_all_sensors.should == {"steps"=>3, "top_int"=>11, "second_int"=>88}
+    end
+  end
+end

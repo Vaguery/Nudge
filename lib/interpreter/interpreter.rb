@@ -16,6 +16,7 @@ module Nudge
     attr_accessor :program, :stepLimit, :steps
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
     attr_accessor :last_name, :evaluate_references
+    attr_accessor :sensors
     
     
     # A program to be interpreted can be passed in as an optional parameter
@@ -24,6 +25,7 @@ module Nudge
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @stepLimit = params[:step_limit] || 3000
+      @sensors = Hash.new
       
       instructions = params[:instructions] || Instruction.all_instructions
       @instructions_library = Hash.new {|hash, key| raise InstructionPoint::InstructionNotFoundError,
@@ -230,6 +232,25 @@ module Nudge
     
     def disable_all_types
       @types = []
+    end
+    
+    
+    def register_sensor(name, &block)
+      raise(ArgumentError, "Sensor name #{name} is not a string") unless name.kind_of?(String)
+      @sensors[name] = block
+    end
+    
+    
+    def reset_sensors
+      @sensors = Hash.new
+    end
+    
+    
+    def fire_all_sensors
+      @sensors.inject({}) do |result, (key, value)|
+        result[key] = @sensors[key].call(self)
+        result
+      end
     end
   end
 end
