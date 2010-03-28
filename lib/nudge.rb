@@ -19,6 +19,8 @@ require 'interpreter/grammars/nudge_codeblock'
 
 require 'interpreter/nudge_program'
 
+require 'cli/runner'
+
 require 'interpreter/interpreter'
 require 'interpreter/types/pushTypes'
 require 'interpreter/types/codeType'

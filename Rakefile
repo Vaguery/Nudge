@@ -1,5 +1,7 @@
 require 'rake'
 
+
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
@@ -20,10 +22,10 @@ begin
     # files
     gemspec.files.exclude '_spikes/**'
     gemspec.files.exclude('exploring_nudge/**')
-    
   end
   
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
 end
+
