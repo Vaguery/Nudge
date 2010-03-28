@@ -18,9 +18,11 @@ module Nudge
     end
     
     
-    def setup
+    def setup(options = {})
       @raw_code = IO.open(@filename)
       @interpreter.reset(@raw_code)
+      options[:variables].each {|name, val| @interpreter.bind_variable(name, val)} if options[:variables]
+      options[:sensors].each {|name, block| @interpreter.register_sensor(name, &block)} if options[:sensors]
     end
     
     

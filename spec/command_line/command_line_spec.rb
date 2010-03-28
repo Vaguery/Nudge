@@ -34,6 +34,7 @@ describe "CliRunner" do
   describe "setup" do
     before(:each) do
       IO.stub!(:open).and_return("ref g") # to avoid hitting the file
+      @cr = CliRunner.new("beebop")
     end
     
     it "should open the file and read in the program" do
@@ -42,15 +43,31 @@ describe "CliRunner" do
     end
     
     it "should save the read filestream into #raw_code" do
-      cr = CliRunner.new("beebop")
-      cr.setup
-      cr.raw_code.should == "ref g"
+      @cr.setup
+      @cr.raw_code.should == "ref g"
     end
     
     it "should reset the Interpreter with the new program" do
-      cr = CliRunner.new("beebop")
-      cr.setup
-      cr.interpreter.program.should == cr.raw_code
+      @cr.setup
+      @cr.interpreter.program.should == @cr.raw_code
+    end
+    
+    it "should be able to accept an optional Hash of variable bindings" do
+      lambda{@cr.setup(variables:{"x" => ValuePoint.new("int", 9)})}.should_not raise_error
+    end
+    
+    it "should build those bindings into its interpreter" do
+      @cr.setup(variables:{"x" => ValuePoint.new("int",1002)})
+      @cr.interpreter.variables["x"].value.should == 1002
+    end
+    
+    it "should be able to accept an optional Hash of sensor definitions" do
+      lambda{@cr.setup(sensors:{"x" => Proc.new {|me| "hi there"}} )}.should_not raise_error
+    end
+    
+    it "should register those sensors in the interpreter" do
+      @cr.setup(sensors:{"x" => Proc.new {|me| "hi there"}})
+      @cr.interpreter.sensors["x"].call.should == "hi there"
     end
   end
   
