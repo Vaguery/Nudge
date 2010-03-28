@@ -45,6 +45,13 @@ describe "initialization" do
     @ii.steps.should == 0
   end
   
+  it "#reset should reset the #sensors Hash" do
+    @ii.register_sensor("z") {1201}
+    @ii.reset
+    @ii.sensors["z"].should == nil
+  end
+  
+  
   it "should load a complex CodeBlock as a single item on the exec stack" do
     myCode = "block {\ndo foo\n do bar\n block {\ndo baz}}"
     @ii.reset(myCode)
@@ -442,6 +449,10 @@ describe "running" do
     @ii.steps.should == 0
   end
   
+  it "should #fire_all_sensors at the end of running" do
+    @ii.should_receive(:fire_all_sensors)
+    @ii.run
+  end
 end
 
 
@@ -544,7 +555,7 @@ describe "sensors" do
       @ii.register_sensor("steps") {|me| me.steps}
       @ii.register_sensor("top_int") {|me| me.pop_value(:int)}
       @ii.register_sensor("second_int") {|me| me.pop_value(:int)}
-      @ii.run
+      3.times {@ii.step} # so as not to fire sensors at the end
       @ii.fire_all_sensors.should == {"steps"=>3, "top_int"=>11, "second_int"=>88}
     end
   end

@@ -56,6 +56,7 @@ module Nudge
       @program = program
       self.clear_stacks
       self.reset_names
+      self.reset_sensors
       if program
         @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       end
@@ -134,6 +135,7 @@ module Nudge
       while notDone?
         self.step
       end
+      fire_all_sensors
     end
     
     
