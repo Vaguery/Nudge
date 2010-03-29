@@ -8,11 +8,23 @@ See the [project Wiki](http://github.com/Vaguery/Nudge/wikis) for a more thoroug
 
 ## Getting started
 
+### Ruby 1.9
+
+Make sure your Ruby version is 1.9 (or higher) by running
+
+    ruby -v
+
+and getting something along the lines of `ruby 1.9.1p378 (2010-01-10 revision 26273) [i386-darwin10.2.0]` as a response. If you see `ruby 1.8.7`, we'd recommend a look at [rvm](http://rvm.beginrescueend.com/)].
+
+### Installing the gem
+
     gem install nudge
 
 As of this writing, the `nudge` gem can be used as a library in your Ruby programs. S Real Soon Now, it'll be part of a more interesting gem…
 
-Meanwhile, try something like this:
+### A test run
+
+Meanwhile, try something like this in irb:
 
     #encoding: utf-8
     # you'll need to use unicode for all Nudge programs
