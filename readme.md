@@ -38,9 +38,7 @@ Meanwhile, try something like this:
     
     puts "\n\nsensor values: #{my_interpreter.run}"
 
-When you run that, you'll get something like this:
-
-<script src="http://gist.github.com/347215.js?file=nudge_sample_output.txt"></script>
+When you run that, you'll get something [like this](http://gist.github.com/347215)—though your code and output will (hopefully) be a different random result!
 
 ## Requirements
 
