@@ -69,7 +69,7 @@ describe "ValuePoint" do
   
   
   it "should move to the appropriate stack when removed from the exec stack" do
-    ii = Interpreter.new(program:"value «bool»\n«bool»true")
+    ii = Interpreter.new("value «bool»\n«bool»true")
     ii.step
     ii.stacks[:bool].peek.raw.should == "true"
     

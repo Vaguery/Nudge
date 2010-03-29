@@ -14,7 +14,7 @@ Make sure your Ruby version is 1.9 (or higher) by running
 
     ruby -v
 
-and getting something along the lines of `ruby 1.9.1p378 (2010-01-10 revision 26273) [i386-darwin10.2.0]` as a response. If you see `ruby 1.8.7`, we'd recommend a look at [rvm](http://rvm.beginrescueend.com/)].
+and getting something along the lines of `ruby 1.9.1p378 (2010-01-10 revision 26273) [i386-darwin10.2.0]` as a response. If you see `ruby 1.8.7`, we'd recommend a look at [rvm](http://rvm.beginrescueend.com/).
 
 ### Installing the gem
 

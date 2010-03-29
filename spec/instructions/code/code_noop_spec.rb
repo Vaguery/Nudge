@@ -26,7 +26,7 @@ describe CodeNoopInstruction do
 
     describe "\#cleanup" do
       it "should change nothing about the interpreter except the step count" do
-        @context = Interpreter.new(program:"do code_noop")
+        @context = Interpreter.new("do code_noop")
         @context.enable(CodeNoopInstruction)
         earlier = @context.steps
         @context.run

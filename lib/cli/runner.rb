@@ -14,7 +14,7 @@ module Nudge
       @filename = filename
       @nudge_program = NudgeProgram.new("")
       @options = options
-      @interpreter = Interpreter.new(@options)
+      @interpreter = Interpreter.new("",@options)
     end
     
     

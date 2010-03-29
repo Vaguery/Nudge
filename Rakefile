@@ -18,6 +18,7 @@ begin
     # dependencies
     gemspec.add_dependency('treetop', '>= 1.4.3')
     gemspec.add_dependency('activesupport', '>= 2.3.5')
+    gemspec.add_dependency('thor', '>= 0.13')
     
     # files
     gemspec.files.exclude '_spikes/**'

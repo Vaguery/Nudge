@@ -20,8 +20,8 @@ module Nudge
     
     
     # A program to be interpreted can be passed in as an optional parameter
-    def initialize(params = {})
-      initialProgram = params[:program] || nil
+    def initialize(program = nil, params = {})
+      initialProgram = program
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @step_limit = params[:step_limit] || 3000
@@ -57,7 +57,7 @@ module Nudge
       self.clear_stacks
       self.reset_names
       self.reset_sensors
-      if program
+      if !program.nil?
         @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       end
       @steps = 0

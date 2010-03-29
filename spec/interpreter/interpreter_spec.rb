@@ -65,8 +65,8 @@ describe "initialization" do
   end
   
   it "should accept a blueprint, which should default to an empty string" do
-    Interpreter.new(program:"value «int» \n«int» 7").program.should == "value «int» \n«int» 7"
-    # Interpreter.new().program.should == ""
+    Interpreter.new("value «int» \n«int» 7").program.should == "value «int» \n«int» 7"
+    Interpreter.new().program.should == nil
   end
   
   it "should have an #enable method that works for Instructions, adding them to the #instructions hash" do
@@ -444,7 +444,6 @@ describe "running" do
   
   it "should do nothing if the :exec stack starts empty" do
     @ii.reset()
-    puts @ii.stacks[:exec].depth
     @ii.run
     @ii.steps.should == 0
   end
@@ -461,7 +460,7 @@ end
 
 describe "resetting" do
   it "should clear the steps" do
-    ii = Interpreter.new(program:"block {ref a ref b}")
+    ii = Interpreter.new("block {ref a ref b}")
     ii.run
     ii.steps.should == 3
     ii.reset
@@ -484,7 +483,7 @@ describe "resetting" do
   end
   
   it "should clear the program, if none is given" do
-    ii = Interpreter.new(program:"block {}")
+    ii = Interpreter.new("block {}")
     ii.reset
     ii.program.should == nil
   end
