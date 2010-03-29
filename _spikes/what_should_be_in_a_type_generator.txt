@@ -3,13 +3,18 @@
 # validate 'foo' as valid string
 # validate 'foo' doesn't already exist
 
-? where will 'plugins' go?
+? where should all these 'plugins' go?
 
 /lib/interpreter/types/fooType.rb
 - FooType#from_s slug
+  - commented out
+  - comments can indicate how to use it for parsing explicit Ruby in #new calls
 - FooType#recognizes? slug
-- FooType#random_value slug (deprecated!)
+  - commented out
+  - comments can indicate how to use it for parsing explicit Ruby in #new calls
+- FooType#random_value slug (deprecated!!!)
 - FooType#any_value slug
+  - should default to some silly constant thing, with failing specs
 
 /lib/instructions/foo/
 - foo_define.rb
@@ -23,8 +28,21 @@
 - foo_swap.rb
 - foo_yank.rb
 
+
+each should provide
+  #preconditions?
+    - default should be 'true # replace with prerequisite checkers'
+  #setup
+    - can be empty
+  #derive
+    - can be empty
+  #cleanup
+    - can be empty
+
 /lib/instructions/conversion/
 - foo_from_X.rb slug
+  - should be a NOOP slug with lots of comments
 
 /spec/interpreter/types/fooType_spec.rb
+
 /spec/instructions/foo/ [each instruction spec here]

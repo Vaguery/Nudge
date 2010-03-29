@@ -19,14 +19,14 @@ describe "CliRunner" do
   
   it "should capture other options it gets" do
     lambda{CliRunner.new("foo", types:["int"])}.should_not raise_error
-    a = CliRunner.new("bar", types:["bool"], stepLimit: 10000)
-    a.options.should == {:types=>["bool"], :stepLimit=>10000}
+    a = CliRunner.new("bar", types:["bool"], step_limit: 10000)
+    a.options.should == {:types=>["bool"], :step_limit=>10000}
   end
   
   it "should pass those options down into its Interpreter instance's initialization" do
     lambda{CliRunner.new("foo", types:["int"])}.should_not raise_error
     a = CliRunner.new("bar", types:["bool"], step_limit: 10000)
-    a.interpreter.stepLimit.should == 10000
+    a.interpreter.step_limit.should == 10000
     a.interpreter.types.should == ["bool"]
   end
   

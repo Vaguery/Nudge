@@ -13,7 +13,7 @@ module Nudge
   #    * ... NilPoint, do nothing
   
   class Interpreter
-    attr_accessor :program, :stepLimit, :steps
+    attr_accessor :program, :step_limit, :steps
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
     attr_accessor :last_name, :evaluate_references
     attr_accessor :sensors
@@ -24,7 +24,7 @@ module Nudge
       initialProgram = params[:program] || nil
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
-      @stepLimit = params[:step_limit] || 3000
+      @step_limit = params[:step_limit] || 3000
       @sensors = Hash.new
       
       instructions = params[:instructions] || Instruction.all_instructions
@@ -105,9 +105,9 @@ module Nudge
     
     # Checks to see if either stopping condition applies:
     # 1. Is the <b>:exec</b> stack empty?
-    # 2. Are the number of steps greater than self.stepLimit?
+    # 2. Are the number of steps greater than self.step_limit?
     def notDone?
-      @stacks[:exec].depth > 0 && @steps < @stepLimit
+      @stacks[:exec].depth > 0 && @steps < @step_limit
     end
     
     

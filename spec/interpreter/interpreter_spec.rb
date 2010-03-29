@@ -405,9 +405,9 @@ describe "stepping" do
     lambda{3.times {@ii.step}}.should_not raise_error 
   end
   
-  it "should step only until the stepLimit has not been reached, if the :exec stack is full" do
+  it "should step only until the step_limit has not been reached, if the :exec stack is full" do
     myCode = "block {"*20 + "}"*20
-    @ii.stepLimit = 3
+    @ii.step_limit = 3
     @ii.reset(myCode)
     lambda{15.times {@ii.step}}.should_not raise_error
   end
@@ -431,8 +431,8 @@ describe "running" do
     @ii.reset(myCode)
   end
   
-  it "should run until the stepLimit has been reached, if the :exec stack isn't empty" do
-    @ii.stepLimit = 9
+  it "should run until the step_limit has been reached, if the :exec stack isn't empty" do
+    @ii.step_limit = 9
     @ii.run
     @ii.steps.should == 9
   end
