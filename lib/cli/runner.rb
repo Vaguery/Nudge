@@ -31,4 +31,11 @@ module Nudge
     end
   end
   
+  
+  class CliParser
+    
+    def initialize
+    end
+  end
+  
 end

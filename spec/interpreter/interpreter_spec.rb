@@ -449,10 +449,13 @@ describe "running" do
     @ii.steps.should == 0
   end
   
-  it "should #fire_all_sensors at the end of running" do
+  it "should #fire_all_sensors at the end of running if any are defined" do
+    @ii.register_sensor("y")
     @ii.should_receive(:fire_all_sensors)
     @ii.run
   end
+  
+  it "should return Stack#inspect for all its stacks if no sensors are defined"
 end
 
 

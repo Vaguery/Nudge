@@ -92,3 +92,40 @@ describe "CliRunner" do
     end
   end
 end
+
+
+describe CliParser do
+  describe "filename" do
+    it "should read the filename from ARGV"
+  end
+  
+  describe "step_limit" do
+    it "should be an optional parameter"
+    
+    it "should parse the step_limit from ARGV"
+  end
+  
+  describe "types" do
+    it "should be an optional parameter"
+    
+    it "should parse the type_names from ARGV"
+  end
+  
+  describe "instructions" do
+    it "should be an optional parameter"
+    
+    it "should parse the instruction_names from ARGV"
+  end
+  
+  describe "variable bindings" do
+    it "should be an optional parameter"
+    
+    it "should parse the variable bindings from ARGV"
+  end
+  
+  describe "sensors" do
+    it "should be an optional parameter"
+    
+    it "should parse the sensor definitions from ARGV"
+  end
+end

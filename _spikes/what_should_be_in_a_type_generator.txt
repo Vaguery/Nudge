@@ -1,0 +1,30 @@
+>> script/generate generate type foo
+
+# validate 'foo' as valid string
+# validate 'foo' doesn't already exist
+
+? where will 'plugins' go?
+
+/lib/interpreter/types/fooType.rb
+- FooType#from_s slug
+- FooType#recognizes? slug
+- FooType#random_value slug (deprecated!)
+- FooType#any_value slug
+
+/lib/instructions/foo/
+- foo_define.rb
+- foo_equal_q.rb
+- foo_duplicate.rb
+- foo_flush.rb
+- foo_pop.rb
+- foo.random.rb # if it's a candidate for literals
+- foo_rotate.rb
+- foo_shove.rb
+- foo_swap.rb
+- foo_yank.rb
+
+/lib/instructions/conversion/
+- foo_from_X.rb slug
+
+/spec/interpreter/types/fooType_spec.rb
+/spec/instructions/foo/ [each instruction spec here]
