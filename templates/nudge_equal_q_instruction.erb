@@ -1,0 +1,19 @@
+class <%=@instname%> < Instruction
+  
+  def preconditions?
+    needs :<%=@type%>, 2
+  end
+  
+  def setup
+    @arg1 = @context.pop_value(:<%=@type%>)
+    @arg2 = @context.pop_value(:<%=@type%>)
+  end
+  
+  def derive
+    @result = ValuePoint.new("bool", @arg1 == @arg2)
+  end
+  
+  def cleanup
+    pushes :bool, @result
+  end
+end

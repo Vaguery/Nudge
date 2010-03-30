@@ -1,0 +1,32 @@
+#encoding: utf-8
+
+ # This rspec file was automatically generated when class <%=@camelcased_type_name%> was created
+ # Edit the specs to make them pass
+ # Add a link to an appropriate spec_helper.rb file to simplify your work
+
+require 'nudge'
+include Nudge
+
+describe "<%=@camelcased_type_name%>" do
+
+  it "#from_s should require a parameter" do
+    <%=@camelcased_type_name%>.method(:from_s).arity.should == 1
+  end
+  
+  it "#recognizes? should require a parameter" do
+    <%=@camelcased_type_name%>.method(:recognizes?).arity.should == 1
+  end
+  
+  it "#random_value should require a parameter" do
+    <%=@camelcased_type_name%>.method(:random_value).arity.should == 1
+  end
+  
+  it "#any_value should not require a parameter" do
+    <%=@camelcased_type_name%>.method(:any_value).arity.should == 0
+  end
+  
+  it "should use #from_s to parse a string and produce a Ruby instance"
+  
+  it "should have a #recognizes? method that returns true if the arg matches"
+  
+end

@@ -27,6 +27,7 @@
 - foo_shove.rb
 - foo_swap.rb
 - foo_yank.rb
+- foo_yankdup.rb
 
 
 each should provide

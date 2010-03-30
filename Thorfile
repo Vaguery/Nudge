@@ -41,4 +41,19 @@ class New_Nudge_Type < Thor::Group
     filename = "#{@camelcased_type_name}_spec.rb"
     template('templates/nudge_type_spec.erb', "#{type_root}/spec/#{filename}")
   end  
+  
+  def create_instructions
+    suite = ["define", "equal_q", "duplicate", "flush", "pop",
+      "random", "rotate", "shove", "swap", "yank", "yankdup"]
+    
+    suite.each do |inst|
+      @core = "#{type_root}_#{inst}"
+      filename = "#{@core}.rb"
+      @instname = "#{@core.camelize}Instruction"
+      @type = type_root
+      @camelized_type = New_Nudge_Type.type_name(type_root)
+      template("templates/nudge_#{inst}_instruction.erb", "#{type_root}/lib/instructions/#{filename}")
+    end
+  end  
+  
 end
