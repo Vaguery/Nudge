@@ -33,12 +33,12 @@ class New_Nudge_Type < Thor::Group
   def create_lib_file
     @camelcased_type_name = New_Nudge_Type.type_name(type_root)
     filename = "#{@camelcased_type_name}.rb"
-    template('templates/nudge_type_class.erb', "#{type_root}/lib/#{@camelcased_type_name}.rb")
+    template('templates/nudge_type_class.erb', "#{type_root}/lib/types/#{filename}")
   end
   
   def create_lib_spec
     @camelcased_type_name = New_Nudge_Type.type_name(type_root)
-    filename = "#{@camelcased_type_name}.rb"
-    template('templates/nudge_type_class.erb', "#{type_root}/lib/#{@camelcased_type_name}.rb")
-  end
+    filename = "#{@camelcased_type_name}_spec.rb"
+    template('templates/nudge_type_spec.erb', "#{type_root}/spec/#{filename}")
+  end  
 end

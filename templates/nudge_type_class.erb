@@ -1,31 +1,50 @@
-class <%=@camelcased_type_name%>
-  extend TypeBehaviors
+# coding: utf-8
+
+#  This file was automatically generated when <%=@camelcased_type_name%> was created
+#  
+#  Your class should define (at least) the four following methods
+#  The calls to 'super' will raise exceptions until replaced with valid code
+#
+
+module NudgeType
+
+
+  class <%=@camelcased_type_name%>
+    extend TypeBehaviors
   
-  # def self.from_s(string_value)
-    # uncomment and replace this method with one that converts a string representation of a value
-    # into a Ruby object you can use in instruction code
-    #
-    # for example, the IntType class
-    #   uses 'string_value.to_i'
-  # end
-  
-  
-  # def self.recognizes?(a_thing)
-    # uncomment and replace this method with one that looks at a Ruby object (the 'a_thing' argument)
-    # and returns true if it is the 'right kind' of object for this type
-    # 
-    # for example, in the IntType class,
-    # this method uses
-    #  '!a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_i)'
-  # end
-  
-  
-  # def self.random_value(params = {})
-    # replace this method with one that generates a single random value
-  # end
+    def self.from_s(string_value)
+      super # this will raise an exception until you edit it out!
+    
+      # uncomment and replace this method with one that converts a string representation of a value
+      # into a Ruby object you can use in instruction code
+      #
+      # for example, the IntType class
+      #   uses 'string_value.to_i'
+    end
   
   
-  def self.any_value(options ={})
-    self.random_value(options)
+    def self.recognizes?(a_thing)
+      super # this will raise an exception until you edit it out!
+  
+      # uncomment and replace this method with one that looks at a Ruby object (the 'a_thing' argument)
+      # and returns true if it is the 'right kind' of object for this type
+      # 
+      # for example, in the IntType class,
+      # this method uses
+      #  '!a_thing.kind_of?(String) && !a_thing.nil? && a_thing.respond_to?(:to_i)'
+    end
+  
+  
+    def self.random_value(params = {})
+      super # this will raise an exception until you edit it out!
+    
+      # replace this method with one that generates a single random value
+    end
+  
+  
+    def self.any_value(options ={})
+      super # this will raise an exception until you edit it out!
+      self.random_value(options)
+    end
   end
 end
