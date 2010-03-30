@@ -55,7 +55,7 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
   def collect_embedded_footnotes!(code_text, embedded_footnotes)
     ss = StringScanner.new(code_text)
     
-    while ss.skip_until(/«[\p{Alpha}][\p{Alnum}_]*»/)
+    while ss.skip_until(/«[\p{Alpha}][\p{Alnum}_]*»/u)
       category = ss.matched[1...-1]
       footnote = @footnotes[category].shift
       
@@ -80,9 +80,9 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
           nil
         when /[{}«»]/
           [c, 0]
-        when /[\p{Alpha}]/
-          ss.pointer -= 1
-          ss.scan(/[\p{Alpha}][\p{Alnum}_]*/)  # <- \p{Alpha}
+        when /[\p{Alpha}]/u
+          ss.unscan
+          ss.scan(/[\p{Alpha}][_\p{Alnum}]*/u)  # <- \p{Alpha}
           
           case m = ss.matched
             when "block", "ref", "do", "value"

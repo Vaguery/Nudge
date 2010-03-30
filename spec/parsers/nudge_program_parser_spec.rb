@@ -36,10 +36,10 @@ describe "Nudge Program parser" do
   end
   
   it "should be happy with unicode" do
-    pending "Somebody has to edit the parse.y file so this works, I think"
-    ["value «a_∫»",
+    # pending "Somebody has to edit the parse.y file so this works, I think"
+    ["value «a_éüîøö»",
       "do β_assay",
-      "do Int_ADD",
+      "do Ünt_ADD",
       "value  \n  «β_distribution»\n«β_distribution» [something here]"].each do |exp|
       lambda{NudgeTree.from(exp)}.should_not raise_error
     end
