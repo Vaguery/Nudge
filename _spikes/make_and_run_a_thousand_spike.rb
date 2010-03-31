@@ -2,7 +2,7 @@ require '../lib/nudge'
 include Nudge
 
 runner = Interpreter.new(
-  program:"",
+  "",
   instructions:Instruction.all_instructions,
   step_limit: 10000)
   

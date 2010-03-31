@@ -1,7 +1,7 @@
 #coding: utf-8
 require 'strscan'
 require 'pp'
-require 'nudge'
+require '../lib/nudge'
 include Nudge
 
 
@@ -47,8 +47,8 @@ class NudgeScanner
 end
 
 collection = []
-cases = 500
-pts = 100
+cases = 100
+pts = 20
 
 cases.times do
   collection << CodeType.any_value(target_size_in_points:pts, reference_names:["x1","x2"],

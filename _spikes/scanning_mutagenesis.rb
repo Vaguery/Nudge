@@ -1,5 +1,5 @@
 #encoding: utf-8
-require '../lib/nudge'
+require 'nudge'
 include Nudge
 
 @wt = NudgeProgram.random(target_size_in_points:20)

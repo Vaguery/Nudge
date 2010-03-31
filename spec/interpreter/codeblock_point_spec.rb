@@ -3,8 +3,7 @@ require File.join(File.dirname(__FILE__), "/../spec_helper")
 include Nudge
 
 def magicCodeblockPointMaker(program_blueprint)
-  my_kludge = NudgeProgram.new(program_blueprint)
-  return my_kludge.linked_code
+  NudgeTree.from(program_blueprint)[:tree]
 end
 
 
