@@ -147,14 +147,14 @@ describe "ValuePoint" do
   
   
   describe "#blueprint_parts" do
-    it "should description return an Array with two parts: (1) self#tidy (2) the footnotes as a string" do
+    it "should return an Array with two parts: (1) self#tidy (2) the footnotes as a string" do
       myL = ValuePoint.new("float", "-99.121001")
       myL.blueprint_parts.should == ["value «float»","«float» -99.121001"]
       myURI = ValuePoint.new("uri", "http://googol.com")
       myURI.blueprint_parts.should == ["value «uri»","«uri» http://googol.com"]
-      
+
       myHuh = ValuePoint.new("missing")
-      myHuh.blueprint_parts.should == ["value «missing»",""]
+      myHuh.blueprint_parts.should == ["value «missing»","«missing»"]
       
       myFUcode = ValuePoint.new("code", "block { value «code»}\n«code» value «int»\n«int» 8")
       myFUcode.blueprint_parts.should == ["value «code»","«code» block { value «code»}\n«code» value «int»\n«int» 8"]
@@ -168,6 +168,11 @@ describe "ValuePoint" do
       
       num = ValuePoint.new("int", 812)
       num.blueprint.should == "value «int» \n«int» 812"
+    end
+    
+    it "should not fail for valueless footnotes" do
+      myHuh = ValuePoint.new("missing")
+      myHuh.blueprint.should == "value «missing» \n«missing»"
     end
   end
 end

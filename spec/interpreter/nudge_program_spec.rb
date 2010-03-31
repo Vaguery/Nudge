@@ -43,51 +43,18 @@ describe "Nudge Program parsing" do
         NudgeProgram.new("value «int» \n«int» 8 \n«code» value «bool»").footnote_section.should ==
           "«int» 8 \n«code» value «bool»"
       end
-      
-      it "should capture each individual footnote into #footnotes" do
-        NudgeProgram.new("do int_add").footnotes.should == {}
-        NudgeProgram.new("value «int» \n«bool» false").footnotes[:bool].should include("false")
-        
-        tricky = NudgeProgram.new("value «int» \n«int» 8 \n«code» value «bool»").footnotes
-        tricky.keys.length.should == 2
-        tricky[:code].should == ["value «bool»"]
-      end
     end
   
     describe ": trimming whitespace from footnote values" do
-      it "should ignore leading whitespace" do
-        NudgeProgram.new("value «baz» \n«baz»\t\t8").tokenized_footnote_section[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»\n\n\n\n8").tokenized_footnote_section[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»      8").tokenized_footnote_section[:baz][0].should == "8"
-        NudgeProgram.new("value «baz» \n«baz»8").tokenized_footnote_section[:baz][0].should == "8"
-      end
+      it "should ignore leading whitespace"
       
-      it "should should ignore trailing whitespace" do
-        NudgeProgram.new("value «foo» \n«foo» 9\t\t").tokenized_footnote_section[:foo][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9\n\n\n\n").tokenized_footnote_section[:foo][0].should == "9"
-        NudgeProgram.new("value «foo» \n«foo» 9     ").tokenized_footnote_section[:foo][0].should == "9"
-      end
+      it "should should ignore trailing whitespace"
       
-      it "should capture whitespace inside values" do
-        NudgeProgram.new("value «bar» \n«bar» 9\t\t9").tokenized_footnote_section[:bar][0].should == "9\t\t9"
-        NudgeProgram.new("value «bar» \n«bar» 9\n\n\n\n9").tokenized_footnote_section[:bar][0].
-          should == "9\n\n\n\n9"
-        NudgeProgram.new("value «bar» \n«bar» 9     9").tokenized_footnote_section[:bar][0].should == "9     9"
-      end
+      it "should capture whitespace inside values"
       
-      it "should trim whitespace between footnotes" do
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
-          tokenized_footnote_section.keys.length.should == 2
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
-          tokenized_footnote_section.keys.should include(:bar)
-        NudgeProgram.new("value «bar» \n«bar» 9\n  \n\t\n«baz»9").
-          tokenized_footnote_section.keys.should include(:baz)
-      end
+      it "should trim whitespace between footnotes"
       
-      it "should avoid capturing newlines between footnotes" do
-        known_risk = NudgeProgram.new("block {value «mya»\nvalue «myb»}\n«myb» this is a b\n«mya» a")
-        known_risk.tokenized_footnote_section[:myb][0].should == "this is a b"
-      end
+      it "should avoid capturing newlines between footnotes"
     end
   end
   
@@ -158,15 +125,6 @@ describe "Nudge Program parsing" do
       bbb.linked_code.contents.length.should == 1
       bbb.linked_code.contents[0].contents[0].should be_a_kind_of(CodeblockPoint)
       bbb.linked_code.contents[0].contents[0].contents.should == []
-    end
-  end
-  
-  
-  describe "#contains_codevalues? method" do
-    it "should return true iff the raw code (including footnote_section) includes 'value «code»" do
-      NudgeProgram.new("do int_add").contains_codevalues?.should == false
-      NudgeProgram.new("value \t\t«code»").contains_codevalues?.should == true
-      NudgeProgram.new("block {block {value \n «code»}}").contains_codevalues?.should == true
     end
   end
   
@@ -300,6 +258,7 @@ block { value «int» value «code» value «int»}
     
   end
   
+  
   describe "contains_valuepoints?" do
     it "should accept a string and return true if it contains any «» markup AT ALL" do
       np = NudgeProgram.new("")
@@ -309,50 +268,6 @@ block { value «int» value «code» value «int»}
       np.contains_valuepoints?("««»»").should == false
       np.contains_valuepoints?("boring old crap").should == false
       np.contains_valuepoints?("misleading «something»").should == false
-    end
-  end
-  
-  
-  describe "pursue_more_footnotes method" do
-    before(:each) do
-      @nasty = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1\n«foo» 2\n«code» value «foo»\n«foo» 3"
-      @simple = "block {value «code»}\n«code» value «int»\n«int» 2"
-      @boring = "value «code»\n«code» block {}"
-      @stringy = "value «code»\n«code» value «code»\n«code» value «code»\n«code» do X"
-      @filler = '['+ (" \n "*100) + ']'
-      @spacey = "value «code»\n«code» value «spacer»\n«spacer»#{@filler}"
-      @staged_program = NudgeProgram.new("")
-      
-      def reprocess_using(new_code)
-        @staged_program.instance_variable_set(:@raw_code,new_code)
-        @staged_program.program_split!
-        @staged_program.relink_code!
-      end
-    end
-    
-    it "should determine if the blueprint contains any ValuePoints if it is type code" do
-      @staged_program.should_receive(:contains_valuepoints?).with("block {}")
-      reprocess_using(@boring)
-    end
-    
-    it "should (in the end) return the collected_footnotes string for this depth-first traversal" do
-      reprocess_using(@nasty)
-      @staged_program.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
-      @staged_program.linked_code.contents[1].raw.should ==
-        "block {value «code»}\n«code» value «foo»\n«foo» 2"
-      @staged_program.linked_code.contents[2].raw.should == "3"
-      
-      reprocess_using(@simple)
-      @staged_program.linked_code.contents[0].raw.should == "value «int»\n«int» 2"
-      
-      reprocess_using(@boring)
-      @staged_program.linked_code.raw.should == "block {}"
-      
-      reprocess_using(@stringy)
-      @staged_program.linked_code.raw.should == "value «code»\n«code» value «code»\n«code» do X"
-      
-      reprocess_using(@spacey)
-      @staged_program.linked_code.raw.should == "value «spacer»\n«spacer» #{@filler}"
     end
   end
   
@@ -386,55 +301,40 @@ block { value «int» value «code» value «int»}
       huh.footnotes.should == {} # they didn't get used
     end
     
-    it "should interpret an unparseable codesection as no code at all, but keep the footnotes" do
+    it "should interpret an unparseable codesection as no code at all, and drop footnotes" do
       got_nuthin = NudgeProgram.new("block { hunh \n«int» 2")
       got_nuthin.code_section.should == "block { hunh"
       got_nuthin.linked_code.should be_a_kind_of(NilPoint)
       got_nuthin.footnote_section.should == "«int» 2"
-      got_nuthin.footnotes.should == {:int => ["2"]} # it's not been used
+      got_nuthin.footnotes.should == {} # it's not been used
     end
     
     
-    it "should read values linking to missing footnotes as linked to 'nil'" do
-      # nasty_shorter:     |  associated values:
-      # -------------       |  ------------------
-      # block {             |
-      #   value «code»      |  <- "value «foo»\n«foo» 1"
-      #   value «code»      |  <- "block {value «code»}"
-      #   value «foo»}      |  <- nil
-      # «code» value «foo»  |
-      # «code» block {value «code»}
-      # «foo» 1             |
+    it "should include a footnote for every reference, even if it has to create an empty one" do
+      nasty =
+        "block {value «code»\nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
+        
+      shortstop = NudgeProgram.new(nasty)
+      r0 = "value «code» \n«code» value «foo»\n«foo» 1"
+      r1 = "value «code» \n«code» block {value «code»}\n«code»"
+      r2 = "value «foo» \n«foo»"
+      shortstop.linked_code.contents[0].blueprint.should == r0
+      shortstop.linked_code.contents[1].blueprint.should == r1
       
-      nasty_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
-      shortstop = NudgeProgram.new(nasty_shorter)
-      shortstop.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
-      shortstop.linked_code.contents[1].raw.should == "block {value «code»}"
-      shortstop.linked_code.contents[2].raw.should == nil
     end
     
     it "should collect unused footnotes" do
       hmm = NudgeProgram.new("do int_add\n«nob» nothing")
-      hmm.footnotes[:nob].should include("nothing")
+      hmm.footnotes["nob"].should include("nothing")
     end
     
     it "should act as specified above when one or more footnote is unparseable" do
-      # stupid_shorter:    |  associated values:
-      # -------------       |  ------------------
-      # block {             |
-      #   value «code»      |  <- "value «foo»\n«foo» 1"
-      #   value «code»      |  <- "some junk"
-      #   value «foo»}      |  <- nil
-      # «code» value «foo»  |
-      # «code» some junk    |
-      # «foo» 1             |
       
       stupid_shorter = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» some junk\n«foo» 1"
       busted = NudgeProgram.new(stupid_shorter)
       busted.linked_code.contents[0].raw.should == "value «foo»\n«foo» 1"
       busted.linked_code.contents[1].raw.should == "some junk"
       busted.linked_code.contents[2].raw.should == nil
-      
     end
   end
   
@@ -586,7 +486,7 @@ block { value «int» value «code» value «int»}
         "value «foo» \n«foo» •••"
         
       valueful.replace_point(2,addedvalue).blueprint.should ==
-        "block {\n  value «foo»\n  value «code»} \n«foo» •••\n«code» value «bool»"
+        "block {\n  value «foo»\n  value «code»} \n«foo» •••\n«code» value «bool»\n«bool»"
       
       valueful.replace_point(3,addedvalue).blueprint.should ==
         "block {\n  value «code»\n  value «foo»} \n«code» block {value «int»}\n«int» 7\n«foo» •••"
@@ -649,7 +549,6 @@ block { value «int» value «code» value «int»}
     end
     
     it "should return a new NudgeProgram with the right ProgramPoint deleted" do
-      # "block {\n  block {\n    block {\n      block {\n        block {\n          block {\n            ref a}}}}}}"
       result = @lodgepole_tree.delete_point(1)
       result.blueprint.should == "block {}"
       
@@ -671,7 +570,7 @@ block { value «int» value «code» value «int»}
         "block {}"
         
       valueful.delete_point(2).blueprint.should ==
-        "block {\n  value «code»} \n«code» value «bool»"
+        "block {\n  value «code»} \n«code» value «bool»\n«bool»"
         
       valueful.delete_point(3).blueprint.should ==
         "block {\n  value «code»} \n«code» block {value «int»}\n«int» 7"

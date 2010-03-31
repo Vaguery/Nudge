@@ -92,10 +92,7 @@ module Nudge
     def initialize(type,representation=nil)
       raise(ArgumentError, "Type must be a symbol or string") unless [Symbol,String].include?(type.class)
       @type = type.to_sym
-      if representation != nil
-        representation = representation.to_s
-      end
-      @raw = representation
+      @raw = representation.nil? ? nil : representation.to_s
     end
     
     def go(context)
@@ -147,13 +144,13 @@ module Nudge
     end
     
     def blueprint_parts
-      fn = @raw ? "«#{self.type}» #{self.raw}" : ""
+      fn = "«#{self.type}» #{self.raw}".strip
       return [self.tidy, fn]
     end
     
     def blueprint
       pts = self.blueprint_parts
-      return "value «#{self.type}» \n«#{self.type}» #{self.raw.strip}".strip
+      return "#{pts[0]} \n#{pts[1]}"
     end
   end
   

@@ -48,7 +48,7 @@ end
 
 collection = []
 cases = 100
-pts = 20
+pts = 100
 
 cases.times do
   collection << CodeType.any_value(target_size_in_points:pts, reference_names:["x1","x2"],

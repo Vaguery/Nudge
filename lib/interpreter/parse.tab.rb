@@ -72,11 +72,11 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
     ss = StringScanner.new(code_text)    
     while ss.skip_until(/«([\p{Alpha}][\p{Alnum}_]*?)»/um)
       category = ss[1]
-      footnote = @footnotes[category].shift
+      footnote = @footnotes[category].shift || ""
       
       embedded_footnotes << "«#{category}» #{footnote}"
       
-      if category == "code" && !footnote.empty?
+      if category == "code"
         self.collect_embedded_footnotes!(footnote, embedded_footnotes)
       end
     end

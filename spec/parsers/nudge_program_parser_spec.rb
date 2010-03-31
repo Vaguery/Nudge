@@ -102,6 +102,7 @@ describe "Nudge Program parser" do
     end
   end
   
+  
   it "should parse well-formed footnotes" do
     NudgeTree.from("value «code»\n«int» 9\n«code» value «int»")[:tree].should_not be_a_kind_of(NilPoint)
     nt = NudgeTree.from("value «code»\n«int» 9\n«code» value «int»")
@@ -109,13 +110,15 @@ describe "Nudge Program parser" do
     nt[:tree].blueprint.should == "value «code» \n«code» value «int»\n«int» 9"
   end
   
+  
   it "should work with multi-line footnotes" do
     wordy = "value «code»\n«code» block {\ndo thing_1\n  do thing_2}\n«int» 5"
     lambda{NudgeTree.from(wordy)}.should_not raise_error
     NudgeTree.from(wordy)[:tree].blueprint.should == 
       "value «code» \n«code» block {\ndo thing_1\n  do thing_2}"
   end
-
+  
+  
   it "should parse code with malformed footnotes (but they'll turn out weird)" do
     busted = "value «code» \n«code» do thing\n«float 2» 9"
     NudgeTree.from(busted).should_not be_a_kind_of(NilPoint)
@@ -125,6 +128,7 @@ describe "Nudge Program parser" do
     NudgeTree.from(strange).should_not be_a_kind_of(NilPoint)
     NudgeTree.from(strange)[:tree].blueprint.should == "value «code» \n«code» do thing"
   end
+  
   
   it "should parse code with missing footnote values" do
     lacuna = "value «code» \n«code»"
@@ -144,10 +148,20 @@ describe "Nudge Program parser" do
       "value «code» \n«code» value «float»\n«float» 1.234"
   end
   
+  
+  it "should work for well-formed programs with insufficient footnotes by creating placeholders" do
+    lacuna = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
+    NudgeTree.from(lacuna).should_not be_a_kind_of(NilPoint)
+    NudgeTree.from(lacuna)[:tree].blueprint.should ==
+      "block {\n  value «code»\n  value «code»\n  value «foo»} \n«code» value «foo»\n«foo» 1\n«code» block {value «code»}\n«code»"
+  end
+  
+  
   it "should not parse a footnotes-only string" do
     NudgeTree.from("\n«int» 9\n«code» value «int»")[:tree].should be_a_kind_of(NilPoint)
     NudgeTree.from("«int» 9\n«code» value «int»")[:tree].should be_a_kind_of(NilPoint)
   end
+  
   
   it "should return extra footnotes" do
     hash = NudgeTree.from("do unrelated\n«int» 9\n«code» value «int»")
