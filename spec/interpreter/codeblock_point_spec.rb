@@ -42,10 +42,10 @@ describe "blueprint_parts" do
   context "when there need to be footnotes" do
     it "should work for blocks containing nil-valued ValuePoints" do
       CodeblockPoint.new([ValuePoint.new("foo")]).blueprint_parts.should ==
-        ["block {\n  value «foo»}",""]
+        ["block {\n  value «foo»}","«foo»"]
       annoyinglyWordy = magicCodeblockPointMaker("block { block { block { value «foo»}}}")
       annoyinglyWordy.blueprint_parts.should ==
-        ["block {\n  block {\n    block {\n      value «foo»}}}",""]
+        ["block {\n  block {\n    block {\n      value «foo»}}}","«foo»"]
     end
     
     it "should work with footnotes from the root" do

@@ -138,7 +138,7 @@ describe "Nudge Program parser" do
     lacuna = "block {value «code» value «code» value «int»} \n«code» do a\n«code» \n«int» 77"
     NudgeTree.from(lacuna).should_not be_a_kind_of(NilPoint)
     NudgeTree.from(lacuna)[:tree].blueprint.should ==
-      "block {\n  value «code»\n  value «code»\n  value «int»} \n«code» do a\n«code» \n«int» 77"
+      "block {\n  value «code»\n  value «code»\n  value «int»} \n«code» do a\n«code»\n«int» 77"
   end
   
   
@@ -153,7 +153,7 @@ describe "Nudge Program parser" do
     lacuna = "block {value «code» \nvalue «code» \nvalue «foo»}\n«code» value «foo»\n«code» block {value «code»}\n«foo» 1"
     NudgeTree.from(lacuna).should_not be_a_kind_of(NilPoint)
     NudgeTree.from(lacuna)[:tree].blueprint.should ==
-      "block {\n  value «code»\n  value «code»\n  value «foo»} \n«code» value «foo»\n«foo» 1\n«code» block {value «code»}\n«code»"
+      "block {\n  value «code»\n  value «code»\n  value «foo»} \n«code» value «foo»\n«foo» 1\n«code» block {value «code»}\n«code»\n«foo»"
   end
   
   

@@ -217,7 +217,8 @@ describe "Nudge Program parsing" do
       
       it "should produce the same thing as #tidy for a CodeblockPoint program with unassigned footnotes" do
         dangling = NudgeProgram.new("block {\t\t value «a»\nvalue «b»\n \n value «c»}")
-        dangling.blueprint.should == dangling.tidy
+        dangling.blueprint.should ==
+          "block {\n  value «a»\n  value «b»\n  value «c»} \n«a»\n«b»\n«c»"
       end
       
       it "should put out the tidy form AND the footnotes in the right order" do
