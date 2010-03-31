@@ -5,9 +5,6 @@ include Nudge
 
 
 describe "Nudge Program parsing" do
-  before(:each) do
-    @parser = NudgeCodeblockParser.new()
-  end
   
   describe ": initializing a new NudgeProgram from a string" do
     it "should check that it's been given a string" do

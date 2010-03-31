@@ -118,13 +118,25 @@ describe "Nudge Program parser" do
 
   it "should parse code with malformed footnotes (but they'll turn out weird)" do
     busted = "value «code» \n«code» do thing\n«float 2» 9"
-    lambda{NudgeTree.from(busted)}.should_not raise_error(ParseError)
+    NudgeTree.from(busted).should_not be_a_kind_of(NilPoint)
     NudgeTree.from(busted)[:tree].blueprint.should == "value «code» \n«code» do thing"
     
     strange = "value «code» \n«float 2» 9\n«code» do thing\n"
-    lambda{NudgeTree.from(strange)}.should_not raise_error(ParseError)
+    NudgeTree.from(strange).should_not be_a_kind_of(NilPoint)
     NudgeTree.from(strange)[:tree].blueprint.should == "value «code» \n«code» do thing"
   end
+  
+  it "should parse code with missing footnote values" do
+    lacuna = "value «code» \n«code»"
+    NudgeTree.from(lacuna).should_not be_a_kind_of(NilPoint)
+    NudgeTree.from(lacuna)[:tree].blueprint.should == "value «code» \n«code»"
+    
+    lacuna = "block {value «code» value «code» value «int»} \n«code» do a\n«code» \n«int» 77"
+    NudgeTree.from(lacuna).should_not be_a_kind_of(NilPoint)
+    NudgeTree.from(lacuna)[:tree].blueprint.should ==
+      "block {\n  value «code»\n  value «code»\n  value «int»} \n«code» do a\n«code» \n«int» 77"
+  end
+  
   
   it "should strip whitespace off the front and back of footnote values" do
     spacey = "value «code»\n«code»  \t\t  value «float»  \t\t\n«float»  \t\n1.234"
@@ -141,6 +153,5 @@ describe "Nudge Program parser" do
     hash = NudgeTree.from("do unrelated\n«int» 9\n«code» value «int»")
     hash[:tree].blueprint.should == "do unrelated"
     hash[:unused].should == {"int"=>["9"], "code"=>["value «int»"]}
-  end
-  
+  end  
 end

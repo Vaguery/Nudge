@@ -40,8 +40,15 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
     while ss.exist?(fn_head)
       ss.scan_until(fn_head)
       cat = ss[1]
-      ss.exist?(/(.*)\n«/um) ? ss.scan_until(/(.*)\n«/um) : ss.scan_until(/(.*)$/um)
-      fn = ss[1]
+      if ss.exist?(/\n«/um)
+        ss.scan_until(/(.*?)\n«/um)
+        fn = ss[1]
+      elsif ss.eos?
+        fn = ""
+      else
+        ss.scan_until(/(.*)$/um)
+        fn = ss[1]
+      end
       ss.pos -= 3
       @footnotes[cat] << fn.strip
     end
@@ -62,15 +69,14 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
   
   
   def collect_embedded_footnotes!(code_text, embedded_footnotes)
-    ss = StringScanner.new(code_text)
-    
-    while ss.skip_until(/«([\p{Alpha}][\p{Alnum}_]*)»/um)
+    ss = StringScanner.new(code_text)    
+    while ss.skip_until(/«([\p{Alpha}][\p{Alnum}_]*?)»/um)
       category = ss[1]
       footnote = @footnotes[category].shift
       
       embedded_footnotes << "«#{category}» #{footnote}"
       
-      if category == "code"
+      if category == "code" && !footnote.empty?
         self.collect_embedded_footnotes!(footnote, embedded_footnotes)
       end
     end

@@ -1,7 +1,7 @@
 #coding: utf-8
 require 'strscan'
 require 'pp'
-require '../lib/nudge'
+require 'nudge'
 include Nudge
 
 
@@ -46,24 +46,28 @@ class NudgeScanner
   
 end
 
-
-ns = NudgeScanner.new
-np = NudgeCodeblockParser.new
-
 collection = []
+cases = 500
+pts = 100
 
-100.times do
-  collection << CodeType.any_value(target_size_in_points:100)
+cases.times do
+  collection << CodeType.any_value(target_size_in_points:pts, reference_names:["x1","x2"],
+    type_names:["int", "bool", "code"])
 end
 
 t1 = Time.now
 collection.each do |g|
-  np.parse(g)
+  NudgeCodeblockParser.new.parse(g)
 end
+
 t2 = Time.now
 collection.each do |g|
-  ns.scannit(g)
+  NudgeScanner.new.scannit(g)
 end
 t3 = Time.now
+collection.each do |g|
+  NudgeTree.from(g)[:tree]
+end
+t4 = Time.now
 
-puts "parser:  #{(t2-t1)/100.0}\nstrscan: #{(t3-t2)/100.0}"
+puts "(sec/tree) for #{pts} points\nparser:  #{(t2-t1)/cases.to_f} \nstrscan: #{(t3-t2)/cases.to_f}\njesse_parser: #{(t4-t3)/cases.to_f}"

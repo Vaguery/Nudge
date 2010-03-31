@@ -3,7 +3,6 @@ $: << File.join(File.dirname(__FILE__), "/../lib")
 
 
 require 'spec'
-require 'interpreter/treetophelpers'
 require 'pp'
 require 'nudge'
 require 'erb'
