@@ -33,7 +33,7 @@ safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|
   
     puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}, #{fired}"
   
-    if runner.steps > 1000 && runner.steps < 10000
+    if runner.steps > 500 && runner.steps < 9000
       puts NudgeProgram.new(dude).blueprint
     end
 end
