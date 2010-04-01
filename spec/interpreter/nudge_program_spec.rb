@@ -46,15 +46,23 @@ describe "Nudge Program parsing" do
     end
   
     describe ": trimming whitespace from footnote values" do
-      it "should ignore leading whitespace"
+      it "should ignore (and not need) leading whitespace" do
+        NudgeProgram.new("value «x»\n«x» \t\n \f\n 111").linked_code.value.should == "111"
+        NudgeProgram.new("value «x»\n«x»111").linked_code.value.should == "111"
+      end
       
-      it "should should ignore trailing whitespace"
+      it "should should ignore (and not need) trailing whitespace" do
+        NudgeProgram.new("value «y»\n«y» 111\t\n \f\n ").linked_code.value.should == "111"
+        NudgeProgram.new("value «y»\n«y» 111\n«y» something").linked_code.value.should == "111"
+      end
       
-      it "should capture whitespace inside values"
+      it "should capture whitespace inside values" do
+        NudgeProgram.new("value «y»\n«y» 1\t\n1\t\n1 ").linked_code.value.should == "1\t\n1\t\n1"
+      end
       
-      it "should trim whitespace between footnotes"
-      
-      it "should avoid capturing newlines between footnotes"
+      it "should trim whitespace between footnotes" do
+        NudgeProgram.new("block {value «y» value «z»}\n«y» 111\f\t\n\t\t  \n«z» something").linked_code.contents[0].value.should == "111"
+      end
     end
   end
   
@@ -96,6 +104,16 @@ describe "Nudge Program parsing" do
       it "should work for really big programs" do
         jeez = "block {" + ("block { " * 20 + "block {}" + "}" * 20) * 3 + "}"
         NudgeProgram.new(jeez).tidy.split(/\n/).length.should == 64
+      end
+      
+      it "should not produce footnotes" do
+        wordy = "block {value «code»}\n«code» value «int»\n«int» 9"
+        NudgeProgram.new(wordy).tidy.should == "block {\n  value «code»}"
+      end
+      
+      it "should not produce footnotes even when there are unassigned ones" do
+        forgetful = "block {value «a» value «b» value «c»}"
+        NudgeProgram.new(forgetful).tidy.should == "block {\n  value «a»\n  value «b»\n  value «c»}"
       end
     end
   end
@@ -215,7 +233,7 @@ describe "Nudge Program parsing" do
         tree2.blueprint.should == tree2.tidy
       end
       
-      it "should produce the same thing as #tidy for a CodeblockPoint program with unassigned footnotes" do
+      it "should NOT produce self#tidy for a CodeblockPoint program with unassigned footnotes" do
         dangling = NudgeProgram.new("block {\t\t value «a»\nvalue «b»\n \n value «c»}")
         dangling.blueprint.should ==
           "block {\n  value «a»\n  value «b»\n  value «c»} \n«a»\n«b»\n«c»"
