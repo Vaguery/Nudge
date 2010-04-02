@@ -58,7 +58,11 @@ The interpreter code relies heavily on functional programming features of Ruby 1
 
 The following gems need to be present to run the code:
 
-* [treetop](http://treetop.rubyforge.org/)
 * [activesupport](http://as.rubyonrails.org/)
+** (`gem install activesupport`)
+
+To use the fancypants command line generators we're building, you'll need thor:
+* [thor](http://github.com/wycats/thor/)
+** (`gem install thor`)
   
-and you will want [rspec](http://rspec.info/) to be able to run the specs and confirm the codebase works on your system.
+and you will definitely want [rspec](http://rspec.info/) to be able to run the specs and confirm the codebase works on your system: `gem install rspec`.
