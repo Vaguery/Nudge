@@ -57,7 +57,7 @@ end
 
 t1 = Time.now
 collection.each do |g|
-  NudgeCodeblockParser.new.parse(g)
+  # NudgeCodeblockParser.new.parse(g) THIS WILL FAIL NOW!
 end
 
 t2 = Time.now

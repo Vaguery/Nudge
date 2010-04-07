@@ -1,7 +1,4 @@
 #encoding: utf-8
-require 'treetop'
-Treetop.load(File.join(File.dirname(__FILE__),'grammars', "nudge_codeblock.treetop"))
-
 
 module Nudge
   class NudgeProgram
@@ -22,14 +19,10 @@ module Nudge
       raise(ArgumentError, "NudgeProgram.new should be passed a string") unless sourcecode.kind_of?(String)
       @raw_code = sourcecode
       
-      # snipped out:
-      # program_split!
       split_at_first_guillemet=@raw_code.partition( /^(?=«)/ )
       @code_section = split_at_first_guillemet[0].strip
       @footnote_section = split_at_first_guillemet[2].strip
       
-      #snipped out:
-      #relink_code!
       parsed_code = NudgeTree.from(@raw_code)
       @linked_code = parsed_code[:tree] 
       @footnotes = parsed_code[:unused]
@@ -152,14 +145,13 @@ module Nudge
     
     
     def parses?(program_blueprint = @code_section)
-      (NudgeCodeblockParser.new.parse(program_blueprint) != nil)
+      !NudgeTree.from(program_blueprint)[:tree].kind_of?(NilPoint)
     end
     
     
     
     def tidy
-      framework = NudgeCodeblockParser.new.parse(@code_section)
-      framework ? framework.tidy : ""
+      NudgeTree.from(@raw_code)[:tree].tidy
     end
     
     
