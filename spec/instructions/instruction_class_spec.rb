@@ -15,6 +15,7 @@ describe "Instruction has a master list" do
   end
 end
 
+
 describe "capturing errors" do
   describe "NotEnoughStackItems" do
     describe "#preconditions?" do
@@ -36,5 +37,16 @@ describe "capturing errors" do
       context.stacks[:error].peek.blueprint.should include "needs IntAddInstruction"
     end
   end
-  
+end
+
+
+describe ":code stack has a special rule" do
+  it "should be impossible to use #pushes to push a :code item that is too large for the context" do
+    small_box = Interpreter.new("block {}", code_char_limit:20)
+    small_code = ValuePoint.new("code","block { do a }")
+    long_code = ValuePoint.new("code","block { do a do b do c do d do e do f do g }")
+    throwaway = IntAddInstruction.new(small_box)
+    lambda{throwaway.pushes(:code, long_code)}.should raise_error(Instruction::CodeOversizeError)
+    lambda{throwaway.pushes(:code, small_code)}.should_not raise_error(Instruction::CodeOversizeError)
+  end
 end

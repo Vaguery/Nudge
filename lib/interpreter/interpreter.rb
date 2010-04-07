@@ -17,6 +17,7 @@ module Nudge
     attr_accessor :stacks, :instructions_library, :variables, :names, :types
     attr_accessor :last_name, :evaluate_references
     attr_accessor :sensors
+    attr_accessor :code_char_limit
     
     
     # A program to be interpreted can be passed in as an optional parameter
@@ -25,6 +26,7 @@ module Nudge
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @step_limit = params[:step_limit] || 3000
+      @code_char_limit = params[:code_char_limit] || 2000
       @sensors = Hash.new
       
       instructions = params[:instructions] || Instruction.all_instructions

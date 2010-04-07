@@ -68,6 +68,7 @@ describe IntPowerInstruction do
         context.peek(:error).blueprint.should include("Infinity")
         context.stacks[:int].depth.should == 0
       end
+      
     end
   end
 end

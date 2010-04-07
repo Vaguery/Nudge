@@ -51,6 +51,18 @@ describe "initialization" do
     @ii.sensors["z"].should == nil
   end
   
+  it "should have a code_char_limit" do
+    lambda{@ii.code_char_limit}.should_not raise_error
+  end
+  
+  it "should have a default code_char_limit of 2000 characters" do
+    @ii.code_char_limit.should == 2000
+  end
+  
+  it "should be possible to set code_char_limit with an option" do
+    Interpreter.new("block {}",code_char_limit:171).code_char_limit.should == 171
+  end
+  
   
   it "should load a complex CodeBlock as a single item on the exec stack" do
     myCode = "block {\ndo foo\n do bar\n block {\ndo baz}}"
@@ -489,7 +501,7 @@ describe "resetting" do
   end
   
   it "should not affect variable bindings" do
-    ii = Interpreter.new
+    ii = Interpreter.new("block {}")
     ii.bind_variable("a", ValuePoint.new("int",3))
     ii.variables.keys.should == ["a"]
     ii.reset

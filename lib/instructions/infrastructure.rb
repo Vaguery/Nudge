@@ -28,6 +28,10 @@ class Instruction
   class MissingInstructionError < RuntimeError
   end
   
+  class CodeOversizeError < ArgumentError
+  end
+  
+  
   def initialize(context)
     @context = context
   end
@@ -51,6 +55,9 @@ class Instruction
   
   
   def pushes(stackName, literal)
+    if (stackName.to_s == "code") && (literal.value.length > self.context.code_char_limit)
+      raise(CodeOversizeError, ":code cannot have more than #{self.context.code_char_limit} chars")
+    end
     @context.stacks[stackName].push literal
   end
   
@@ -62,7 +69,7 @@ class Instruction
       self.cleanup
     end
   rescue NotEnoughStackItems, MissingInstructionError,
-    InstructionMethodError, NaNResultError, FloatDomainError => exc
+    InstructionMethodError, NaNResultError, FloatDomainError, CodeOversizeError => exc
     msg = ValuePoint.new("error", exc.message)
     pushes :error, msg
   end
