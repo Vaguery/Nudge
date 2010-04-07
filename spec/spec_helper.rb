@@ -4,7 +4,7 @@ $: << File.join(File.dirname(__FILE__), "/../lib")
 
 require 'spec'
 require 'pp'
-require 'nudge'
+require 'lib/nudge'
 require 'erb'
 
 Spec::Runner.configure do |config|

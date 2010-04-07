@@ -20,12 +20,13 @@ total_time = 0
     dude = CodeType.any_value(target_size_in_points:pts, type_names:["int", "float", "bool", "code"], instruction_names:safe_instructions, reference_names:["x1", "x2"])    
     runner.reset(dude)
     
-    puts "\n\n#{dude.inspect}"
-    
-    runner.bind_variable("x1", ValuePoint.new("int", 1900))
-    runner.bind_variable("x2", ValuePoint.new("int", 2010))
+    # puts "\n\n#{dude.inspect}"
+    x1 = rand(90)+10
+    x2 = rand(90)+10
+    runner.bind_variable("x1", ValuePoint.new("int", x1))
+    runner.bind_variable("x2", ValuePoint.new("int", x2))
     runner.register_sensor("y1") {|me| me.pop_value(:int)}
-    runner.register_sensor("y2") {|me| me.pop_value(:float)}
+    runner.register_sensor("y2") {|me| me.depth(:error)}
     t2 = Time.now
     fired = runner.run
     t3 = Time.now
@@ -35,10 +36,6 @@ total_time = 0
     total_instructions += runner.steps
     total_time += (t3-t2)
   
-    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}, #{i/total_time}; results: #{fired}"
-  
-    # if (t3-t2 > 2) || (runner.steps > 1000 && runner.steps < 9000)
-    #   puts NudgeProgram.new(dude).blueprint
-    # end
+    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}, #{i/total_time}, #{fired}, #{x1}, #{x2}, #{((x1+x2)-(fired['y1']||30000)).abs}"
 end
 

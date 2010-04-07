@@ -45,6 +45,12 @@ describe "initialization" do
     @ii.steps.should == 0
   end
   
+  it "#reset should reset the start_time counter to 0" do
+    @ii.start_time = 999999999999
+    @ii.reset
+    @ii.start_time.should be_a_kind_of(Time)
+  end
+  
   it "#reset should reset the #sensors Hash" do
     @ii.register_sensor("z") {1201}
     @ii.reset
@@ -431,6 +437,13 @@ describe "stepping" do
     @ii.steps.should == 11
     11.times {@ii.step}
     @ii.steps.should == 20
+  end
+  
+  it "should step only until its time_limit is reached or exceeded" do
+    @ii.reset("block {}")
+    @ii.start_time = (Time.now - 10000)
+    @ii.run
+    @ii.steps.should == 1
   end
   
 end

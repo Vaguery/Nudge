@@ -18,6 +18,7 @@ module Nudge
     attr_accessor :last_name, :evaluate_references
     attr_accessor :sensors
     attr_accessor :code_char_limit
+    attr_accessor :start_time, :time_limit
     
     
     # A program to be interpreted can be passed in as an optional parameter
@@ -26,6 +27,7 @@ module Nudge
       @program = initialProgram
       @types = params[:types] || NudgeType.all_types
       @step_limit = params[:step_limit] || 3000
+      @time_limit = params[:time_limit] || 60.0 # seconds
       @code_char_limit = params[:code_char_limit] || 2000
       @sensors = Hash.new
       
@@ -63,6 +65,7 @@ module Nudge
         @stacks[:exec].push(NudgeProgram.new(program).linked_code)
       end
       @steps = 0
+      @start_time = Time.now
       @evaluate_references = true
     end
     
@@ -109,7 +112,9 @@ module Nudge
     # 1. Is the <b>:exec</b> stack empty?
     # 2. Are the number of steps greater than self.step_limit?
     def notDone?
-      @stacks[:exec].depth > 0 && @steps < @step_limit
+      @stacks[:exec].depth > 0 &&
+      @steps < @step_limit && 
+      (Time.now-@start_time)<@time_limit
     end
     
     
@@ -134,6 +139,7 @@ module Nudge
     
     # invoke self.step() until a termination condition is true
     def run
+      @start_time = Time.now
       while notDone?
         self.step
       end
