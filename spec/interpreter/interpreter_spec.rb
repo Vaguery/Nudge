@@ -478,8 +478,6 @@ describe "running" do
     @ii.should_receive(:fire_all_sensors)
     @ii.run
   end
-  
-  it "should return Stack#inspect for all its stacks if no sensors are defined"
 end
 
 
