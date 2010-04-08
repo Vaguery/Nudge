@@ -77,6 +77,10 @@ describe "Nudge Program parsing" do
       NudgeProgram.new("block {} «bar» 9     9").parses?.should == false
     end
     
+    it "should work (not raise an exception) if the program is an empty string" do
+      NudgeProgram.new("").parses?.should == false
+    end
+    
     describe ": should have a #tidy attribute with the indented, one-point per line structure" do
       it "should work for one-line programs" do
         NudgeProgram.new("do    int_add").tidy.should == "do int_add"

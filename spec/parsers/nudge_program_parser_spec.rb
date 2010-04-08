@@ -141,6 +141,12 @@ describe "Nudge Program parser" do
       "block {\n  value «code»\n  value «code»\n  value «int»} \n«code» do a\n«code»\n«int» 77"
   end
   
+  it "should work for code missing footnotes entirely" do
+    troubl = "block {value «code»}"
+    lambda{NudgeTree.from(troubl)}.should_not raise_error
+    NudgeTree.from(troubl)[:tree].blueprint.should == "block {\n  value «code»} \n«code»"
+  end
+  
   
   it "should strip whitespace off the front and back of footnote values" do
     spacey = "value «code»\n«code»  \t\t  value «float»  \t\t\n«float»  \t\n1.234"

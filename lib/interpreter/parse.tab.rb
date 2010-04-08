@@ -57,6 +57,7 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
   
   def pop_footnote(category)
     value = @footnotes[category].shift
+    return unless value
     
     if category == "code"
       embedded_footnotes = [""]
@@ -69,7 +70,7 @@ module_eval <<'..end parse.y modeval..ida1760a43d7', 'parse.y', 22
   
   
   def collect_embedded_footnotes!(code_text, embedded_footnotes)
-    ss = StringScanner.new(code_text)    
+    ss = StringScanner.new(code_text)
     while ss.skip_until(/«([\p{Alpha}][\p{Alnum}_]*?)»/um)
       category = ss[1]
       footnote = @footnotes[category].shift || ""

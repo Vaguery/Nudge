@@ -25,8 +25,8 @@ total_time = 0
     x2 = rand(90)+10
     runner.bind_variable("x1", ValuePoint.new("int", x1))
     runner.bind_variable("x2", ValuePoint.new("int", x2))
-    runner.register_sensor("y1") {|me| me.pop_value(:int)}
-    runner.register_sensor("y2") {|me| me.depth(:error)}
+    runner.register_sensor("y1") {|me| me.pop_value(:int) || nil}
+    runner.register_sensor("y2") {|me| me.depth(:error) || 0}
     t2 = Time.now
     fired = runner.run
     t3 = Time.now
