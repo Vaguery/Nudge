@@ -2,7 +2,7 @@
 require 'nudge'
 include Nudge
 
-@wt = NudgeProgram.random(target_size_in_points:100)
+@wt = NudgeProgram.random(target_size_in_points:40)
 
 def scanning_mutagenesis
   (0..@wt.tidy.length).each do |char|
