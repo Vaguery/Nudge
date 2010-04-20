@@ -20,7 +20,7 @@ and getting something along the lines of `ruby 1.9.1p378 (2010-01-10 revision 26
 
     gem install nudge
 
-As of this writing, the `nudge` gem can be used as a library in your Ruby programs. S Real Soon Now, it'll be part of a more interesting gem…
+As of this writing, the `nudge` gem can be used as a library in your Ruby programs. So Real Soon Now, it'll be part of a more interesting gem…
 
 ### A test run
 

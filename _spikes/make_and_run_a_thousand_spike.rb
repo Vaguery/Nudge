@@ -7,7 +7,7 @@ runner = Interpreter.new(
   step_limit: 10000)
 
 
-puts "pts, length, steps, init_time, run_time, stacks, stack_items, error_items, sensors"
+puts "num, pts, lines, steps, init_time, run_time, num_stacks, all_stack_items, error_items, avg_time_per_answer, result(y1), result(y2), input_x1, input_x2, error"
 
 safe_instructions = (Instruction.all_instructions-[ExecYInstruction]).collect {|i| i.to_nudgecode}
 
@@ -35,7 +35,8 @@ total_time = 0
     er = runner.stacks[:error].depth
     total_instructions += runner.steps
     total_time += (t3-t2)
+    score = ((x1+x2)-(fired['y1']||30000)).abs
   
-    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}, #{i/total_time}, #{fired}, #{x1}, #{x2}, #{((x1+x2)-(fired['y1']||30000)).abs}"
+    puts "#{i}, #{pts}, #{NudgeProgram.new(dude).blueprint.count("\n")}, #{runner.steps}, #{t2-t1}, #{t3-t2}, #{stacks}, #{stacked}, #{er}, #{i/total_time}, #{fired["y1"] || "NA"}, #{fired["y2"] || "NA"}, #{x1}, #{x2}, #{score}"
 end
 
