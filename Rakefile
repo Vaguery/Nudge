@@ -19,7 +19,8 @@ begin
     gemspec.add_dependency('activesupport', '>= 2.3.5')
     
     # files
-    gemspec.files.exclude '_spikes/**'
+    gemspec.files.include('templates/**')
+    gemspec.files.exclude('_spikes/**')
     gemspec.files.exclude('exploring_nudge/**')
   end
   

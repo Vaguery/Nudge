@@ -27,3 +27,7 @@ Dir.glob(File.dirname(__FILE__) + '/instructions/name/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/conversion/*') {|file| require file}
 
 include NudgeType
+
+def Nudge.gem_root
+  File.dirname(__FILE__) + '/..'
+end
