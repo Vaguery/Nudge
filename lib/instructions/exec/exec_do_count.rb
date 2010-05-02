@@ -1,5 +1,3 @@
-#encoding: utf-8
-
 # Pops one "count" item from the +:int+ stack, and one item from the +:exec+ stack.
 # The net effect of the instruction (unless interfered with by another operation)
 # is to evaluate the +:exec+ item "count" times.

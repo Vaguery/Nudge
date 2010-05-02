@@ -1,4 +1,4 @@
-# makes and pushes a clone of the top item on the +:bool: stack
+# makes and pushes a clone of the top item on the +:bool+ stack
 #
 # *needs:* 1 +:bool+
 #

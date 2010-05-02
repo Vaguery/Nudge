@@ -1,12 +1,12 @@
 # Implements the Y Combinator on the +:exec+ stack:
 # pops the top item from the +:exec+ stack, then
 # pushes:
-# 1. a CodeBlockPoint with the following macro:
+# * a CodeBlockPoint with the following macro:
 #   block {
 #     do exec_y
 #     popped_item
 #   }
-# 2. the +popped_item+ (again)
+# * the +popped_item+ (again)
 # 
 # The result is an (arguably infinite) recursive call of the +popped_item+; it will run once, then
 # the macro will be encountered and the process will repeat.

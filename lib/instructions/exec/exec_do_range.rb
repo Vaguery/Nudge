@@ -1,5 +1,3 @@
-#encoding: utf-8
-
 # Pops two values from the +:int+ stack ("destination" and "counter"), and one item from the +:exec+ stack.
 # The net effect of the instruction (unless interfered with by another operation)
 # is to evaluate the +:exec+ item once for every integer in the range (inclusive), and
@@ -10,10 +8,10 @@
 #
 # note: unlike the ExecDoTimes instruction, the counter is pushed
 #
-# *If the counter and destination have the same value*, then a new +:int+ is pushed with that value,
+# <b>If the counter and destination have the same value</b>, then a new +:int+ is pushed with that value,
 # and the +:exec+ item is pushed onto the +:exec+ stack.
 #
-# *If the counter and destination have different values*, then a "new_counter" value
+# <b>If the counter and destination have different values</b>, then a "new_counter" value
 # is calculated that is *one step closer to the destination*.
 #
 # A ValuePoint containing the following "macro" is created:
@@ -38,7 +36,7 @@
 #
 # note: if the +popped item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
 #
-# *needs:* 2 +:int+ items, 1 +:exec: item
+# *needs:* 2 +:int+ items, 1 +:exec+ item
 #
 # *pushes:* well, it's complicated...
 #
