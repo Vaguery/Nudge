@@ -1,3 +1,14 @@
+# pops the top two +:code+ items;
+# pushes a new +:int+ item, with value equal to the program point number in the first argument
+# where the second argument appears as a subtree (or 0 otherwise)
+#
+# note: order of arguments is important; the top stack item is the second argument
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:int+
+#
+
 class CodePositionInstruction < Instruction
   def preconditions?
     needs :code, 2

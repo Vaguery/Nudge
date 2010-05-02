@@ -1,3 +1,6 @@
+# does nothing
+#
+
 class CodeNoopInstruction < Instruction
   def preconditions?
     true

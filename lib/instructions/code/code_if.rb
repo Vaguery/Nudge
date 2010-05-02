@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:code+ stack, and one +:bool+;
+# returns the top +:code+ item if the +:bool+ is +false+, the second one if +true+
+#
+# *needs:* 2 +:code+, 1 +:bool+
+#
+# *pushes:* 1 +:code+
+#
+
 class CodeIfInstruction < Instruction
   
   def preconditions?

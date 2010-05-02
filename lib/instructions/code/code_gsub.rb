@@ -1,6 +1,14 @@
-# ORIGINAL PUSH3 DESCRIPTION: Pushes the result of substituting the third item on the code stack for the second item in the first item. As of this writing this is implemented only in the Lisp implementation, within which it relies on the Lisp "subst" function. As such, there are several problematic possibilities; for example "dotted-lists" can result in certain cases with empty-list arguments. If any of these problematic possibilities occurs the stack is left unchanged.
-
-# Here, we will pop three :code items, find all occurrences of the appropriate point in the changed codeblock, and then replace them in last-to-first order (so the point counts discovered initially don't change during substitution)
+# pops three items from the +:code+ stack: the "host", the "old_subtree" and the "new_subtree";
+# pushes a new +:code+ item which contants the +host+, with every occurrence of the +old_subtree+
+# (if any) replaced by the +new_subtree+
+#
+# note: the order of arguments counts; the top +:code+ stack item is the +host+, 
+# the second is the +old_subtree+, and the third is the +new_subtree+
+#
+# *needs:* 3 +:code+
+#
+# *pushes:* 1 +:code+
+#
 
 class CodeGsubInstruction < Instruction # was CODE.SUBST in Push3
   def preconditions?

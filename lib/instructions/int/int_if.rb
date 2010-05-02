@@ -3,7 +3,7 @@
 #
 # *needs:* 2 +:int+, 1 +:bool+
 #
-# *pushes:* 1 +:bool+
+# *pushes:* 1 +:int+
 #
 
 class IntIfInstruction < Instruction

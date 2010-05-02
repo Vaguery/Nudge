@@ -1,3 +1,11 @@
+# pops the top +:code+ item;
+# pushes a new +:int+ with the number of program points in the +:code+
+#
+# *needs:* 1 +:code+
+#
+# *pushes:* 1 +:int+
+#
+
 class CodePointsInstruction < Instruction
   
   def preconditions?

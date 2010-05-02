@@ -1,3 +1,14 @@
+# pops the top two +:code+ items ("host" and "target"), and one +:int+ item (the "index");
+# pushes a new +:code+ item, which is the +index+th program point of the +host+
+# is replaced by the +target+ (as a subtree)
+#
+# note: order of arguments is important; the top +:code+ item is the "target" argument
+#
+# *needs:* 2 +:code+, 1 +:int+
+#
+# *pushes:* 1 +:code+
+#
+
 class CodeReplaceNthPointInstruction < Instruction # was CODE.INSERT in Push3
   def preconditions?
     needs :int, 1

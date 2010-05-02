@@ -1,3 +1,12 @@
+# pops the top 2 items of the +:code+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the
+# two items' blueprint strings are identical
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:bool+
+#
+
 class CodeEqualQInstruction < Instruction
   def preconditions?
     needs :code, 2

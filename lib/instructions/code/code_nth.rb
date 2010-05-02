@@ -1,3 +1,15 @@
+# pops the top +:code+ item and +:int+ item ("N");
+# pushes a new +:code+ item containing the Nth backbone element of the +:code+, if it's a block
+#
+# If the +:code+ is not a block, it's replaced intact;
+# if the +:code+ is an empty block, an +:error+ is pushed instead of a +:code+ item;
+# otherwise, the index is chosen as +N+ modulo the length of the block's backbone.
+#
+# *needs:* 1 +:code+ and 1 +:int+
+#
+# *pushes:* 1 +:code+
+#
+
 class CodeNthInstruction < Instruction 
   def preconditions?
     needs :int, 1

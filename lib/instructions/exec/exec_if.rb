@@ -3,7 +3,7 @@
 #
 # *needs:* 2 +:exec+, 1 +:bool+
 #
-# *pushes:* 1 +:bool+
+# *pushes:* 1 +:exec+
 #
 
 class ExecIfInstruction < Instruction

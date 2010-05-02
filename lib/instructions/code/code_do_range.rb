@@ -1,6 +1,47 @@
-# ORIGINAL DESCRIPTION: An iteration instruction that executes the top item on the CODE stack a number of times that depends on the top two integers, while also pushing the loop counter onto the INTEGER stack for possible access during the execution of the body of the loop. The top integer is the "destination index" and the second integer is the "current index." First the code and the integer arguments are saved locally and popped. Then the integers are compared. If the integers are equal then the current index is pushed onto the INTEGER stack and the code (which is the "body" of the loop) is pushed onto the EXEC stack for subsequent execution. If the integers are not equal then the current index will still be pushed onto the INTEGER stack but two items will be pushed onto the EXEC stack -- first a recursive call to CODE.DO*RANGE (with the same code and destination index, but with a current index that has been either incremented or decremented by 1 to be closer to the destination index) and then the body code. Note that the range is inclusive of both endpoints; a call with integer arguments 3 and 5 will cause its body to be executed 3 times, with the loop counter having the values 3, 4, and 5. Note also that one can specify a loop that "counts down" by providing a destination index that is less than the specified current index.
-
-# That description must be flawed; "a recursive call to CODE.DO*RANGE" would not run the same code, but rather run the next piece of code from the :code stack. I'm interpreting it as a typo, and using exec_do_range instead, since that will have the desired outcome without running through all kinds of weird :code items.
+# Pops two values from the +:int+ stack ("destination" and "counter"), and one item from the +:code+ stack.
+# The net effect of the instruction (unless interfered with by another operation)
+# is to evaluate the +:code+ item once for every integer in the range (inclusive), and
+# at the same time push the counter integer onto the +:int+ stack.
+#
+# note: rather than duplicating the functionality of the ExecDoRangeInstruction, that is used as a macro here
+#
+# note: the first integer popped is the "destination", the second one the "counter"
+# (regardless of their values or signs)
+#
+# note: unlike the CodeDoTimes instruction, the counter is pushed
+#
+# <b>If the counter and destination have the same value</b>, then a new +:int+ is pushed with that value,
+# and the +:code+ item is pushed onto the +:exec+ stack.
+#
+# <b>If the counter and destination have different values</b>, then a "new_counter" value
+# is calculated that is *one step closer to the destination*.
+#
+# A ValuePoint containing the following "macro" is created:
+#   block {
+#     value «int»
+#     value «int»
+#     do exec_do_range
+#     popped item
+#   }
+#   «int» new_counter
+#   «int» destination
+# where +popped_item+ is the code from the +:code+ stack, and +new_counter+ and +destination+ are the numeric values that were derived above.
+#
+# Finally,
+# 1. a new ValuePoint whose value is +new_counter+ is pushed to the +:int+ stack;
+# 2. the macro is pushed onto the +:exec+ stack
+# 3. another copy of the +popped_item+ is pushed onto the +:exec+ stack (on top of the macro)
+#
+# The consequence is that the original +:code+ item will be executed (at least once),
+# the counter will be pushed onto the +:int+ stack,
+# the macro will be encountered, and this cycle will repeat via the ExecDoRangeInstruction.
+#
+# note: if the +popped_item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
+#
+# *needs:* 2 +:int+ items, 1 +:code+ item
+#
+# *pushes:* well, it's complicated...
+#
 
 class CodeDoRangeInstruction < Instruction
   def preconditions?

@@ -3,7 +3,7 @@
 #
 # *needs:* 2 +:float+, 1 +:bool+
 #
-# *pushes:* 1 +:bool+
+# *pushes:* 1 +:float+
 #
 
 class FloatIfInstruction < Instruction

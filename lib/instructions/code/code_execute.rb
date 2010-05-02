@@ -1,3 +1,10 @@
+# pops the top item from the +:code+ stack;
+# pushes it onto the +:exec+ stack so it is executed
+#
+# *needs:* 1 +:code+
+#
+# *pushes:* 1 +:exec+
+
 class CodeExecuteInstruction < Instruction
   def preconditions?
     needs :code, 1

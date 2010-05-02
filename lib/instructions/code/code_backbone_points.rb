@@ -4,6 +4,12 @@
 # note: if the +:code+ value does not parse, or is an atom (doesn't parse into a CodeBlockPoint),
 # the result is 0; if it is an empty block, it's also 0
 #
+# For example:
+#   [1,2,[3,4],5] -> 4 backbone points
+#   [[1,2,3,4,5]] -> 1 backbone point
+#   [] -> 0 backbone points
+#   1 -> 0 backbone points
+#
 # *needs:* 1 +:code+
 #
 # *pushes:* 1 +:int+

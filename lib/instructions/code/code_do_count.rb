@@ -1,4 +1,24 @@
-# Again, the original description of this instruction appears to be confusing "CODE.DO*RANGE" with "EXEC.DO*RANGE"; I've made the adjustment to the code so that the behavior is as described, not the implementation.
+# Pops one "count" item from the +:int+ stack, and one item from the +:code+ stack.
+# The net effect of the instruction (unless interfered with by another operation)
+# is to evaluate the +:code+ item "count" times.
+#
+# If the count is negative, an +:error+ item will be pushed to the +:error+ stack. Otherwise,
+# a ValuePoint containing the following "macro" is created and pushed onto the +:exec+ stack:
+#   block {
+#     value «int»
+#     value «int»
+#     do exec_do_range
+#     popped item
+#   }
+#   «int» 0
+#   «int» count - 1
+# where +popped_item+ is the code from the +:code+ stack, and +count - 1+ is a decrement of
+# the "count" value.
+#
+# *needs:* ExecDoRangeInstruction must be active in the context for this to work; needs 1 +:int+ and 1 +:code+ item
+#
+# *pushes:* it's complicated...
+#
 
 class CodeDoCountInstruction < Instruction
   def preconditions?

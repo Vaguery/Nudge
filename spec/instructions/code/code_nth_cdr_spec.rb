@@ -59,12 +59,20 @@ describe CodeNthCdrInstruction do
         @context.stacks[:code].peek.value.should == "block {}"
       end
       
-      it "should wrap a non-codeblock point and just return it" do
-        @context.stacks[:int].push(ValuePoint.new("int", 12))
+      it "should wrap a non-codeblock point and just return it if the index is less than 1" do
+        @context.stacks[:int].push(ValuePoint.new("int", -12))
         @context.stacks[:code].push(ValuePoint.new("code", "do x1"))
         @i1.go
         @context.stacks[:code].peek.value.should == "block {\n  do x1}"
       end
+      
+      it "should return an empty block if the index is positive" do
+        @context.stacks[:int].push(ValuePoint.new("int", 12))
+        @context.stacks[:code].push(ValuePoint.new("code", "do x1"))
+        @i1.go
+        @context.stacks[:code].peek.value.should == "block {}"
+      end
+      
       
       it "should not remove anything if the int % length == 0" do
         @context.stacks[:int].push(ValuePoint.new("int", -921231)) # => 0

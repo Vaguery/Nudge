@@ -1,3 +1,17 @@
+# pops the top 2 item of the +:code+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the
+# second argument appears as a block in the _backbone_ of the first argument
+#
+# note: order matters, and the top stack item is the second argument, the second stack item is the first
+#
+# note: compare to CodeContainsQInstruction, which checks for matches at all subtrees, not just the "root"
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:bool+
+#
+
+
 class CodeMemberQInstruction < Instruction
   def preconditions?
     needs :code, 2

@@ -1,5 +1,5 @@
 # pops the top 2 items of the +:exec+ stack;
-# pushes a new ValuePoint onto the +:exec+ stack, with value +true+ if the
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the
 # two items' blueprint strings are identical
 #
 # *needs:* 2 +:exec+

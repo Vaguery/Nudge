@@ -1,3 +1,11 @@
+# pops the top +:code+ item;
+# pushes a new +:bool+ with value +true+ if the +:code+ can be parsed
+#
+# *needs:* 1 +:code+
+#
+# *pushes:* 1 +:bool+
+#
+
 class CodeParsesQInstruction < Instruction
   def preconditions?
     needs :code, 1

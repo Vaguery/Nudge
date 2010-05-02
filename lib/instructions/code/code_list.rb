@@ -1,3 +1,13 @@
+# pops the top 2 items from the +:code+ stack;
+# pushes a new +:code+ item containing a block obtained by combining the other listings into one block
+#
+# note: the top stack item (the "attachment") is the second item of the resulting list
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:code+
+#
+
 class CodeListInstruction < Instruction
   def preconditions?
     needs :code, 2

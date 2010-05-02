@@ -1,10 +1,16 @@
-# ORIGINAL DESCRIPTION in Push3:
-# Pushes a measure of the discrepancy between the top two CODE stack items onto the INTEGER stack. This will be zero if the top two items are equivalent, and will be higher the 'more different' the items are from one another. The calculation is as follows:
-# 1. Construct a list of all of the unique items in both of the lists (where uniqueness is determined by equalp). Sub-lists and atoms all count as items.
-# 2. Initialize the result to zero.
-# 3. For each unique item increment the result by the difference between the number of occurrences of the item in the two pieces of code.
-# 4. Push the result.
-
+# pops the top 2 items of the +:code+ stack;
+# and compares their values algorithmically to obtain an +:int+ value, which it pushes
+#
+# The measure of discrepancy is determined by:
+# 1. first creating a list of every program point's blueprint, for both +:code+ values
+# 2. for every item in the _union_ of these sets of blueprints, accumulate the absolute difference in the number of times the blueprint appears in each of the two items' values
+#
+# the resulting +:int+ is pushed
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:int+
+#
 
 class CodeDiscrepancyInstruction < Instruction
   def preconditions?
