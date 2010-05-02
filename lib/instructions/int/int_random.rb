@@ -1,3 +1,6 @@
+# pushes a new +:int+ ValuePoint, with value determined by a call to IntType.any_value
+#
+
 class IntRandomInstruction < Instruction
   def preconditions?
     true # no preconditions

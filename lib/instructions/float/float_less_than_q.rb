@@ -1,3 +1,12 @@
+# pops the top 2 items of the +:float+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack,
+# with value +true+ if the second one is strictly less than the top one
+#
+# *needs:* 2 +:float+
+#
+# *pushes:* 1 +:bool+
+#
+
 class FloatLessThanQInstruction < Instruction
   def preconditions?
     needs :float, 2

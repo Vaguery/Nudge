@@ -1,3 +1,13 @@
+# pops the top 2 items of the +:float+ stack;
+# pushes a ValuePoint with their difference onto the +:float+ stack
+#
+# note: the top item is the value subtracted from the second stack item's value
+#
+# *needs:* 2 +:float+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatSubtractInstruction < Instruction
   def preconditions?
     needs :float, 2

@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a new ValuePoint onto the +:int+ stack with the largest of the two values
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntMaxInstruction < Instruction
   def preconditions?
     needs :int, 2

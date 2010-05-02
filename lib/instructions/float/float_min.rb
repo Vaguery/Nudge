@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:float+ stack;
+# pushes a new ValuePoint onto the +:float+ stack with the smallest of the two values
+#
+# *needs:* 2 +:float+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatMinInstruction < Instruction
   def preconditions?
     needs :float, 2

@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a ValuePoint with their sum onto the +:int+ stack
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntAddInstruction < Instruction
   def preconditions?
     needs :int, 2

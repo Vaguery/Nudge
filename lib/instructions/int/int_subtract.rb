@@ -1,3 +1,13 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a ValuePoint with their difference onto the +:int+ stack
+#
+# note: the top item is the value subtracted from the second stack item's value
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntSubtractInstruction < Instruction
   def preconditions?
     needs :int, 2

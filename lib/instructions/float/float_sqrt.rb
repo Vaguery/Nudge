@@ -1,3 +1,13 @@
+# pops the top item of the +:float+ stack;
+# pushes a ValuePoint with its square root onto the +:float+ stack
+#
+# note: pushes an +:error+ item if the value is negative
+#
+# *needs:* 1 +:float+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatSqrtInstruction < Instruction
   def preconditions?
     needs :float, 1

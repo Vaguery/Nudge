@@ -1,3 +1,15 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a ValuePoint with their (integer) remainder onto the +:int+ stack
+#
+# note: the top item is the denominator, the second item is the numerator
+#
+# note: will push an +:error+ ValuePoint instead of an +:int+ if the numerator is 0
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntModuloInstruction < Instruction
   def preconditions?
     needs :int, 2

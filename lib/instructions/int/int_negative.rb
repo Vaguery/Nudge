@@ -1,3 +1,11 @@
+# pops the top item of the +:int+ stack;
+# pushes a ValuePoint with the value negated onto the +:int+ stack
+#
+# *needs:* 1 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntNegativeInstruction < Instruction
   def preconditions?
     needs :int, 1

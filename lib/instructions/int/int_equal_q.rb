@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the integers are identical
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:bool+
+#
+
 class IntEqualQInstruction < Instruction
   def preconditions?
     needs :int, 2

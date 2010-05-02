@@ -1,3 +1,6 @@
+# pushes a new +:float+ ValuePoint, with value determined by a call to FloatType.any_value
+#
+
 class FloatRandomInstruction < Instruction
   def preconditions?
     true # no preconditions

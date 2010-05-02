@@ -1,3 +1,15 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a ValuePoint with value x**y, where x is the second stack item, y the top one
+#
+# note: the top item is the exponent, the second item is the base
+#
+# note: will push an +:error+ ValuePoint instead of an +:int+ if asked to take a negative root of 0
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntPowerInstruction < Instruction
   def preconditions?
     needs :int, 2

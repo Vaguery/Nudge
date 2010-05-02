@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:float+ stack;
+# pushes a ValuePoint with their product onto the +:float+ stack
+#
+# *needs:* 2 +:float+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatMultiplyInstruction < Instruction
   def preconditions?
     needs :float, 2

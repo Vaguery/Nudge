@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:float+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with its value +true+ if the popped values are identical
+#
+# *needs:* 2 +:float+
+#
+# *pushes:* 1 +:bool+
+#
+
 class FloatEqualQInstruction < Instruction
   def preconditions?
     needs :float, 2

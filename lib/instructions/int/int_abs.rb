@@ -1,4 +1,12 @@
-class IntAbsInstruction < Instruction
+# pops the top item of the +:int+ stack;
+# pushes a ValuePoint with its absolute value onto the +:int+ stack
+#
+# *needs:* 1 +:int+
+#
+# *pushes:* 1 +:int+
+#
+
+class IntAbsInstruction < Instruction  
   def preconditions?
     needs :int, 1
   end

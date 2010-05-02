@@ -1,3 +1,12 @@
+# pops the top 2 items of the +:int+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack,
+# with value +true+ if the second one is strictly greater than the top one
+#
+# *needs:* 2 +:int+
+#
+# *pushes:* 1 +:bool+
+#
+
 class IntGreaterThanQInstruction < Instruction
   def preconditions?
     needs :int, 2

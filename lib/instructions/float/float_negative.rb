@@ -1,3 +1,11 @@
+# pops the top item of the +:float+ stack;
+# pushes a ValuePoint with the value negated onto the +:float+ stack
+#
+# *needs:* 1 +:float+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatNegativeInstruction < Instruction
   def preconditions?
     needs :float, 1
