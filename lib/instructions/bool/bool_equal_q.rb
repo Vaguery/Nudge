@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:bool+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the boolean values are identical
+#
+# *needs:* 2 +:bool+
+#
+# *pushes:* 1 +:bool+
+#
+
 class BoolEqualQInstruction < Instruction
   
   def preconditions?

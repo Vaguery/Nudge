@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:bool+ stack;
+# pushes a ValuePoint with their logical OR onto the +:bool+ stack
+#
+# *needs:* 2 +:bool+
+#
+# *pushes:* 1 +:bool+
+#
+
 class BoolOrInstruction < Instruction
   
   def preconditions?

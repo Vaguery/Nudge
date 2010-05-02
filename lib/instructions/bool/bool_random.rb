@@ -1,3 +1,6 @@
+# pushes a new +:bool+ ValuePoint, with value determined by a call to BoolType.any_value
+#
+
 class BoolRandomInstruction < Instruction
   def preconditions?
     true # no preconditions

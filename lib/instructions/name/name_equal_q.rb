@@ -1,3 +1,11 @@
+# pops the top 2 items of the +:name+ stack;
+# pushes a new ValuePoint onto the +:bool+ stack, with value +true+ if the names are identical
+#
+# *needs:* 2 +:name+
+#
+# *pushes:* 1 +:bool+
+#
+
 class NameEqualQInstruction < Instruction
   def preconditions?
     needs :name, 2

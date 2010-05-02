@@ -1,3 +1,11 @@
+# pops the top item of the +:bool+ stack;
+# pushes a ValuePoint with the value negated onto the +:bool+ stack
+#
+# *needs:* 1 +:bool+
+#
+# *pushes:* 1 +:bool+
+#
+
 class BoolNotInstruction < Instruction
   
   def preconditions?
