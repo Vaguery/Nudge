@@ -1,3 +1,23 @@
+# pops the top 2 items from the +:code+ stack;
+# pushes a new +:code+ item containing a block obtained by concatenating the other listings
+#
+# note: the top stack item (the "attachment") is concatenated _into_ the second popped item (the "receiver")
+#
+# If both items are already blocks, the new block is their concatenation;
+# if the receiver is a block and the attachment isn't, the attachment is appended to the receiver;
+# if the receiver is not a block, then a _surrounding_ block is constructed that contains both, in order.
+#
+# For example:
+#   [a, b] + [1,2,3] -> [a,b,1,2,3]
+#   [a,b] + 1 -> [a,b,1]
+#   a + [1,2,3] -> [a,[1,2,3]]
+#   a + 1 -> [a,1]
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:code+
+#
+
 class CodeConcatenateInstruction < Instruction
   def preconditions?
     needs :code, 2

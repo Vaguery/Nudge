@@ -1,3 +1,14 @@
+# pops the top item from the +:code+ stack;
+# pushes an +:int+ with the number of items <i>in the root</i> of the +:code+ value
+#
+# note: if the +:code+ value does not parse, or is an atom (doesn't parse into a CodeBlockPoint),
+# the result is 0; if it is an empty block, it's also 0
+#
+# *needs:* 1 +:code+
+#
+# *pushes:* 1 +:int+
+#
+
 class CodeBackbonePointsInstruction < Instruction
   
   def preconditions?

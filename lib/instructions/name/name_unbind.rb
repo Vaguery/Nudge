@@ -1,7 +1,7 @@
 # Pops the top +:name+ item, and if it is bound to a name (a local, not a variable)
 # it removes that binding.
 #
-# needs: 1 +:name:
+# needs: 1 +:name+
 #
 # pushes: nothing
 

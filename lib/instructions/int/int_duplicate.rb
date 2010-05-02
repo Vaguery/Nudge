@@ -1,4 +1,4 @@
-# makes and pushes a clone of the top item on the +:int: stack
+# makes and pushes a clone of the top item on the +:int+ stack
 #
 # *needs:* 1 +:int+
 #

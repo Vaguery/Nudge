@@ -1,4 +1,4 @@
-# makes and pushes a clone of the top item on the +:float: stack
+# makes and pushes a clone of the top item on the +:float+ stack
 #
 # *needs:* 1 +:float+
 #

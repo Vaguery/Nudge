@@ -12,7 +12,7 @@
 #   }
 #   «int» 0
 #   «int» count - 1
-# where +popped item+ is the code from the +:exec+ stack, and +count - 1+ is a decrement of
+# where +popped_item+ is the code from the +:exec+ stack, and +count - 1+ is a decrement of
 # the "count" value.
 #
 # *needs:* ExecDoRangeInstruction must be active in the context for this to work; needs 1 +:int+ and 1 +:exec+ item

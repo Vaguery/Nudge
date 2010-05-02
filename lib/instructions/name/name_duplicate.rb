@@ -1,4 +1,4 @@
-# makes and pushes a clone of the top item on the +:name: stack
+# makes and pushes a clone of the top item on the +:name+ stack
 #
 # *needs:* 1 +:name+
 #

@@ -1,3 +1,12 @@
+# pops the top item of the +:code+ stack and the +:name+ stack;
+# if the name string is not a bound variable (as opposed to a local name),
+# it binds the name to a new ValuePoint the +:code+ value.
+#
+# *needs:* 1 +:code+, 1 +:name+
+#
+# *pushes:* nothing
+#
+
 class CodeDefineInstruction < Instruction
   def preconditions?
     needs :code, 1

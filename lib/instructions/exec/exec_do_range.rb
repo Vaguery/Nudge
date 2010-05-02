@@ -23,7 +23,7 @@
 #   }
 #   «int» new_counter
 #   «int» destination
-# where +popped item+ is the code from the +:exec+ stack, and +new_counter+ and +destination+ are the numeric values that were derived above.
+# where +popped_item+ is the code from the +:exec+ stack, and +new_counter+ and +destination+ are the numeric values that were derived above.
 #
 # Finally,
 # 1. a new ValuePoint whose value is +new_counter+ is pushed to the +:int+ stack;
@@ -34,7 +34,7 @@
 # the counter will be pushed onto the +:int+ stack,
 # the macro will be encountered, and this process will repeat.
 #
-# note: if the +popped item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
+# note: if the +popped_item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
 #
 # *needs:* 2 +:int+ items, 1 +:exec+ item
 #

@@ -4,7 +4,7 @@
 #
 # needs: at least one bound variable or name
 #
-# pushes: 1 +:name:
+# pushes: 1 +:name+
 #
 
 class NameRandomBoundInstruction < Instruction

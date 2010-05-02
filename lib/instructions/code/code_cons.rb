@@ -1,4 +1,25 @@
-# This is a tricky one to translate from Push, which assumes a very Lisp-like list structure. Here we'll simply build a new block with the consed item first, and the original code second.
+# pops the top 2 items from the +:code+ stack;
+# pushes a new +:code+ item containing a block, obtained by +cons+ing the other listings, a la Lisp
+#
+# note: order matters, and the top stack item is the second argument, the second stack item is the first
+#
+# If the second argument is a block, the result is obtained by inserting the first argument
+# into that block as the new first element; if the second argument isn't a block, it's first
+# wrapped in one, and then the first argument is inserted into that block.
+#
+# For example:
+#   first_argument + second_argument -> cons result
+#   [a, b] + [1,2,3] -> [[a,b],1,2,3]
+#   [a,b] + 1 -> [[a,b],1]
+#   a + [1,2,3] -> [a,1,2,3]
+#   a + 1 -> [a,1]
+#
+# note: there are several differences between this and +code_concatenate+
+#
+# *needs:* 2 +:code+
+#
+# *pushes:* 1 +:code+
+#
 
 class CodeConsInstruction < Instruction
   def preconditions?

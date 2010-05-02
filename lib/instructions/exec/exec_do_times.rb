@@ -22,7 +22,7 @@
 #   }
 #   «int» new_counter
 #   «int» destination
-# where +popped item+ is the code from the +:exec+ stack, and +new_counter+ and +destination+ are the numeric values that were derived above.
+# where +popped_item+ is the code from the +:exec+ stack, and +new_counter+ and +destination+ are the numeric values that were derived above.
 #
 # Finally,
 # 1. the macro is pushed onto the +:exec+ stack
@@ -31,7 +31,7 @@
 # The consequence is that the original item will be executed,
 # then the macro will be encountered, and this process will repeat.
 #
-# note: if the +popped item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
+# note: if the +popped_item+ itself manipulates the +:exec+ stack, "complicated behavior" may arise 
 #
 # *needs:* 2 +:int+ items, 1 +:exec+ item
 #
