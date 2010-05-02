@@ -1,3 +1,7 @@
+# Implements the K Combinator on the +:exec+ stack:
+# deletes the second item (replacing the top one).
+#
+
 class ExecKInstruction < Instruction
   def preconditions?
     needs :exec, 2

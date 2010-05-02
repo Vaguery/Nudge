@@ -1,3 +1,12 @@
+# pops the top 2 items of the +:exec+ stack;
+# pushes a new ValuePoint onto the +:exec+ stack, with value +true+ if the
+# two items' blueprint strings are identical
+#
+# *needs:* 2 +:exec+
+#
+# *pushes:* 1 +:bool+
+#
+
 class ExecEqualQInstruction < Instruction
   def preconditions?
     needs :exec, 2
