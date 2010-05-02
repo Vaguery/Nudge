@@ -1,4 +1,13 @@
-#encoding: utf-8
+# encoding: utf-8
+
+# pops the top +:float+ item;
+# pushes a new +:code+ item,
+# with value equal to the +:float+ item's blueprint
+#
+# *needs:* 1 +:float+
+#
+# *pushes:* 1 +:code+
+#
 
 class CodeFromFloatInstruction < Instruction
   def preconditions?

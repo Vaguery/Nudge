@@ -1,3 +1,12 @@
+# pops the top +:bool+ item;
+# pushes a new +:float+ item,
+# with value 0.0 when the +:bool+ is +false+, otherwise 1.0
+#
+# *needs:* 1 +:bool+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatFromBoolInstruction < Instruction
   def preconditions?
     needs :bool, 1

@@ -1,4 +1,13 @@
-#encoding: utf-8
+# encoding: utf-8
+
+# pops the top +:name+ item;
+# pushes a new +:code+ item,
+# with value equal to the +:name+ item's blueprint
+#
+# *needs:* 1 +:name+
+#
+# *pushes:* 1 +:code+
+#
 
 class CodeFromNameInstruction < Instruction
   def preconditions?

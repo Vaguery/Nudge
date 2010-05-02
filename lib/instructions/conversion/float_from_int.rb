@@ -1,3 +1,12 @@
+# pops the top +:int+ item;
+# pushes a new +:float+ item,
+# with value obtained by applying #to_f to the value
+#
+# *needs:* 1 +:int+
+#
+# *pushes:* 1 +:float+
+#
+
 class FloatFromIntInstruction < Instruction
   def preconditions?
     needs :int, 1

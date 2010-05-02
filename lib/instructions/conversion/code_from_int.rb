@@ -1,4 +1,13 @@
-#encoding: utf-8
+# encoding: utf-8
+
+# pops the top +:int+ item;
+# pushes a new +:code+ item,
+# with value equal to the +:int+ item's blueprint
+#
+# *needs:* 1 +:int+
+#
+# *pushes:* 1 +:code+
+#
 
 
 class CodeFromIntInstruction < Instruction

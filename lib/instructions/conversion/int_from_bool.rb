@@ -1,3 +1,12 @@
+# pops the top +:bool+ item;
+# pushes a new +:int+ item,
+# with value 0 when the +:bool+ is +false+, otherwise 1
+#
+# *needs:* 1 +:bool+
+#
+# *pushes:* 1 +:int+
+#
+
 class IntFromBoolInstruction < Instruction
   def preconditions?
     needs :bool, 1
