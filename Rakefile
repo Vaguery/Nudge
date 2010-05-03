@@ -15,6 +15,9 @@ begin
     # Ruby
     gemspec.required_ruby_version = '>= 1.9.1'
     
+    # docs
+    gemspec.has_rdoc = 'yard'
+    
     # dependencies
     gemspec.add_dependency('activesupport', '>= 2.3.5')
     

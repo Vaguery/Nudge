@@ -1,8 +1,10 @@
 .hg*
+.yardoc
 pkg/*
+doc/*
+exploring_nudge/*
 nudge.gemspec
 *.pdf
 *.aux
 *.dvi
 *.log
-exploring_nudge
