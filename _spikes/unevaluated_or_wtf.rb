@@ -52,18 +52,8 @@ block {
 :int: "-(12 * -91)", "671", "-291056", "(x2 % 8)"
 
 
-
-
-
-
-
-
-
-
-
-:int: "(12 * -91)"
-:int: "(12 * -91)"
-
-
-
-
+# clearly there's a qualitative difference between instructions
+# that produce or modify values, which could be changed in this
+# way, and those that manipulate the structure of the stacks, which
+# would need to use evaluated values (shove, yank, do_range, code_execute,
+# even long-range consequences of "if")
