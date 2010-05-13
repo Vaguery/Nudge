@@ -6,6 +6,7 @@ proportion_bounded_add
 proportion_bounded_subtract
 proportion_multiply
 proportion_bounded_divide
+
 proportion_min
 proportion_max
 
