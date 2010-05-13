@@ -45,7 +45,7 @@ Spec::Runner.configure do |config|
       @i1.should respond_to(:derive)
     end   
   
-    it "should respond to \#celanup" do
+    it "should respond to \#cleanup" do
       @i1.should respond_to(:cleanup)
     end   
   end
