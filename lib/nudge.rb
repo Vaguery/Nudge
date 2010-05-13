@@ -11,6 +11,7 @@ require 'cli/runner'
 
 require 'interpreter/interpreter'
 require 'interpreter/types/pushTypes'
+require 'interpreter/types/proportion_type'
 require 'interpreter/types/codeType'
 require 'interpreter/stack'
 require 'interpreter/programPoints'

@@ -1,6 +1,5 @@
 #encoding: utf-8
 require File.join(File.dirname(__FILE__), "/../spec_helper")
-include Nudge
 
 describe "Type list" do
   it "should have an #all_types [getter] method to return a list of every defined type" do
