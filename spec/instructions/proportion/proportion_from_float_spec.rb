@@ -34,4 +34,15 @@ describe ProportionFromFloatInstruction do
     @context.depth(:proportion).should == 1
     @context.peek_value(:proportion).should == 0.1
   end
+  
+  it "should return a number in [0.0, 1.0]" do
+    @context.push(:float, "11.11")
+    @i1.go
+    @context.depth(:proportion).should == 1
+    @context.peek_value(:proportion).should be_close(0.11, 0.000001)
+    
+    @context.push(:float, "-2.7")
+    @i1.go
+    @context.peek_value(:proportion).should be_close(0.3, 0.000001)
+  end
 end
