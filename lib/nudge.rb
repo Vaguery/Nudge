@@ -24,6 +24,8 @@ Dir.glob(File.dirname(__FILE__) + '/instructions/exec/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/int/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/float/*') {|file| require file}
 Dir.glob(File.dirname(__FILE__) + '/instructions/name/*') {|file| require file}
+Dir.glob(File.dirname(__FILE__) + '/instructions/proportion/*') {|file| require file}
+
 
 Dir.glob(File.dirname(__FILE__) + '/instructions/conversion/*') {|file| require file}
 

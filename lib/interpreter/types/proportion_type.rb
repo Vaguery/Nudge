@@ -25,7 +25,7 @@ module NudgeType
     end
     
     def self.from_s(string_value)
-      return string_value.to_f % 1.0
+      (string_value.to_f != 1.0) ? (string_value.to_f % 1.0) : 1.0
     end
     
     def self.recognizes?(a_thing)

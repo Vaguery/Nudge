@@ -53,7 +53,7 @@ describe "ProportionType" do
   describe "self.from_s" do
     it "should use to_f" do
       a = "0.9"
-      a.should_receive(:to_f).and_return(0.9)
+      a.should_receive(:to_f).at_least(1).times.and_return(0.9)
       ProportionType.from_s(a)
     end
     
@@ -62,6 +62,8 @@ describe "ProportionType" do
       ProportionType.from_s("-1.1").should be_close(0.9, 0.00000001)
       ProportionType.from_s("1.1").should be_close(0.1, 0.00000001)
       ProportionType.from_s("-0.0").should be_close(0.0, 0.00000001)
+      
+      ProportionType.from_s("1.0").should == 1.0
     end
   end
   
