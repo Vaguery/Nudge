@@ -2,10 +2,10 @@
 
 instructions:
 
-proportion_add_bounded
-proportion_subtract_bounded
+proportion_bounded_add
+proportion_bounded_subtract
 proportion_multiply
-proportion_divide_bounded
+proportion_bounded_divide
 proportion_min
 proportion_max
 

@@ -3,7 +3,7 @@
 #
 # note: the top item is the denominator, the second item is the numerator
 #
-# note: will push an +:error+ ValuePoint instead of an +:int+ if the numerator is 0.0
+# note: will push an +:error+ ValuePoint instead of a +:float+ if the numerator is 0.0
 #
 # *needs:* 2 +:float+
 #

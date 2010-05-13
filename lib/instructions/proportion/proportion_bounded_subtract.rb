@@ -8,7 +8,7 @@
 # *pushes:* 1 +:proportion+
 #
 
-class ProportionSubtractBoundedInstruction < Instruction
+class ProportionBoundedSubtractInstruction < Instruction
   def preconditions?
     needs :proportion, 2
   end

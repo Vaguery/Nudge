@@ -1,20 +1,20 @@
 require File.join(File.dirname(__FILE__), "../../spec_helper")
 include Nudge
 
-describe ProportionSubtractBoundedInstruction do
+describe ProportionBoundedSubtractInstruction do
   
   it_should_behave_like "every Nudge Instruction"
   
   before(:each) do
     @context = Interpreter.new
-    @i1 = ProportionSubtractBoundedInstruction.new(@context)
+    @i1 = ProportionBoundedSubtractInstruction.new(@context)
   end
   
   
   describe "\#go" do
     before(:each) do
       @context = Interpreter.new
-      @i1 = ProportionSubtractBoundedInstruction.new(@context)
+      @i1 = ProportionBoundedSubtractInstruction.new(@context)
       @context.clear_stacks
       @p1 = ValuePoint.new("proportion", 0.2)
     end
