@@ -8,4 +8,8 @@ class NudgePoint
     raise "over point limit" if (outcome_data.points_evaluated += 1) > Outcome::POINT_LIMIT
     raise "over time limit" if Time.now.to_i > outcome_data.expiration_moment
   end
+  
+  def get_point (n)
+    n == 1 ? self : n
+  end
 end

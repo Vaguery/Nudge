@@ -1,7 +1,7 @@
 require 'nudge'
 
 describe "ValuePoint" do
-  describe ".new(type_id, string)" do
+  describe ".new (type_id: Symbol, string: String)" do
     it "returns a new ValuePoint containing the given type_id and string" do
       point = ValuePoint.new(:int, 5)
       point.instance_variable_get(:@type_id) === :int
@@ -9,7 +9,7 @@ describe "ValuePoint" do
     end
   end
   
-  describe "#evaluate(outcome_data)" do
+  describe "#evaluate (outcome_data: Outcome)" do
     it "pushes its string to the outcome_data stack identified by its type_id" do
       outcome_data = Outcome.new({})
       ValuePoint.new(:int, "5").evaluate(outcome_data)
