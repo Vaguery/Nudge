@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "Outcome" do
   describe ".new(variable_bindings)" do

@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 %w(Bool Code Exec Float Int Name Proportion).each do |name|
   outcome_data = Outcome.new({})

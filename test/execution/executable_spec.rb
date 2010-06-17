@@ -1,4 +1,5 @@
-require 'nudge'
+#encoding:utf-8
+require './nudge'
 
 SCRIPT = "block { block { ref x1 value «int» } do int_add }\n«int» 5"
 POINT = NudgePoint.from(SCRIPT)

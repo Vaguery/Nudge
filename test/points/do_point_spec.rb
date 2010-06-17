@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "DoPoint" do
   describe ".new (instruction_id: Symbol)" do

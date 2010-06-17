@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "Instruction::BoolRandom" do
   describe "#process()" do

@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "ValuePoint" do
   describe ".new (type_id: Symbol, string: String)" do

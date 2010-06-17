@@ -1,4 +1,5 @@
-require 'nudge'
+#encoding:utf-8
+require './nudge'
 
 describe "Instruction::BoolOr" do
   describe "#process()" do

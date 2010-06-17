@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "RefPoint" do
   describe ".new (variable_id: Symbol)" do

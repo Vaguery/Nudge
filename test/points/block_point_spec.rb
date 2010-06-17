@@ -1,4 +1,4 @@
-require 'nudge'
+require './nudge'
 
 describe "BlockPoint" do
   describe ".new (*points: [NudgePoint, *])" do

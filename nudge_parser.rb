@@ -1,3 +1,4 @@
+#encoding:utf-8
 require 'racc/parser'
 require 'strscan'
 
