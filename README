@@ -1,0 +1,7 @@
+script = "block { ref x1 ref x2 do int_add }"
+
+exe = Executable.new(script)
+
+exe.bind(:x1 => Value.new(:int, 100), :x2 => Value.new(:int, 200))
+
+outcome = exe.run
