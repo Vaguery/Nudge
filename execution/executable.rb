@@ -21,13 +21,3 @@ class Executable
     return outcome_data
   end
 end
-
-exe = Executable.new("block {}")
-
-exe.bind({:x => Value.new(:int, 100)})
-
-exe.run
-
-exe.bind()
-exe.run
-
