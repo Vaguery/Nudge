@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'active_support'
 require 'nudge_point'
 require 'points/block_point'
 require 'points/do_point'
