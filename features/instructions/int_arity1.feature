@@ -10,9 +10,17 @@ Feature: Integer arity-1 instructions
     And the argument should not be there
     
     Scenario Outline: int_abs
-      | arg1  | instruction | result |
-      |  13   | do int_abs    |  13  |
-      | -13   | do int_abs    |  13  |
-      |   0   | do int_abs    |   0  |
-      |  -0   | do int_abs    |   0  |
+      | arg1  | instruction   | result |
+      |  13   | do int_abs    |  13    |
+      | -13   | do int_abs    |  13    |
+      |   0   | do int_abs    |   0    |
+      |  -0   | do int_abs    |   0    |
+      
+      
+    Scenario Outline: int_negative
+      | arg1 | instruction     | result | error_msg |
+      |  3   | do int_negative | -3     | |
+      | -4   | do int_negative |  4     | |
+      |  0   | do int_negative |  0     | |
+      | -0   | do int_negative |  0     | |
       
