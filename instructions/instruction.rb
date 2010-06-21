@@ -14,7 +14,7 @@ class Instruction
   end
   
   def Instruction.execute (instruction_id, outcome_data)
-    instruction_class = const_get(instruction_id.gsub(/(?:^|_)(.)/) { $1.upcase })
+    instruction_class = const_get(instruction_id.to_s.gsub(/(?:^|_)(.)/) { $1.upcase })
     instruction = instruction_class.new(outcome_data)
     stacks = outcome_data.stacks
     

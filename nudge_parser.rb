@@ -8,11 +8,11 @@ class NudgeParser < Racc::Parser
     @footnotes = Hash.new {|hash, type_name| hash[type_name] = [] }
     @unused_footnotes = {}
     
-    make_footnotes!
+    parse_footnotes!
     tokenize!
   end
   
-  def make_footnotes!
+  def parse_footnotes!
     return unless split_point = @string.index(/\n«/u)
     
     raise ParseError, "No program string" if split_point == 0

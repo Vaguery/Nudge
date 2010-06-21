@@ -27,15 +27,50 @@ describe "NudgePoint" do
     end
   end
   
-  describe "#get_point (n: Fixnum)" do
-    it "if n == 1, returns this point" do
+  describe "#points" do
+    it "returns 1" do
       point = NudgePoint.new
-      point.get_point(1).should == point
+      point.points.should == 1
+    end
+  end
+  
+  describe "#get_point_at (n: Fixnum)" do
+    it "returns this point if n == 1" do
+      point = NudgePoint.new
+      point.get_point_at(1).should == point
     end
     
-    it "if n != 1, returns n" do
+    it "raises NudgeIndexError if n != 1" do
       point = NudgePoint.new
-      point.get_point(2).should == 2
+      lambda { point.get_point_at(2) }.should raise_error NudgeIndexError, "point index out of range (2 from 1)"
+    end
+  end
+  
+  describe "#delete_point_at (n: Fixnum)" do
+    it "raises NudgeIndexError" do
+      point = NudgePoint.new
+      lambda { point.delete_point_at(1) }.should raise_error NudgeIndexError
+    end
+  end
+  
+  describe "#replace_point_at (n: Fixnum, new_point: NudgePoint)" do
+    it "raises NudgeIndexError" do
+      point = NudgePoint.new
+      lambda { point.replace_point_at(1, point) }.should raise_error NudgeIndexError
+    end
+  end
+  
+  describe "#insert_point_before (n: Fixnum, new_point: NudgePoint)" do
+    it "raises NudgeIndexError" do
+      point = NudgePoint.new
+      lambda { point.insert_point_before(1, point) }.should raise_error NudgeIndexError
+    end
+  end
+  
+  describe "#insert_point_after (n: Fixnum, new_point: NudgePoint)" do
+    it "raises NudgeIndexError" do
+      point = NudgePoint.new
+      lambda { point.insert_point_after(1, point) }.should raise_error NudgeIndexError
     end
   end
 end

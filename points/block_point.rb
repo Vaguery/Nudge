@@ -8,12 +8,33 @@ class BlockPoint < NudgePoint
     outcome_data.stacks[:exec].concat(@points.reverse)
   end
   
-  def get_point (n)
-    return self if n == 1
-    
-    @points.inject(n) do |n, point|
-      n = point.get_point(n - 1)
-      break n if n.is_a?(NudgePoint); n
+  def points
+    @points.inject(1) {|n,point| n + point.points }
+  end
+  
+  def do_action_at_n (*args)
+    point = catch(:complete) { do_action_at_n_recursively(*args) }
+    point.is_a?(NudgePoint) ? point : false
+  end
+  
+  def do_action_at_n_recursively (n, action, new_point)
+    @points.each_with_index do |point, i|
+      if (n -= 1) == 1
+        old_point = @points[i]
+        
+        case action
+          when :get
+          when :replace       then @points[i..i]  = new_point
+          when :insert_before then @points[i...i] = new_point
+          when :insert_after  then @points[(i + 1)...(i + 1)] = new_point
+        end
+        
+        throw(:complete, old_point)
+      end
+      
+      n = point.do_action_at_n_recursively(n, action, new_point) if point.is_a? BlockPoint
     end
+    
+    return n
   end
 end
