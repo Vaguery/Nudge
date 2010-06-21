@@ -16,14 +16,18 @@ describe "NudgePoint" do
     
     it "halts execution if points_evaluated exceeds POINT_LIMIT" do
       outcome_data = Outcome.new({})
-      outcome_data.points_evaluated = Outcome::POINT_LIMIT
-      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error
+      outcome_data.instance_variable_set(:@points_evaluated, Outcome::POINT_LIMIT)
+      outcome_data.instance_variable_set(:@expiration_moment, Time.now.to_f + 45)
+      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TooManyPointsEvaluated,
+        "the point evaluation limit was exceeded after 15 seconds"
     end
     
     it "halts execution if time is beyond TIME_LIMIT" do
       outcome_data = Outcome.new({})
       outcome_data.instance_variable_set(:@expiration_moment, Time.now.to_f - 10)
-      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error
+      outcome_data.instance_variable_set(:@points_evaluated, 20)
+      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TimeLimitExceeded,
+        "the time limit was exceeded after evaluating 20 points"
     end
   end
   
@@ -40,37 +44,42 @@ describe "NudgePoint" do
       point.get_point_at(1).should == point
     end
     
-    it "raises NudgeIndexError if n != 1" do
+    it "raises PointIndexTooLarge if n != 1" do
       point = NudgePoint.new
-      lambda { point.get_point_at(2) }.should raise_error NudgeIndexError, "point index out of range (2 from 1)"
+      lambda { point.get_point_at(2) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 2 in a tree of size 1"
     end
   end
   
   describe "#delete_point_at (n: Fixnum)" do
-    it "raises NudgeIndexError" do
+    it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.delete_point_at(1) }.should raise_error NudgeIndexError
+      lambda { point.delete_point_at(1) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't delete outermost point"
     end
   end
   
   describe "#replace_point_at (n: Fixnum, new_point: NudgePoint)" do
-    it "raises NudgeIndexError" do
+    it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.replace_point_at(1, point) }.should raise_error NudgeIndexError
+      lambda { point.replace_point_at(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't replace outermost point"
     end
   end
   
   describe "#insert_point_before (n: Fixnum, new_point: NudgePoint)" do
-    it "raises NudgeIndexError" do
+    it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.insert_point_before(1, point) }.should raise_error NudgeIndexError
+      lambda { point.insert_point_before(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't insert_before outermost point"
     end
   end
   
   describe "#insert_point_after (n: Fixnum, new_point: NudgePoint)" do
-    it "raises NudgeIndexError" do
+    it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.insert_point_after(1, point) }.should raise_error NudgeIndexError
+      lambda { point.insert_point_after(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't insert_after outermost point"
     end
   end
 end

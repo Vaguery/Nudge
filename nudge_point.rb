@@ -1,14 +1,18 @@
 class NudgePoint
-  ::NudgeIndexError = Class.new(ArgumentError)
-  
   def NudgePoint.from (script)
     NudgeParser.new(script).send(:do_parse)
   end
   
-  # called as `super` from points' individual #evaluate methods
   def evaluate (outcome_data)
-    raise "over point limit" if (outcome_data.points_evaluated += 1) > Outcome::POINT_LIMIT
-    raise "over time limit" if Time.now.to_i > outcome_data.expiration_moment
+    if Time.now.to_i > outcome_data.expiration_moment
+      n = outcome_data.points_evaluated
+      raise NudgeError::TimeLimitExceeded, "the time limit was exceeded after evaluating #{n} points"
+    end
+    
+    if (outcome_data.points_evaluated += 1) > Outcome::POINT_LIMIT
+      t = (Time.now - (outcome_data.expiration_moment - Outcome::TIME_LIMIT)).to_i
+      raise NudgeError::TooManyPointsEvaluated, "the point evaluation limit was exceeded after #{t} seconds"
+    end
   end
   
   def points
@@ -21,7 +25,7 @@ class NudgePoint
   end
   
   def delete_point_at (n)
-    at(n, :replace)
+    at(n, :delete)
   end
   
   def replace_point_at (n, new_point)
@@ -37,10 +41,10 @@ class NudgePoint
   end
   
   def at (n, action, new_point = nil)
-    raise NudgeIndexError, "can't #{action} outermost point" if n == 1
+    raise NudgeError::OutermostPointOperation, "can't #{action} outermost point" if n == 1
     
     do_action_at_n(n, action, new_point) ||
-      raise(NudgeIndexError, "point index out of range (#{n} from #{points})")
+      raise(NudgeError::PointIndexTooLarge, "can't operate on point #{n} in a tree of size #{points}")
   end
   
   def do_action_at_n (*)
