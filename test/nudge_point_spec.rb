@@ -9,8 +9,7 @@ describe "NudgePoint" do
   
   describe "#to_script" do
     it "returns a string representation of the Nudge program described by this point" do
-      point = NudgePoint.from("block { ref x value «code» do int_add }\n«int»1\n«code»value «int»\n«int»2")
-      script = point.to_script
+      script = NudgePoint.from("block { ref x value «code» do int_add }\n«int»1\n«code»value «int»\n«int»2").to_script
       NudgePoint.from(script).to_script.should == script
     end
   end

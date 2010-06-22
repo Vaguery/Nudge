@@ -88,10 +88,6 @@ class NudgeParser < Racc::Parser
     end
   end
   
-  def unused_footnotes
-    @footnotes
-  end
-  
   def on_error (*)
     raise NudgeError::InvalidScript, "script tokens do not form valid Nudge program"
   end
