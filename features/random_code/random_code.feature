@@ -9,13 +9,25 @@ Feature: Random code generation
     When I create random code
     And pass in an optional parameter specifying the desired points
     Then the result should have exactly that many points
-  
-  
+    
+    
+  Scenario: the default number of points is 20
+    Given no external changes
+    When I create random code
+    Then the resulting code should be 20 points
+    
+    
   Scenario: it should be possible to specify the maximum tree depth
     Given a maximum tree depth 12
     When I create random code
     And pass in an optional parameter specifying that depth
     Then the result should not have more than that depth
+    
+    
+  Scenario: the default maximum tree depth should be 10
+    Given no external changes
+    When I create random code
+    Then the maximum tree depth should be 10 layers
     
     
   Scenario: it should be possible to specify a subset of instructions to use
@@ -88,3 +100,19 @@ Feature: Random code generation
     And 25% block points
     
     
+  Scenario: the default probability over point types should be uniform
+    Given no external changes
+    When I generate random code
+    Then the chance of picking a ref point should be 25%
+    And of an instruction, 25%
+    And of a value, 25%
+    And of a block, 25%
+    
+    
+  Scenario: the default probability of setting a point of a given point type should be uniform
+    Given an interpreter with 10 instructions defined
+    When I randomly choose an instruction point
+    Then the chance should be equal that it will be any of those 10
+  
+  
+  
