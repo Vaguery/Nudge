@@ -1,168 +1,168 @@
-  ___  |bool_and|
-  ___  |bool_define|
-  ___  |bool_depth|
-  ___  |bool_duplicate|
-  ___  |bool_equal_q|
-  ___  |bool_flush|
-  ___  |bool_from_float|
-  ___  |bool_from_int|
-  ___  |bool_not|
-  ___  |bool_or|
-  ___  |bool_pop|
-  ___  |bool_random|
-  ___  |bool_rotate|
-  ___  |bool_shove|
-  ___  |bool_swap|
-  ___  |bool_xor|
-  ___  |bool_yank|
-  ___  |bool_yankdup|
+X  |bool_and|
+X  |bool_define|
+X  |bool_depth|
+X  |bool_duplicate|
+X  |bool_equal_q|
+X  |bool_flush|
+X  |bool_from_float|
+X  |bool_from_int|
+X  |bool_not|
+X  |bool_or|
+X  |bool_pop|
+X  |bool_random|
+X  |bool_rotate|
+X  |bool_shove|
+X  |bool_swap|
+X  |bool_xor|
+X  |bool_yank|
+X  |bool_yankdup|
 
 
 
-  ___  |code_atom_q|
-  ___  |code_backbone_points|
-  ___  |code_car|
-  ___  |code_cdr|
-  ___  |code_concatenate|
-  ___  |code_cons|
-  ___  |code_container|
-  ___  |code_contains_q|
-  ___  |code_define|
-  ___  |code_depth|
-  ___  |code_discrepancy|
-  ___  |code_do_count|
-  ___  |code_do_range|
-  ___  |code_do_times|
-  ___  |code_duplicate|
-  ___  |code_equal_q|
-  ___  |code_execute|
-  ___  |code_execute_then_pop|
-  ___  |code_flush|
-  ___  |code_from_bool|
-  ___  |code_from_float|
-  ___  |code_from_int|
-  ___  |code_from_name|
-  ___  |code_gsub|
-  ___  |code_if|
-  ___  |code_instructions|
-  ___  |code_list|
-  ___  |code_member_q|
-  ___  |code_name_lookup|
-  ___  |code_noop|
-  ___  |code_nth_cdr|
-  ___  |code_nth|
-  ___  |code_nth_point|
-  ___  |code_null_q|
-  ___  |code_parses_q|
-  ___  |code_points|
-  ___  |code_pop|
-  ___  |code_position|
-  ___  |code_quote|
-  ___  |code.random|
-  ___  |code_replace_nth_point|
-  ___  |code_rotate|
-  ___  |code_shove|
-  ___  |code_swap|
-  ___  |code_yank|
-  ___  |code_yankdup|
+X  |code_atom_q|
+X  |code_backbone_points|
+X  |code_car|
+X  |code_cdr|
+X  |code_concatenate|
+X  |code_cons|
+X  |code_container|
+X  |code_contains_q|
+X  |code_define|
+X  |code_depth|
+X  |code_discrepancy|
+X  |code_do_count|
+X  |code_do_range|
+X  |code_do_times|
+X  |code_duplicate|
+X  |code_equal_q|
+X  |code_execute|
+X  |code_execute_then_pop|
+X  |code_flush|
+X  |code_from_bool|
+X  |code_from_float|
+X  |code_from_int|
+X  |code_from_name|
+X  |code_gsub|
+X  |code_if|
+X  |code_instructions|
+X  |code_list|
+X  |code_member_q|
+X  |code_name_lookup|
+X  |code_noop|
+X  |code_nth_cdr|
+X  |code_nth|
+X  |code_nth_point|
+X  |code_null_q|
+X  |code_parses_q|
+X  |code_points|
+X  |code_pop|
+X  |code_position|
+X  |code_quote|
+-  |code_random|
+X  |code_replace_nth_point|
+X  |code_rotate|
+X  |code_shove|
+X  |code_swap|
+X  |code_yank|
+X  |code_yankdup|
 
 
-  ___  |exec_define|
-  ___  |exec_depth|
-  ___  |exec_do_count|
-  ___  |exec_do_range|
-  ___  |exec_do_times|
-  ___  |exec_duplicate|
-  ___  |exec_equal_q|
-  ___  |exec_flush|
-  ___  |exec_if|
-  ___  |exec_k|
-  ___  |exec_pop|
-  ___  |exec_rotate|
-  ___  |exec_s|
-  ___  |exec_shove|
-  ___  |exec_swap|
-  ___  |exec_y|
-  ___  |exec_yank|
-  ___  |exec_yankdup|
-
-
-
-  ___  |float_abs|
-  ___  |float_add|
-  ___  |float_cosine|
-  ___  |float_define|
-  ___  |float_depth|
-  ___  |float_divide|
-  ___  |float_duplicate|
-  ___  |float_equal_q|
-  ___  |float_flush|
-  ___  |float_from_bool|
-  ___  |float_from_int|
-  ___  |float_greater_than_q|
-  ___  |float_if|
-  ___  |float_less_than_q|
-  ___  |float_max|
-  ___  |float_min|
-  ___  |float_modulo|
-  ___  |float_multiply|
-  ___  |float_negative|
-  ___  |float_pop|
-  ___  |float_power|
-  ___  |float_random|
-  ___  |float_rotate|
-  ___  |float_shove|
-  ___  |float_sine|
-  ___  |float_sqrt|
-  ___  |float_subtract|
-  ___  |float_swap|
-  ___  |float_tangent|
-  ___  |float_yank|
-  ___  |float_yankdup|
+X  |exec_define|
+X  |exec_depth|
+X  |exec_do_count|
+X  |exec_do_range|
+X  |exec_do_times|
+X  |exec_duplicate|
+X  |exec_equal_q|
+X  |exec_flush|
+X  |exec_if|
+X  |exec_k|
+X  |exec_pop|
+X  |exec_rotate|
+X  |exec_s|
+X  |exec_shove|
+X  |exec_swap|
+X  |exec_y|
+X  |exec_yank|
+X  |exec_yankdup|
 
 
 
-  ___  |int_abs|
-  ___  |int_add|
-  ___  |int_define|
-  ___  |int_depth|
-  ___  |int_divide|
-  ___  |int_duplicate|
-  ___  |int_equal_q|
-  ___  |int_flush|
-  ___  |int_from_bool|
-  ___  |int_from_float|
-  ___  |int_greater_than_q|
-  ___  |int_if|
-  ___  |int_less_than_q|
-  ___  |int_max|
-  ___  |int_min|
-  ___  |int_modulo|
-  ___  |int_multiply|
-  ___  |int_negative|
-  ___  |int_pop|
-  ___  |int_power|
-  ___  |int_random|
-  ___  |int_rotate|
-  ___  |int_shove|
-  ___  |int_subtract|
-  ___  |int_swap|
-  ___  |int_yank|
-  ___  |int_yankdup|
+X  |float_abs|
+X  |float_add|
+X  |float_cosine|
+X  |float_define|
+X  |float_depth|
+X  |float_divide|
+X  |float_duplicate|
+X  |float_equal_q|
+X  |float_flush|
+X  |float_from_bool|
+X  |float_from_int|
+X  |float_greater_than_q|
+X  |float_if|
+X  |float_less_than_q|
+X  |float_max|
+X  |float_min|
+X  |float_modulo|
+X  |float_multiply|
+X  |float_negative|
+X  |float_pop|
+X  |float_power|
+X  |float_random|
+X  |float_rotate|
+X  |float_shove|
+X  |float_sine|
+X  |float_sqrt|
+X  |float_subtract|
+X  |float_swap|
+X  |float_tangent|
+X  |float_yank|
+X  |float_yankdup|
 
 
 
-  ___  |name_depth|
-  ___  |name_disable_lookup|
-  ___  |name_duplicate|
-  ___  |name_equal_q|
-  ___  |name_flush|
-  ___  |name_next|
-  ___  |name_pop|
-  ___  |name_random_bound|
-  ___  |name_rotate|
-  ___  |name_shove|
-  ___  |name_swap|
-  ___  |name_unbind|
-  ___  |name_yank|
-  ___  |name_yankdup|
+X  |int_abs|
+X  |int_add|
+X  |int_define|
+X  |int_depth|
+X  |int_divide|
+X  |int_duplicate|
+X  |int_equal_q|
+X  |int_flush|
+X  |int_from_bool|
+X  |int_from_float|
+X  |int_greater_than_q|
+X  |int_if|
+X  |int_less_than_q|
+X  |int_max|
+X  |int_min|
+X  |int_modulo|
+X  |int_multiply|
+X  |int_negative|
+X  |int_pop|
+X  |int_power|
+X  |int_random|
+X  |int_rotate|
+X  |int_shove|
+X  |int_subtract|
+X  |int_swap|
+X  |int_yank|
+X  |int_yankdup|
+
+
+
+X  |name_depth|
+X  |name_disable_lookup|
+X  |name_duplicate|
+X  |name_equal_q|
+X  |name_flush|
+X  |name_next|
+X  |name_pop|
+X  |name_random_bound|
+X  |name_rotate|
+X  |name_shove|
+X  |name_swap|
+X  |name_unbind|
+X  |name_yank|
+X  |name_yankdup|
