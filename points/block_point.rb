@@ -37,4 +37,16 @@ class BlockPoint < NudgePoint
     
     return n
   end
+  
+  def script_and_values
+    values = []
+    
+    block_scripts = @points.collect do |point|
+      point_script, point_values = point.script_and_values
+      values.concat(point_values)
+      point_script
+    end
+    
+    return ["block {", block_scripts, "}"], values
+  end
 end

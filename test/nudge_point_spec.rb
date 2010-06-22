@@ -7,6 +7,14 @@ describe "NudgePoint" do
     end
   end
   
+  describe "#to_script" do
+    it "returns a string representation of the Nudge program described by this point" do
+      point = NudgePoint.from("block { ref x value «code» do int_add }\n«int»1\n«code»value «int»\n«int»2")
+      script = point.to_script
+      NudgePoint.from(script).to_script.should == script
+    end
+  end
+  
   describe "#evaluate (outcome_data: Outcome)" do
     it "increments by one the points evaluated by the outcome_data" do
       outcome_data = Outcome.new({})

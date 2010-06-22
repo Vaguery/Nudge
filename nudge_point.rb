@@ -1,6 +1,21 @@
 class NudgePoint
   def NudgePoint.from (script)
-    NudgeParser.new(script).send(:do_parse)
+    parser = NudgeParser.new(script)
+    point = parser.send(:do_parse)
+    point.instance_variable_set(:@unused_footnotes, parser.unused_footnotes)
+    point
+  end
+  
+  def to_script
+    script, values = script_and_values
+    
+    @unused_footnotes.each do |type_id, values_array|
+      values_array.each do |string|
+        values << "«#{type_id}»#{string}"
+      end
+    end if @unused_footnotes
+    
+    [script].join(" ") + "\n" + values.join("\n")
   end
   
   def evaluate (outcome_data)

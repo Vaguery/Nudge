@@ -1,6 +1,7 @@
 class NudgeError < StandardError
-  TimeLimitExceeded = Class.new(self)
-  TooManyPointsEvaluated = Class.new(self)
-  PointIndexTooLarge = Class.new(self)
-  OutermostPointOperation = Class.new(self)
+  %w[ TimeLimitExceeded
+      TooManyPointsEvaluated
+      PointIndexTooLarge
+      OutermostPointOperation
+      InvalidScript ].each {|e| const_set(e, Class.new(self)) }
 end

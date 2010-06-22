@@ -6,7 +6,6 @@ class NudgeParser < Racc::Parser
     @tokens = []
     @string = script.strip
     @footnotes = Hash.new {|hash, type_name| hash[type_name] = [] }
-    @unused_footnotes = {}
     
     parse_footnotes!
     tokenize!
@@ -15,18 +14,13 @@ class NudgeParser < Racc::Parser
   def parse_footnotes!
     return unless split_point = @string.index(/\n«/u)
     
-    raise ParseError, "No program string" if split_point == 0
+    raise NudgeError::InvalidScript, "script contains only footnotes" if split_point == 0
     
-    ss = StringScanner.new(@string.slice!((split_point)..-1))
+    ss = StringScanner.new(@string.slice!(split_point..-1))
     
     while ss.scan_until(/\n«([a-zA-Z][_a-zA-Z0-9]*)»/u)
       type_name = ss[1]
-      
-      if ss.scan_until(/.*(?=\n«)/um)
-        string_value = ss.matched
-      else
-        string_value = ss.rest
-      end
+      string_value = ss.scan_until(/.*?(?=\n«|$)/um)
       
       @footnotes[type_name] << string_value.strip
     end
@@ -55,7 +49,7 @@ class NudgeParser < Racc::Parser
           end
         
         else
-          raise ParseError, "Couldn't tokenize program string \"#{@string}\""
+          raise NudgeError::InvalidScript, "script contains invalid tokens"
       end
     end
     
@@ -63,10 +57,10 @@ class NudgeParser < Racc::Parser
     @tokens << [false, false]
   end
   
-  def pop_footnote(type_name)
+  def use_footnote (type_name)
     return "" unless string_value = @footnotes[type_name].shift
     
-    raise "cannot create exec literals" if type_name === "exec"
+    raise NudgeError::InvalidScript "script contains «exec» literals" if type_name === "exec"
     
     if type_name === "code"
       embedded_footnotes = [""]
@@ -77,16 +71,16 @@ class NudgeParser < Racc::Parser
     string_value
   end
   
-  def collect_embedded_footnotes!(code_text, embedded_footnotes)
+  def collect_embedded_footnotes! (code_text, embedded_footnotes)
     ss = StringScanner.new(code_text)
     
     while ss.skip_until(/«([a-zA-Z][_a-zA-Z0-9]*?)»/um)
       type_name = ss[1]
       string_value = @footnotes[type_name].shift
       
-      raise "cannot create exec literals" if type_name === "exec"
+      raise NudgeError::InvalidScript "script contains «exec» literals" if type_name === "exec"
       
-      embedded_footnotes << "«#{type_name}» #{string_value}"
+      embedded_footnotes << "«#{type_name}»#{string_value}"
       
       if type_name == "code" && string_value
         collect_embedded_footnotes!(string_value, embedded_footnotes)
@@ -94,8 +88,12 @@ class NudgeParser < Racc::Parser
     end
   end
   
-  def on_error(error_token_id, error_value, value_stack)
-    raise ParseError, "Couldn't parse program string"
+  def unused_footnotes
+    @footnotes
+  end
+  
+  def on_error (*)
+    raise NudgeError::InvalidScript, "script tokens do not form valid Nudge program"
   end
   
   def next_token
@@ -115,7 +113,7 @@ class NudgeParser < Racc::Parser
   end
   
   def new_value_point (v, *)
-    ValuePoint.new(v[2].intern, pop_footnote(v[2]))
+    ValuePoint.new(v[2].intern, use_footnote(v[2]))
   end
   
   def new_point_array (v, *)
@@ -130,12 +128,7 @@ class NudgeParser < Racc::Parser
     v[0] << v[1]
   end
   
-  def _reduce_none (v, vv, result)
-    result
-  end
-  
   Racc_debug_parser = false
-  Racc_token_to_s_table = %w($end error "block" "{" "}" "ref" ID "do" "value" "«" "»" $start statement statements)
   Racc_arg = [
     [2,10,9,3,8,4,5,2,11,16,3,2,4,5,3,7,4,5,14,6,17],
     [0,5,4,0,3,0,0,13,6,13,13,7,13,13,7,2,7,7,10,1,14],
@@ -146,7 +139,7 @@ class NudgeParser < Racc::Parser
     [nil,nil,nil],
     [nil,0,-6],
     11,
-    [ 0, 0, :racc_error, 4, 12, :new_block_point, 2, 12, :new_ref_point, 2, 12, :new_do_point, 4, 12, :new_value_point, 1, 13, :new_point_array, 2, 13, :append_point, 0, 13, :new_empty_array ],
+    [0, 0, :racc_error, 4, 12, :new_block_point, 2, 12, :new_ref_point, 2, 12, :new_do_point, 4, 12, :new_value_point, 1, 13, :new_point_array, 2, 13, :append_point, 0, 13, :new_empty_array],
     { false => 0, Object.new => 1, "block" => 2, "{" => 3, "}" => 4, "ref" => 5, :ID => 6, "do" => 7, "value" => 8, "«" => 9, "»" => 10 },
     18,
     8,
