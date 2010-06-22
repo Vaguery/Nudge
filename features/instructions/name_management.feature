@@ -1,4 +1,5 @@
-Feature: instructions binding stack items to references
+#encoding: utf-8
+Feature: instructions binding stack items to references, and looking them up
   In order to work with programs referring to values
   As a Nudge programmer
   I want a suite of _define instructions to link References to new values
@@ -30,3 +31,19 @@ Feature: instructions binding stack items to references
     And neither of the arguments should be left on stacks
     
     
+    
+    
+    
+    
+  Scenario: code_name_lookup instruction should push a new :code item based on a ref
+    Given an interpreter with name "x" bound to :int "789"
+    And "x" on the :name stack
+    When I execute "do code_name_lookup"
+    Then a new value "value «int» \n«int» 789" should be on the :code stack
+    
+    
+  Scenario: code_name_lookup instruction should create an :error when the reference is unbound
+    Given an interpreter with name "x" but no current binding
+    And "x" on the :name stack
+    When I execute "do code_name_lookup"
+    Then I should have a new :error "code_name_lookup referenced an unbound name"
