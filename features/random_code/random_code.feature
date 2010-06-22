@@ -51,11 +51,10 @@ Feature: Random code generation
     Then the only references that appear are those three
     
     
-  Scenario: the default set of references should be those active in the Interpreter
-    Given an interpreter with variables ["x1", "x2"] active
-    And names ["n1", "n2"] active
-    When I create random code
-    Then the only references that appear are those four
+  Scenario: the default behavior is to select from a list of 10 references
+    Given no references are passed in
+    When I create a random ref point
+    Then the name should be sampled randomly from ('x1'..'x10')
     
     
   Scenario: it should be possible to specify a set of NudgeTypes to use
