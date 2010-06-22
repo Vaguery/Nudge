@@ -19,7 +19,7 @@ class BlockPoint < NudgePoint
   
   def do_action_at_n_recursively (n, action, new_point)
     @points.each_with_index do |point, i|
-      if (n -= 1) == 1
+      if (n -= 1) == 0
         old_point = @points[i]
         
         case action

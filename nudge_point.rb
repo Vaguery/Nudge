@@ -25,7 +25,7 @@ class NudgePoint
   end
   
   def get_point_at (n)
-    return self if n == 1
+    return self if n == 0
     at(n, :get)
   end
   
@@ -46,7 +46,7 @@ class NudgePoint
   end
   
   def at (n, action, new_point = nil)
-    raise NudgeError::OutermostPointOperation, "can't #{action} outermost point" if n == 1
+    raise NudgeError::OutermostPointOperation, "can't #{action} outermost point" if n == 0
     
     do_action_at_n(n, action, new_point) ||
       raise(NudgeError::PointIndexTooLarge, "can't operate on point #{n} in a tree of size #{points}")

@@ -46,22 +46,22 @@ describe "NudgePoint" do
   end
   
   describe "#get_point_at (n: Fixnum)" do
-    it "returns this point if n == 1" do
+    it "returns this point if n == 0" do
       point = NudgePoint.new
-      point.get_point_at(1).should == point
+      point.get_point_at(0).should == point
     end
     
-    it "raises PointIndexTooLarge if n != 1" do
+    it "raises PointIndexTooLarge if n != 0" do
       point = NudgePoint.new
-      lambda { point.get_point_at(2) }.should raise_error NudgeError::PointIndexTooLarge,
-        "can't operate on point 2 in a tree of size 1"
+      lambda { point.get_point_at(1) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 1 in a tree of size 1"
     end
   end
   
   describe "#delete_point_at (n: Fixnum)" do
     it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.delete_point_at(1) }.should raise_error NudgeError::OutermostPointOperation,
+      lambda { point.delete_point_at(0) }.should raise_error NudgeError::OutermostPointOperation,
         "can't delete outermost point"
     end
   end
@@ -69,7 +69,7 @@ describe "NudgePoint" do
   describe "#replace_point_at (n: Fixnum, new_point: NudgePoint)" do
     it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.replace_point_at(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+      lambda { point.replace_point_at(0, point) }.should raise_error NudgeError::OutermostPointOperation,
         "can't replace outermost point"
     end
   end
@@ -77,7 +77,7 @@ describe "NudgePoint" do
   describe "#insert_point_before (n: Fixnum, new_point: NudgePoint)" do
     it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.insert_point_before(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+      lambda { point.insert_point_before(0, point) }.should raise_error NudgeError::OutermostPointOperation,
         "can't insert_before outermost point"
     end
   end
@@ -85,7 +85,7 @@ describe "NudgePoint" do
   describe "#insert_point_after (n: Fixnum, new_point: NudgePoint)" do
     it "raises OutermostPointOperation" do
       point = NudgePoint.new
-      lambda { point.insert_point_after(1, point) }.should raise_error NudgeError::OutermostPointOperation,
+      lambda { point.insert_point_after(0, point) }.should raise_error NudgeError::OutermostPointOperation,
         "can't insert_after outermost point"
     end
   end
