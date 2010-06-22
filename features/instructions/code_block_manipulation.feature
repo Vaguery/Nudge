@@ -39,11 +39,7 @@ Feature: Code 'list' manipulation
     And the original argument should be gone
     
     
-  Scenario: code_car should return an error value for an unparseable program
-    Given an interpreter with "12345 67 8 9" on the :code stack
-    When I execute "do code_car"
-    Then the original argument should be gone
-    And the :error stack should contain "code_car attempted on unparseable program"
+    
     
     
     
@@ -82,11 +78,7 @@ Feature: Code 'list' manipulation
     And the original argument should be gone
     
     
-  Scenario: code_cdr should return an :error when the argument is unparseable
-    Given an interpreter with "flibbertigibbet" on the :code stack
-    When I execute "do code_cdr"
-    Then the original argument should be gone
-    And the :error stack should contain "code_cdr attempted on unparseable program"
+    
     
     
     
@@ -123,6 +115,9 @@ Feature: Code 'list' manipulation
     
     
     
+    
+    
+    
   Scenario: code_cons should insert the 1st argument into the first position in a 2nd argument block
     Given an interpreter with "do a" on the :code stack
     And "block {ref x ref y}" above that
@@ -153,6 +148,9 @@ Feature: Code 'list' manipulation
     When I execute "do code_cons"
     Then the original arguments should be gone
     And the :code stack should contain "block {block {block {}} do int_add}"
+    
+    
+    
     
     
     
@@ -204,6 +202,17 @@ Feature: Code 'list' manipulation
     And the :code stack should contain "block {block {value «int» ref x}} \n«int» 99"
     
     
+  Scenario: code_container should return the entire arg1 if they're identical
+    Given an interpreter with "block {block {value «int» ref x}} \n«int» 99" on the :code stack
+    And "block {block {value «int» ref x}} \n«int» 99" above that
+    When I execute "do code_container"
+    Then the original arguments should be gone
+    And the :code stack should contain "block {block {value «int» ref x}} \n«int» 99"
+    
+    
+    
+    
+    
     
   Scenario: code_gsub should replace all subtrees in arg1 matching arg2 with arg3
     Given an interpreter with "block {ref x ref y ref x}" on the :code stack
@@ -241,31 +250,7 @@ Feature: Code 'list' manipulation
     And the :code stack should contain "block {value «code» do a} \n«code ref x"
     
     
-  Scenario: code_gsub should return an :error if arg1 is unparseable
-    Given an interpreter with "rooty toot toot" on the :code stack
-    And "value «int» \n «int» 9" above that
-    And "do a" above that
-    When I execute "do code_gsub"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_gsub cannot parse an argument"
     
-    
-  Scenario: code_gsub should return an :error if arg2 is unparseable
-    Given an interpreter with "ref x" on the :code stack
-    And "hoo dee doo" above that
-    And "do a" above that
-    When I execute "do code_gsub"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_gsub cannot parse an argument"
-    
-    
-  Scenario: code_gsub should return an :error if arg3 is unparseable
-    Given an interpreter with "ref x" on the :code stack
-    And "do a" above that
-    And "tra la la" above that
-    When I execute "do code_gsub"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_gsub cannot parse an argument"
     
     
     
@@ -283,6 +268,9 @@ Feature: Code 'list' manipulation
     When I execute "do code_list"
     Then the original arguments should be gone
     And the :code stack should contain "block {block {ref x} block {do a}}"
+    
+    
+    
     
     
     
@@ -310,12 +298,6 @@ Feature: Code 'list' manipulation
     And the :code stack should contain "do int_add"
     
     
-  Scenario: code_nth should create an error if an empty block is the arg
-    Given an interpreter with "block {}" on the :code stack
-    And "2" on the :int stack
-    When I execute "do code_nth"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_nth cannot work on empty blocks"
     
     
     
@@ -349,3 +331,81 @@ Feature: Code 'list' manipulation
     When I execute "do code_nth_cdr"
     Then the original arguments should be gone
     And the :code stack should contain "block {do a do b do c}"
+    
+    
+    
+    
+    
+    
+  Scenario: code_nth_point should return the nth point of a program
+    Given an interpreter with "block {do a do b do c}" on the :code stack
+    And "2" on the :int stack
+    When I execute "do code_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "do a"
+    
+    
+  Scenario: code_nth_point should take n modulo the number of points
+    Given an interpreter with "block {do a do b do c}" on the :code stack
+    And "7" on the :int stack
+    When I execute "do code_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "do b"
+    
+    
+  Scenario: code_nth_point should take arg2 = 0 to mean the last point
+    Given an interpreter with "block {do a do b do c}" on the :code stack
+    And "0" on the :int stack
+    When I execute "do code_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "do c"
+    
+    
+  Scenario: code_nth_point should work as expected for negative arguments
+    Given an interpreter with "block {do a do b do c}" on the :code stack
+    And "-1" on the :int stack
+    When I execute "do code_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "do b"
+    
+    
+    
+    
+    
+    
+  Scenario: code_position should find the first point identical to the 2nd argument in the 1st arg
+    Given an interpreter with "block {do a block {do b}}" on the :code stack
+    And "do b" on the :code stack above that
+    When I execute "do code_position"
+    Then the original arguments should be gone
+    And the :int stack should contain "4"
+    
+    
+  Scenario: code_position should return 0 if the 2nd arg is not found
+    Given an interpreter with "block {do a block {do b}}" on the :code stack
+    And "ref x" on the :code stack above that
+    When I execute "do code_position"
+    Then the original arguments should be gone
+    And the :int stack should contain "0"
+    
+    
+    
+    
+    
+    
+  Scenario: code_replace_nth_point should replace the nth point of :code arg1 with :code arg2
+    Given an interpreter with "block {do a block {do b}}" on the :code stack
+    And "ref x" on the :code stack above that
+    And "3" on the :int stack
+    When I execute "do code_replace_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "block {do a ref x}"
+    
+    
+  Scenario: code_replace_nth_point should take n modulo the number of points in the arg1 (1-based)
+    Given an interpreter with "block {do a block {do b}}" on the :code stack
+    And "ref x" on the :code stack above that
+    And "32" on the :int stack
+    When I execute "do code_replace_nth_point"
+    Then the original arguments should be gone
+    And the :code stack should contain "block {do a block {ref x}}"

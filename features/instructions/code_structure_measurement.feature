@@ -62,6 +62,9 @@ Feature: Code structure measurements
   
   
   
+  
+  
+  
   Scenario: code_discrepancy should return 0 for two identical :code items
     Given an interpreter with "block {do a ref y}" on the :code stack
     And  "block {do a ref y}" above that on the :code stack
@@ -108,6 +111,9 @@ Feature: Code structure measurements
     When I execute "do code_discrepancy"
     Then a new :int with value "0" should be on top of the :int stack
     And the argument should be gone
+    
+    
+    
     
     
     

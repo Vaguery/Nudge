@@ -48,6 +48,9 @@ Feature: Code classification
     
     
     
+    
+    
+    
   Scenario: code_null_q should be true if the argument is an empty block
     Given an interpreter with "block {}" on the :code stack
     When I execute "do code_null_q"
@@ -91,6 +94,9 @@ Feature: Code classification
     
     
     
+    
+    
+    
   Scenario: code_member_q should be true if the 2nd argument is in the root of the 1st
     Given an interpreter with "block {do x}" on the :code stack
     And "do x" on top of that
@@ -121,6 +127,9 @@ Feature: Code classification
     When I execute "do code_member_q"
     Then "false" should be on top of the :bool stack
     And the arguments should be gone
+    
+    
+    
     
     
     
