@@ -26,22 +26,137 @@ describe "BlockPoint" do
     end
   end
   
-  describe "#get_point (n)" do
-    it "if n == 1, returns this point" do
+  describe "#points" do
+    it "returns the total number of points in the tree that has this point as its root" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_3 = NudgePoint.new
+      point_4 = BlockPoint.new(point_1, point_2)
+      BlockPoint.new(point_3, point_4).points.should == 5
+    end
+  end
+  
+  describe "#get_point_at (n: Fixnum)" do
+    it "returns this point if n == 0" do
       point = BlockPoint.new
-      point.get_point(1).should == point
+      point.get_point_at(0).should == point
     end
     
-    it "if n != 1 and n is less than the combined number of all contained points, returns the point corresponding to n" do
+    it "raises PointIndexTooLarge if n + 1 > self.points" do
+      point_1 = NudgePoint.new
       point_2 = NudgePoint.new
-      point_3 = NudgePoint.new
-      BlockPoint.new(point_2, point_3).get_point(3).should == point_3
+      lambda { BlockPoint.new(point_1, point_2).get_point_at(5) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 5 in a tree of size 3"
     end
     
-    it "if n != 1 and n is greater than the combined number of all contained points, returns n minus the number of points seen" do
+    it "returns the point corresponding to n" do
+      point_1 = NudgePoint.new
       point_2 = NudgePoint.new
-      point_3 = NudgePoint.new
-      BlockPoint.new(point_2, point_3).get_point(5).should == 3
+      BlockPoint.new(point_1, point_2).get_point_at(2).should == point_2
+    end
+  end
+  
+  describe "#delete_point_at (n: Fixnum)" do
+    it "raises OutermostPointOperation if n == 0" do
+      point = BlockPoint.new
+      lambda { point.delete_point_at(0) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't delete outermost point"
+    end
+    
+    it "raises PointIndexTooLarge if n + 1 > self.points" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      lambda { BlockPoint.new(point_1, point_2).delete_point_at(5) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 5 in a tree of size 3"
+    end
+    
+    it "removes the point corresponding to n from the tree and returns that point" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_0 = BlockPoint.new(point_1, point_2)
+      
+      point_0.delete_point_at(2).should == point_2
+      lambda { point_0.get_point_at(2) }.should raise_error NudgeError::PointIndexTooLarge
+    end
+  end
+  
+  describe "#replace_point_at (n: Fixnum, new_point: NudgePoint)" do
+    it "raises OutermostPointOperation if n == 0" do
+      point = BlockPoint.new
+      lambda { point.replace_point_at(0, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't replace outermost point"
+    end
+    
+    it "raises PointIndexTooLarge if n + 1 > self.points" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      lambda { BlockPoint.new(point_1, point_2).replace_point_at(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 5 in a tree of size 3"
+    end
+    
+    it "replaces the point corresponding to n with new_point and returns the replaced point" do
+      point_r = NudgePoint.new
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_0 = BlockPoint.new(point_1, point_2)
+      
+      point_0.replace_point_at(2, point_r).should == point_2
+      point_0.points.should == 3
+      point_0.get_point_at(2).should == point_r
+    end
+  end
+  
+  describe "#insert_point_before (n: Fixnum, new_point: NudgePoint)" do
+    it "raises OutermostPointOperation if n == 0" do
+      point = BlockPoint.new
+      lambda { point.insert_point_before(0, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't insert_before outermost point"
+    end
+    
+    it "raises PointIndexTooLarge if n + 1 > self.points" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      lambda { BlockPoint.new(point_1, point_2).insert_point_before(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 5 in a tree of size 3"
+    end
+    
+    it "inserts new_point before the point corresponding to n and returns the old nth point" do
+      point_i = NudgePoint.new
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_0 = BlockPoint.new(point_1, point_2)
+      
+      point_0.insert_point_before(2, point_i).should == point_2
+      point_0.points.should == 4
+      point_0.get_point_at(2).should == point_i
+      point_0.get_point_at(3).should == point_2
+    end
+  end
+  
+  describe "#insert_point_after (n: Fixnum, new_point: NudgePoint)" do
+    it "raises OutermostPointOperation if n == 0" do
+      point = BlockPoint.new
+      lambda { point.insert_point_after(0, point) }.should raise_error NudgeError::OutermostPointOperation,
+        "can't insert_after outermost point"
+    end
+    
+    it "raises PointIndexTooLarge if n + 1 > self.points" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      lambda { BlockPoint.new(point_1, point_2).insert_point_after(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
+        "can't operate on point 5 in a tree of size 3"
+    end
+    
+    it "inserts new_point after the point corresponding to n and returns the point at n" do
+      point_i = NudgePoint.new
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_0 = BlockPoint.new(point_1, point_2)
+      
+      point_0.insert_point_after(2, point_i).should == point_2
+      point_0.points.should == 4
+      point_0.get_point_at(2).should == point_2
+      point_0.get_point_at(3).should == point_i
     end
   end
 end

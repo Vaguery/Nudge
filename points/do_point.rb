@@ -7,4 +7,8 @@ class DoPoint < NudgePoint
     super
     Instruction.execute(@instruction_id, outcome_data)
   end
+  
+  def script_and_values
+    return "do #{@instruction_id}", []
+  end
 end

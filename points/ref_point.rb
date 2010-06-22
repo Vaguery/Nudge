@@ -10,4 +10,8 @@ class RefPoint < NudgePoint
       value.evaluate(outcome_data)
     end
   end
+  
+  def script_and_values
+    return "ref #{@variable_id}", []
+  end
 end

@@ -8,6 +8,10 @@ class ValuePoint < NudgePoint
     super
     outcome_data.stacks[@type_id].push(@string)
   end
+  
+  def script_and_values
+    return "value «#{@type_id}»", ["«#{@type_id}»#{@string}"]
+  end
 end
 
 class Value < ValuePoint
