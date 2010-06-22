@@ -1,7 +1,7 @@
 Feature: Random code generation
   In order to generate samples for algorithm search
   As a modeler
-  I want a flexible suite of random code generating methods
+  I want a flexible random code generating method
   
   
   Scenario: it should be possible to specify the exact number of points created
@@ -18,10 +18,12 @@ Feature: Random code generation
     
     
   Scenario: it should be possible to specify the maximum tree depth
-    Given a maximum tree depth 12
+    Given a maximum tree depth 4
     When I create random code
     And pass in an optional parameter specifying that depth
-    Then the result should not have more than that depth
+    And pass in a 300 as the number of program points
+    Then the result should not have any nesting depth more than 4
+    And the number of points should be 300
     
     
   Scenario: the default maximum tree depth should be 10
@@ -37,9 +39,9 @@ Feature: Random code generation
     Then the only instructions that should appear are those three
     
     
-  Scenario: the default instruction set should be all those defined in the namespace
-    Given an interpreter with only the :int_add instruction active
-    But no other instructions are active
+  Scenario: the default instruction set should be all those active in the namespace
+    Given a Nudge namespace with only the :int_add instruction active
+    And no other instructions are active
     When I create random code
     Then the only instructions that appear are :int_add
     
@@ -65,28 +67,28 @@ Feature: Random code generation
     
     
   Scenario: the default set of types should be those active in the namespace
-    Given an interpreter with [IntType, FloatType] active
+    Given a namespace with only [IntType, FloatType] active
     When I create random code
     Then the only value points created should be :int and :float points
     
     
-  Scenario: the default ranges for all value points are defined by the Interpreter
-    Given an interpreter with the minimum random integer limit = -100
+  Scenario: the default ranges for all value points are defined by NudgeTypes themselves
+    Given a namespace in which the IntType has minimum random integer limit = -100
     And maximum random integer limit = 100
-    And minimum random float limit = -1000.0
+    And the FloatType has minimum random float limit = -1000.0
     And maximum random float limit = 1000.0
-    And boolean bias = 0.5
-    And random code size in points = 20
+    And the BoolType has boolean bias = 0.5
+    And CodeType has random code size in points = 20
     When I generate random code
     Then all values should be generated using those parameters
     
     
-  Scenario: it should be possible to override the range for random value generation
-    Given a set of new ranges and control parameters used by various NudgeType methods
+  Scenario: it should be possible to temporarily override the ranges for random value generation
+    Given a set of new ranges and control parameters
     When I create random code
     And pass in those parameters to the call
     Then the code should use those parameters
-    And not use the defaults
+    And not use the defaults from the NudgeType classes
     
     
   Scenario: it should be possible to specify the proportion of program points that are each point type
@@ -108,10 +110,10 @@ Feature: Random code generation
     And of a block, 25%
     
     
-  Scenario: the default probability of setting a point of a given point type should be uniform
+  Scenario: the default probability of setting a point of a given specific variant should be uniform
     Given an interpreter with 10 instructions defined
     When I randomly choose an instruction point
     Then the chance should be equal that it will be any of those 10
-  
-  
+    
+    
   

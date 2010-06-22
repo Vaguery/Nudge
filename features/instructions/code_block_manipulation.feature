@@ -274,9 +274,9 @@ Feature: Code 'list' manipulation
     
     
     
-  Scenario: code_nth should return the nth backbone element (1-based) of a :code item
+  Scenario: code_nth should return the nth backbone element (0-based) of a :code item
     Given an interpreter with "block {do a do b do c}" on the :code stack
-    And "1" on the :int stack
+    And "0" on the :int stack
     When I execute "do code_nth"
     Then the original arguments should be gone
     And the :code stack should contain "do a"
@@ -284,10 +284,10 @@ Feature: Code 'list' manipulation
     
   Scenario: code_nth should take n modulo the number of items in the backbone
     Given an interpreter with "block {do a do b do c}" on the :code stack
-    And "-29" on the :int stack
+    And "5" on the :int stack
     When I execute "do code_nth"
     Then the original arguments should be gone
-    And the :code stack should contain "do a"
+    And the :code stack should contain "do c"
       
       
   Scenario: code_nth should not affect a non-block argument
@@ -337,12 +337,12 @@ Feature: Code 'list' manipulation
     
     
     
-  Scenario: code_nth_point should return the nth point of a program
+  Scenario: code_nth_point should return the nth point of a program (0-based)
     Given an interpreter with "block {do a do b do c}" on the :code stack
     And "2" on the :int stack
     When I execute "do code_nth_point"
     Then the original arguments should be gone
-    And the :code stack should contain "do a"
+    And the :code stack should contain "do b"
     
     
   Scenario: code_nth_point should take n modulo the number of points
@@ -350,15 +350,15 @@ Feature: Code 'list' manipulation
     And "7" on the :int stack
     When I execute "do code_nth_point"
     Then the original arguments should be gone
-    And the :code stack should contain "do b"
+    And the :code stack should contain "do c"
     
     
-  Scenario: code_nth_point should take arg2 = 0 to mean the last point
+  Scenario: code_nth_point should take arg2 = 0 to mean the first point
     Given an interpreter with "block {do a do b do c}" on the :code stack
     And "0" on the :int stack
     When I execute "do code_nth_point"
     Then the original arguments should be gone
-    And the :code stack should contain "do c"
+    And the :code stack should contain "block {do a do b do c}"
     
     
   Scenario: code_nth_point should work as expected for negative arguments
@@ -366,46 +366,46 @@ Feature: Code 'list' manipulation
     And "-1" on the :int stack
     When I execute "do code_nth_point"
     Then the original arguments should be gone
-    And the :code stack should contain "do b"
+    And the :code stack should contain "do c"
     
     
     
     
     
     
-  Scenario: code_position should find the first point identical to the 2nd argument in the 1st arg
+  Scenario: code_position should find the first (0-based) point identical to the 2nd argument in the 1st arg 
     Given an interpreter with "block {do a block {do b}}" on the :code stack
     And "do b" on the :code stack above that
     When I execute "do code_position"
     Then the original arguments should be gone
-    And the :int stack should contain "4"
+    And the :int stack should contain "3"
     
     
-  Scenario: code_position should return 0 if the 2nd arg is not found
+  Scenario: code_position should return [WHAT?!] if the 2nd arg is not found
     Given an interpreter with "block {do a block {do b}}" on the :code stack
     And "ref x" on the :code stack above that
     When I execute "do code_position"
     Then the original arguments should be gone
-    And the :int stack should contain "0"
+    And the :int stack should contain "[WHAT?!]"
     
     
     
     
     
     
-  Scenario: code_replace_nth_point should replace the nth point of :code arg1 with :code arg2
+  Scenario: code_replace_nth_point should replace the nth point (0-based) of :code arg1 with :code arg2
     Given an interpreter with "block {do a block {do b}}" on the :code stack
     And "ref x" on the :code stack above that
-    And "3" on the :int stack
+    And "2" on the :int stack
     When I execute "do code_replace_nth_point"
     Then the original arguments should be gone
     And the :code stack should contain "block {do a ref x}"
     
     
-  Scenario: code_replace_nth_point should take n modulo the number of points in the arg1 (1-based)
+  Scenario: code_replace_nth_point should take n modulo the number of points in the arg1 (0-based)
     Given an interpreter with "block {do a block {do b}}" on the :code stack
     And "ref x" on the :code stack above that
-    And "32" on the :int stack
+    And "31" on the :int stack
     When I execute "do code_replace_nth_point"
     Then the original arguments should be gone
     And the :code stack should contain "block {do a block {ref x}}"

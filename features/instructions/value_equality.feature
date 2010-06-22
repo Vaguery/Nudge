@@ -41,7 +41,7 @@ Feature: Value equality
     | x11  | x1    |  name  | name_equal_q | false  |
     
     
-    Scenario Outline: code_equal_q (with parseable code)
+    Scenario Outline: code_equal_q (compares parsed code, not strings)
     | arg1                   | arg2                             | stack | instruction   | result |
     | "ref x"                | "ref x"                          |  code |  code_equal_q |  true  |
     | "ref \t\n  x"          | "ref x"                          |  code |  code_equal_q |  true  |
