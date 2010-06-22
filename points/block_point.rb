@@ -36,9 +36,10 @@ class BlockPoint < NudgePoint
         
         case action
           when :get
-          when :replace, :delete  then @points[i..i] = new_point
-          when :insert_before     then @points[i...i] = new_point
-          when :insert_after      then @points[(i + 1)...(i + 1)] = new_point
+          when :delete         then @points.delete_at(i)
+          when :replace        then @points[i..i] = new_point
+          when :insert_before  then @points[i...i] = new_point
+          when :insert_after   then @points[(i + 1)...(i + 1)] = new_point
         end
         
         throw(:complete, old_point)
