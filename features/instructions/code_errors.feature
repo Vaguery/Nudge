@@ -76,6 +76,26 @@ Feature: Code manipulation errors
     
     
     
+  Scenario: code_contains_q should return an :error if its arg1 can't be parsed
+    Given an interpreter with "askjdnkajsndkas" on the :code stack
+    And "block {}" above that
+    When I execute "do code_contains_q"
+    Then the original arguments should be gone
+    And the :error stack should contain "code_contains_q cannot parse an argument"
+    
+    
+  Scenario: code_contains_q should return an :error if its arg2 can't be parsed
+    Given an interpreter with "do x" on the :code stack
+    And "099" above that
+    When I execute "do code_contains_q"
+    Then the original arguments should be gone
+    And the :error stack should contain "code_contains_q cannot parse an argument"
+    
+    
+    
+    
+    
+    
   Scenario: code_gsub should return an :error if arg1 is unparseable
     Given an interpreter with "rooty toot toot" on the :code stack
     And "value «int» \n «int» 9" above that

@@ -65,6 +65,34 @@ Feature: Code structure measurements
   
   
   
+  Scenario: code_contains_q should return true if arg1 contains arg2 as a point anywhere
+    Given an interpreter with "block {ref x do a}" on the :code stack
+    And "ref x" on top of that
+    When I execute "do code_contains_q"
+    Then the arguments should disappear
+    And a new :bool with value "true" should be on top of the :bool stack
+  
+  
+  Scenario: code_contains_q should return false if arg1 doesn't contain arg2 as a point anywhere
+    Given an interpreter with "block {ref x do a}" on the :code stack
+    And "ref y" on top of that
+    When I execute "do code_contains_q"
+    Then the arguments should disappear
+    And a new :bool with value "false" should be on top of the :bool stack
+  
+  
+  Scenario: code_contains_q should return false if arg1 == arg2 
+    Given an interpreter with "block {ref x do a}" on the :code stack
+    And "block {ref x do a}" on top of that
+    When I execute "do code_contains_q"
+    Then the arguments should disappear
+    And a new :bool with value "true" should be on top of the :bool stack
+    
+    
+    
+    
+    
+    
   Scenario: code_discrepancy should return 0 for two identical :code items
     Given an interpreter with "block {do a ref y}" on the :code stack
     And  "block {do a ref y}" above that on the :code stack
