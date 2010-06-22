@@ -1,3 +1,4 @@
+#encoding: utf-8
 class ValuePoint < NudgePoint
   def initialize (type_id, string)
     @type_id = type_id

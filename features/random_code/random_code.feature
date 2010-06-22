@@ -37,7 +37,7 @@ Feature: Random code generation
     Then the only instructions that should appear are those three
     
     
-  Scenario: the default instruction set should be all those active in the Interpreter
+  Scenario: the default instruction set should be all those defined in the namespace
     Given an interpreter with only the :int_add instruction active
     But no other instructions are active
     When I create random code
@@ -64,7 +64,7 @@ Feature: Random code generation
     Then the only values that appear should be taken from that list
     
     
-  Scenario: the default set of types should be those active in the Interpreter
+  Scenario: the default set of types should be those active in the namespace
     Given an interpreter with [IntType, FloatType] active
     When I create random code
     Then the only value points created should be :int and :float points
@@ -89,7 +89,7 @@ Feature: Random code generation
     And not use the defaults
     
     
-  Scenario: it should be possible to specify the proportion of program points that are refs
+  Scenario: it should be possible to specify the proportion of program points that are each point type
     Given a Hash {refs: 0, instructions: 100, values: 200, blocks: 100}
     When I create random code
     And pass in the Hash as an optional parameter
