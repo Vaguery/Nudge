@@ -1,4 +1,4 @@
-class Instruction::GreaterThanQ < Instruction
+class Instruction::IntGreaterThanQ < Instruction
   get 2, :int
   
   def process
