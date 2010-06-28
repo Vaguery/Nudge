@@ -1,6 +1,8 @@
 class Instruction::IntDuplicate < Instruction
+  get 1, :int
+  
   def process
-    stack = @outcome_data.stacks[:int]
-    stack.push(stack.last)
+    put :int, int(0)
+    put :int, int(0)
   end
 end
