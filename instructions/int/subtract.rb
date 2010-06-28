@@ -1,4 +1,4 @@
-class Instruction::IntSubtract < Instruction
+class IntSubtract < NudgeInstruction
   get 2, :int
   
   def process

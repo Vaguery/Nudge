@@ -1,4 +1,4 @@
-class Instruction::ProportionBoundedDivide < Instruction
+class ProportionBoundedDivide < NudgeInstruction
   get 2, :proportion
   
   def process

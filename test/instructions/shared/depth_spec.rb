@@ -17,10 +17,10 @@ require 'nudge'
   outcome_data.stacks[:proportion].push "0.0909090909"
   outcome_data.stacks[:proportion].push "0.9090909091"
   
-  describe "Instruction::#{name}Depth" do
+  describe "#{name}Depth" do
     describe "#process()" do
       it "pushes the length of the :#{name.downcase} stack to the :int stack" do
-        Instruction.execute(:"#{name.downcase}_depth", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_depth", outcome_data)
         outcome_data.stacks[:int].pop.should == "2"
       end
     end

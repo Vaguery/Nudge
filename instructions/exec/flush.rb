@@ -1,4 +1,4 @@
-class Instruction::ExecFlush < Instruction
+class ExecFlush < NudgeInstruction
   def process
     @outcome_data.stacks[:exec].clear
   end

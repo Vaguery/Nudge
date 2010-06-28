@@ -1,4 +1,4 @@
-class Instruction::FloatTangent < Instruction
+class FloatTangent < NudgeInstruction
   get 1, :float
   
   def process

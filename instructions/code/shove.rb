@@ -1,4 +1,4 @@
-class Instruction::CodeShove < Instruction
+class CodeShove < NudgeInstruction
   get 1, :int
   
   def process

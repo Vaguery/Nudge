@@ -1,4 +1,4 @@
-class Instruction::FloatModulo < Instruction
+class FloatModulo < NudgeInstruction
   get 2, :float
   
   def process

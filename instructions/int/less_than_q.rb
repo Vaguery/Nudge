@@ -1,4 +1,4 @@
-class Instruction::IntLessThanQ < Instruction
+class IntLessThanQ < NudgeInstruction
   get 2, :int
   
   def process

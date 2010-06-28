@@ -1,4 +1,4 @@
-class Instruction::NamePop < Instruction
+class NamePop < NudgeInstruction
   def process
     @outcome_data.stacks[:name].pop
   end

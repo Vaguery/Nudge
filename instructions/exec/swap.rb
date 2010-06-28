@@ -1,4 +1,4 @@
-class Instruction::ExecSwap < Instruction
+class ExecSwap < NudgeInstruction
   get 2, :exec
   
   def process

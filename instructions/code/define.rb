@@ -1,4 +1,4 @@
-class Instruction::CodeDefine < Instruction
+class CodeDefine < NudgeInstruction
   get 1, :name
   get 1, :code
   

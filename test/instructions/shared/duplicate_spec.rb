@@ -10,10 +10,10 @@ require 'nudge'
   outcome_data.stacks[:name].push "x"
   outcome_data.stacks[:proportion].push "0.0909090909"
   
-  describe "Instruction::#{name}Duplicate" do
+  describe "#{name}Duplicate" do
     describe "#process()" do
       it "pushes a duplicate of the top item on the :#{name.downcase} stack to the :#{name.downcase} stack" do
-        Instruction.execute(:"#{name.downcase}_duplicate", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_duplicate", outcome_data)
         outcome_data.stacks[name.downcase.intern].pop.should == outcome_data.stacks[name.downcase.intern].pop
       end
     end

@@ -1,6 +1,6 @@
 require 'nudge'
 
-describe "Instruction::BoolRandom" do
+describe "BoolRandom" do
   describe "#process()" do
     it "pushes one randomly chosen \"true\" or \"false\" onto the :bool stack" do
       script = "block { do bool_random }"

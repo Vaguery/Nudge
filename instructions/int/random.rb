@@ -1,4 +1,4 @@
-class Instruction::IntRandom < Instruction
+class IntRandom < NudgeInstruction
   get 1, :int
   
   def process

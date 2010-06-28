@@ -1,4 +1,4 @@
-class Instruction::BoolDuplicate < Instruction
+class BoolDuplicate < NudgeInstruction
   get 1, :bool
   
   def process

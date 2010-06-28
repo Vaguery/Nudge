@@ -1,4 +1,4 @@
-class Instruction::FloatSqrt < Instruction
+class FloatSqrt < NudgeInstruction
   get 1, :float
   
   def process

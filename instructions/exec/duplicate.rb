@@ -1,4 +1,4 @@
-class Instruction::ExecDuplicate < Instruction
+class ExecDuplicate < NudgeInstruction
   get 1, :exec
   
   def process

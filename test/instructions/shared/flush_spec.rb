@@ -10,10 +10,10 @@ require 'nudge'
   outcome_data.stacks[:name].push "x"
   outcome_data.stacks[:proportion].push "0.0909090909"
   
-  describe "Instruction::#{name}Flush" do
+  describe "#{name}Flush" do
     describe "#process()" do
       it "empties the :#{name.downcase} stack" do
-        Instruction.execute(:"#{name.downcase}_flush", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_flush", outcome_data)
         outcome_data.stacks[name.downcase.intern].should == []
       end
     end

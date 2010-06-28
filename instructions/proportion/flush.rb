@@ -1,4 +1,4 @@
-class Instruction::ProportionFlush < Instruction
+class ProportionFlush < NudgeInstruction
   def process
     @outcome_data.stacks[:proportion].clear
   end

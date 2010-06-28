@@ -1,4 +1,4 @@
-class Instruction::ProportionRotate < Instruction
+class ProportionRotate < NudgeInstruction
   get 3, :proportion
   
   def process

@@ -1,4 +1,4 @@
-class Instruction::IntDivide < Instruction
+class IntDivide < NudgeInstruction
   get 2, :int
   
   def process

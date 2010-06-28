@@ -1,4 +1,4 @@
-class Instruction::ExecDefine < Instruction
+class ExecDefine < NudgeInstruction
   get 1, :name
   get 1, :exec
   

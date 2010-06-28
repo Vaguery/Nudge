@@ -1,4 +1,4 @@
-class Instruction::FloatRandom < Instruction
+class FloatRandom < NudgeInstruction
   get 1, :float
   
   def process

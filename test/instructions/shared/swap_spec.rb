@@ -24,13 +24,13 @@ require 'nudge'
   outcome_data.stacks[:proportion].push "0.2"
   outcome_data.stacks[:proportion].push "0.3"
   
-  describe "Instruction::#{name}Swap" do
+  describe "#{name}Swap" do
     describe "#process()" do
       it "swaps the positions of the top two items in the :#{name.downcase} stack" do
         expected_new_top_value = outcome_data.stacks[name.downcase.intern][-2]
         expected_new_second_value = outcome_data.stacks[name.downcase.intern][-1]
         expected_new_third_value = outcome_data.stacks[name.downcase.intern][-3]
-        Instruction.execute(:"#{name.downcase}_swap", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_swap", outcome_data)
         
         outcome_data.stacks[name.downcase.intern].pop.should == expected_new_top_value
         outcome_data.stacks[name.downcase.intern].pop.should == expected_new_second_value

@@ -1,4 +1,4 @@
-class Instruction::IntDuplicate < Instruction
+class IntDuplicate < NudgeInstruction
   get 1, :int
   
   def process

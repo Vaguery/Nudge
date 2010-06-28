@@ -1,4 +1,4 @@
-class Instruction::FloatCosine < Instruction
+class FloatCosine < NudgeInstruction
   get 1, :float
   
   def process

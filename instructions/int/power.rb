@@ -1,4 +1,4 @@
-class Instruction::IntPower < Instruction
+class IntPower < NudgeInstruction
   get 2, :int
   
   def process

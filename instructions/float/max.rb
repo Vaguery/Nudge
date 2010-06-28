@@ -1,4 +1,4 @@
-class Instruction::FloatMax < Instruction
+class FloatMax < NudgeInstruction
   get 2, :float
   
   def process

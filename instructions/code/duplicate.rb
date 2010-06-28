@@ -1,4 +1,4 @@
-class Instruction::CodeDuplicate < Instruction
+class CodeDuplicate < NudgeInstruction
   get 1, :code
   
   def process

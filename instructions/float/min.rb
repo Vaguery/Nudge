@@ -1,4 +1,4 @@
-class Instruction::FloatMin < Instruction
+class FloatMin < NudgeInstruction
   get 2, :float
   
   def process

@@ -1,4 +1,4 @@
-class Instruction::FloatDuplicate < Instruction
+class FloatDuplicate < NudgeInstruction
   get 1, :float
   
   def process

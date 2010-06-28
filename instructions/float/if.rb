@@ -1,4 +1,4 @@
-class Instruction::FloatIf < Instruction
+class FloatIf < NudgeInstruction
   get 1, :bool
   get 2, :float
   

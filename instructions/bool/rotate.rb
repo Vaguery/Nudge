@@ -1,4 +1,4 @@
-class Instruction::BoolRotate < Instruction
+class BoolRotate < NudgeInstruction
   get 3, :bool
   
   def process

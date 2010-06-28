@@ -1,4 +1,4 @@
-class Instruction::ProportionMultiply < Instruction
+class ProportionMultiply < NudgeInstruction
   get 2, :proportion
   
   def process

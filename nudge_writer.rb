@@ -8,7 +8,7 @@ class NudgeWriter
     @block_width = 5
     @block_depth = 5
     
-    @do_instructions = Instruction::INSTRUCTIONS.keys
+    @do_instructions = NudgeInstruction::INSTRUCTIONS.keys
     @ref_names = %w:x1 x2 x3 x4 x5 x6 x7 x8 x9 x10:
     @value_types = NudgeValue::TYPES.keys
     

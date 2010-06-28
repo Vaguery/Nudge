@@ -1,4 +1,4 @@
-class Instruction::NameRotate < Instruction
+class NameRotate < NudgeInstruction
   get 3, :name
   
   def process

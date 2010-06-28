@@ -1,4 +1,4 @@
-class Instruction::IntNegative < Instruction
+class IntNegative < NudgeInstruction
   get 1, :int
   
   def process

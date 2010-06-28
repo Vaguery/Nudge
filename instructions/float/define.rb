@@ -1,4 +1,4 @@
-class Instruction::FloatDefine < Instruction
+class FloatDefine < NudgeInstruction
   get 1, :name
   get 1, :float
   

@@ -1,4 +1,4 @@
-class Instruction::CodeYank < Instruction
+class CodeYank < NudgeInstruction
   get 1, :int
   
   def process

@@ -1,6 +1,6 @@
 require 'nudge'
 
-describe "Instruction::BoolNot" do
+describe "BoolNot" do
   describe "#process()" do
     it "pops the top item off the :bool stack and pushes its logical ! onto the :bool stack" do
       script = "block { value «bool» do bool_not }\n«bool» false"

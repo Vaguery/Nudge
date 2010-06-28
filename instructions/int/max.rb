@@ -1,4 +1,4 @@
-class Instruction::IntMax < Instruction
+class IntMax < NudgeInstruction
   get 2, :int
   
   def process

@@ -1,4 +1,4 @@
-class Instruction::FloatMultiply < Instruction
+class FloatMultiply < NudgeInstruction
   get 2, :float
   
   def process

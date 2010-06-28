@@ -1,4 +1,4 @@
-class Instruction::BoolXor < Instruction
+class BoolXor < NudgeInstruction
   get 2, :bool
   
   def process

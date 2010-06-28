@@ -1,4 +1,4 @@
-class Instruction::FloatGreaterThanQ < Instruction
+class FloatGreaterThanQ < NudgeInstruction
   get 2, :float
   
   def process

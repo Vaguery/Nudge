@@ -1,4 +1,4 @@
-class Instruction::ProportionDefine < Instruction
+class ProportionDefine < NudgeInstruction
   get 1, :name
   get 1, :proportion
   

@@ -1,4 +1,4 @@
-class Instruction::FloatDivide < Instruction
+class FloatDivide < NudgeInstruction
   get 2, :float
   
   def process
