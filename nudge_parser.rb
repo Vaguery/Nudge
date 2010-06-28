@@ -39,7 +39,7 @@ class NudgeParser < Racc::Parser
         
         when /[a-zA-Z]/
           ss.unscan
-          ss.scan(/[a-zA-Z][_a-zA-Z0-9]*/)
+          ss.scan(/[a-zA-Z][_a-zA-Z0-9]*[?]?/)
           
           case m = ss.matched
             when "block", "ref", "do", "value"
