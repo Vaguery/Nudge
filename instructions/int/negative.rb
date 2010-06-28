@@ -1,4 +1,4 @@
-class Instruction::IntMultiply < Instruction
+class Instruction::IntNegative < Instruction
   get 1, :int
   
   def process
