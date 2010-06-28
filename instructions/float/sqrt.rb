@@ -5,7 +5,7 @@ class FloatSqrt < NudgeInstruction
     if float(0) > 0
       put :float, Math.sqrt(float(0))
     else
-      # raise
+      raise NudgeError::NaN, "result of square root was not a number"
     end
   end
 end

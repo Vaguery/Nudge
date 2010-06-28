@@ -32,6 +32,9 @@ class NudgeInstruction
       instruction.process
       instruction.push_results_to_stacks!(stacks)
     end
+    
+  rescue NudgeError => error
+    stacks[:error].push(error.string)
   end
   
   def initialize (outcome_data)

@@ -5,7 +5,7 @@ class FloatModulo < NudgeInstruction
     if float(1) != 0
       put :float, float(0) % float(1)
     else
-      # raise
+      raise NudgeError::DivisionByZero, "cannot perform float modulo zero"
     end
   end
 end

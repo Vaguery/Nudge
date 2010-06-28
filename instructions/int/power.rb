@@ -3,7 +3,7 @@ class IntPower < NudgeInstruction
   
   def process
     if int(0) == 0 && int(1) < 0
-      # raise
+      raise NudgeError::NaN, "result of int exponent was not a number"
     else
       put :int, int(0) ** int(1)
     end

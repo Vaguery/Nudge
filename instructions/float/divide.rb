@@ -5,7 +5,7 @@ class FloatDivide < NudgeInstruction
     if float(1) != 0
       put :float, float(0) / float(1)
     else
-      # raise
+      raise NudgeError::DivisionByZero, "cannot divide a float by 0"
     end
   end
 end

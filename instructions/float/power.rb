@@ -5,7 +5,7 @@ class FloatPower < NudgeInstruction
     result = float(0) ** float(1)
     
     if result.infinite? || result.nan?
-      # raise
+      raise NudgeError::NaN, "result of float exponent was not a number"
     else
       put :float, result
     end
