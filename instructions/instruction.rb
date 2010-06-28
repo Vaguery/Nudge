@@ -1,6 +1,16 @@
 class Instruction
+  INSTRUCTIONS = {}
+  
   def Instruction.inherited (klass)
     klass.const_set("REQUIREMENTS", {})
+    
+    instruction_id = klass.name.
+      gsub(/^.*::/, '').
+      gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+      gsub(/([a-z\d])([A-Z])/,'\1_\2').
+      downcase.intern
+    
+    INSTRUCTIONS[instruction_id] = klass
     
     def klass.get (n, type_id)
       self::REQUIREMENTS[type_id] = n
@@ -14,8 +24,7 @@ class Instruction
   end
   
   def Instruction.execute (instruction_id, outcome_data)
-    instruction_class = const_get(instruction_id.to_s.gsub(/(?:^|_)(.)/) { $1.upcase })
-    instruction = instruction_class.new(outcome_data)
+    instruction = INSTRUCTIONS[instruction_id].new(outcome_data)
     stacks = outcome_data.stacks
     
     if instruction.get_required_arguments!(stacks)
