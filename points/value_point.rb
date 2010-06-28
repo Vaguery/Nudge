@@ -1,22 +1,22 @@
 class ValuePoint < NudgePoint
-  def initialize (type_id, string)
-    @type_id = type_id
+  def initialize (value_type, string)
+    @value_type = value_type
     @string = string
   end
   
   def evaluate (outcome_data)
     super
-    outcome_data.stacks[@type_id].push(@string)
+    outcome_data.stacks[@value_type].push(@string)
   end
   
   def script_and_values
-    return "value «#{@type_id}»", ["«#{@type_id}»#{@string}"]
+    return "value «#{@value_type}»", ["«#{@value_type}»#{@string}"]
   end
 end
 
 class Value < ValuePoint
-  def initialize (type_id, value)
-    @type_id = type_id
+  def initialize (value_type, value)
+    @value_type = value_type
     @string = value.to_s
   end
 end
