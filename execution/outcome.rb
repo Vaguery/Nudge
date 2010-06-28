@@ -2,14 +2,25 @@ class Outcome
   include Settings
   
   attr_accessor :points_evaluated
-  attr_reader :expiration_moment
+  attr_accessor :execution_time
   attr_reader :variable_bindings
+  attr_reader :start_moment
   attr_reader :stacks
   
   def initialize (variable_bindings)
-    @variable_bindings = variable_bindings
     @points_evaluated = 0
-    @expiration_moment = Time.now.to_f + TIME_LIMIT
+    @execution_time = 0
+    @variable_bindings = variable_bindings
     @stacks = Hash.new {|hash, key| hash[key] = [] }
+  end
+  
+  def begin
+    @start_moment = Time.now.to_f
+    self
+  end
+  
+  def end
+    @execution_time = Time.now.to_f - @start_moment
+    self
   end
 end

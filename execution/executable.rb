@@ -16,12 +16,12 @@ class Executable
     exec_stack.push(@point)
     
     while point = exec_stack.pop
-      point.evaluate(outcome_data)
+      point.evaluate(outcome_data.begin)
     end
     
   rescue NudgeError => error
     error_stack.push(error.string)
   ensure
-    return outcome_data
+    return outcome_data.end
   end
 end
