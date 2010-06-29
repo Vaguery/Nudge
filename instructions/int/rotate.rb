@@ -1,4 +1,4 @@
-class Instruction::IntRotate < Instruction
+class IntRotate < NudgeInstruction
   get 3, :int
   
   def process

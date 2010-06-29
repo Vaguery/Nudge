@@ -24,13 +24,13 @@ require './nudge'
   outcome_data.stacks[:proportion].push "0.2"
   outcome_data.stacks[:proportion].push "0.3"
   
-  describe "Instruction::#{name}Rotate" do
+  describe "#{name}Rotate" do
     describe "#process()" do
       it "moves the third item in the :#{name.downcase} stack to the top and pushes the next two down by one" do
         expected_new_top_value = outcome_data.stacks[name.downcase.intern][-3]
         expected_new_second_value = outcome_data.stacks[name.downcase.intern][-1]
         expected_new_third_value = outcome_data.stacks[name.downcase.intern][-2]
-        Instruction.execute(:"#{name.downcase}_rotate", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_rotate", outcome_data)
         
         outcome_data.stacks[name.downcase.intern].pop.should == expected_new_top_value
         outcome_data.stacks[name.downcase.intern].pop.should == expected_new_second_value

@@ -1,7 +1,14 @@
 class NudgeError < StandardError
-  %w[ TimeLimitExceeded
-      TooManyPointsEvaluated
-      PointIndexTooLarge
+  %w[ DivisionByZero
+      InvalidScript
+      NaN
       OutermostPointOperation
-      InvalidScript ].each {|e| const_set(e, Class.new(self)) }
+      PointIndexTooLarge
+      VariableRedefined
+      TimeLimitExceeded
+      TooManyPointsEvaluated ].each {|e| const_set(e, Class.new(self)) }
+  
+  def string
+    "#{self.class.name.gsub(/.*::/,'')}: #{message}"
+  end
 end

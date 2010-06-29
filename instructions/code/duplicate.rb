@@ -1,6 +1,8 @@
-class Instruction::CodeDuplicate < Instruction
+class CodeDuplicate < NudgeInstruction
+  get 1, :code
+  
   def process
-    stack = @outcome_data.stacks[:code]
-    stack.push(stack.last)
+    put :code, code(0)
+    put :code, code(0)
   end
 end

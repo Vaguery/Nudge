@@ -1,4 +1,4 @@
-class Instruction::ProportionBoundedDivide < Instruction
+class ProportionBoundedDivide < NudgeInstruction
   get 2, :proportion
   
   def process
@@ -7,7 +7,7 @@ class Instruction::ProportionBoundedDivide < Instruction
     if divisor != 0
       put :proportion, [proportion(0) / divisor, 1.0].max
     else
-    # raise
+      raise NudgeError::DivisionByZero, "cannot divide a proportion by zero"
     end
   end
 end

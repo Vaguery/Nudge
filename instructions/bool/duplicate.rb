@@ -1,6 +1,8 @@
-class Instruction::BoolDuplicate < Instruction
+class BoolDuplicate < NudgeInstruction
+  get 1, :bool
+  
   def process
-    stack = @outcome_data.stacks[:bool]
-    stack.push(stack.last)
+    put :bool, bool(0)
+    put :bool, bool(0)
   end
 end

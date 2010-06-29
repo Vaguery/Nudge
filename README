@@ -1,6 +1,6 @@
 require './nudge'
 
-script = "block { ref x1 ref x2 do int_add }"
+script = NudgeWriter.new.random
 
 exe = Executable.new(script)
 

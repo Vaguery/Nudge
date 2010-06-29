@@ -1,4 +1,4 @@
-class Instruction::ProportionSwap < Instruction
+class ProportionSwap < NudgeInstruction
   get 2, :proportion
   
   def process

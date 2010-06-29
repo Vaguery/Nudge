@@ -1,4 +1,4 @@
-class Instruction::CodeRotate < Instruction
+class CodeRotate < NudgeInstruction
   get 3, :code
   
   def process

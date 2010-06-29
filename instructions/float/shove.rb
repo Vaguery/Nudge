@@ -1,4 +1,4 @@
-class Instruction::FloatShove < Instruction
+class FloatShove < NudgeInstruction
   get 1, :int
   
   def process

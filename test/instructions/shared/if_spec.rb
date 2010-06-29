@@ -17,11 +17,11 @@ require './nudge'
   
   outcome_data.stacks[:bool].push "true"
   
-  describe "Instruction::#{name}If" do
+  describe "#{name}If" do
     describe "#process()" do
       it ":#{name.downcase} stack" do
 #        expected_new_top_value = outcome_data.stacks[name.downcase.intern][-2]
-#        Instruction.execute(:"#{name.downcase}_if", outcome_data)
+#        NudgeInstruction.execute(:"#{name.downcase}_if", outcome_data)
 #        outcome_data.stacks[name.downcase.intern].pop.should == expected_new_top_value
       end
     end

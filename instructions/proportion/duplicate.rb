@@ -1,6 +1,8 @@
-class Instruction::ProportionDuplicate < Instruction
+class ProportionDuplicate < NudgeInstruction
+  get 1, :proportion
+  
   def process
-    stack = @outcome_data.stacks[:proportion]
-    stack.push(stack.last)
+    put :proportion, proportion(0)
+    put :proportion, proportion(0)
   end
 end

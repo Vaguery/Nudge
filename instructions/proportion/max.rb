@@ -1,4 +1,4 @@
-class Instruction::ProportionMax < Instruction
+class ProportionMax < NudgeInstruction
   get 2, :proportion
   
   def process

@@ -1,4 +1,4 @@
-class Instruction::BoolSwap < Instruction
+class BoolSwap < NudgeInstruction
   get 2, :bool
   
   def process

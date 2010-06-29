@@ -1,17 +1,17 @@
 class RefPoint < NudgePoint
-  def initialize (variable_id)
-    @variable_id = variable_id
+  def initialize (variable_name)
+    @variable_name = variable_name
   end
   
   def evaluate (outcome_data)
     super
     
-    if value = outcome_data.variable_bindings[@variable_id]
+    if value = outcome_data.variable_bindings[@variable_name]
       value.evaluate(outcome_data)
     end
   end
   
   def script_and_values
-    return "ref #{@variable_id}", []
+    return "ref #{@variable_name}", []
   end
 end

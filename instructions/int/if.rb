@@ -1,4 +1,4 @@
-class Instruction::IntIf < Instruction
+class IntIf < NudgeInstruction
   get 1, :bool
   get 2, :int
   

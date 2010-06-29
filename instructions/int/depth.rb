@@ -1,4 +1,4 @@
-class Instruction::IntDepth < Instruction
+class IntDepth < NudgeInstruction
   def process
     put :int, @outcome_data.stacks[:int].length
   end

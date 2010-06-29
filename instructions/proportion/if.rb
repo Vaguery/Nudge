@@ -1,4 +1,4 @@
-class Instruction::ProportionIf < Instruction
+class ProportionIf < NudgeInstruction
   get 1, :bool
   get 2, :proportion
   

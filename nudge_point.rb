@@ -9,13 +9,13 @@ class NudgePoint
   end
   
   def evaluate (outcome_data)
-    if Time.now.to_i > outcome_data.expiration_moment
+    if Time.now.to_i > outcome_data.start_moment + Outcome::TIME_LIMIT
       n = outcome_data.points_evaluated
       raise NudgeError::TimeLimitExceeded, "the time limit was exceeded after evaluating #{n} points"
     end
     
     if (outcome_data.points_evaluated += 1) > Outcome::POINT_LIMIT
-      t = (Time.now - (outcome_data.expiration_moment - Outcome::TIME_LIMIT)).to_i
+      t = (Time.now - outcome_data.start_moment).to_i
       raise NudgeError::TooManyPointsEvaluated, "the point evaluation limit was exceeded after #{t} seconds"
     end
   end

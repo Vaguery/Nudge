@@ -1,4 +1,4 @@
-class Instruction::NameSwap < Instruction
+class NameSwap < NudgeInstruction
   get 2, :name
   
   def process

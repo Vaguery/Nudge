@@ -1,6 +1,8 @@
-class Instruction::FloatDuplicate < Instruction
+class FloatDuplicate < NudgeInstruction
+  get 1, :float
+  
   def process
-    stack = @outcome_data.stacks[:float]
-    stack.push(stack.last)
+    put :float, float(0)
+    put :float, float(0)
   end
 end

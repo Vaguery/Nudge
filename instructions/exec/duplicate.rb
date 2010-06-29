@@ -1,6 +1,8 @@
-class Instruction::ExecDuplicate < Instruction
+class ExecDuplicate < NudgeInstruction
+  get 1, :exec
+  
   def process
-    stack = @outcome_data.stacks[:exec]
-    stack.push(stack.last)
+    put :exec, exec(0)
+    put :exec, exec(0)
   end
 end

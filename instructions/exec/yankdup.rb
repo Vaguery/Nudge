@@ -1,4 +1,4 @@
-class Instruction::ExecYankdup < Instruction
+class ExecYankdup < NudgeInstruction
   get 1, :int
   
   def process

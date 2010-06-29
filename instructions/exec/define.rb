@@ -1,4 +1,4 @@
-class Instruction::ExecDefine < Instruction
+class ExecDefine < NudgeInstruction
   get 1, :name
   get 1, :exec
   
@@ -6,9 +6,7 @@ class Instruction::ExecDefine < Instruction
     key = name(0)
     bindings = @outcome_data.variable_bindings
     
-    if bindings.key?(key)
-      # raise
-    end
+    raise(NudgeError::VariableRedefined, "cannot redefine variable #{key}") if bindings.key?(key)
     
     bindings[key] = ValuePoint.new(:exec, exec(0))
   end

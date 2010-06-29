@@ -1,4 +1,4 @@
-class Instruction::FloatSwap < Instruction
+class FloatSwap < NudgeInstruction
   get 2, :float
   
   def process

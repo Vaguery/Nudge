@@ -33,12 +33,12 @@ require './nudge'
   
   outcome_data.stacks[:int].push "2"
   
-  describe "Instruction::#{name}Yank" do
+  describe "#{name}Yank" do
     describe "#process()" do
       it "pops the top item off of the :int stack and pushes a duplicate of the item in that position on the :#{name.downcase} stack back onto the :#{name.downcase} stack" do
         old_top_value = outcome_data.stacks[name.downcase.intern][name == "Int" ? -2 : -1]
         expected_new_top_value = outcome_data.stacks[name.downcase.intern][name == "Int" ? -4 : -3]
-        Instruction.execute(:"#{name.downcase}_yankdup", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_yankdup", outcome_data)
         outcome_data.stacks[name.downcase.intern][-2].should == old_top_value
         outcome_data.stacks[name.downcase.intern][-1].should == expected_new_top_value
         outcome_data.stacks[name.downcase.intern][-4].should == expected_new_top_value

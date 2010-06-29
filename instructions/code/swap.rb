@@ -1,4 +1,4 @@
-class Instruction::CodeSwap < Instruction
+class CodeSwap < NudgeInstruction
   get 2, :code
   
   def process

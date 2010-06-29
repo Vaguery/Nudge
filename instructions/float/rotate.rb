@@ -1,4 +1,4 @@
-class Instruction::FloatRotate < Instruction
+class FloatRotate < NudgeInstruction
   get 3, :float
   
   def process

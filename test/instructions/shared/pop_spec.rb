@@ -17,11 +17,11 @@ require './nudge'
   outcome_data.stacks[:proportion].push "0.1"
   outcome_data.stacks[:proportion].push "0.2"
   
-  describe "Instruction::#{name}Pop" do
+  describe "#{name}Pop" do
     describe "#process()" do
       it "pops the top item off of the :#{name.downcase} stack" do
         expected_new_top_value = outcome_data.stacks[name.downcase.intern][-2]
-        Instruction.execute(:"#{name.downcase}_pop", outcome_data)
+        NudgeInstruction.execute(:"#{name.downcase}_pop", outcome_data)
         
         outcome_data.stacks[name.downcase.intern].pop.should == expected_new_top_value
       end

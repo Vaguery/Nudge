@@ -1,4 +1,4 @@
-class Instruction::ProportionYank < Instruction
+class ProportionYank < NudgeInstruction
   get 1, :int
   
   def process

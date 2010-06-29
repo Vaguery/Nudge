@@ -1,4 +1,4 @@
-class Instruction::BoolDepth < Instruction
+class BoolDepth < NudgeInstruction
   def process
     put :int, @outcome_data.stacks[:bool].length
   end
