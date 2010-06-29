@@ -11,5 +11,5 @@ Feature: Boolean arity-1 logic instructions
     
     Scenario Outline: bool_not
       | arg1  | stack | instruction_name | result | result_stack |
-      | true  | bool  |      bool_not    | false  |    bool      |
-      | false | bool  |      bool_not    | true   |    bool      |
+      | true  | bool  | bool_not         | false  | bool         |
+      | false | bool  | bool_not         | true   | bool         |
