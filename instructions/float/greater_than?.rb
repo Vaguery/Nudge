@@ -2,6 +2,6 @@ class FloatGreaterThanQ < NudgeInstruction
   get 2, :float
   
   def process
-    put :float, float(0) > float(1)
+    put :bool, float(1) > float(0)
   end
 end
