@@ -1,4 +1,3 @@
-$: << File.join(File.dirname(__FILE__), "./../..") 
+$: << File.join(File.dirname(__FILE__), "..")
 
 require 'nudge'
-include Nudge

@@ -1,3 +1,4 @@
+$: << File.join(File.dirname(__FILE__), "..")
 require 'nudge_point'
 require 'points/block_point'
 require 'points/do_point'
