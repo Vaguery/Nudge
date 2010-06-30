@@ -36,41 +36,50 @@ class NudgeWriter
   end
   
   def random
-    "#{generate!(@block_depth)}\n#{footnotes!}"
+    "#{generate_block(@block_depth)}\n#{footnotes}"
   end
   
-  def generate! (remaining_depth)
+  def random_value (value_type)
+    "#{generate_value(value_type)}\n#{footnotes}"
+  end
+  
+  def generate_block (remaining_depth)
     points = (0...@block_width).collect { random_point(remaining_depth) }
     points.length > 1 ? "block { #{points.compact.join(" ")} }" : points
   end
   
-  def footnotes!
+  def random_point (remaining_depth)
+    case rand
+      when @block then generate_block(remaining_depth - 1) if remaining_depth > 0
+      when @do    then "do #{@do_instructions.shuffle.first}"
+      when @ref   then "ref #{@ref_names.shuffle.first}"
+      else generate_value
+    end
+  end
+  
+  def generate_value (value_type = nil)
+    unless value_type
+      value_types = @value_types + (@include_code_type ? [:code] : [])
+      value_type = value_types.shuffle.first
+    end
+    
+    @footnotes_needed << value_type
+    "value «#{value_type}»"
+  end
+  
+  def footnotes
     footnotes = []
     code_recursion, include_code_type = @code_recursion, @include_code_type
     
     while value_type = @footnotes_needed.pop
-      footnotes << "«#{value_type}»#{random_value(value_type)}"
+      footnotes << "«#{value_type}»#{footnote_value(value_type)}"
     end
     
     @code_recursion, @include_code_type = code_recursion, include_code_type
     footnotes.join("\n")
   end
   
-  def random_point (remaining_depth)
-    case rand
-      when @block then generate!(remaining_depth - 1) if remaining_depth > 0
-      when @do    then "do #{@do_instructions.shuffle.first}"
-      when @ref   then "ref #{@ref_names.shuffle.first}"
-    else
-        value_types = @value_types + (@include_code_type ? [:code] : [])
-        value_type = value_types.shuffle.first
-        
-        @footnotes_needed << value_type
-        "value «#{value_type}»"
-    end
-  end
-  
-  def random_value (value_type)
+  def footnote_value (value_type)
     case value_type
       when :bool       then rand < 0.5
       when :float      then rand(@max_float - @min_float).to_f + @min_float
@@ -79,7 +88,7 @@ class NudgeWriter
       when :proportion then rand
       when :code
         @include_code_type = (@code_recursion -= 1) >= 0
-        generate!(@block_depth)
+        generate_block(@block_depth)
     else
       NudgeValue::TYPES[value_type].random
     end.to_s
