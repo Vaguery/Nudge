@@ -5,9 +5,7 @@ end
 
 
 When /^I execute the Nudge instruction "([^"]*)"$/ do |instruction_name|
-  pending "what is breaking here?"
-  actor = (instruction_name.to_instruction_class).new(@context)
-  actor.process
+  NudgePoint.from("do #{instruction_name}").evaluate(@context)
 end
 
 Then /^"([^"]*)" should be in position ([^"]*) of the "([^"]*)" stack$/ do |result_val, posn, stack|
