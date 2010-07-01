@@ -4,44 +4,44 @@ Feature: Value equality
   I want Nudge to include a suite of [stack]_equal_q instructions
   
   
-  Scenario: x_equal_q
+  Scenario Outline: x_equal_q
     Given two values "<arg1>" and "<arg2>" on stack "<stack>"
     When I execute instruction "<instruction>"
     Then only "<result>" should be left on stack :bool
     And the other arguments should be gone
     
-    Scenario Outline: float_equal_q
+    Examples: float_equal_q
     | arg1 | arg2 | stack | instruction   | result |
     | 3.3  |  3.3 | float | float_equal_q |  true  |
     | 3.3  | 7.77 | float | float_equal_q | false  |
     | 0.0  | -0.0 | float | float_equal_q |  true  |
     
     
-    Scenario Outline: bool_equal_q
+    Examples: bool_equal_q
     | arg1 | arg2  | stack | instruction   | result |
     | true |  true |  bool |  bool_equal_q |  true  |
     | true | false |  bool |  bool_equal_q | false  |
     
     
-    Scenario Outline: int_equal_q
+    Examples: int_equal_q
     | arg1 | arg2  | stack | instruction   | result |
     | 12   |  12   |  int  |   int_equal_q |  true  |
     | -12  |  12   |  int  |   int_equal_q | false  |
     
     
-    Scenario Outline: proportion_equal_q
+    Examples: proportion_equal_q
     | arg1 | arg2  | stack        | instruction        | result |
     | 0.12 | 0.12  |  proportion  | proportion_equal_q |  true  |
     | 0.10 | 0.101 |  proportion  | proportion_equal_q | false  |
     
     
-    Scenario Outline: name_equal_q
+    Examples: name_equal_q
     | arg1 | arg2  | stack  | instruction  | result |
     | x1   | x1    |  name  | name_equal_q |  true  |
     | x11  | x1    |  name  | name_equal_q | false  |
     
     
-    Scenario Outline: code_equal_q (compares parsed code, not strings)
+    Examples: code_equal_q (compares parsed code, not strings)
     | arg1                   | arg2                             | stack | instruction   | result |
     | "ref x"                | "ref x"                          |  code |  code_equal_q |  true  |
     | "ref \t\n  x"          | "ref x"                          |  code |  code_equal_q |  true  |
@@ -51,13 +51,13 @@ Feature: Value equality
     | "block {}"             | "block {block {}}"               |  code |  code_equal_q | false  |
     
     
-    Scenario Outline: code_equal_q is always false for unparseable code
+    Examples: code_equal_q is always false for unparseable code
     | arg1       | arg2              | stack | instruction   | result |
     | "not code" | "neither is this" |  code |  code_equal_q | false  |
     | "block {}" | "busted"          |  code |  code_equal_q | false  |
     
     
-    Scenario Outline: exec_equal_q (compares these trees, not strings)
+    Examples: exec_equal_q (compares these trees, not strings)
     | arg1                   | arg2                     | stack | instruction   | result |
     | "ref x"                | "ref x"                  |  exec |  exec_equal_q |  true  |
     | "do foo"               | "do foo"                 |  exec |  exec_equal_q |  true  |

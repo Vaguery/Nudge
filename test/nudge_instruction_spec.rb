@@ -20,4 +20,16 @@ describe "NudgeInstruction" do
       IntGreaterThanQ.to_nudge_string.should == IntGreaterThanQ.to_nudge_symbol.to_s
     end
   end
+  
+  describe "to_instruction_classname" do
+    it "should return the instruction given into the equivalent class name" do
+      "bool_not".to_instruction_class.should == BoolNot
+      "proportion_bounded_add".to_instruction_class.should == ProportionBoundedAdd
+      "int_greater_than?".to_instruction_class.should == IntGreaterThanQ
+    end
+    
+    it "should raise an error if the classname doesn't exist" do
+      lambda{"bool_guillotine".to_instruction_class}.should raise_error(NameError)
+    end
+  end
 end

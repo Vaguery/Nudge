@@ -3,14 +3,14 @@ Feature: Numerical comparison instructions
   As a modeler
   I want a suite of :float Nudge instructions that compare their size
   
-  Scenario: greater_than_q and less_than_q 
+  Scenario Outline: greater_than_q and less_than_q 
     Given I have placed "<arg1>" on the "<type>" stack
     And I have placed "<arg2>" on the same stack immediately above it
     When I execute the Nudge code "<instruction>"
     Then a value very close to "<result>" should be on top of the :bool stack
     And the arguments should not remain on their original stack
     
-    Scenario Outline: float_greater_than_q
+    Examples: float_greater_than_q
     | arg1         | type  | arg2 | instruction             | result |
     |  3.0         | float |  4.1 | do float_greater_than_q |  false |
     |  4.1         | float |  3.0 | do float_greater_than_q |   true |
@@ -20,7 +20,7 @@ Feature: Numerical comparison instructions
     | -2.5         | float | -4.0 | do float_greater_than_q |   true |
     
     
-    Scenario Outline: float_less_than_q
+    Examples: float_less_than_q
     | arg1         | type  | arg2 | instruction          | result |
     |  3.0         | float |  4.1 | do float_less_than_q |   true |
     |  4.1         | float |  3.0 | do float_less_than_q |  false |
@@ -30,7 +30,7 @@ Feature: Numerical comparison instructions
     | -2.5         | float | -4.0 | do float_less_than_q |  false |
     
     
-    Scenario Outline: int_greater_than_q
+    Examples: int_greater_than_q
     | arg1 | type | arg2 | instruction           | result |
     |  3   | int  |  4   | do int_greater_than_q |  false |
     |  4   | int  |  3   | do int_greater_than_q |   true |
@@ -39,7 +39,7 @@ Feature: Numerical comparison instructions
     | -2   | int  | -4   | do int_greater_than_q |   true |
     
     
-    Scenario Outline: int_less_than_q
+    Examples: int_less_than_q
     | arg1 | type | arg2 | instruction        | result |
     |  3   | int  |  4   | do int_less_than_q |   true |
     |  4   | int  |  3   | do int_less_than_q |  false |

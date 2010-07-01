@@ -3,13 +3,13 @@ Feature: Float trignometry instructions
   As a modeler
   I want a suite of :float Nudge trigonometry instructions
   
-  Scenario: sine, cosine and tangent
+  Scenario Outline: sine, cosine and tangent
     Given I have placed "<arg1>" on the :float stack
     When I execute the Nudge code "<instruction>"
     Then a value very close to "<result>" should be on top of the :float stack
     And the argument should not remain on :float
     
-    Scenario Outline: float_sine
+    Examples: float_sine
       | arg1              | instruction   | result | 
       |  0.0              | do float_sine |  0.0               |
       | -0.0              | do float_sine | -0.0               |
@@ -20,7 +20,7 @@ Feature: Float trignometry instructions
       |  4.71238898038469 | do float_sine | -1.0               |
       
       
-    Scenario Outline: float_cosine
+    Examples: float_cosine
       | arg1             | instruction     | result | 
       |  0.0             | do float_cosine | 1.0                |
       | -0.0             | do float_cosine | 1.0                |
@@ -30,7 +30,7 @@ Feature: Float trignometry instructions
       | 1.5707963267949  | do float_cosine | 0.0                |
       
       
-    Scenario Outline: float_tangent
+    Examples: float_tangent
       | arg1             | instruction      | result | 
       |  0.0             | do float_tangent |      0.0           |
       | -0.0             | do float_tangent |     -0.0           |

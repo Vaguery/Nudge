@@ -3,7 +3,7 @@ Feature: Integer arity-2 math instructions
   As a modeler
   I want a suite of :int Nudge arithmetic instructions
   
-  Scenario: basic arity-2 instructions
+  Scenario Outline: basic arity-2 instructions
     Given I have placed "<arg1>" on the :int stack
     And I have placed "<arg2>" on top of that
     When I execute the Nudge code "<instruction>"
@@ -11,7 +11,7 @@ Feature: Integer arity-2 math instructions
     And a message "<error_msg>" should be on the :error stack
     And the arguments should not remain on :int
     
-    Scenario Outline: int_add
+    Examples: int_add
       | arg1   | arg2   | instruction | result | error_msg |
       |    6   |    5   | do int_add  |   11   | |
       |   -9   |    4   | do int_add  |   -5   | |
@@ -19,7 +19,7 @@ Feature: Integer arity-2 math instructions
       |    0   |  -11   | do int_add  |  -11   | |
       
 
-    Scenario Outline: int_divide
+    Examples: int_divide
       | arg1   | arg2  | instruction    | result  | error_msg |
       |   8    |    2  | do int_divide  |   4     | |
       |  12    |   -3  | do int_divide  |  -4     | |
@@ -34,7 +34,7 @@ Feature: Integer arity-2 math instructions
       |   0    |    0  | do int_divide  |         | "int_divide cannot divide by 0" |
       
       
-    Scenario Outline: int_max
+    Examples: int_max
       | arg1 | arg2 | instruction | result | error_msg |
       |  12  |   1  | do int_max  |  12    | |
       |   1  |  12  | do int_max  |  12    | |
@@ -42,7 +42,7 @@ Feature: Integer arity-2 math instructions
       |   3  |   3  | do int_max  |   3    | |
 
 
-    Scenario Outline: int_min
+    Examples: int_min
       | arg1 | arg2 | instruction | result | error_msg |
       |  12  |   1  | do int_min  |   1    | |
       |   1  |  12  | do int_min  |   1    | |
@@ -50,7 +50,7 @@ Feature: Integer arity-2 math instructions
       |   3  |   3  | do int_min  |   3    | |
       
       
-    Scenario Outline: int_modulo
+    Examples: int_modulo
       | arg1 | arg2 | instruction   | result | error_msg |
       |  9   |   3  | do int_modulo |  0     | |
       |  9   |  -3  | do int_modulo |  0     | |
@@ -69,7 +69,7 @@ Feature: Integer arity-2 math instructions
       |  0   |  -0  | do int_modulo |        | "int_modulo attempted modulo 0" |
       
       
-    Scenario Outline: int_multiply
+    Examples: int_multiply
       | arg1 | arg2 | instruction       | result | error_msg |
       |  3   |  4   | do int_multiply   |  12    | |
       |  0   |  3   | do int_multiply   |   0    | |
@@ -78,7 +78,7 @@ Feature: Integer arity-2 math instructions
       |  1   | -4   | do int_multiply   |  -4    | |
       
       
-    Scenario Outline: int_power
+    Examples: int_power
       | arg1  | arg2     | instruction  | result | error_msg |
       |   3   |   3      | do int_power |   27   | |
       |   3   |   1      | do int_power |    3   | |
@@ -90,7 +90,7 @@ Feature: Integer arity-2 math instructions
       | 77777 | 9999999  | do int_power |        | "int_power did not return a finite integer" |
       
       
-    Scenario Outline: int_subtract
+    Examples: int_subtract
       | arg1 | arg2 | instruction     | result | error_msg |
       |  3   |  4   | do int_subtract |  -1    | |
       |  5   |  3   | do int_subtract |   2    | |

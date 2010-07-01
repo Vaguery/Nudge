@@ -3,7 +3,7 @@ Feature: Float arity-2 math instructions
   As a modeler
   I want a suite of :float Nudge arithmetic instructions
   
-  Scenario: basic arity-2 instructions
+  Scenario Outline: basic arity-2 instructions
     Given I have placed "<arg1>" on the :float stack
     And I have placed "<arg2>" on top of that
     When I execute the Nudge code "<instruction>"
@@ -11,14 +11,14 @@ Feature: Float arity-2 math instructions
     And a message "<error_msg>" should be on the :error stack
     And the arguments should not remain on :float
     
-    Scenario Outline: float_add
+    Examples: float_add
       | arg1   | arg2   | instruction   | result | error_msg |
       |  12.1  | -12.0  | do float_add  |  0.1   | |
       |   0.0  |   3.3  | do float_add  |  3.3   | |
       |  -2.0  |  -2.0  | do float_add  | -4.0   | |
       
       
-    Scenario Outline: float_divide
+    Examples: float_divide
       | arg1   | arg2  | instruction      | result  | error_msg |
       |   8.1  |   0.9 | do float_divide  |   9.0   | |
       |   1.0  |   8.0 | do float_divide  |   0.125 | |
@@ -33,7 +33,7 @@ Feature: Float arity-2 math instructions
       |   0.0  |  -0.0 | do float_divide  |         | "float_divide cannot divide by 0.0" |
       
       
-    Scenario Outline: float_max
+    Examples: float_max
       | arg1  | arg2  | instruction   | result | error_msg |
       |  12.0 |   1.0 | do float_max  |  12.0  | |
       |   1.0 |  12.0 | do float_max  |  12.0  | |
@@ -41,7 +41,7 @@ Feature: Float arity-2 math instructions
       |   3.0 |   3.0 | do float_max  |   3.0  | |
       
       
-    Scenario Outline: float_min
+    Examples: float_min
       | arg1  | arg2  | instruction   | result | error_msg |
       |  12.0 |   1.0 | do float_min  |   1.0  | |
       |   1.0 |  12.0 | do float_min  |   1.0  | |
@@ -49,7 +49,7 @@ Feature: Float arity-2 math instructions
       |   3.0 |   3.0 | do float_min  |   3.0  | |
       
       
-    Scenario Outline: float_modulo
+    Examples: float_modulo
       | arg1  | arg2  | instruction      | result | error_msg |
       |  3.3  |  1.0  | do float_modulo  |  0.3   | |
       | -3.3  |  1.0  | do float_modulo  |  0.7   | |
@@ -65,7 +65,7 @@ Feature: Float arity-2 math instructions
       |  2.2  | -0.0  | do float_modulo  |        | "float_modulo attempted modulo 0.0" |
       
       
-    Scenario Outline: float_multiply
+    Examples: float_multiply
       | arg1 | arg2 | instruction       | result | error_msg |
       |  3.0 |  4.1 | do float_multiply |  12.3  | |
       |  0.0 |  3.3 | do float_multiply |   0.0  | |
@@ -73,7 +73,7 @@ Feature: Float arity-2 math instructions
       | -2.5 | -4.0 | do float_multiply |  10.0  | |
       
       
-    Scenario Outline: float_power
+    Examples: float_power
       | arg1  | arg2  | instruction     | result | error_msg |
       |  0.2  |  1.0  | do float_power  |  0.2   | |
       |  0.2  |  2.0  | do float_power  |  0.04  | |
@@ -88,7 +88,7 @@ Feature: Float arity-2 math instructions
       |  0.0  |  0.0  | do float_power  |  1.0   | |
       
       
-    Scenario Outline: float_subtract
+    Examples: float_subtract
       | arg1 | arg2 | instruction       | result | error_msg |
       |  3.0 |  4.1 | do float_subtract |  -1.1  | |
       |  5.6 |  3.3 | do float_subtract |   2.3  | |

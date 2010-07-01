@@ -3,14 +3,14 @@ Feature: Push3 coverage
   As a genetic programmer
   I want all the instructions from Push3 in Nudge
 
-  Scenario: they're all acceptably re-implemented
+  Scenario Outline: they're all acceptably re-implemented
     Given a Nudge interpreter with all Push3 instructions
     When I run a program containing "<instruction>"
     Then the interpreter should recognize it
     And there should be a feature that checks its behavior
     
     
-    Scenario Outline: Boolean
+    Examples: Boolean
       |instruction|
       |bool_and|
       |bool_define|
@@ -32,7 +32,7 @@ Feature: Push3 coverage
       |bool_yankdup|
     
     
-    Scenario Outline: Code
+    Examples: Code
       |instruction|
       |code_atom_q|
       |code_backbone_points|
@@ -81,7 +81,7 @@ Feature: Push3 coverage
       |code_yank|
       |code_yankdup|
       
-    Scenario Outline: Exec
+    Examples: Exec
       |instruction|
       |exec_define|
       |exec_depth|
@@ -102,7 +102,7 @@ Feature: Push3 coverage
       |exec_yank|
       |exec_yankdup|
       
-    Scenario Outline: Float
+    Examples: Float
       |instruction|
       |float_abs|
       |float_add|
@@ -136,7 +136,7 @@ Feature: Push3 coverage
       |float_yank|
       |float_yankdup|
       
-    Scenario Outline: Int
+    Examples: Int
       |instruction|
       |int_abs|
       |int_add|
@@ -166,7 +166,7 @@ Feature: Push3 coverage
       |int_yank|
       |int_yankdup|
       
-    Scenario Outline: Name
+    Examples: Name
       |instruction|
       |name_depth|
       |name_disable_lookup|

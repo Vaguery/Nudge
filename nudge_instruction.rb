@@ -1,3 +1,11 @@
+class String
+  def to_instruction_class
+    eval self.gsub('?','_q').
+    gsub(/^([a-z\d])|_([a-z\d])/) {|s| s.upcase}.
+    gsub(/_/,'')
+  end
+end
+
 class NudgeInstruction
   INSTRUCTIONS = {}
   
@@ -13,6 +21,7 @@ class NudgeInstruction
   def self.to_nudge_string
     self.to_nudge_symbol.to_s
   end
+  
   
   def NudgeInstruction.inherited (klass)
     klass.const_set("REQUIREMENTS", {})
