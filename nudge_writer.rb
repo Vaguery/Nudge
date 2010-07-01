@@ -85,7 +85,6 @@ class NudgeWriter
       when :bool       then rand < 0.5
       when :float      then rand(@max_float - @min_float).to_f + @min_float
       when :int        then rand(@max_int - @min_int).to_i + @min_int
-      when :name       then @ref_names.shuffle.first
       when :proportion then rand
       when :code
         @include_code_type = (@code_recursion -= 1) >= 0

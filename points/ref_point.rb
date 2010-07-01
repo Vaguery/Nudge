@@ -8,6 +8,8 @@ class RefPoint < NudgePoint
     
     if value = outcome_data.variable_bindings[@variable_name]
       value.evaluate(outcome_data)
+    else
+      outcome_data.stacks[:name] << @variable_name.to_s
     end
   end
   
