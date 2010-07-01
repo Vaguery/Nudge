@@ -7,10 +7,9 @@ describe "Outcome" do
     end
     
     it "returns a new Outcome with an expiration moment stored in seconds" do
-      pending
+      pending "How can you know the expiration moment until you start to run it?"
       time = Time.now
       Time.stub!(:now).and_return(time)
-      puts Outcome.new({}).instance_variable_get(:@expiration_moment).inspect
       Outcome.new({}).instance_variable_get(:@expiration_moment).should === (time + Outcome::TIME_LIMIT).to_f
     end
   end

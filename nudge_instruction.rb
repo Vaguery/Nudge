@@ -1,6 +1,19 @@
 class NudgeInstruction
   INSTRUCTIONS = {}
   
+  def self.to_nudge_symbol
+    self.name.
+    gsub(/^.*::/, '').
+    gsub(/Q$/,'?').
+    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub(/([a-z\d])([A-Z])/,'\1_\2').
+    downcase.intern
+  end
+  
+  def self.to_nudge_string
+    self.to_nudge_symbol.to_s
+  end
+  
   def NudgeInstruction.inherited (klass)
     klass.const_set("REQUIREMENTS", {})
     
