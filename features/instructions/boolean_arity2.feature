@@ -4,32 +4,32 @@ Feature: Boolean arity-2 logic instructions
   I want a suite of Boolean logic Nudge instructions
   
   Scenario Outline: basic arity-2 instructions
-    Given I have placed "<arg1>" and "<arg2>" on the :bool stack
-    And arg2 is on top of the :bool stack
-    When I execute the Nudge code "<instruction>"
-    Then "<result>" should be on top of the :bool stack
-    And neither of the arguments should be left there
+    Given I have pushed "<arg1>" onto the :<stack1> stack
+    And I have pushed "<arg2>" onto the :<stack2> stack
+    When I execute the Nudge instruction "<instruction>"
+    Then "<result>" should be in position <posn> of the :<out_stack> stack
+    And that stack's depth should be <final_depth>
     
     Examples: bool_and
-      | arg1  | arg2  | instruction | result  |
-      | true  | true  | do bool_and | true    |
-      | true  | false | do bool_and | false   |
-      | false | true  | do bool_and | false   |
-      | false | false | do bool_and | false   |
+      | arg1  | stack1 | arg2  | stack2 | instruction | result | posn | out_stack | final_depth |
+      | true  | bool   | true  | bool   | bool_and    | true   | 0    | bool      | 1           |
+      | true  | bool   | false | bool   | bool_and    | false  | 0    | bool      | 1           |
+      | false | bool   | true  | bool   | bool_and    | false  | 0    | bool      | 1           |
+      | false | bool   | false | bool   | bool_and    | false  | 0    | bool      | 1           |
       
       
     Examples: bool_or
-      | arg1  | arg2  | instruction | result  |
-      | true  | true  | do bool_or  | true    |
-      | true  | false | do bool_or  | true    |
-      | false | true  | do bool_or  | true    |
-      | false | false | do bool_or  | false   |
+      | arg1  | stack1 | arg2  | stack2 | instruction | result | posn | out_stack | final_depth |
+      | true  | bool   | true  | bool   | bool_or     | true   | 0    | bool      | 1           |
+      | true  | bool   | false | bool   | bool_or     | true   | 0    | bool      | 1           |
+      | false | bool   | true  | bool   | bool_or     | true   | 0    | bool      | 1           |
+      | false | bool   | false | bool   | bool_or     | false  | 0    | bool      | 1           |
       
       
     Examples: bool_xor
-      | arg1  | arg2  | instruction | result  |
-      | true  | true  | do bool_xor | false   |
-      | true  | false | do bool_xor | true    |
-      | false | true  | do bool_xor | true    |
-      | false | false | do bool_xor | false   |
+      | arg1  | stack1 | arg2  | stack2 | instruction | result | posn | out_stack | final_depth |
+      | true  | bool   | true  | bool   | bool_xor    | false  | 0    | bool      | 1           |
+      | true  | bool   | false | bool   | bool_xor    | true   | 0    | bool      | 1           |
+      | false | bool   | true  | bool   | bool_xor    | true   | 0    | bool      | 1           |
+      | false | bool   | false | bool   | bool_xor    | false  | 0    | bool      | 1           |
     

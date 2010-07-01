@@ -6,8 +6,11 @@ class String
   end
 end
 
+
+
 class NudgeInstruction
   INSTRUCTIONS = {}
+  
   
   def self.to_nudge_symbol
     self.name.
@@ -17,6 +20,7 @@ class NudgeInstruction
     gsub(/([a-z\d])([A-Z])/,'\1_\2').
     downcase.intern
   end
+  
   
   def self.to_nudge_string
     self.to_nudge_symbol.to_s
@@ -46,6 +50,7 @@ class NudgeInstruction
     end
   end
   
+  
   def NudgeInstruction.execute (instruction_name, outcome_data)
     instruction = INSTRUCTIONS[instruction_name].new(outcome_data)
     stacks = outcome_data.stacks
@@ -59,16 +64,19 @@ class NudgeInstruction
     stacks[:error].push(error.string)
   end
   
+  
   def initialize (outcome_data)
     @outcome_data = outcome_data
     @argument_stacks = {}
     @result_stacks = {}
   end
   
+  
   def put (value_type, result)
     result_stack = @result_stacks[value_type] ||= []
     result_stack << (value_type == :exec ? result : result.to_s)
   end
+  
   
   def get_required_arguments! (stacks)
     self.class::REQUIREMENTS.each do |value_type, n|
@@ -84,6 +92,7 @@ class NudgeInstruction
       end
     end
   end
+  
   
   def push_results_to_stacks! (stacks)
     @result_stacks.each do |value_type, result_stack|
