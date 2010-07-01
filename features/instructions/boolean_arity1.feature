@@ -1,3 +1,4 @@
+#encoding: utf-8
 Feature: Boolean arity-1 logic instructions
   In order to describe and manipulate discrete logical variables
   As a modeler
