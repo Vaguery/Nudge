@@ -18,7 +18,7 @@ describe "BlockPoint" do
       point_2 = BlockPoint.new
       point_3 = BlockPoint.new
       
-      BlockPoint.new(point_1, point_2, point_3).evaluate(outcome_data)
+      BlockPoint.new(point_1, point_2, point_3).evaluate(outcome_data.begin)
       
       outcome_data.stacks[:exec][2].should === point_1
       outcome_data.stacks[:exec][1].should === point_2

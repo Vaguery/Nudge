@@ -10,7 +10,7 @@ describe "RefPoint" do
   describe "#evaluate (outcome_data: Outcome)" do
     it "pushes the value associated with its @variable_name to the outcome_data stack" do
       outcome_data = Outcome.new(:x1 => Value.new(:int, 100))
-      RefPoint.new(:x1).evaluate(outcome_data)
+      RefPoint.new(:x1).evaluate(outcome_data.begin)
       
       outcome_data.stacks[:int][0].should == '100'
     end

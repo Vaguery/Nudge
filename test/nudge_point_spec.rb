@@ -17,21 +17,21 @@ describe "NudgePoint" do
   describe "#evaluate (outcome_data: Outcome)" do
     it "increments by one the points evaluated by the outcome_data" do
       outcome_data = Outcome.new({})
-      NudgePoint.new.evaluate(outcome_data)
+      NudgePoint.new.evaluate(outcome_data.begin)
       outcome_data.instance_variable_get(:@points_evaluated).should === 1
     end
     
     it "halts execution if points_evaluated exceeds POINT_LIMIT" do
       outcome_data = Outcome.new({})
       outcome_data.instance_variable_set(:@points_evaluated, Outcome::POINT_LIMIT)
-      outcome_data.instance_variable_set(:@expiration_moment, Time.now.to_f + 45)
+      outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 5)
       lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TooManyPointsEvaluated,
-        "the point evaluation limit was exceeded after 15 seconds"
+        "the point evaluation limit was exceeded after 5 seconds"
     end
     
     it "halts execution if time is beyond TIME_LIMIT" do
       outcome_data = Outcome.new({})
-      outcome_data.instance_variable_set(:@expiration_moment, Time.now.to_f - 10)
+      outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 10)
       outcome_data.instance_variable_set(:@points_evaluated, 20)
       lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TimeLimitExceeded,
         "the time limit was exceeded after evaluating 20 points"

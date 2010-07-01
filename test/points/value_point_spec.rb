@@ -12,7 +12,7 @@ describe "ValuePoint" do
   describe "#evaluate (outcome_data: Outcome)" do
     it "pushes its string to the outcome_data stack identified by its value_type" do
       outcome_data = Outcome.new({})
-      ValuePoint.new(:int, "5").evaluate(outcome_data)
+      ValuePoint.new(:int, "5").evaluate(outcome_data.begin)
       outcome_data.instance_variable_get(:@stacks)[:int][0].should === "5"
     end
   end
