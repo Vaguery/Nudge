@@ -1,5 +1,5 @@
 class NudgeValue
-  TYPES = {:bool => nil, :code => nil, :float => nil, :int => nil, :name => nil, :proportion => nil}
+  TYPES = {:bool => nil, :code => nil, :float => nil, :int => nil, :proportion => nil}
   
   def NudgeValue.inherited (klass)
     value_type = klass.name.
