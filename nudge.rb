@@ -1,16 +1,17 @@
-$: << File.join(File.dirname(__FILE__), "..")
-require 'nudge_point'
-require 'points/block_point'
-require 'points/do_point'
-require 'points/ref_point'
-require 'points/value_point'
-require 'nudge_error'
-require 'nudge_instruction'
-require 'nudge_parser'
-require 'nudge_value'
-require 'nudge_writer'
-require 'execution/settings'
-require 'execution/outcome'
-require 'execution/executable'
+NUDGE_ROOT = '.' unless defined? NUDGE_ROOT
 
-Dir.glob('instructions/*/*.rb') {|file| require file }
+require "#{NUDGE_ROOT}/nudge_point"
+require "#{NUDGE_ROOT}/points/block_point"
+require "#{NUDGE_ROOT}/points/do_point"
+require "#{NUDGE_ROOT}/points/ref_point"
+require "#{NUDGE_ROOT}/points/value_point"
+require "#{NUDGE_ROOT}/nudge_error"
+require "#{NUDGE_ROOT}/nudge_instruction"
+require "#{NUDGE_ROOT}/nudge_parser"
+require "#{NUDGE_ROOT}/nudge_value"
+require "#{NUDGE_ROOT}/nudge_writer"
+require "#{NUDGE_ROOT}/execution/settings"
+require "#{NUDGE_ROOT}/execution/outcome"
+require "#{NUDGE_ROOT}/execution/executable"
+
+Dir.glob("#{NUDGE_ROOT}/instructions/*/*.rb") {|file| require file }
