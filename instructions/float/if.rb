@@ -3,6 +3,6 @@ class FloatIf < NudgeInstruction
   get 2, :float
   
   def process
-    put :float, bool(0) ? float(0) : float(1)
+    put :float, bool(0) ? float(1) : float(0)
   end
 end
