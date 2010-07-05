@@ -3,9 +3,14 @@ class IntPower < NudgeInstruction
   
   def process
     if int(1) == 0 && int(0) < 0
-      raise NudgeError::NaN, "result of int exponent was not a number"
+      raise NudgeError::NaN, "result of int power was not a number"
     else
-      put :int, int(1) ** int(0)
+      result = int(1) ** int(0)
+      unless result.to_s == "Infinity"
+        put :int, result.to_i
+      else
+        raise NudgeError::NaN, "result of int power was Infinity"
+      end
     end
   end
 end
