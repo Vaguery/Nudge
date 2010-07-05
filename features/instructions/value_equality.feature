@@ -1,3 +1,4 @@
+#encoding: utf-8
 Feature: Value equality
   In order to compare values on any stack
   As a modeler

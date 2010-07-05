@@ -4,23 +4,24 @@ Feature: Integer arity-1 instructions
   I want a suite of Integer arithmetic Nudge instructions
   
   Scenario Outline: basic arity-1 instructions
-    Given I have placed "<arg1>" on the :int stack
-    When I execute the Nudge code "<instruction>"
-    Then "<result>" should be on top of the :int stack
-    And the argument should not be there
+    Given I have pushed "<arg1>" onto the :int stack
+    When I execute the Nudge instruction "<instruction>"
+    Then "<result>" should be in position <posn> of the :<result_stack> stack
+    And that stack's depth should be <depth>    
+    
     
     Examples: int_abs
-      | arg1  | instruction   | result |
-      |  13   | do int_abs    |  13    |
-      | -13   | do int_abs    |  13    |
-      |   0   | do int_abs    |   0    |
-      |  -0   | do int_abs    |   0    |
+      | arg1 | instruction | result | posn | result_stack | depth |
+      | 13   | int_abs     | 13     | 0    | int          | 1     |
+      | -13  | int_abs     | 13     | 0    | int          | 1     |
+      | 0    | int_abs     | 0      | 0    | int          | 1     |
+      | -0   | int_abs     | 0      | 0    | int          | 1     |
       
       
     Examples: int_negative
-      | arg1 | instruction     | result | error_msg |
-      |  3   | do int_negative | -3     | |
-      | -4   | do int_negative |  4     | |
-      |  0   | do int_negative |  0     | |
-      | -0   | do int_negative |  0     | |
+    | arg1 | instruction  | result | posn | result_stack | depth |
+    | 3    | int_negative | -3     | 0    | int          | 1     |
+    | -4   | int_negative | 4      | 0    | int          | 1     |
+    | 0    | int_negative | 0      | 0    | int          | 1     |
+    | -0   | int_negative | 0      | 0    | int          | 1     |
       

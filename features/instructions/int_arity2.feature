@@ -4,42 +4,42 @@ Feature: Integer arity-2 math instructions
   I want a suite of :int Nudge arithmetic instructions
   
   Scenario Outline: basic arity-2 instructions
-    Given I have placed "<arg1>" on the :int stack
-    And I have placed "<arg2>" on top of that
-    When I execute the Nudge code "<instruction>"
-    Then the value "<result>" should be on top of the :int stack
-    And a message "<error_msg>" should be on the :error stack
-    And the arguments should not remain on :int
+    Given I have pushed "<arg1>" onto the :<s1> stack
+    And I have pushed "<arg2>" onto the :<s2> stack
+    When I execute the Nudge instruction "<inst>"
+    Then "<result>" should be in position <pos> of the :<s3> stack
+    And stack :<s4> should have depth <depth>
+    And the top :error should include "<error>"
     
     Examples: int_add
-      | arg1   | arg2   | instruction | result | error_msg |
-      |    6   |    5   | do int_add  |   11   | |
-      |   -9   |    4   | do int_add  |   -5   | |
-      |   -3   |  -11   | do int_add  |  -14   | |
-      |    0   |  -11   | do int_add  |  -11   | |
+      | arg1 | s1  | arg2 | s2  | inst    | result | pos | s3  | s4  | depth | error |
+      | 6    | int | 5    | int | int_add | 11     | 0   | int | int | 1     |       |
+      | -9   | int | 4    | int | int_add | -5     | 0   | int | int | 1     |       |
+      | -3   | int | -11  | int | int_add | -14    | 0   | int | int | 1     |       |
+      | 0    | int | -11  | int | int_add | -11    | 0   | int | int | 1     |       |
       
 
     Examples: int_divide
-      | arg1   | arg2  | instruction    | result  | error_msg |
-      |   8    |    2  | do int_divide  |   4     | |
-      |  12    |   -3  | do int_divide  |  -4     | |
-      | -20    |    4  | do int_divide  |  -5     | |
-      | -40    |   -8  | do int_divide  |   5     | |
-      |  10    |    6  | do int_divide  |   1     | |
-      |   6    |   10  | do int_divide  |   0     | |
-      |  -3    |    5  | do int_divide  |   0     | |
-      |   5    |   -3  | do int_divide  |  -1     | |
-      |   0    |    1  | do int_divide  |   0     | |
-      |   1    |   -0  | do int_divide  |         | "int_divide cannot divide by 0" |
-      |   0    |    0  | do int_divide  |         | "int_divide cannot divide by 0" |
+    | arg1 | s1  | arg2 | s2  | inst       | result | pos | s3  | s4  | depth | error                                     |
+    | 8    | int | 2    | int | int_divide | 4      | 0   | int | int | 1     |                                           |
+    | 12   | int | -3   | int | int_divide | -4     | 0   | int | int | 1     |                                           |
+    | -20  | int | 4    | int | int_divide | -5     | 0   | int | int | 1     |                                           |
+    | -40  | int | -8   | int | int_divide | 5      | 0   | int | int | 1     |                                           |
+    | 10   | int | 6    | int | int_divide | 1      | 0   | int | int | 1     |                                           |
+    | 6    | int | 10   | int | int_divide | 0      | 0   | int | int | 1     |                                           |
+    | -3   | int | 5    | int | int_divide | -1     | 0   | int | int | 1     |                                           |
+    | 5    | int | -3   | int | int_divide | -2     | 0   | int | int | 1     |                                           |
+    | 0    | int | 1    | int | int_divide | 0      | 0   | int | int | 1     |                                           |
+    | 1    | int | -0   | int | int_divide |        | 0   | int | int | 0     | DivisionByZero: cannot divide an int by 0 |
+    | 0    | int | 0    | int | int_divide |        | 0   | int | int | 0     | DivisionByZero: cannot divide an int by 0 |
       
       
     Examples: int_max
-      | arg1 | arg2 | instruction | result | error_msg |
-      |  12  |   1  | do int_max  |  12    | |
-      |   1  |  12  | do int_max  |  12    | |
-      |  -2  |   2  | do int_max  |   2    | |
-      |   3  |   3  | do int_max  |   3    | |
+      | arg1 | s1  | arg2 | s2  | inst    | result | pos | s3  | s4  | depth | error |
+      | 12   | int | 1    | int | int_max | 12     | 0   | int | int | 1     |       |
+      | 1    | int | 12   | int | int_max | 12     | 0   | int | int | 1     |       |
+      | -2   | int | 2    | int | int_max | 2      | 0   | int | int | 1     |       |
+      | 3    | int | 3    | int | int_max | 3      | 0   | int | int | 1     |       |
 
 
     Examples: int_min
