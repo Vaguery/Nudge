@@ -29,7 +29,7 @@ Feature: Conditional instructions
     | ref x | code   | do a_bc | code   | false  | code_if     | do a_bc | 0    | code      | 1     |
     
     
-    Examples: exec_if (note this is pushing strings, though it shouldn't)
+    Examples: exec_if
     | arg1  | stack1 | arg2  | stack2 | t_or_f | instruction | result | posn | out_stack | depth |
     | ref a | exec   | ref b | exec   | true   | exec_if     | ref a  | 0    | exec      | 1     |
     | ref a | exec   | ref b | exec   | false  | exec_if     | ref b  | 0    | exec      | 1     |

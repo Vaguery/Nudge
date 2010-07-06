@@ -5,53 +5,53 @@ Feature: Code classification
   I want Nudge instructions that classify and match :code
   
   
-  Scenario: code_atom_q should be true if the argument is an instruction
-    Given an interpreter with "do a" on the :code stack
-    When I execute "do code_atom_q"
-    Then "true" should be on top of the :bool stack
-    And the argument should be gone
+  Scenario: code_atom? should be true if the argument is an instruction
+    Given I have pushed "do a" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "true" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
   
   
-  Scenario: code_atom_q should be true if the argument is a reference
-    Given an interpreter with "ref a" on the :code stack
-    When I execute "do code_atom_q"
-    Then "true" should be on top of the :bool stack
-    And the argument should be gone
+  Scenario: code_atom? should be true if the argument is a reference
+    Given I have pushed "ref a" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "true" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
     
     
-  Scenario: code_atom_q should be true if the argument is value
-    Given an interpreter with "value «int»\n«int» 8" on the :code stack
-    When I execute "do code_atom_q"
-    Then "true" should be on top of the :bool stack
-    And the argument should be gone
+  Scenario: code_atom? should be true if the argument is value
+    Given I have pushed "value «int»\n«int» 8" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "true" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
     
     
-  Scenario: code_atom_q should be true if the argument is value that contains a block
-    Given an interpreter with "value «code»\n«code» block {}" on the :code stack
-    When I execute "do code_atom_q"
-    Then "true" should be on top of the :bool stack
-    And the argument should be gone
+  Scenario: code_atom? should be true if the argument is value that contains a block
+    Given I have pushed "value «code»\n«code» block {}" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "true" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
     
     
-  Scenario: code_atom_q should be false if the argument is a block
-    Given an interpreter with "block {}" on the :code stack
-    When I execute "do code_atom_q"
-    Then "false" should be on top of the :bool stack
-    And the argument should be gone  
+  Scenario: code_atom? should be false if the argument is a block
+    Given I have pushed "block {}" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "false" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
     
     
-  Scenario: code_atom_q should be false if the argument is unparseable
-    Given an interpreter with "i am not valid" on the :code stack
-    When I execute "do code_atom_q"
-    Then "false" should be on top of the :bool stack
-    And the argument should be gone  
-    
-    
-    
+  Scenario: code_atom? should be false if the argument is unparseable
+    Given I have pushed "i am not valid" onto the :code stack
+    When I execute the Nudge instruction "code_atom?"
+    Then "false" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
     
     
     
-  Scenario: code_null_q should be true if the argument is an empty block
+    
+    
+  # this is a stupid instruction :/
+  Scenario: code_null? should be true if the argument is an empty block
     Given an interpreter with "block {}" on the :code stack
     When I execute "do code_null_q"
     Then "true" should be on top of the :bool stack

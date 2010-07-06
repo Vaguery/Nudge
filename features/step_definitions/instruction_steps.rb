@@ -9,11 +9,13 @@ end
 
 
 
-Given /^I have pushed "([^"]*)" onto the :([a-z\d_]+) stack$/ do |value, stack|
-  unless stack == "exec"
-    @context.stacks[stack.intern] << value
+Given /^I have pushed "([^"]*)" onto the :([a-z\d_]+) stack$/ do |string, stack|
+  string.gsub!('\n',"\n")
+  string.gsub!('\t',"\t")
+  if stack == "exec"
+    @context.stacks[:exec] << NudgePoint.from(string)
   else
-    @context.stacks[:exec] << NudgePoint.from(value)
+    @context.stacks[stack.intern] << string
   end
 end
 
@@ -32,7 +34,11 @@ end
 Then /^"([^"]*)" should be in position (\d+) of the :([a-z\d_]+) stack$/ do |result_val, posn, stack|
   unless result_val.strip == ""
     @output_stack = @context.stacks[stack.intern]
-    @output_stack[posn].should == result_val
+    if stack == "exec"
+      @output_stack[posn].to_script.should == NudgePoint.from(result_val).to_script
+    else
+      @output_stack[posn].should == result_val
+    end
   else
     @context.stacks[stack.intern].length.should == 0
   end
