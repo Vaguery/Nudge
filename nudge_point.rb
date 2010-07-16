@@ -5,7 +5,7 @@ class NudgePoint
   
   def to_script
     script, values = script_and_values
-    [script].join(" ") + "\n" + values.join("\n")
+    ([script].join(" ") + "\n" + values.join("\n")).strip
   end
   
   def evaluate (outcome_data)

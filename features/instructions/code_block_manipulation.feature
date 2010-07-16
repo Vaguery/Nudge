@@ -7,54 +7,53 @@ Feature: Code 'list' manipulation
   Scenario: code_car should return the 1st element of a program with 2 or more points
     Given I have pushed "block {block {ref x} ref y ref z}" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then "block {ref x}" should be in position 0 of the :code stack
-    And the original argument should be gone
+    Then "block { ref x }" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_car should return a copy of a 1-point program
     Given I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then the item on the :code stack should have value "block {}"
-    And the original argument should be gone
+    Then "block {}" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_car should return a copy of a reference
     Given I have pushed "ref d" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then the item on the :code stack should have value "ref d"
-    And the original argument should be gone
+    Then "ref d" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_car should return a copy of an instruction
     Given I have pushed "do bool_flush" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then the item on the :code stack should have value "do bool_flush"
-    And the original argument should be gone
+    Then "do bool_flush" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_car should return a copy of a value
     Given I have pushed "value «bool»\n«bool» false" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then the item on the :code stack should have value "value «bool»\n«bool» false"
-    And the original argument should be gone
+    Then "value «bool»\n«bool» false" should be in position 0 of the :code stack
     
     
     
     
     
     
-  Scenario: code_cdr should delete the 1st element of a program with 2 or more points
+  Scenario: code_cdr should delete the 1st internal element of a code value point
     Given I have pushed "block {block {ref x} ref y ref z}" onto the :code stack
     When I execute the Nudge instruction "code_cdr"
-    Then the item on the :code stack should have value "block {ref y ref z}"
-    And the original argument should be gone
+    Then "block { ref y ref z }" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_cdr should return an empty block when the argument is a 1-point block
     Given I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_cdr"
-    Then the item on the :code stack should have value "block {}"
-    And the original argument should be gone
+    Then "block {}" should be in position 0 of the :code stack
+    And that stack's depth should be 1
     
     
   Scenario: code_cdr should return an empty block when the argument is a reference

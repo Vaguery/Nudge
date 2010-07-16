@@ -25,13 +25,15 @@ When /^I execute the Nudge instruction "([^"]*)"$/ do |instruction_name|
 end
 
 
-Then /^"([^"]*)" should be in position ([^"]*) of the "([^"]*)" stack$/ do |result_val, posn, stack|
-  @output_stack = @context.stacks[stack.intern]
-  @output_stack[posn].should == result_val
-end
+# Then /^"([^"]*)" should be in position ([^"]*) of the "([^"]*)" stack$/ do |result_val, posn, stack|
+#   @output_stack = @context.stacks[stack.intern]
+#   @output_stack[posn].should == result_val
+# end
 
 
 Then /^"([^"]*)" should be in position (\d+) of the :([a-z\d_]+) stack$/ do |result_val, posn, stack|
+  result_val.gsub!('\n',"\n")
+  result_val.gsub!('\t',"\t")
   unless result_val.strip == ""
     @output_stack = @context.stacks[stack.intern]
     if stack == "exec"
