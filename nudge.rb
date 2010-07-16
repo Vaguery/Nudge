@@ -1,17 +1,15 @@
-NUDGE_ROOT = '.' unless defined? NUDGE_ROOT
+require File.expand_path('nudge_point', File.dirname(__FILE__))
+require File.expand_path('points/block_point', File.dirname(__FILE__))
+require File.expand_path('points/do_point', File.dirname(__FILE__))
+require File.expand_path('points/ref_point', File.dirname(__FILE__))
+require File.expand_path('points/value_point', File.dirname(__FILE__))
+require File.expand_path('nudge_error', File.dirname(__FILE__))
+require File.expand_path('nudge_instruction', File.dirname(__FILE__))
+require File.expand_path('nudge_parser', File.dirname(__FILE__))
+require File.expand_path('nudge_value', File.dirname(__FILE__))
+require File.expand_path('nudge_writer', File.dirname(__FILE__))
+require File.expand_path('execution/settings', File.dirname(__FILE__))
+require File.expand_path('execution/outcome', File.dirname(__FILE__))
+require File.expand_path('execution/executable', File.dirname(__FILE__))
 
-require "#{NUDGE_ROOT}/nudge_point"
-require "#{NUDGE_ROOT}/points/block_point"
-require "#{NUDGE_ROOT}/points/do_point"
-require "#{NUDGE_ROOT}/points/ref_point"
-require "#{NUDGE_ROOT}/points/value_point"
-require "#{NUDGE_ROOT}/nudge_error"
-require "#{NUDGE_ROOT}/nudge_instruction"
-require "#{NUDGE_ROOT}/nudge_parser"
-require "#{NUDGE_ROOT}/nudge_value"
-require "#{NUDGE_ROOT}/nudge_writer"
-require "#{NUDGE_ROOT}/execution/settings"
-require "#{NUDGE_ROOT}/execution/outcome"
-require "#{NUDGE_ROOT}/execution/executable"
-
-Dir.glob("#{NUDGE_ROOT}/instructions/*/*.rb") {|file| require file }
+Dir.glob('instructions/*/*.rb', File.dirname(__FILE__)) {|file| require file }
