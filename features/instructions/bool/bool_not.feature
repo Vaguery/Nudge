@@ -1,8 +1,8 @@
 #encoding: utf-8
-Feature: Boolean arity-1 logic instructions
+Feature: bool_not
   In order to describe and manipulate discrete logical variables
   As a modeler
-  I want a suite of Boolean logic Nudge instructions
+  I want a to be able to invoke the simplest Boolean operator
   
   Scenario Outline: basic arity-1 :bool instructions
     Given I have pushed "<arg1>" onto the :<stack> stack

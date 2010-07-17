@@ -3,7 +3,12 @@ class CodeCdr < NudgeInstruction
   
   def process
     tree = NudgePoint.from(code(0))
-    tree.delete_point_at(1) if tree.is_a?(BlockPoint) && (tree.points > 1)
-    put :code, tree.to_script
+    result = if tree.is_a?(BlockPoint) && (tree.points > 1)
+      tree.delete_point_at(1)
+      tree.to_script
+    else
+      "block {}"
+    end
+    put :code, result
   end
 end

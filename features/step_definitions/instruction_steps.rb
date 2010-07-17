@@ -25,12 +25,6 @@ When /^I execute the Nudge instruction "([^"]*)"$/ do |instruction_name|
 end
 
 
-# Then /^"([^"]*)" should be in position ([^"]*) of the "([^"]*)" stack$/ do |result_val, posn, stack|
-#   @output_stack = @context.stacks[stack.intern]
-#   @output_stack[posn].should == result_val
-# end
-
-
 Then /^"([^"]*)" should be in position (\d+) of the :([a-z\d_]+) stack$/ do |result_val, posn, stack|
   result_val.gsub!('\n',"\n")
   result_val.gsub!('\t',"\t")
@@ -38,6 +32,8 @@ Then /^"([^"]*)" should be in position (\d+) of the :([a-z\d_]+) stack$/ do |res
     @output_stack = @context.stacks[stack.intern]
     if stack == "exec"
       @output_stack[posn].to_script.should == NudgePoint.from(result_val).to_script
+    elsif stack == "code"
+      NudgePoint.from(@output_stack[posn]).to_script.should == NudgePoint.from(result_val).to_script
     else
       @output_stack[posn].should == result_val
     end
