@@ -16,12 +16,3 @@ Feature: Integer arity-1 instructions
       | -13  | int_abs     | 13     | 0    | int          | 1     |
       | 0    | int_abs     | 0      | 0    | int          | 1     |
       | -0   | int_abs     | 0      | 0    | int          | 1     |
-      
-      
-    Examples: int_negative
-    | arg1 | instruction  | result | posn | result_stack | depth |
-    | 3    | int_negative | -3     | 0    | int          | 1     |
-    | -4   | int_negative | 4      | 0    | int          | 1     |
-    | 0    | int_negative | 0      | 0    | int          | 1     |
-    | -0   | int_negative | 0      | 0    | int          | 1     |
-      
