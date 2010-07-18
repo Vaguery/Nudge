@@ -2,24 +2,6 @@ Feature: Code manipulation errors
   In order to avoid models that break when performing complex :code manipulations
   As a modeler
   I want :code instructions to create :error items when they fail
-
-  Scenario: code_cons should return an :error when it can't parse arg1
-    Given an interpreter with "not my affair" on the :code stack
-    And "do int_add" above that
-    When I execute "do code_cons"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_cons cannot parse an argument"
-    
-    
-  Scenario: code_cons should return an :error when it can't parse arg2
-    Given an interpreter with "do int_add" on the :code stack
-    And "abcd efg" above that
-    When I execute "do code_cons"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_cons cannot parse an argument"
-    
-    
-    
     
   Scenario: code_container should return an :error if its arg1 can't be parsed
     Given an interpreter with "bbbbbbbbbbb" on the :code stack

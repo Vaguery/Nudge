@@ -34,3 +34,19 @@ Feature: code_cons instruction
     When I execute the Nudge instruction "code_cons"
     Then "block {block {block {}} do int_add}" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    
+    
+  Scenario: code_cons should return an :error when it can't parse arg1
+    Given I have pushed "not my affair" onto the :code stack
+    And I have pushed "do int_add" onto the :code stack
+    When I execute the Nudge instruction "code_cons"
+    Then "code_cons cannot parse an argument" should be in position -1 of the :error stack
+    And stack :code should have depth 0
+    
+    
+  Scenario: code_cons should return an :error when it can't parse arg2
+    Given I have pushed "do int_add" onto the :code stack
+    And I have pushed "abc defgh" onto the :code stack
+    When I execute the Nudge instruction "code_cons"
+    Then "code_cons cannot parse an argument" should be in position -1 of the :error stack
+    And stack :code should have depth 0
