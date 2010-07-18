@@ -10,6 +10,7 @@ Feature: code_bundle
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x }" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    And stack :int should have depth 0
   
   
   Scenario: code_bundle(2) should return a block with the top 2 items from :code in a single block
@@ -19,22 +20,28 @@ Feature: code_bundle
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x do a}" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    And stack :int should have depth 0
     
     
-  Scenario: code_bundle(0) should leave the :code stack unchanged
+  Scenario: code_bundle(0) should push an empty block
     Given I have pushed "ref x" onto the :code stack
+    And I have pushed "do a" onto the :code stack
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
-    Then "ref x" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    Then "block {}" should be in position -1 of the :code stack
+    And that stack's depth should be 3
+    And stack :int should have depth 0
     
     
-  Scenario: code_bundle(-12) should leave the :code stack unchanged
+    
+  Scenario: code_bundle(-12) should pop the :int but give no :code result
     Given I have pushed "ref x" onto the :code stack
-    And I have pushed "0" onto the :int stack
+    And I have pushed "-12" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
-    Then "ref x" should be in position 0 of the :code stack
+    Then "ref x" should be in position -1 of the :code stack
     And that stack's depth should be 1
+    And stack :int should have depth 0
+    
     
     
   Scenario: code_bundle(1) should wrap items even if they're blocks already
@@ -43,6 +50,8 @@ Feature: code_bundle
     When I execute the Nudge instruction "code_bundle"
     Then "block { block {} }" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    And stack :int should have depth 0
+    
   
   
   Scenario: code_bundle(more items than on stack) should wrap the whole stack in one item
@@ -53,3 +62,5 @@ Feature: code_bundle
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x ref y ref z}" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    And stack :int should have depth 0
+    
