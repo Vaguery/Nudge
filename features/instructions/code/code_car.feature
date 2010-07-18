@@ -36,3 +36,4 @@ Feature: code_car instruction
     Given I have pushed "value «bool»\n«bool» false" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "value «bool»\n«bool» false" should be in position 0 of the :code stack
+
