@@ -31,9 +31,15 @@ Feature: code_cdr instruction
     And that stack's depth should be 1
     
     
-    
   Scenario: code_cdr should return an empty block when the argument is a value
     Given I have pushed "value «code»\n«code» block {ref x}" onto the :code stack
     When I execute the Nudge instruction "code_cdr"
     Then "block {}" should be in position 0 of the :code stack
     And that stack's depth should be 1
+    
+    
+  Scenario: code_cdr should return an :error when the argument is unparseable
+    Given I have pushed "flibbertigibbet" onto the :code stack
+    When I execute the Nudge instruction "code_cdr"
+    Then stack :code should have depth 0
+    And "code_cdr cannot parse an argument" should be in position -1 of the :error stack

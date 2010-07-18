@@ -3,12 +3,16 @@ class CodeCdr < NudgeInstruction
   
   def process
     tree = NudgePoint.from(code(0))
-    result = if tree.is_a?(BlockPoint) && (tree.points > 1)
-      tree.delete_point_at(1)
-      tree.to_script
+    unless tree.kind_of?(NilPoint)
+      result = if tree.is_a?(BlockPoint) && (tree.points > 1)
+        tree.delete_point_at(1)
+        tree.to_script
+      else
+        "block {}"
+      end
+      put :code, result
     else
-      "block {}"
+      put :error, "code_cdr cannot parse an argument"
     end
-    put :code, result
   end
 end

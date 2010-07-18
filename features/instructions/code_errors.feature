@@ -3,18 +3,6 @@ Feature: Code manipulation errors
   As a modeler
   I want :code instructions to create :error items when they fail
 
-  Scenario: code_cdr should return an :error when the argument is unparseable
-    Given an interpreter with "flibbertigibbet" on the :code stack
-    When I execute "do code_cdr"
-    Then the original argument should be gone
-    And the :error stack should contain "code_cdr cannot parse an argument"
-    
-    
-    
-    
-    
-    
-    
   Scenario: code_cons should return an :error when it can't parse arg1
     Given an interpreter with "not my affair" on the :code stack
     And "do int_add" above that
