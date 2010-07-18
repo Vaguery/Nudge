@@ -3,39 +3,14 @@ Feature: Code manipulation errors
   As a modeler
   I want :code instructions to create :error items when they fail
 
-
-  Scenario: code_car should return an error value for an unparseable program
-    Given an interpreter with "12345 67 8 9" on the :code stack
-    When I execute "do code_car"
-    Then the original argument should be gone
-    And the :error stack should contain "code_car attempted on unparseable program"
-    
-    
-    
-    
   Scenario: code_cdr should return an :error when the argument is unparseable
     Given an interpreter with "flibbertigibbet" on the :code stack
     When I execute "do code_cdr"
     Then the original argument should be gone
-    And the :error stack should contain "code_cdr attempted on unparseable program"
+    And the :error stack should contain "code_cdr cannot parse an argument"
     
     
     
-    
-  Scenario: code_concatenate should return an error when its arg1 can't be parsed
-    Given an interpreter with "gobbledegook" on the :code stack
-    And "ref b" above that
-    When I execute "do code_concatenate"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_concatenate cannot parse an argument"
-    
-    
-  Scenario: code_concatenate should return an error when its arg2 can't be parsed
-    Given an interpreter with "ref x" on the :code stack
-    And "junk junk junk" above that
-    When I execute "do code_concatenate"
-    Then the original arguments should be gone
-    And the :error stack should contain "code_concatenate cannot parse an argument"
     
     
     
@@ -158,7 +133,7 @@ Feature: Code manipulation errors
     And "2" on the :int stack
     When I execute "do code_nth_cdr"
     Then the original arguments should be gone
-    And the :error stack should contain "code_nth_cdr cannot parse its argument"
+    And the :error stack should contain "code_nth_cdr cannot parse an argument"
     
     
     
@@ -168,7 +143,7 @@ Feature: Code manipulation errors
     And "3" on the :int stack
     When I execute "do code_nth_point"
     Then the original arguments should be gone
-    And the :error stack should contain "code_nth_point cannot parse its argument"
+    And the :error stack should contain "code_nth_point cannot parse an argument"
     
     
     
@@ -178,7 +153,7 @@ Feature: Code manipulation errors
     And "ref x" on the :code stack above that
     When I execute "do code_position"
     Then the original arguments should be gone
-    And the :error stack should contain "code_position cannot parse its argument"
+    And the :error stack should contain "code_position cannot parse an argument"
     
     
   Scenario: code_position should return an error if arg2 can't be parsed
@@ -186,7 +161,7 @@ Feature: Code manipulation errors
     And "8887766" on the :code stack above that
     When I execute "do code_position"
     Then the original arguments should be gone
-    And the :error stack should contain "code_position cannot parse its argument"
+    And the :error stack should contain "code_position cannot parse an argument"
     
     
     

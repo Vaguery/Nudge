@@ -36,4 +36,11 @@ Feature: code_car instruction
     Given I have pushed "value «bool»\n«bool» false" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "value «bool»\n«bool» false" should be in position 0 of the :code stack
-
+    
+    
+  Scenario: code_car should return an error value for an unparseable program
+    Given I have pushed "12345 67 8 9" onto the :code stack
+    When I execute the Nudge instruction "code_car"
+    Then "code_car cannot parse an argument" should be in position -1 of the :error stack
+    And that stack's depth should be 1
+    

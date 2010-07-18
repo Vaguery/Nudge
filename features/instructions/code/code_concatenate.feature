@@ -41,3 +41,18 @@ Feature: code_concatenate instruction
     And I have pushed "value «float»\n«float» 1.1" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
     Then "block { value «int» value «float» }\n«int»12\n«float»1.1" should be in position 0 of the :code stack
+    
+    
+  Scenario: code_concatenate should return an error when its arg1 can't be parsed
+    Given I have pushed "gobbledegook" onto the :code stack
+    And I have pushed "ref b" onto the :code stack
+    When I execute the Nudge instruction "code_concatenate"
+    Then "code_concatenate cannot parse an argument" should be in position -1 of the :error stack
+
+
+  Scenario: code_concatenate should return an error when its arg2 can't be parsed
+    Given I have pushed "ref h" onto the :code stack
+    And I have pushed "junkety junk" onto the :code stack
+    When I execute the Nudge instruction "code_concatenate"
+    Then "code_concatenate cannot parse an argument" should be in position -1 of the :error stack
+
