@@ -5,17 +5,9 @@ class CodeConcatenate < NudgeInstruction
     arg2 = NudgePoint.from code(0)
     arg1 = NudgePoint.from code(1)
     
-    result = if arg1.is_a?(BlockPoint)
-      if arg2.is_a?(BlockPoint)
-        
-      else
-        arg1.insert_point_after(arg1.points-1,arg2)
-        arg1
-      end
-    else
-      BlockPoint.new(arg1,arg2)
-    end
+    pts = arg1.is_a?(BlockPoint) ? arg1.instance_variable_get(:@points) : [arg1]
+    pts += (arg2.is_a?(BlockPoint) ? arg2.instance_variable_get(:@points) : [arg2])
     
-    put :code, result.to_script
+    put :code, BlockPoint.new(*pts).to_script
   end
 end

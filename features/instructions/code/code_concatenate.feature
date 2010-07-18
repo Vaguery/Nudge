@@ -8,7 +8,7 @@ Feature: code_concatenate instruction
     Given I have pushed "block {ref x ref y}" onto the :code stack
     And I have pushed "block {do a do b}" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "block {ref x ref y do a do b}" should be in position 0 of the :code stack
+    Then "block {ref x ref y do a do b}" should be in position -1 of the :code stack
     And that stack's depth should be 1
     
     
@@ -16,7 +16,7 @@ Feature: code_concatenate instruction
     Given I have pushed "block {ref x ref x}" onto the :code stack
     And I have pushed "value «int»\n«int» 8" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "block {ref x ref x value «int»} \n«int» 8" should be in position 0 of the :code stack
+    Then "block {ref x ref x value «int»} \n«int» 8" should be in position -1 of the :code stack
     And that stack's depth should be 1
     
     
@@ -24,7 +24,7 @@ Feature: code_concatenate instruction
     Given I have pushed "do a" onto the :code stack
     And I have pushed "block {ref x}" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "block {do a block {ref x}}" should be in position 0 of the :code stack
+    Then "block {do a ref x}" should be in position -1 of the :code stack
     And that stack's depth should be 1
     
     
@@ -32,7 +32,7 @@ Feature: code_concatenate instruction
     Given I have pushed "do a" onto the :code stack
     And I have pushed "ref b" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "block { do a ref b }" should be in position 0 of the :code stack
+    Then "block { do a ref b }" should be in position -1 of the :code stack
     And that stack's depth should be 1
     
     
