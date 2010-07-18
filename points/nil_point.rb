@@ -12,6 +12,6 @@ class NilPoint < NudgePoint
   end
   
   def script_and_values
-    return "", []
+    return @source_code, []
   end
 end

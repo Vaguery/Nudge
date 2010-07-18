@@ -13,11 +13,11 @@ describe "NilPoint" do
   
   describe "blueprint" do
     it "should not return any script or values" do
-      NilPoint.new("nasdoaosd").script_and_values.should == ["",[]]
+      NilPoint.new("nasdoaosd").script_and_values.should == ["nasdoaosd",[]]
     end
     
-    it "should have an empty string as a script" do
-      NilPoint.new("nasdoaosd").to_script.should == ""
+    it "should have an the original sourcecode as a script" do
+      NilPoint.new("nasdoaosd").to_script.should == "nasdoaosd"
     end
   end
 end
