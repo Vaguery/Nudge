@@ -1,10 +1,10 @@
 Feature: float_equal instruction
-  In order to compare values on any stack
+  In order to compare values on the float stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the float_equal instruction
   
   
-  Scenario Outline: x_equal_q
+  Scenario Outline: float_equal? instruction
     Given I have pushed "<arg1>" onto the :<stack> stack
     And I have pushed "<arg2>" onto the :<stack> stack
     When I execute the Nudge instruction "<instruction>"

@@ -1,8 +1,8 @@
 #encoding: utf-8
 Feature: Value equality
-  In order to compare values on any stack
+  In order to compare values on the :name stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the name_equal? instructions
   
   
   Scenario Outline: name_equal? instruction

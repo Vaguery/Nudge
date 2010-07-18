@@ -1,8 +1,8 @@
 #encoding: utf-8
 Feature: Value equality
-  In order to compare values on any stack
+  In order to compare values on the proportion stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the proportion_equal? instructions
   
   
   Scenario Outline: proportion_equal? instruction
@@ -13,7 +13,7 @@ Feature: Value equality
     And stack :<stack> should have depth <depth>
     
     
-    Examples: proportion_equal_q
+    Examples: proportion_equal?
     | arg1 | stack      | arg2  | stack      | instruction       | result | stack      | depth |
     | 0.12 | proportion | 0.12  | proportion | proportion_equal? | true   | proportion | 0     |
     | 0.10 | proportion | 0.101 | proportion | proportion_equal? | false  | proportion | 0     |

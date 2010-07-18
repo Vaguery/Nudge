@@ -1,7 +1,7 @@
 Feature: Value equality
-  In order to compare values on any stack
+  In order to compare values on the :bool stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the bool_equal? instruction
   
   
   Scenario Outline: x_equal_q

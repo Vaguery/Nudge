@@ -1,8 +1,8 @@
 #encoding: utf-8
 Feature: Value equality
-  In order to compare values on any stack
+  In order to compare values the :int stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the int_equal? instruction
   
   
   Scenario Outline: int_equal? instruction
@@ -13,7 +13,7 @@ Feature: Value equality
     And stack :<stack> should have depth <depth>
     
     
-    Examples: int_equal_q
+    Examples: int_equal?
     | arg1 | stack | arg2 | stack | instruction | result | stack | depth |
     | 12   | int   | 12   | int   | int_equal?  | true   | int   | 0     |
     | -12  | int   | 12   | int   | int_equal?  | false  | int   | 0     |

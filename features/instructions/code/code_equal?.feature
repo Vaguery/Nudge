@@ -1,11 +1,11 @@
 #encoding: utf-8
 Feature: Value equality
-  In order to compare values on any stack
+  In order to compare values on the :code stack
   As a modeler
-  I want Nudge to include a suite of [stack]_equal_q instructions
+  I want Nudge to include the code_equal? instruction
   
   
-  Scenario Outline: x_equal_q
+  Scenario Outline: code_equal? instruction
     Given I have pushed "<arg1>" onto the :<stack> stack
     And I have pushed "<arg2>" onto the :<stack> stack
     When I execute the Nudge instruction "<instruction>"
@@ -22,7 +22,7 @@ Feature: Value equality
     | block {}            | code  | block {block {}}       | code  | code_equal? | false  | code  | 0     |
     
     
-    Examples: code_equal_q is always false for unparseable code
+    Examples: code_equal? is always false for unparseable code
     | arg1     | stack | arg2            | stack | instruction | result | stack | depth |
     | not code | code  | neither is this | code  | code_equal? | false  | code  | 0     |
     | block {} | code  | busted          | code  | code_equal? | false  | code  | 0     |
