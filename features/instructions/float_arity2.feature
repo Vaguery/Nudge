@@ -10,12 +10,6 @@ Feature: Float arity-2 math instructions
     Then a value very close to "<result>" should be on top of the :float stack
     And a message "<error_msg>" should be on the :error stack
     And the arguments should not remain on :float
-    
-    Examples: float_add
-      | arg1   | arg2   | instruction   | result | error_msg |
-      |  12.1  | -12.0  | do float_add  |  0.1   | |
-      |   0.0  |   3.3  | do float_add  |  3.3   | |
-      |  -2.0  |  -2.0  | do float_add  | -4.0   | |
       
       
     Examples: float_divide
@@ -32,21 +26,6 @@ Feature: Float arity-2 math instructions
       |  -0.0  |   0.0 | do float_divide  |         | "float_divide cannot divide by 0.0" |
       |   0.0  |  -0.0 | do float_divide  |         | "float_divide cannot divide by 0.0" |
       
-      
-    Examples: float_max
-      | arg1  | arg2  | instruction   | result | error_msg |
-      |  12.0 |   1.0 | do float_max  |  12.0  | |
-      |   1.0 |  12.0 | do float_max  |  12.0  | |
-      |  -2.0 |   2.0 | do float_max  |   2.0  | |
-      |   3.0 |   3.0 | do float_max  |   3.0  | |
-      
-      
-    Examples: float_min
-      | arg1  | arg2  | instruction   | result | error_msg |
-      |  12.0 |   1.0 | do float_min  |   1.0  | |
-      |   1.0 |  12.0 | do float_min  |   1.0  | |
-      |  -2.0 |   2.0 | do float_min  |  -2.0  | |
-      |   3.0 |   3.0 | do float_min  |   3.0  | |
       
       
     Examples: float_modulo
@@ -65,12 +44,6 @@ Feature: Float arity-2 math instructions
       |  2.2  | -0.0  | do float_modulo  |        | "float_modulo attempted modulo 0.0" |
       
       
-    Examples: float_multiply
-      | arg1 | arg2 | instruction       | result | error_msg |
-      |  3.0 |  4.1 | do float_multiply |  12.3  | |
-      |  0.0 |  3.3 | do float_multiply |   0.0  | |
-      | -2.5 | 16.0 | do float_multiply | -40.0  | |
-      | -2.5 | -4.0 | do float_multiply |  10.0  | |
       
       
     Examples: float_power
@@ -86,11 +59,3 @@ Feature: Float arity-2 math instructions
       | 64.0  |  0.5  | do float_power  |  8.0   | |
       |-64.0  |  0.5  | do float_power  |        | "float_power did not return a float" |
       |  0.0  |  0.0  | do float_power  |  1.0   | |
-      
-      
-    Examples: float_subtract
-      | arg1 | arg2 | instruction       | result | error_msg |
-      |  3.0 |  4.1 | do float_subtract |  -1.1  | |
-      |  5.6 |  3.3 | do float_subtract |   2.3  | |
-      | -2.0 | -3.1 | do float_subtract |   1.1  | |
-      | -3.1 | -2.0 | do float_subtract |  -1.1  | |
