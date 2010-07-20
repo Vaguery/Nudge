@@ -4,11 +4,12 @@ Feature: *_rotate instruction
   I want to be able to shift items around on any given stack
   
   Scenario Outline: *_rotate instructions
-    Given I have pushed "<arg1>" onto the :<stack> stack
+    Given I have pushed "filler" onto the :<stack> stack
+    And I have pushed "<arg1>" onto the :<stack> stack
     And I have pushed "<arg2>" onto the :<stack> stack
     And I have pushed "<arg3>" onto the :<stack> stack
     When I execute the Nudge instruction "<inst>"
-    Then stack :<stack> should have depth 3
+    Then stack :<stack> should have depth 4
     And "<arg1>" should be in position -1 of the :<stack> stack
     And "<arg3>" should be in position -2 of the :<stack> stack
     And "<arg2>" should be in position -3 of the :<stack> stack

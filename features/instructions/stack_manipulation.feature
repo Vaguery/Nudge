@@ -11,8 +11,6 @@ Feature: Stack manipulation instructions
     And its value should be N
     
     
-    
-    
   Scenario: x_equal_q instructions
     Given there are two item with value V1 and V2 on a stack named :x
     When I execute the Nudge code 'do x_equal_q'
@@ -55,11 +53,6 @@ Feature: Stack manipulation instructions
     And the :int will have disappeared
     
     
-  Scenario: x_swap instructions
-    Given there are two or more items on a stack named :x
-    And the top two items have values (top to bottom) [A, B]
-    When I execute the Nudge code 'do x_swap'
-    Then the top two items on :x will be in order [B, A]
     
     
   Scenario: x_yank standard behavior
