@@ -12,4 +12,4 @@ require File.expand_path('execution/settings', File.dirname(__FILE__))
 require File.expand_path('execution/outcome', File.dirname(__FILE__))
 require File.expand_path('execution/executable', File.dirname(__FILE__))
 
-Dir.glob('instructions/*/*.rb', File.dirname(__FILE__)) {|file| require file }
+Dir.glob(File.expand_path("instructions/*/*.rb", File.dirname(__FILE__))) {|file| require file }
