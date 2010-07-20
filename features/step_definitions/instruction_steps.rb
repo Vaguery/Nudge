@@ -54,6 +54,11 @@ Then /^something close to "([^"]*)" should be in position (-?\d+) of the :float 
 end
 
 
+Then /^the name "([^"]*)" should be bound to "([^"]*)"$/ do |arg1, arg2|
+  pending
+end
+
+
 
 Then /^"([^"]*)" should be on top of the bool stack$/ do |result_val|
   @context.stacks[:bool][0].should == result_val
