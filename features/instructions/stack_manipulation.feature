@@ -31,10 +31,6 @@ Feature: Stack manipulation instructions
     Then there should be no items on stack :x
     
     
-  Scenario: x_pop instructions
-    Given there are one or more items on a stack named :x
-    When I execute the Nudge code 'do x_pop'
-    Then the top item should have disappeared from stack :x
     
     
   Scenario: x_rotate instructions

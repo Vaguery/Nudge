@@ -30,7 +30,7 @@ Feature: Integer arity-2 math instructions
       
       
     Examples: int_divmod emits an :error for dividing by 0
-    | arg1 | s1  | arg2 | inst       | r1 | pos1 | out | r2 | pos2 | depth | error                                          |
-    | 3    | int | 0    | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot perform int modulo zero |
-    | 0    | int | 0    | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot perform int modulo zero |
-    | 0    | int | -0   | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot perform int modulo zero |
+    | arg1 | s1  | arg2 | inst       | r1 | pos1 | out | r2 | pos2 | depth | error                                     |
+    | 3    | int | 0    | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot divide an int by 0 |
+    | 0    | int | 0    | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot divide an int by 0 |
+    | 0    | int | -0   | int_divmod |    | 0    | int |    | 1    | 0     | DivisionByZero: cannot divide an int by 0 |
