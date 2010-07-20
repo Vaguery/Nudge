@@ -1,6 +1,8 @@
 class NudgePoint
   def NudgePoint.from (script)
     NudgeParser.new(script).send(:do_parse)
+  rescue NudgeError
+    NilPoint.new(script)
   end
   
   def to_script
