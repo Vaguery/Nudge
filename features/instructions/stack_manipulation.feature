@@ -12,40 +12,6 @@ Feature: Stack manipulation instructions
     Then a new item should be pushed onto :bool
     And its value should be true iff V1==V2
     
-  Scenario: x_shove standard behavior
-    Given there is 6 items on a stack named :x
-    And their values are (top to bottom) [A, B, B, B, B, B]
-    And an item on the :int stack with value '3'
-    When I execute the Nudge code 'do x_shove'
-    Then the order of the values on the :x stack will be [B, B, B, A, B, B]
-    And the :int will have disappeared
-    
-    
-  Scenario: x_shove with negative value leaves item on top
-    Given there is 6 items on a stack named :x
-    And their values are (top to bottom) [A, B, B, B, B, B]
-    And an item on the :int stack with value '-2'
-    When I execute the Nudge code 'do x_shove'
-    Then the order of the values on the :x stack will be [A, B, B, B, B, B]
-    And the :int will have disappeared
-    
-  
-  Scenario: x_shove with zero value leaves item on top
-    Given there is 6 items on a stack named :x
-    And their values are (top to bottom) [A, B, B, B, B, B]
-    And an item on the :int stack with value '0'
-    When I execute the Nudge code 'do x_shove'
-    Then the order of the values on the :x stack will be [A, B, B, B, B, B]
-    And the :int will have disappeared
-    
-    
-  Scenario: x_shove with huge value shoves item to bottom
-    Given there is 6 items on a stack named :x
-    And their values are (top to bottom) [A, B, B, B, B, B]
-    And an item on the :int stack with value '881291'
-    When I execute the Nudge code 'do x_shove'
-    Then the order of the values on the :x stack will be [B, B, B, B, B, A]
-    And the :int will have disappeared
     
     
     
