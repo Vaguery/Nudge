@@ -11,11 +11,6 @@ Feature: Stack manipulation instructions
     And its value should be N
     
     
-  Scenario: x_duplicate instructions
-    Given there is an item with value V on a stack named :x
-    When I execute the Nudge code 'do x_duplicate'
-    Then a new item should be pushed onto :x
-    And its value should be also be V
     
     
   Scenario: x_equal_q instructions
