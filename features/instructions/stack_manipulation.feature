@@ -19,22 +19,6 @@ Feature: Stack manipulation instructions
     Then a new item should be pushed onto :bool
     And its value should be true iff V1==V2
     
-    
-  Scenario: x_flush instructions
-    Given there are any number of items on a stack named :x
-    When I execute the Nudge code 'do x_flush'
-    Then there should be no items on stack :x
-    
-    
-    
-    
-  Scenario: x_rotate instructions
-    Given there are 3 or more items on a stack named :x
-    And their values (top to bottom) are [A, B, C]
-    When I execute the Nudge code 'do x_rotate'
-    Then the top 3 items (top to bottom) on stack :x should be [C, A, B]
-    
-    
   Scenario: x_shove standard behavior
     Given there is 6 items on a stack named :x
     And their values are (top to bottom) [A, B, B, B, B, B]
