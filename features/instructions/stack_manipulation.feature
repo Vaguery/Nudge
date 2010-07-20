@@ -4,11 +4,6 @@ Feature: Stack manipulation instructions
   I want Nudge instructions that move stuff around predictably in any stack
   
   
-  Scenario: x_depth instructions
-    Given there are N items on a stack named :x
-    When I execute the Nudge code 'do x_depth'
-    Then a new :int value should be pushed
-    And its value should be N
     
     
   Scenario: x_equal_q instructions
