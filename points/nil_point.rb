@@ -1,17 +1,17 @@
 class NilPoint < NudgePoint
-  def initialize (source_code)
-    @source_code = source_code
-  end
-  
-  def points
-    0
+  def initialize (script)
+    @script = script
   end
   
   def evaluate (outcome_data)
     super
   end
   
+  def points
+    0
+  end
+  
   def script_and_values
-    return @source_code, []
+    return @script, []
   end
 end
