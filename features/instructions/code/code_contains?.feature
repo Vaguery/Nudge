@@ -21,10 +21,10 @@ Feature: code_contains? instruction
     And stack :code should have depth 0
   
   
-  Scenario: code_contains? should return false if arg1 == arg2 
+  Scenario: code_contains? should return true if arg1 == arg2 
     Given I have pushed "block {ref x do a}" onto the :code stack
     And I have pushed "block {ref x do a}" onto the :code stack
     When I execute the Nudge instruction "code_contains?"
-    Then "false" should be in position 0 of the :bool stack
+    Then "true" should be in position 0 of the :bool stack
     And stack :code should have depth 0
     
