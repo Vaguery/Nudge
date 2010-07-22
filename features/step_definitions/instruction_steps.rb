@@ -47,7 +47,7 @@ end
 
 Then /^something close to "([^"]*)" should be in position (-?\d+) of the :float stack$/ do |result_val, posn|
   unless result_val.strip == ""
-    @context.stacks[:float][-1].to_f.should be_close(result_val.to_f,0.0001)
+    @context.stacks[:float][posn].to_f.should be_close(result_val.to_f,0.0001)
   else
     @context.stacks[:float].length.should == 0
   end
