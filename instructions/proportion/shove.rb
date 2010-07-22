@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionShove < NudgeInstruction
   get 1, :int
   

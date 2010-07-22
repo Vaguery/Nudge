@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NudgePoint
   def NudgePoint.from (script)
     NudgeParser.new(script).send(:do_parse)

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class RefPoint < NudgePoint
   def initialize (variable_name)
     @variable_name = variable_name

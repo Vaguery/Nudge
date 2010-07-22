@@ -1,4 +1,5 @@
-require 'nudge'
+# encoding: UTF-8
+require File.expand_path("../../../nudge", File.dirname(__FILE__))
 
 describe "BoolRandom" do
   describe "#process()" do

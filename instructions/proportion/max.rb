@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionMax < NudgeInstruction
   get 2, :proportion
   

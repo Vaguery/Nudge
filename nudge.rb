@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require File.expand_path('nudge_point', File.dirname(__FILE__))
 require File.expand_path('points/block_point', File.dirname(__FILE__))
 require File.expand_path('points/do_point', File.dirname(__FILE__))

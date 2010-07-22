@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class BoolOr < NudgeInstruction
   get 2, :bool
   

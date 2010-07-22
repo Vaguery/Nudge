@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NilPoint < NudgePoint
   def initialize (script)
     @script = script

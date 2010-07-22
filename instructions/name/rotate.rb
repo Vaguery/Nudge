@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NameRotate < NudgeInstruction
   get 3, :name
   

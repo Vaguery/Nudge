@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecRotate < NudgeInstruction
   get 3, :exec
   

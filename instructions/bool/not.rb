@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class BoolNot < NudgeInstruction
   get 1, :bool
   

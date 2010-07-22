@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NameIf < NudgeInstruction
   get 1, :bool
   get 2, :name

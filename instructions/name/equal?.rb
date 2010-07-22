@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NameEqualQ < NudgeInstruction
   get 2, :name
   

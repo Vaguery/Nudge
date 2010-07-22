@@ -1,4 +1,5 @@
-require 'nudge'
+# encoding: UTF-8
+require File.expand_path("../../../nudge", File.dirname(__FILE__))
 
 %w(Bool Code Exec Float Int Name Proportion).each do |name|
   outcome_data = Outcome.new({})

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class CodeYankdup < NudgeInstruction
   get 1, :int
   

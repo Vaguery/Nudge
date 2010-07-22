@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntAbs < NudgeInstruction
   get 1, :int
   

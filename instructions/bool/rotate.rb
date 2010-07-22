@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class BoolRotate < NudgeInstruction
   get 3, :bool
   

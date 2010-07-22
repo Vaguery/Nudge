@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionEqualQ < NudgeInstruction
   get 2, :proportion
   

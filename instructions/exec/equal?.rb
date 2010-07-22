@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecEqualQ < NudgeInstruction
   get 2, :exec
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatRotate < NudgeInstruction
   get 3, :float
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecShove < NudgeInstruction
   get 1, :int
   

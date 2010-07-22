@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatEqualQ < NudgeInstruction
   get 2, :float
   

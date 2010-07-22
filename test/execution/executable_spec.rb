@@ -1,4 +1,5 @@
-require 'nudge'
+# encoding: UTF-8
+require File.expand_path("../../nudge", File.dirname(__FILE__))
 
 SCRIPT = "block { block { ref x1 value «int» } do int_add }\n«int» 5"
 POINT = NudgePoint.from(SCRIPT)

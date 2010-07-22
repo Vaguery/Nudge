@@ -1,4 +1,5 @@
-require 'nudge'
+# encoding: UTF-8
+require File.expand_path("../../nudge", File.dirname(__FILE__))
 
 describe "RefPoint" do
   describe ".new (variable_name: Symbol)" do

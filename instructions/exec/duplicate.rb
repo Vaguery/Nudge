@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecDuplicate < NudgeInstruction
   get 1, :exec
   

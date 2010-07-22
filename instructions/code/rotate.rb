@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class CodeRotate < NudgeInstruction
   get 3, :code
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class CodeShove < NudgeInstruction
   get 1, :int
   

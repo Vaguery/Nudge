@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionBoundedDivide < NudgeInstruction
   get 2, :proportion
   

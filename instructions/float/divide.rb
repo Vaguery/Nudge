@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatDivide < NudgeInstruction
   get 2, :float
   

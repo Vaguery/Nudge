@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatMultiply < NudgeInstruction
   get 2, :float
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecDefine < NudgeInstruction
   get 1, :name
   get 1, :exec

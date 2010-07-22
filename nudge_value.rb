@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NudgeValue
   TYPES = {:bool => nil, :code => nil, :float => nil, :int => nil, :proportion => nil}
   

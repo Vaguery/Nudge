@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntMax < NudgeInstruction
   get 2, :int
   
