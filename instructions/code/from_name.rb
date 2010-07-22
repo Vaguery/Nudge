@@ -2,6 +2,6 @@ class CodeFromName < NudgeInstruction
   get 1, :name
   
   def process
-    put :code, "ref #{name(0)}"
+    put :code, RefPoint.new(name(0)).to_script
   end
 end
