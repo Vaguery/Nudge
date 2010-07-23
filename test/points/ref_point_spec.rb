@@ -14,6 +14,15 @@ describe "RefPoint" do
       RefPoint.new(:x1).evaluate(outcome_data.begin)
       
       outcome_data.stacks[:int][0].should == '100'
+      outcome_data.stacks[:name].length.should == 0
+    end
+    
+    it "pushes its @variable_name to the :name stack if there is no associated value" do
+      outcome_data = Outcome.new(:x1 => Value.new(:int, 100))
+      RefPoint.new(:x2).evaluate(outcome_data.begin)
+      
+      outcome_data.stacks[:int].length.should == 0
+      outcome_data.stacks[:name][0].should == "x2"
     end
   end
 end
