@@ -1,5 +1,5 @@
-#encoding:utf-8
-require './nudge'
+# encoding: UTF-8
+require File.expand_path("../nudge", File.dirname(__FILE__))
 
 describe "NudgePoint" do
   describe ".from (script: String)" do
@@ -23,7 +23,6 @@ describe "NudgePoint" do
     end
     
     it "halts execution if points_evaluated exceeds POINT_LIMIT" do
-      pending
       outcome_data = Outcome.new({})
       outcome_data.instance_variable_set(:@points_evaluated, Outcome::POINT_LIMIT)
       outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 5)
@@ -32,7 +31,6 @@ describe "NudgePoint" do
     end
     
     it "halts execution if time is beyond TIME_LIMIT" do
-      pending
       outcome_data = Outcome.new({})
       outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 10)
       outcome_data.instance_variable_set(:@points_evaluated, 20)

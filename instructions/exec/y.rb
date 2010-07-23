@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecY < NudgeInstruction
   get 1, :exec
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionMultiply < NudgeInstruction
   get 2, :proportion
   

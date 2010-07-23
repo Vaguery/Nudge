@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntPower < NudgeInstruction
   get 2, :int
   

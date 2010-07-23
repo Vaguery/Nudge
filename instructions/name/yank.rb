@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NameYank < NudgeInstruction
   get 1, :int
   

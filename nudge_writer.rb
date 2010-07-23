@@ -1,4 +1,4 @@
-#encoding: utf-8
+# encoding: UTF-8
 class NudgeWriter
   attr_accessor :weight, :block_width, :block_depth
   attr_accessor :do_instructions, :ref_names, :value_types

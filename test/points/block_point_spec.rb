@@ -1,4 +1,5 @@
-require './nudge'
+# encoding: UTF-8
+require File.expand_path("../../nudge", File.dirname(__FILE__))
 
 describe "BlockPoint" do
   describe ".new (*points: [NudgePoint, *])" do
@@ -76,7 +77,7 @@ describe "BlockPoint" do
       point_0 = BlockPoint.new(point_1, point_2)
       
       point_0.delete_point_at(2).should == point_2
-      lambda {point_0.get_point_at(2) }.should raise_error NudgeError::PointIndexTooLarge
+      lambda { point_0.get_point_at(2) }.should raise_error NudgeError::PointIndexTooLarge
     end
   end
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatRandom < NudgeInstruction
   get 1, :float
   

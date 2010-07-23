@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NameDuplicate < NudgeInstruction
   get 1, :name
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class CodeSwap < NudgeInstruction
   get 2, :code
   

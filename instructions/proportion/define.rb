@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ProportionDefine < NudgeInstruction
   get 1, :name
   get 1, :proportion

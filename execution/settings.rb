@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module Settings
   TIME_LIMIT = 5
   POINT_LIMIT = 250000

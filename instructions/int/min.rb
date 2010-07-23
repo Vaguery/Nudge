@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntMin < NudgeInstruction
   get 2, :int
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class ExecSwap < NudgeInstruction
   get 2, :exec
   

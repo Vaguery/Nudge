@@ -1,13 +1,11 @@
-#encoding:utf-8
-require './nudge'
+# encoding: UTF-8
+require File.expand_path("../../nudge", File.dirname(__FILE__))
+
+SCRIPT = "block { block { ref x1 value «int» } do int_add }\n«int» 5"
+POINT = NudgePoint.from(SCRIPT)
+HASH = {:x1 => Value.new(:int, '100'), :x2 => Value.new(:int, 200)}
 
 describe "Executable" do
-  before(:each) do
-    SCRIPT = "block { block { ref x1 value «int» } do int_add }\n«int» 5"
-    POINT = NudgePoint.from(SCRIPT)
-    HASH = {:x1 => Value.new(:int, '100'), :x2 => Value.new(:int, 200)}
-  end
-  
   describe ".new(point)" do
     it "returns a new Executable containing a point derived from the given script" do
       NudgePoint.stub!(:from).and_return(POINT)

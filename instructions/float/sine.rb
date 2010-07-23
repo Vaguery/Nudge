@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatSine < NudgeInstruction
   get 1, :float
   

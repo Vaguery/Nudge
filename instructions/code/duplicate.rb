@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class CodeDuplicate < NudgeInstruction
   get 1, :code
   

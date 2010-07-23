@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntEqualQ < NudgeInstruction
   get 2, :int
   

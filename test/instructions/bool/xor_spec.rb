@@ -1,5 +1,5 @@
-#encoding:utf-8
-require './nudge'
+# encoding: UTF-8
+require File.expand_path("../../../nudge", File.dirname(__FILE__))
 
 describe "BoolXor" do
   describe "#process()" do

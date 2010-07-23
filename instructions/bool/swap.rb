@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class BoolSwap < NudgeInstruction
   get 2, :bool
   

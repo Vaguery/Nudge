@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class IntMultiply < NudgeInstruction
   get 2, :int
   

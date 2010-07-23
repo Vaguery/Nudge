@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class NudgeError < StandardError
   %w[ DivisionByZero
       InvalidScript

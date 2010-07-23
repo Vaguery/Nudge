@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class DoPoint < NudgePoint
   def initialize (instruction_name)
     @instruction_name = instruction_name

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatModulo < NudgeInstruction
   get 2, :float
   

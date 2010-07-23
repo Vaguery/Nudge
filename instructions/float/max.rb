@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatMax < NudgeInstruction
   get 2, :float
   

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class BoolYankdup < NudgeInstruction
   get 1, :int
   

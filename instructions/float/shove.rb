@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class FloatShove < NudgeInstruction
   get 1, :int
   

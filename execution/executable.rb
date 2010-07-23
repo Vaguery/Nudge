@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class Executable
   def initialize (script)
     @point = NudgePoint.from(script)
