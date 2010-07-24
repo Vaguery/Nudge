@@ -1,4 +1,4 @@
-Feature: Value point
+Feature: Value point evaluation
   In order to use literals in my algorithms
   As a modeler
   I want Nudge to handle value points as if they were constants
