@@ -2,27 +2,7 @@ Feature: Evaluation loop
   In order to run Nudge programs
   As a modeler
   I want the interpreter to be able to handle all five basic program points
-  
-  
-  Scenario: block point handling
-    Given an interpreter with "block { ref x ref y ref z}" on :exec
-    When I take one execution step
-    Then the :exec stack should have "ref x" on top
-    And "ref y" below that
-    And "ref z" below that
-    
-    
-  Scenario: empty block handling
-    Given an interpreter with "block {}" on :exec
-    When I take one execution step
-    Then nothing should be on the :exec stack
-    
-    
-  Scenario: nested block handling
-    Given an interpreter with "block {block {do a} block {do b}}" on :exec
-    When I take one execution step
-    Then the :exec stack should have "block {do a}" on top
-    And "block {do b}" below that
+      
     
     
   Scenario: ref handling of a bound variable

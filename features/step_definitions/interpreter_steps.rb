@@ -1,7 +1,14 @@
 #encoding: utf-8
+Before do
+  @context = Outcome.new({})
+end
 
 Given /^the blueprint "([^"]*)"$/ do |arg1|
   @feature_blueprint = arg1
+end
+
+When /^I take one execution step$/ do
+  @context.stacks[:exec].pop.evaluate(@context.begin)
 end
 
 
@@ -21,4 +28,8 @@ end
 
 Then /^the number of points should be (\d+)$/ do |number|
   @feature_tree.points.should == number.to_i
+end
+
+Then /^the execution counter should be (\d+)$/ do |steps|
+  @context.points_evaluated.should == steps.to_i
 end

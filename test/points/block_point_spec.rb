@@ -21,9 +21,9 @@ describe "BlockPoint" do
       
       BlockPoint.new(point_1, point_2, point_3).evaluate(outcome_data.begin)
       
-      outcome_data.stacks[:exec][2].should === point_1
+      outcome_data.stacks[:exec][2].should === point_3
       outcome_data.stacks[:exec][1].should === point_2
-      outcome_data.stacks[:exec][0].should === point_3
+      outcome_data.stacks[:exec][0].should === point_1
     end
   end
   

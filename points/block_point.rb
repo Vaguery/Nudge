@@ -6,7 +6,7 @@ class BlockPoint < NudgePoint
   
   def evaluate (outcome_data)
     super
-    outcome_data.stacks[:exec].concat(@points.reverse)
+    outcome_data.stacks[:exec].concat(@points)
   end
   
   def points
