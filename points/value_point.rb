@@ -7,7 +7,9 @@ class ValuePoint < NudgePoint
   
   def evaluate (outcome_data)
     super
-    outcome_data.stacks[@value_type].push(@string)
+    @string.strip.length > 0 ? 
+      outcome_data.stacks[@value_type].push(@string) : 
+      outcome_data.stacks[:error].push("«#{@value_type}» has no value")
   end
   
   def script_and_values

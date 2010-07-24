@@ -22,10 +22,11 @@ Feature: Block point execution
     
     
   Scenario: only the backbone of a block should be shattered, not subtrees
-    Given I have pushed "block {block {ref a ref b} block {ref c}}" onto the :exec stack
+    Given I have pushed "block {do int_add block {ref a ref b} block {ref c}}" onto the :exec stack
     When I take one execution step
-    Then stack :exec should have depth 2
+    Then stack :exec should have depth 3
     And "block {ref c}" should be in position -1 of the :exec stack
     And "block {ref a ref b}" should be in position -2 of the :exec stack
+    And "do int_add" should be in position -3 of the :exec stack
     And the execution counter should be 1
     

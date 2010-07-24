@@ -7,6 +7,11 @@ Given /^the blueprint "([^"]*)"$/ do |arg1|
   @feature_blueprint = arg1
 end
 
+Given /^I have bound "([^"]*)" to an :([^"]*) with value "([^"]*)"$/ do |name, type, value|
+  @context.variable_bindings[name.to_sym] = Value.new(type.to_sym, value)
+end
+
+
 When /^I take one execution step$/ do
   @context.stacks[:exec].pop.evaluate(@context.begin)
 end

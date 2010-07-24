@@ -38,9 +38,3 @@ Feature: NilPoints
     Then the number of points should be 0
     
     
-  
-  
-  
-  
-
-  
