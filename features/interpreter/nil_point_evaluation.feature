@@ -1,6 +1,11 @@
+Feature: Nil point evaluation
+  In order to manage edge cases where bad code has been created
+  As a modeler
+  I want the execution loop to handle NilPoints gracefully
 
 
-Scenario: nil point handling
-  Given an interpreter with "end of line" on the :exec stack
-  When I take an execution step
-  Then a new :error value "cannot parse 'end of line'" should appear on the :error stack
+  Scenario: NilPoints just go away
+    Given I have pushed "end of line" onto the :exec stack
+    When I take one execution step
+    Then stack :exec should have depth 0
+    And the execution counter should be 1

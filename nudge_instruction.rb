@@ -2,6 +2,7 @@
 class NudgeInstruction
   INSTRUCTIONS = {}
   
+  
   def NudgeInstruction.inherited (klass)
     klass.const_set("REQUIREMENTS", {})
     
@@ -25,9 +26,14 @@ class NudgeInstruction
     end
   end
   
+  
   def NudgeInstruction.execute (instruction_name, outcome_data)
+    raise(NudgeError, ":#{instruction_name} not recognized") unless INSTRUCTIONS[instruction_name]
     INSTRUCTIONS[instruction_name].new(outcome_data).execute
+  rescue NudgeError => error
+    outcome_data.stacks[:error] << error.string
   end
+  
   
   def initialize (outcome_data)
     @outcome_data = outcome_data
@@ -35,11 +41,13 @@ class NudgeInstruction
     @result_stacks = Hash.new {|hash, key| hash[key] = [] }
   end
   
+  
   def execute
     stacks = @outcome_data.stacks
     
     self.class::REQUIREMENTS.each do |value_type, n|
-      return unless (stack = stacks[value_type]) && (stack.length >= n)
+      raise(NudgeError,":#{self.class} missing arguments") unless
+        (stack = stacks[value_type]) && (stack.length >= n)
     end.each do |value_type, n|
       stack = stacks[value_type]
       argument_stack = @argument_stacks[value_type]
@@ -55,10 +63,10 @@ class NudgeInstruction
     @result_stacks.each do |value_type, result_stack|
       stacks[value_type].concat result_stack
     end
-    
   rescue NudgeError => error
     stacks[:error] << error.string
   end
+  
   
   def put (value_type, result)
     result = (value_type == :exec) ? result : result.to_s

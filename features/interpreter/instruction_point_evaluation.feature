@@ -26,5 +26,5 @@ Feature: Instruction point evaluation
     When I take one execution step
     Then stack :exec should have depth 0
     And stack :error should have depth 1
-    And the execution counter should be 1
+    And the execution counter should be 0
     

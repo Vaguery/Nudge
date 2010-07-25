@@ -13,4 +13,25 @@ describe "DoPoint" do
       pending
     end
   end
+  
+  describe "DoPoint execution errors" do
+    it "pushes an :error if the arguments aren't there" do
+      @context = Outcome.new({})
+      @context.stacks[:int] = "1"
+      DoPoint.new(:int_add).evaluate(@context.begin)
+      @context.stacks[:error][-1].should include "missing arguments"
+    end
+    
+    it "pushes an :error if the instruction_name is not recognized" do
+      @context = Outcome.new({})
+      lambda{DoPoint.new(:foo_bar).evaluate(@context.begin)}.should_not raise_error
+      @context.stacks[:error][-1].should include ":foo_bar not recognized"
+    end
+    
+    it "should count a bad instruction as one step" do
+      @context = Outcome.new({})
+      DoPoint.new(:foo_bar).evaluate(@context.begin)
+      @context.points_evaluated.should == 1
+    end
+  end
 end
