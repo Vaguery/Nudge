@@ -67,7 +67,6 @@ end
 
 Then /^stack :([a-z\d_]+) should have depth ([\d]+)$/  do |stack, depth|
   @context.stacks[stack.intern].length.should == depth.to_i
-  puts @context.stacks[stack.intern]
 end
 
 

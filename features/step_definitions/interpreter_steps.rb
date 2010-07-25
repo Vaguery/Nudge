@@ -12,6 +12,11 @@ Given /^I have bound "([^"]*)" to an :([^"]*) with value "([^"]*)"$/ do |name, t
 end
 
 
+Given /^I have pushed an instruction called "([^"]*)" onto the :exec stack$/ do |inst|
+  @context.stacks[:exec] = [DoPoint.new(inst)]
+end
+
+
 When /^I take one execution step$/ do
   @context.stacks[:exec].pop.evaluate(@context.begin)
 end

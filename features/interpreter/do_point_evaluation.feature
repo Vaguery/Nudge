@@ -1,4 +1,4 @@
-Feature: Instruction point evaluation
+Feature: Do point evaluation
   In order to manipulate values
   As a modeler
   I want the Nudge interpreter to execute an instruction immediately
@@ -22,9 +22,9 @@ Feature: Instruction point evaluation
   
   
   Scenario: instruction handling when instruction is inactive or unknown
-    Given I have pushed "do be_dü_be_doo" onto the :exec stack
+    Given I have pushed an instruction called "be_dü_be_doo" onto the :exec stack
     When I take one execution step
     Then stack :exec should have depth 0
     And stack :error should have depth 1
-    And the execution counter should be 0
+    And the execution counter should be 1
     
