@@ -7,12 +7,14 @@ class Outcome
   attr_reader :variable_bindings
   attr_reader :start_moment
   attr_reader :stacks
+  attr_accessor :wtf_stacks
   
   def initialize (variable_bindings)
     @points_evaluated = 0
     @execution_time = 0
     @variable_bindings = variable_bindings
     @stacks = Hash.new {|hash, key| hash[key] = [] }
+    @wtf_stacks = Hash.new {|hash, key| hash[key] = [] }
   end
   
   def begin

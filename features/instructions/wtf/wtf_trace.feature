@@ -4,7 +4,7 @@ Feature: Wtf trace
   I want to be able to see the output of instructions as strings, not just results
 
   
-  Scenario: 
+  Scenario: an executable should have a toggle parameter to run in wtf mode
     Given context
     When event
     Then outcome

@@ -37,6 +37,7 @@ describe "NudgePoint" do
       lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TimeLimitExceeded,
         "the time limit was exceeded after evaluating 20 points"
     end
+    
   end
   
   describe "#points" do

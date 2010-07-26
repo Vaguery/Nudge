@@ -28,7 +28,8 @@ class NudgeInstruction
   
   
   def NudgeInstruction.execute (instruction_name, outcome_data)
-    raise(NudgeError::UnknownInstruction, ":#{instruction_name} not recognized") unless INSTRUCTIONS[instruction_name]
+    raise(NudgeError::UnknownInstruction,
+      ":#{instruction_name} not recognized") unless INSTRUCTIONS[instruction_name]
     INSTRUCTIONS[instruction_name].new(outcome_data).execute
   rescue NudgeError => error
     outcome_data.stacks[:error] << error.string

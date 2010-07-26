@@ -7,4 +7,19 @@ describe "Outcome" do
       Outcome.new({}).instance_variable_get(:@points_evaluated).should === 0
     end
   end
+  
+  
+  describe "stacks" do
+    it "should be a Hash with a default value of an empty Array" do
+      Outcome.new({}).stacks[:aodfa].should == []
+    end
+  end
+  
+  
+  describe "wtf_stacks" do
+    it "should be a Hash with a default value of an empty Array" do
+      Outcome.new({}).wtf_stacks[:jajk].should == []
+    end
+  end
+  
 end

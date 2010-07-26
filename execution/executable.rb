@@ -10,14 +10,14 @@ class Executable
     self
   end
   
-  def run
+  def run(wtf=false)
     outcome_data = Outcome.new(@variable_bindings)
     error_stack = outcome_data.stacks[:error]
     exec_stack = outcome_data.stacks[:exec]
     exec_stack.push(@point)
     
     while point = exec_stack.pop
-      point.evaluate(outcome_data.begin)
+      point.evaluate(outcome_data.begin, wtf)
     end
     
   rescue NudgeError => error

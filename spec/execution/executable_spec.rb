@@ -21,7 +21,8 @@ describe "Executable" do
     
     it "overwrites old variable bindings" do
       exe = Executable.new(SCRIPT)
-      exe.bind(HASH).bind(:x3 => Value.new(:int, 100)).instance_variable_get(:@variable_bindings)[:x1].should === nil
+      exe.bind(HASH).bind(:x3 => Value.new(:int, 100)).
+        instance_variable_get(:@variable_bindings)[:x1].should === nil
     end
   end
   
@@ -29,5 +30,6 @@ describe "Executable" do
     it "returns a new Outcome" do
       Executable.new(SCRIPT).run.class.should == Outcome
     end
+    
   end
 end
