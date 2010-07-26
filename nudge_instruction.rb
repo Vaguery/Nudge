@@ -28,7 +28,7 @@ class NudgeInstruction
   
   
   def NudgeInstruction.execute (instruction_name, outcome_data)
-    raise(NudgeError, ":#{instruction_name} not recognized") unless INSTRUCTIONS[instruction_name]
+    raise(NudgeError::UnknownInstruction, ":#{instruction_name} not recognized") unless INSTRUCTIONS[instruction_name]
     INSTRUCTIONS[instruction_name].new(outcome_data).execute
   rescue NudgeError => error
     outcome_data.stacks[:error] << error.string
@@ -46,7 +46,7 @@ class NudgeInstruction
     stacks = @outcome_data.stacks
     
     self.class::REQUIREMENTS.each do |value_type, n|
-      raise(NudgeError,":#{self.class} missing arguments") unless
+      raise(NudgeError::MissingArguments,":#{self.class} missing arguments") unless
         (stack = stacks[value_type]) && (stack.length >= n)
     end.each do |value_type, n|
       stack = stacks[value_type]

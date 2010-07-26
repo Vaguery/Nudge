@@ -7,7 +7,9 @@ class NudgeError < StandardError
       PointIndexTooLarge
       VariableRedefined
       TimeLimitExceeded
-      TooManyPointsEvaluated ].each {|e| const_set(e, Class.new(self)) }
+      TooManyPointsEvaluated
+      MissingArguments
+      UnknownInstruction ].each {|e| const_set(e, Class.new(self)) }
   
   def string
     "#{self.class.name.gsub(/.*::/,'')}: #{message}"
