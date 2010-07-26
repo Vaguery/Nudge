@@ -11,7 +11,7 @@ Feature: float_negative instruction
     
       
     Examples: float_negative
-      | arg1 | instruction    | result |
+      | arg1 | instruction     | result |
       | 3.3  | float_negative | -3.3   |
       | -4.4 | float_negative | 4.4    |
       | 0.0  | float_negative | 0.0    |
