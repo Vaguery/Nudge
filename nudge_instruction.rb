@@ -69,6 +69,9 @@ class NudgeInstruction
   end
   
   
+  
+  
+  
   def put (value_type, result)
     result = (value_type == :exec) ? result : result.to_s
     @result_stacks[value_type] << result

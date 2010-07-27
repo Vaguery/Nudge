@@ -31,5 +31,8 @@ describe "Executable" do
       Executable.new(SCRIPT).run.class.should == Outcome
     end
     
+    it "takes an optional parameter 'wtf=true'" do
+      lambda{Executable.new(SCRIPT).run(wtf=true)}.should_not raise_error
+    end
   end
 end
