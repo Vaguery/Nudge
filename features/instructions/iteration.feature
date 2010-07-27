@@ -4,41 +4,8 @@ Feature: Iteration control structures
   In order to create iteration and recursion
   As a modeler
   I want Nudge to include the Push3 code and exec instructions
-    
-    
-    
-    
-    
-  Scenario: code_do_times should execute the top :code item for each integer between n1 and n2
-    Given an interpreter with "block {ref z}" on the :code stack
-    And "3" on the :int stack
-    And "-3" above that on the :int stack
-    When I execute "do code_do_times"
-    Then a new :exec item "block { value «int» value «int» do exec_do_times block {ref z}}\n«int» 2\n«int» -3"
-    And the arguments will have disappeared
-    
-    
-  Scenario: code_do_times should not build its macro when the indices are identical
-    Given an interpreter with "block {ref z}" on the :code stack
-    And "6" on the :int stack
-    And "6" above that on the :int stack
-    When I execute "do code_do_times"
-    Then a new :exec item "block {ref z}"
-    And the arguments will have disappeared
-    
-    
-  Scenario: code_do_times doesn't push its counter value to :int
-    Given an interpreter with "block {ref x}" on the :code stack
-    And "1" on the :int stack
-    When I execute "do code_do_times"
-    Then the :int stack will be empty
-    
-    
-    
-    
-    
-    
-    
+
+
   Scenario: exec_do_count should build a macro that will execute the :exec item n times
     Given an interpreter with "do bool_and" on the :exec stack
     And "4" on the :int stack

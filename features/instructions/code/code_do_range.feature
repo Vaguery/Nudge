@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-Feature: Iteration control structures
+Feature: code_do_range
   In order to create iteration and recursion
   As a modeler
   I want Nudge to include the Push3 code and exec iteration instructions
