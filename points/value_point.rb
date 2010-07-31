@@ -7,6 +7,11 @@ class ValuePoint < NudgePoint
   
   def evaluate (outcome_data)
     super
+    
+    if @string.is_a?(String) && @string.strip.empty?
+      raise NudgeError::EmptyValue, "«#{@value_type}» has no value"
+    end
+    
     outcome_data.stacks[@value_type].push(@string)
   end
   
