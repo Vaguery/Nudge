@@ -17,12 +17,14 @@ class Executable
     exec_stack.push(@point)
     
     while point = exec_stack.pop
-      point.evaluate(outcome_data.begin)
+      begin
+        point.evaluate(outcome_data.begin)
+      rescue NudgeError => error
+        error_stack.push(error.string)
+        break if [NudgeError::TimeLimitExceeded, NudgeError::TooManyPointsEvaluated].include?(error.class)
+      end
     end
     
-  rescue NudgeError => error
-    error_stack.push(error.string)
-  ensure
-    return outcome_data.end
+    outcome_data.end
   end
 end
