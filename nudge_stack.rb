@@ -8,9 +8,10 @@ class NudgeStack < Array
     push item.to_s
   end
   
-  def pop_string
-    pop
-  end
+  alias pop_string pop
+  
+  private :push, :pop
+  public :pop_string
   
   def pop_value
     if value = pop
@@ -47,20 +48,15 @@ class NudgeStack < Array
       else push(self[length - 1 - n])
     end
   end
-  
-  private :push, :pop
 end
 
 class ExecStack < NudgeStack
-  def << (item)
-    push item
-  end
   
-  def pop_value
-    pop
-  end
-  
+  alias << push
+  alias pop_value pop
   undef pop_string
+  
+  public :<<, :pop_value
   
   def yankdup (n)
     return if length < 2

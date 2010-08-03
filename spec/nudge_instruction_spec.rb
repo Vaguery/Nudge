@@ -40,20 +40,6 @@ describe "NudgeInstruction" do
       
       instruction.instance_variable_get(:@arguments).should be_a Hash
     end
-    
-    it "sets @result_stacks to a new hash" do
-      exe = NudgeExecutable.new("do int_depth")
-      instruction = NudgeInstruction.new(exe)
-      
-      instruction.instance_variable_get(:@result_stacks).should be_a Hash
-    end
-    
-    it "sets @result_stacks[:exec] to a new ExecStack" do
-      exe = NudgeExecutable.new("do int_depth")
-      instruction = NudgeInstruction.new(exe)
-      
-      instruction.instance_variable_get(:@result_stacks)[:exec].should be_a ExecStack
-    end
   end
   
   describe "#execute" do

@@ -161,7 +161,7 @@ describe "NudgeExecutable" do
       top_item = exe.stacks[:exec][-1]
       stack = exe.stacks[:exec]
       
-      stack.should_receive(:pop).and_return(top_item)
+      stack.should_receive(:pop_value).and_return(top_item)
       
       exe.step
     end

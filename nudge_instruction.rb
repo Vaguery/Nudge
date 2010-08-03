@@ -39,9 +39,6 @@ class NudgeInstruction
   def initialize (executable)
     @executable = executable
     @arguments = Hash.new {|hash, key| hash[key] = [] }
-    
-    @result_stacks = Hash.new {|hash, key| hash[key] = NudgeStack.new(key) }
-    @result_stacks[:exec] = ExecStack.new(:exec)
   end
   
   def execute
@@ -55,13 +52,9 @@ class NudgeInstruction
     end
     
     process
-    
-    @result_stacks.each do |value_type, result_stack|
-      stacks[value_type].concat result_stack
-    end
   end
   
   def put (value_type, result)
-    @result_stacks[value_type] << result
+    @executable.stacks[value_type] << result
   end
 end
