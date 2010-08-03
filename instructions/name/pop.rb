@@ -1,6 +1,6 @@
 # encoding: UTF-8
 class NamePop < NudgeInstruction
   def process
-    @outcome_data.stacks[:name].pop
+    @executable.stacks[:name].pop_string
   end
 end

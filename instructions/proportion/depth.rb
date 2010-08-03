@@ -1,6 +1,6 @@
 # encoding: UTF-8
 class ProportionDepth < NudgeInstruction
   def process
-    put :int, @outcome_data.stacks[:proportion].length
+    put :int, @executable.stacks[:proportion].length
   end
 end

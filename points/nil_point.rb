@@ -4,8 +4,7 @@ class NilPoint < NudgePoint
     @script = script
   end
   
-  def evaluate (outcome_data)
-    super
+  def evaluate (executable)
   end
   
   def points
@@ -13,6 +12,6 @@ class NilPoint < NudgePoint
   end
   
   def script_and_values
-    return @script, []
+    @script
   end
 end

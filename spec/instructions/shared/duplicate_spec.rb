@@ -1,21 +1,20 @@
 # encoding: UTF-8
 require File.expand_path("../../../nudge", File.dirname(__FILE__))
 
-%w(Bool Code Exec Float Int Name Proportion).each do |name|
-  outcome_data = Outcome.new({})
-  outcome_data.stacks[:bool].push "true"
-  outcome_data.stacks[:code].push "block {}"
-  outcome_data.stacks[:exec].push NudgePoint.from("block {}")
-  outcome_data.stacks[:float].push "1.0"
-  outcome_data.stacks[:int].push "1"
-  outcome_data.stacks[:name].push "x"
-  outcome_data.stacks[:proportion].push "0.0909090909"
+%w(Bool Code Float Int Name Proportion).each do |name|
+  exe = NudgeExecutable.new("block {}").step
+  exe.stacks[:bool] << true
+  exe.stacks[:code] << "block {}"
+  exe.stacks[:float] << 1.0
+  exe.stacks[:int] << 1
+  exe.stacks[:name] << :x
+  exe.stacks[:proportion] << 0.0909090909
   
   describe "#{name}Duplicate" do
-    describe "#process()" do
+    describe "#process" do
       it "pushes a duplicate of the top item on the :#{name.downcase} stack to the :#{name.downcase} stack" do
-        NudgeInstruction.execute(:"#{name.downcase}_duplicate", outcome_data)
-        outcome_data.stacks[name.downcase.intern].pop.should == outcome_data.stacks[name.downcase.intern].pop
+        NudgeInstruction.execute(:"#{name.downcase}_duplicate", exe)
+        exe.stacks[name.downcase.intern][-1].should == exe.stacks[name.downcase.intern][-2]
       end
     end
   end

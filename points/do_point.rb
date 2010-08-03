@@ -4,12 +4,11 @@ class DoPoint < NudgePoint
     @instruction_name = instruction_name
   end
   
-  def evaluate (outcome_data)
-    super
-    NudgeInstruction.execute(@instruction_name, outcome_data)
+  def evaluate (executable)
+    NudgeInstruction.execute(@instruction_name, executable)
   end
   
   def script_and_values
-    return "do #{@instruction_name}", []
+    "do #{@instruction_name}"
   end
 end

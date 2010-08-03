@@ -15,30 +15,6 @@ describe "NudgePoint" do
     end
   end
   
-  describe "#evaluate (outcome_data: Outcome)" do
-    it "increments by one the points evaluated by the outcome_data" do
-      outcome_data = Outcome.new({})
-      NudgePoint.new.evaluate(outcome_data.begin)
-      outcome_data.instance_variable_get(:@points_evaluated).should === 1
-    end
-    
-    it "halts execution if points_evaluated exceeds POINT_LIMIT" do
-      outcome_data = Outcome.new({})
-      outcome_data.instance_variable_set(:@points_evaluated, Outcome::POINT_LIMIT)
-      outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 2)
-      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TooManyPointsEvaluated,
-        "the point evaluation limit was exceeded after 2 seconds"
-    end
-    
-    it "halts execution if time is beyond TIME_LIMIT" do
-      outcome_data = Outcome.new({})
-      outcome_data.instance_variable_set(:@start_moment, Time.now.to_f - 10)
-      outcome_data.instance_variable_set(:@points_evaluated, 20)
-      lambda { NudgePoint.new.evaluate(outcome_data) }.should raise_error NudgeError::TimeLimitExceeded,
-        "the time limit was exceeded after evaluating 20 points"
-    end
-  end
-  
   describe "#points" do
     it "returns 1" do
       point = NudgePoint.new
@@ -88,6 +64,22 @@ describe "NudgePoint" do
       point = NudgePoint.new
       lambda { point.insert_point_after(0, point) }.should raise_error NudgeError::OutermostPointOperation,
         "can't insert_after outermost point"
+    end
+  end
+  
+  describe "#dup" do
+    it "returns a new NudgePoint representing the same Nudge program but without referencing the old NudgePoint objects" do
+      ref_point = RefPoint.new(:x)
+      block_point = BlockPoint.new(ref_point)
+      
+      block_duplicate = block_point.dup
+      ref_duplicate = block_duplicate.instance_variable_get(:@points).first
+      
+      block_duplicate.to_script.should == block_point.to_script
+      block_duplicate.object_id.should_not == block_point.object_id
+      
+      ref_duplicate.to_script.should == ref_point.to_script
+      ref_duplicate.object_id.should_not == ref_point.object_id
     end
   end
 end

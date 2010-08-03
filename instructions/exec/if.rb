@@ -4,6 +4,6 @@ class ExecIf < NudgeInstruction
   get 2, :exec
   
   def process
-    put :exec, bool(0) ? exec(0) : exec(1)
+    put :exec, bool(0) ? exec(1) : exec(0)
   end
 end

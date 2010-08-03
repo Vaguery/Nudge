@@ -4,6 +4,6 @@ class ExecDefine < NudgeInstruction
   get 1, :exec
   
   def process
-    @outcome_data.variable_bindings[name(0)] = ValuePoint.new(:exec, exec(0))
+    @executable.variable_bindings[name(0)] = exec(0).dup
   end
 end

@@ -4,6 +4,6 @@ class ProportionDefine < NudgeInstruction
   get 1, :proportion
   
   def process
-    @outcome_data.variable_bindings[name(0)] = Value.new(:proportion, proportion(0))
+    @executable.variable_bindings[name(0)] = Value.new(:proportion, proportion(0))
   end
 end

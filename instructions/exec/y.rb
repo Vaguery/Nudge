@@ -3,11 +3,10 @@ class ExecY < NudgeInstruction
   get 1, :exec
   
   def process
-    a = exec(0)
-    exec_y = DoPoint.new(:exec_y)
-    block = BlockPoint.new(exec_y, a)
+    point = exec(0)
+    y = DoPoint.new(:exec_y)
     
-    put :exec, block
-    put :exec, a
+    put :exec, BlockPoint.new(y, point)
+    put :exec, point
   end
 end

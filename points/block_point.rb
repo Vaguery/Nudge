@@ -4,9 +4,8 @@ class BlockPoint < NudgePoint
     @points = points
   end
   
-  def evaluate (outcome_data)
-    super
-    outcome_data.stacks[:exec].concat(@points.reverse)
+  def evaluate (executable)
+    executable.stacks[:exec].concat(@points.reverse)
   end
   
   def points
@@ -17,8 +16,8 @@ class BlockPoint < NudgePoint
     values = []
     
     block_scripts = @points.collect do |point|
-      point_script, point_values = point.script_and_values
-      values.concat(point_values)
+      point_script, *point_values = *point.script_and_values
+      values.concat point_values
       point_script
     end
     

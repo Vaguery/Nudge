@@ -16,48 +16,42 @@ class NudgeInstruction
     
     def klass.get (n, value_type)
       self::REQUIREMENTS[value_type] = n
-      
-      self.module_eval <<-END
-        def #{value_type} (n)
-          @argument_stacks[:#{value_type}][n]
-        end
-      END
+      define_method(value_type) {|i| raise if i >= n; @arguments[value_type][i] }
     end
   end
   
-  def NudgeInstruction.execute (instruction_name, outcome_data)
+  def NudgeInstruction.execute (instruction_name, executable)
     unless instruction_class = INSTRUCTIONS[instruction_name]
       raise NudgeError::UnknownInstruction, "#{instruction_name} not recognized"
     end
     
-    stacks = outcome_data.stacks
+    stacks = executable.stacks
     
     instruction_class::REQUIREMENTS.each do |value_type, n|
-      unless (stack = stacks[value_type]) && (stack.length >= n)
+      unless stacks[value_type].length >= n
         raise NudgeError::MissingArguments, "#{instruction_name} missing arguments"
       end
     end
     
-    instruction_class.new(outcome_data).execute
+    instruction_class.new(executable).execute
   end
   
-  def initialize (outcome_data)
-    @outcome_data = outcome_data
-    @argument_stacks = Hash.new {|hash, key| hash[key] = [] }
-    @result_stacks = Hash.new {|hash, key| hash[key] = [] }
+  def initialize (executable)
+    @executable = executable
+    @arguments = Hash.new {|hash, key| hash[key] = [] }
+    
+    @result_stacks = Hash.new {|hash, key| hash[key] = NudgeStack.new(key) }
+    @result_stacks[:exec] = ExecStack.new(:exec)
   end
   
   def execute
-    stacks = @outcome_data.stacks
+    stacks = @executable.stacks
     
     self.class::REQUIREMENTS.each do |value_type, n|
       stack = stacks[value_type]
-      argument_stack = @argument_stacks[value_type]
+      arguments = @arguments[value_type]
       
-      n.times do
-        argument = (value_type == :exec) ? stack.pop : stack.pop.send(:"to_#{value_type}")
-        argument_stack << argument
-      end
+      n.times { arguments << stack.pop_value }
     end
     
     process
@@ -68,7 +62,6 @@ class NudgeInstruction
   end
   
   def put (value_type, result)
-    result = (value_type == :exec) ? result : result.to_s
     @result_stacks[value_type] << result
   end
 end

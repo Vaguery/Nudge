@@ -1,12 +1,9 @@
 # encoding: UTF-8
 class IntRandom < NudgeInstruction
-  get 1, :int
-  
   def process
-    min = Settings::INT_MINIMUM
-    max = Settings::INT_MAXIMUM
-    low, high = [min, max].sort
+    min = @executable.instance_variable_get(:@min_int)
+    max = @executable.instance_variable_get(:@max_int)
     
-    put :int, rand(high - low).to_i + low
+    put :int, (rand(max - min) + min).to_i
   end
 end

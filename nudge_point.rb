@@ -7,20 +7,8 @@ class NudgePoint
   end
   
   def to_script
-    script, values = script_and_values
+    script, *values = *script_and_values
     [script].join(" ") + "\n" + values.join("\n")
-  end
-  
-  def evaluate (outcome_data)
-    if Time.now.to_f > outcome_data.start_moment + Outcome::TIME_LIMIT
-      n = outcome_data.points_evaluated
-      raise NudgeError::TimeLimitExceeded, "the time limit was exceeded after evaluating #{n} points"
-    end
-    
-    if (outcome_data.points_evaluated += 1) > Outcome::POINT_LIMIT
-      t = (Time.now - outcome_data.start_moment).to_i
-      raise NudgeError::TooManyPointsEvaluated, "the point evaluation limit was exceeded after #{t} seconds"
-    end
   end
   
   def points
@@ -47,6 +35,12 @@ class NudgePoint
   def insert_point_after (n, new_point)
     at(n, :insert_after, new_point)
   end
+  
+  def dup
+    NudgePoint.from(to_script)
+  end
+  
+  private
   
   def at (n, action, new_point = nil)
     raise NudgeError::OutermostPointOperation, "can't #{action} outermost point" if n == 0

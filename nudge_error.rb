@@ -5,13 +5,11 @@ class NudgeError < StandardError
       InvalidScript
       MissingArguments
       NaN
+      NegativeCounter
       OutermostPointOperation
       PointIndexTooLarge
       TimeLimitExceeded
       TooManyPointsEvaluated
+      UnboundName
       UnknownInstruction ].each {|e| const_set(e, Class.new(self)) }
-  
-  def string
-    "#{self.class.name.gsub(/.*::/,'')}: #{message}"
-  end
 end

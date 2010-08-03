@@ -5,14 +5,12 @@ class ValuePoint < NudgePoint
     @string = string
   end
   
-  def evaluate (outcome_data)
-    super
-    
+  def evaluate (executable)
     if @string.is_a?(String) && @string.strip.empty?
       raise NudgeError::EmptyValue, "«#{@value_type}» has no value"
     end
     
-    outcome_data.stacks[@value_type].push(@string)
+    executable.stacks[@value_type] << @string
   end
   
   def script_and_values

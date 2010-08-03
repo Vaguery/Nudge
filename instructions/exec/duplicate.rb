@@ -4,6 +4,6 @@ class ExecDuplicate < NudgeInstruction
   
   def process
     put :exec, exec(0)
-    put :exec, exec(0)
+    put :exec, exec(0).dup
   end
 end

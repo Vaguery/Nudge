@@ -4,6 +4,10 @@ class ProportionOfInt < NudgeInstruction
   get 1, :int
   
   def process
-    put :int, (proportion(0) * int(0)).round
+    result = proportion(0) * int(0)
+    
+    raise NudgeError::NaN, "result of proportion_of_int was infinity" if result.infinite?
+    
+    put :int, result.round
   end
 end

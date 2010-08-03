@@ -3,27 +3,27 @@ require File.expand_path("../../nudge", File.dirname(__FILE__))
 
 describe "BlockPoint" do
   describe ".new (*points: [NudgePoint, *])" do
-    it "returns a new BlockPoint containing an array of the given points" do
+    it "sets @points" do
       point_1 = BlockPoint.new
       point_2 = BlockPoint.new
       
-      BlockPoint.new(point_1, point_2).instance_variable_get(:@points) == [point_1, point_2]
+      BlockPoint.new(point_1, point_2).instance_variable_get(:@points).should == [point_1, point_2]
     end
   end
   
-  describe "#evaluate (outcome_data: Outcome)" do
-    it "pushes its points onto the exec stack in reverse order" do
-      outcome_data = Outcome.new({})
+  describe "#evaluate (executable: NudgeExecutable)" do
+    it "pushes @points onto the :exec stack in reverse order" do
+      exe = NudgeExecutable.new("block { block {} block {} block {} }")
       
       point_1 = BlockPoint.new
       point_2 = BlockPoint.new
       point_3 = BlockPoint.new
       
-      BlockPoint.new(point_1, point_2, point_3).evaluate(outcome_data.begin)
+      BlockPoint.new(point_1, point_2, point_3).evaluate(exe)
       
-      outcome_data.stacks[:exec][2].should === point_1
-      outcome_data.stacks[:exec][1].should === point_2
-      outcome_data.stacks[:exec][0].should === point_3
+      exe.stacks[:exec][-1].should == point_1
+      exe.stacks[:exec][-2].should == point_2
+      exe.stacks[:exec][-3].should == point_3
     end
   end
   
@@ -33,6 +33,7 @@ describe "BlockPoint" do
       point_2 = NudgePoint.new
       point_3 = NudgePoint.new
       point_4 = BlockPoint.new(point_1, point_2)
+      
       BlockPoint.new(point_3, point_4).points.should == 5
     end
   end
@@ -46,6 +47,7 @@ describe "BlockPoint" do
     it "raises PointIndexTooLarge if n + 1 > self.points" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       lambda { BlockPoint.new(point_1, point_2).get_point_at(5) }.should raise_error NudgeError::PointIndexTooLarge,
         "can't operate on point 5 in a tree of size 3"
     end
@@ -53,6 +55,7 @@ describe "BlockPoint" do
     it "returns the point corresponding to n" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       BlockPoint.new(point_1, point_2).get_point_at(2).should == point_2
     end
   end
@@ -67,6 +70,7 @@ describe "BlockPoint" do
     it "raises PointIndexTooLarge if n + 1 > self.points" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       lambda { BlockPoint.new(point_1, point_2).delete_point_at(5) }.should raise_error NudgeError::PointIndexTooLarge,
         "can't operate on point 5 in a tree of size 3"
     end
@@ -91,6 +95,7 @@ describe "BlockPoint" do
     it "raises PointIndexTooLarge if n + 1 > self.points" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       lambda { BlockPoint.new(point_1, point_2).replace_point_at(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
         "can't operate on point 5 in a tree of size 3"
     end
@@ -117,6 +122,7 @@ describe "BlockPoint" do
     it "raises PointIndexTooLarge if n + 1 > self.points" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       lambda { BlockPoint.new(point_1, point_2).insert_point_before(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
         "can't operate on point 5 in a tree of size 3"
     end
@@ -144,6 +150,7 @@ describe "BlockPoint" do
     it "raises PointIndexTooLarge if n + 1 > self.points" do
       point_1 = NudgePoint.new
       point_2 = NudgePoint.new
+      
       lambda { BlockPoint.new(point_1, point_2).insert_point_after(5, point_1) }.should raise_error NudgeError::PointIndexTooLarge,
         "can't operate on point 5 in a tree of size 3"
     end

@@ -3,14 +3,19 @@ require File.expand_path("../../nudge", File.dirname(__FILE__))
 
 describe "DoPoint" do
   describe ".new (instruction_name: Symbol)" do
-    it "returns a new DoPoint containing the given instruction_name" do
-      DoPoint.new(:inst).instance_variable_get(:@instruction_name) === :inst
+    it "sets @instruction_name" do
+      DoPoint.new(:inst).instance_variable_get(:@instruction_name).should == :inst
     end
   end
   
-  describe "#evaluate (outcome_data: Outcome)" do
-    it "makes and executes a new instruction based on its instruction_name" do
-      pending
+  describe "#evaluate (executable: NudgeExecutable)" do
+    it "calls NudgeInstruction.execute with @instruction_name" do
+      exe = NudgeExecutable.new("do inst")
+      point = DoPoint.new(:inst)
+      
+      NudgeInstruction.should_receive(:execute).with(:inst, exe)
+      
+      point.evaluate(exe)
     end
   end
 end

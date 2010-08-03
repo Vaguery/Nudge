@@ -4,17 +4,15 @@ class RefPoint < NudgePoint
     @variable_name = variable_name
   end
   
-  def evaluate (outcome_data)
-    super
-    
-    if value = outcome_data.variable_bindings[@variable_name]
-      value.evaluate(outcome_data)
+  def evaluate (executable)
+    if executable.lookup_allowed? && value = executable.variable_bindings[@variable_name]
+      executable.stacks[:exec] << value
     else
-      outcome_data.stacks[:name] << @variable_name.to_s
+      executable.stacks[:name] << @variable_name
     end
   end
   
   def script_and_values
-    return "ref #{@variable_name}", []
+    "ref #{@variable_name}"
   end
 end

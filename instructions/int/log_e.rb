@@ -1,10 +1,12 @@
 # encoding: UTF-8
 class IntLogE < NudgeInstruction
-  get 1, :float
+  get 1, :int
   
   def process
-    raise NudgeError::NaN, "result of log_e was not an int" unless int(0) > 0
+    unless int(0) > 0 && (result = Math.log(int(0))).finite?
+      raise NudgeError::NaN, "result of int_log_e was not an int"
+    end
     
-    put :int, Math.log(int(0)).to_i
+    put :int, result.to_i
   end
 end

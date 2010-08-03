@@ -1,6 +1,6 @@
 # encoding: UTF-8
 class NudgeValue
-  TYPES = {:bool => nil, :code => nil, :float => nil, :int => nil, :proportion => nil}
+  TYPES = {}
   
   def NudgeValue.inherited (klass)
     value_type = klass.name.
@@ -20,15 +20,10 @@ class NudgeValue
     end
   end
   
-  class ::String
-    alias to_int to_i
-    alias to_float to_f
-    alias to_name intern
-    alias to_code to_s
-    alias to_proportion to_f
-    
-    def to_bool
-      self == "true"
-    end
-  end
+  String.send(:alias_method, :to_code, :to_s)
+  String.send(:alias_method, :to_float, :to_f)
+  String.send(:alias_method, :to_int, :to_i)
+  String.send(:alias_method, :to_name, :intern)
+  String.send(:alias_method, :to_proportion, :to_f)
+  String.send(:define_method, :to_bool) { self == "true" }
 end

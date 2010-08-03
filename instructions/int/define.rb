@@ -4,6 +4,6 @@ class IntDefine < NudgeInstruction
   get 1, :int
   
   def process
-    @outcome_data.variable_bindings[name(0)] = Value.new(:int, int(0))
+    @executable.variable_bindings[name(0)] = Value.new(:int, int(0))
   end
 end
