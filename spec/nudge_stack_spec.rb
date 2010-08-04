@@ -28,6 +28,26 @@ describe "NudgeStack" do
     end
   end
   
+  describe "#depth" do
+    it "returns the depth of the stack as an integer" do
+      stack = NudgeStack.new(:int)
+      stack << mock(:item) << mock(:item)
+      
+      stack.depth.should == 2
+    end
+  end
+  
+  describe "#flush" do
+    it "removes every item from the stack" do
+      stack = NudgeStack.new(:int)
+      stack << mock(:item) << mock(:item)
+      
+      stack.flush
+      
+      stack.length.should == 0
+    end
+  end
+  
   describe "#push" do
     it "raises NoMethodError" do
       stack = NudgeStack.new(:int)

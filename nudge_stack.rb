@@ -8,6 +8,8 @@ class NudgeStack < Array
     push item.to_s
   end
   
+  alias depth length
+  alias flush clear
   alias pop_string pop
   
   private :push, :pop
