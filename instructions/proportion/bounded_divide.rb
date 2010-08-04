@@ -5,6 +5,6 @@ class ProportionBoundedDivide < NudgeInstruction
   def process
     raise NudgeError::DivisionByZero, "cannot divide a proportion by zero" if proportion(0) == 0.0
     
-    put :proportion, [proportion(1) / proportion(0), 1.0].max
+    put :proportion, [proportion(1) / proportion(0), 1.0].min
   end
 end
