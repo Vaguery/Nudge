@@ -9,12 +9,11 @@ describe "RefPoint" do
   end
   
   describe "#evaluate (executable: NudgeExecutable)" do
-    it "pushes the ValuePoint associated with @variable_name to the :exec stack" do
-      x = Value.new(:int, 100)
-      exe = NudgeExecutable.new("ref x").bind(:x => x)
+    it "pushes the associated value to the appropriate stack" do
+      exe = NudgeExecutable.new("ref x").bind(:x => Value.new(:int, 100))
       RefPoint.new(:x).evaluate(exe)
       
-      exe.stacks[:exec].last.should == x
+      exe.stacks[:int].pop_value.should == 100
     end
     
     it "pushes @variable_name to the :name stack if there is no associated value" do
