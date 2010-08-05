@@ -232,7 +232,7 @@ describe "NudgeExecutable" do
     
     it "stops after @time_elapsed reaches @time_limit" do
       exe = NudgeExecutable.new("block { do exec_y ref x }")
-      exe.instance_variable_set(:@time_elapsed, 0.97)
+      exe.instance_variable_set(:@time_elapsed, 0.999)
       
       exe.run
       
