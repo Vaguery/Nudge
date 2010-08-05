@@ -5,4 +5,7 @@ Feature: Bool random
 
   Scenario: flip a coin
     When I execute the Nudge instruction "bool_random"
+    Then the result should be a random :bool value
     Then stack :bool should have depth 1
+  
+  

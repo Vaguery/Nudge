@@ -25,3 +25,8 @@ Feature: Integer arity-2 math instructions
     Examples: int_power emits an :error for Infinity results
     | arg1  | s1  | arg2    | s2  | inst      | result | pos | s3  | s4  | depth | error                                 |
     | 77777 | int | 9999999 | int | int_power |        | 0   | int | int | 0     | NaN: result of int_power was Infinity |
+    
+    Examples: int_power emits an :error for dividing by zero results
+    | arg1 | s1  | arg2 | s2  | inst      | result | pos | s3  | s4  | depth | error                                            |
+    | 0    | int | -3   | int | int_power |        | 0   | int | int | 0     | DivisionByZero: result of int_power was Infinity |
+    

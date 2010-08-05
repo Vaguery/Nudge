@@ -7,7 +7,7 @@ class FloatPower < NudgeInstruction
     
     # can somehow result in complex number
     
-    if result.infinite? || result.nan?
+    if result.infinite? || result.nan? 
       raise NudgeError::NaN, "result of float_power was not a float"
     else
       put :float, result

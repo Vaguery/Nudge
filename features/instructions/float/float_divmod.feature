@@ -30,7 +30,7 @@ Feature: float_divmod instruction
       
       
     Examples: float_divmod emits an :error for dividing by 0
-      | arg1 | arg2 | r | r | depth | error                                        |
+      | arg1 | arg2 | q | r | depth | error                                        |
       | 3.0  | 0.0  |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
       | 0.0  | 0.0  |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
       | 0.0  | -0.0 |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
