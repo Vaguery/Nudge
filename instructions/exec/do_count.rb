@@ -9,8 +9,8 @@ class ExecDoCount < NudgeInstruction
     point = exec(0)
     
     case int(0)
-      when 0
-      when 1 then put :exec, point
+    when 0
+    when 1 then put :exec, point
     else
       i = Value.new(:int, int(0) - 1)
       do_count = DoPoint.new(:exec_do_count)

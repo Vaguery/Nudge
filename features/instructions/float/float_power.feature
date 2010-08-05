@@ -29,3 +29,8 @@ Feature: float_power instruction
       | arg1  | arg2 | instruction | result | error_msg                                  | d |
       | -12.8 | 3.1  | float_power |        | NaN: result of float_power was not a float | 0 |
       | -64.0 | 0.5  | float_power |        | NaN: result of float_power was not a float | 0 |
+
+    Examples: float_power emits an :error when it returns Infinity
+      | arg1    | arg2         | instruction | result | error_msg                                  | d |
+      | 99999.0 | 9999999999.0 | float_power |        | NaN: result of float_power was not a float | 0 |
+      

@@ -112,5 +112,12 @@ end
 
 
 Then /^name "([^"]*)" should be bound to "([^"]*)"$/ do |name, value|
-  @context.variable_bindings[name.intern].instance_variable_get(:@string).should == value
+  bound_value = @context.variable_bindings[name.intern]
+
+  unless bound_value.class == Value
+    bound_value.script_and_values.should == NudgePoint.from(value).script_and_values
+  else
+    bound_value.instance_variable_get(:@string).should == value
+  end
+      
 end
