@@ -1,7 +1,8 @@
 #encoding: utf-8
-Before do
-  @context = NudgeExecutable.new("")
-end
+# Before do
+#   @context = NudgeExecutable.new("")
+#   puts "interpreter is GO"
+# end
 
 Given /^the blueprint "([^"]*)"$/ do |script|
   @feature_blueprint = script
