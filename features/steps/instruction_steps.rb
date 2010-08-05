@@ -1,5 +1,6 @@
 #encoding: utf-8
 require 'stringio'
+require 'spec/stubs/cucumber'
 
 Before do
   @context = NudgeExecutable.new("")
@@ -32,6 +33,10 @@ Given /^"([^"]*)" is bound to a :([a-z\d_]+) with value "([^"]*)"$/ do |var_name
   @context.variable_bindings[var_name.intern] = Value.new(type.intern,value)
 end
 
+
+Given /^I have stubbed the random value method so it produces an* :([a-z\d_]+) with value "([^"]*)"$/ do |type, result|
+  pending # express the regexp above with the code you wish you had
+end
 
 
 
@@ -99,6 +104,10 @@ Then /^the top :error should include "([^"]*)"/ do |message|
   else
     @context.stacks[:error][0].should include(message)
   end
+end
+
+Then /^the result should be a random :([a-z\d_]+) value$/ do |type|
+  pending
 end
 
 

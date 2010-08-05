@@ -4,8 +4,8 @@ Feature: Bool random
   I want a bool_random instruction
 
   Scenario: flip a coin
+    Given I have stubbed the random value method so it produces a :bool with value "blue"
     When I execute the Nudge instruction "bool_random"
-    Then the result should be a random :bool value
-    Then stack :bool should have depth 1
+    Then "blue" should be in position -1 of the :bool stack  
   
   
