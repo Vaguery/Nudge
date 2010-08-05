@@ -10,8 +10,9 @@ Feature: exec_do_count
     Given I have pushed "do bool_and" onto the :exec stack
     And I have pushed "4" onto the :int stack
     When I execute the Nudge instruction "exec_do_count"
-    Then "block { value «int» do exec_do_count do bool_and}\n«int» 3" should be in position -1 of the :exec stack
-    And stack :exec should have depth 1
+    Then "do bool_and" should be in position -1 of the :exec stack
+    Then "block { value «int» do exec_do_count do bool_and}\n«int» 3" should be in position -2 of the :exec stack
+    And stack :exec should have depth 2
     And stack :int should have depth 0
     
     
@@ -38,7 +39,7 @@ Feature: exec_do_count
     When I execute the Nudge instruction "exec_do_count"
     And stack :exec should have depth 0
     And stack :int should have depth 0
-    And "exec_do_count called with negative counter" should be in position -1 of the :error stack
+    And "NegativeCounter: exec_do_count called with negative counter" should be in position -1 of the :error stack
     
     
   Scenario: exec_do_count does not push a counter value

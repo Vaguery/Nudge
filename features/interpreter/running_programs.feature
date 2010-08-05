@@ -17,17 +17,17 @@ Feature: Expected outcomes
     Given the blueprint "block {ref a ref b ref c}"
     When I run the interpreter
     Then stack :name should have depth 3
-    And "c" should be in position -3 of the :name stack
+    And "c" should be in position -1 of the :name stack
     And "b" should be in position -2 of the :name stack
-    And "a" should be in position -1 of the :name stack
+    And "a" should be in position -3 of the :name stack
     And the execution counter should be 4
     
     
   Scenario: values
-    Given the blueprint "value «int» \n«int» 12"
+    Given the blueprint "value «bool» \n«bool» false"
     When I run the interpreter
-    Then stack :int should have depth 1
-    And "12" should be in position -1 of the :int stack
+    Then stack :bool should have depth 1
+    And "false" should be in position -1 of the :bool stack
     And the execution counter should be 1
     
   

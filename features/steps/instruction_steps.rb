@@ -42,7 +42,8 @@ end
 
 
 When /^I execute the Nudge instruction "([^"]*)"$/ do |instruction_name|
-  actor = NudgeInstruction.execute(instruction_name.intern, @context)
+  @context.stacks[:exec] << DoPoint.new(instruction_name.intern)
+  @context.step
 end
 
 

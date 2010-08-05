@@ -8,9 +8,9 @@ Feature: Reference point
     Given I have pushed "ref x" onto the :exec stack
     And I have bound "x" to an :int with value "99"
     When I take one execution step
-    Then stack :exec should have depth 0
-    And "99" should be in position -1 of the :int stack
-    And the execution counter should be 2
+    Then stack :exec should have depth 1
+    And "value «int» \n«int» 99" should be in position -1 of the :exec stack
+    And the execution counter should be 1
     
     
   Scenario: execution of an unbound variable

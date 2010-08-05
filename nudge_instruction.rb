@@ -52,11 +52,7 @@ class NudgeInstruction
       n.times { arguments << stack.pop_value }
     end
     
-    process
-    
-  rescue NudgeError => error
-    @executable.stacks[:error] << error
-    
+    process    
   end
   
   def put (value_type, result)

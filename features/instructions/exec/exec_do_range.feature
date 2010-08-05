@@ -10,7 +10,9 @@ Feature: exec_do_range instruction
     And I have pushed "3" onto the :int stack
     And I have pushed "5" onto the :int stack
     When I execute the Nudge instruction "exec_do_range"
-    Then "block { value «int» value «int» do exec_do_range do int_add }\n«int»4\n«int»5" should be in position -1 of the :exec stack
+    Then "do int_add" should be in position -1 of the :exec stack
+    And "block { value «int» value «int» do exec_do_range do int_add }\n«int»4\n«int»5" should be in position -2 of the :exec stack
+    And stack :exec should have depth 2
     And stack :int should have depth 1
     And "3" should be in position -1 of the :int stack
     
@@ -20,7 +22,8 @@ Feature: exec_do_range instruction
     And I have pushed "-13" onto the :int stack
     And I have pushed "-15" onto the :int stack
     When I execute the Nudge instruction "exec_do_range"
-    Then "block { value «int» value «int» do exec_do_range do foo }\n«int»-14\n«int»-15" should be in position -1 of the :exec stack
+    Then "do foo" should be in position -1 of the :exec stack
+    Then "block { value «int» value «int» do exec_do_range do foo }\n«int»-14\n«int»-15" should be in position -2 of the :exec stack
     And stack :int should have depth 1
     And "-13" should be in position -1 of the :int stack
     

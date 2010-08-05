@@ -11,9 +11,10 @@ Feature: exec_do_times instruction
     And I have pushed "3" onto the :int stack
     And I have pushed "5" onto the :int stack
     When I execute the Nudge instruction "exec_do_times"
-    Then "block { value «int» value «int» do exec_do_times ref bar}\n«int» 4\n«int» 5" should be in position -1 of the :exec stack
+    Then "ref bar" should be in position -1 of the :exec stack
+    Then "block { value «int» value «int» do exec_do_times ref bar}\n«int» 4\n«int» 5" should be in position -2 of the :exec stack
     And stack :int should have depth 0
-    And stack :exec should have depth 1
+    And stack :exec should have depth 2
     
     
   Scenario: exec_do_times should work OK for inverted indices
@@ -21,9 +22,10 @@ Feature: exec_do_times instruction
     And I have pushed "-3" onto the :int stack
     And I have pushed "-58812" onto the :int stack
     When I execute the Nudge instruction "exec_do_times"
-    Then "block { value «int» value «int» do exec_do_times ref bar}\n«int» -4\n«int» -58812" should be in position -1 of the :exec stack
+    Then "ref bar" should be in position -1 of the :exec stack
+    Then "block { value «int» value «int» do exec_do_times ref bar}\n«int» -4\n«int» -58812" should be in position -2 of the :exec stack
     And stack :int should have depth 0
-    And stack :exec should have depth 1
+    And stack :exec should have depth 2
     
     
   Scenario: exec_do_times should not build its macro when the indices are identical
