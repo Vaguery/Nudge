@@ -8,6 +8,7 @@ Feature: Integer arity-2 math instructions
     And I have pushed "<arg2>" onto the :<s2> stack
     When I execute the Nudge instruction "<inst>"
     Then "<result>" should be in position <pos> of the :<s3> stack
+    And no warning message should be produced
     And stack :<s4> should have depth <depth>
     And the top :error should include "<error>"
       
@@ -27,6 +28,6 @@ Feature: Integer arity-2 math instructions
     | 77777 | int | 9999999 | int | int_power |        | 0   | int | int | 0     | NaN: result of int_power was Infinity |
     
     Examples: int_power emits an :error for dividing by zero results
-    | arg1 | s1  | arg2 | s2  | inst      | result | pos | s3  | s4  | depth | error                                            |
-    | 0    | int | -3   | int | int_power |        | 0   | int | int | 0     | DivisionByZero: result of int_power was Infinity |
+    | arg1 | s1  | arg2 | s2  | inst      | result | pos | s3  | s4  | depth | error                     |
+    | 0    | int | -3   | int | int_power |        | 0   | int | int | 0     | DivisionByZero: int_power |
     

@@ -1,6 +1,14 @@
 #encoding: utf-8
+require 'stringio'
+
 Before do
   @context = NudgeExecutable.new("")
+  @mistakes = StringIO.open('','r+')
+  $stderr = @mistakes
+end
+
+After do
+  $stderr = STDERR
 end
 
 Given /^I have pushed "([^"]*)" onto the bool stack$/ do |value|
@@ -76,6 +84,12 @@ end
 
 Then /^that stack's depth should be (\d+)$/ do |depth|
   @output_stack.depth.should == depth.to_i
+end
+
+
+Then /^no warning message should be produced$/ do
+  @mistakes.rewind
+  @mistakes.read.should == ""
 end
 
 
