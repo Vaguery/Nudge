@@ -8,7 +8,12 @@ class IntPower < NudgeInstruction
     
     raise NudgeError::DivisionByZero, "int_power" if base == 0 && exponent < 0
     
+    old_verbose = $VERBOSE
+    $VERBOSE = nil
+    
     result = base ** exponent
+    
+    $VERBOSE = old_verbose
     
     raise NudgeError::NaN, "result of int_power was Infinity" if result.to_s == "Infinity"
     
