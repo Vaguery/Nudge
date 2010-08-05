@@ -50,16 +50,16 @@ Then /^"([^"]*)" should be in position (-?\d+) of the :([a-z\d_]+) stack$/ do |r
 end
 
 
-Then /^something close to "([^"]*)" should be in position (-?\d+) of the :float stack$/ do |result_val, posn|
+Then /^something close to "([^"]*)" should be in position (-?\d+) of the :([a-z\d_]+) stack$/ do |result_val, posn, stack|
   unless result_val.strip == ""
-    float_value = @context.stacks[:float][posn]
+    float_value = @context.stacks[stack.intern][posn]
     if float_value.nil?
       fail
     else
       float_value.to_f.should be_close(result_val.to_f,0.0001)
     end
   else
-    @context.stacks[:float].length.should == 0
+    @context.stacks[stack.intern].length.should == 0
   end
 end
 
@@ -70,12 +70,12 @@ end
 
 
 Then /^stack :([a-z\d_]+) should have depth ([\d]+)$/  do |stack, depth|
-  @context.stacks[stack.intern].length.should == depth.to_i
+  @context.stacks[stack.intern].depth.should == depth.to_i
 end
 
 
 Then /^that stack's depth should be (\d+)$/ do |depth|
-  @output_stack.length.should == depth.to_i
+  @output_stack.depth.should == depth.to_i
 end
 
 

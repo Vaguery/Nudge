@@ -8,7 +8,7 @@ Feature: Proportion from floats
     Given I have pushed "78.0" onto the :float stack
     And I have pushed "100.0" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "0.78" should be in position -1 of the :proportion stack
+    Then something close to "0.78" should be in position -1 of the :proportion stack
     And stack :float should have depth 0
   
   
@@ -16,7 +16,7 @@ Feature: Proportion from floats
     Given I have pushed "-91.1" onto the :float stack
     And I have pushed "-100.0" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "0.911" should be in position -1 of the :proportion stack
+    Then something close to "0.911" should be in position -1 of the :proportion stack
     And stack :float should have depth 0
   
   
@@ -24,7 +24,7 @@ Feature: Proportion from floats
     Given I have pushed "-1.0" onto the :float stack
     And I have pushed "100.0" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "0.0" should be in position -1 of the :proportion stack
+    Then something close to "0.0" should be in position -1 of the :proportion stack
     And stack :float should have depth 0
   
   
@@ -32,7 +32,7 @@ Feature: Proportion from floats
     Given I have pushed "3.9" onto the :float stack
     And I have pushed "1.3" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "1.0" should be in position -1 of the :proportion stack
+    Then something close to "1.0" should be in position -1 of the :proportion stack
     And stack :float should have depth 0
   
   
@@ -40,5 +40,5 @@ Feature: Proportion from floats
     Given I have pushed "-100.0" onto the :float stack
     And I have pushed "91.0" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "0.0" should be in position -1 of the :proportion stack
+    Then something close to "0.0" should be in position -1 of the :proportion stack
     And stack :float should have depth 0

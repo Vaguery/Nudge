@@ -7,8 +7,8 @@ Feature: proportion_bounded_subtract instruction
     Given I have pushed "<arg1>" onto the :proportion stack
     And I have pushed "<arg2>" onto the :proportion stack
     When I execute the Nudge instruction "<instruction>"
-    Then "<result>" should be in position -1 of the :proportion stack
-    And that stack's depth should be 1
+    Then something close to "<result>" should be in position -1 of the :proportion stack
+    And stack :proportion should have depth 1
 
 
   Examples: proportion_bounded_subtract

@@ -301,6 +301,19 @@ describe "ErrorStack" do
       
       stack.last.should == "NudgeError: an error occurred"
     end
+    
+    it "should include the subclass in the message, if present" do
+      stack = ErrorStack.new(:error)
+      
+      begin
+        raise NudgeError::InvalidScript, "an error occurred"
+      rescue => error
+        stack << error
+      end
+      
+      stack.last.should == "InvalidScript: an error occurred"
+      
+    end
   end
   
   describe "#pop_value" do

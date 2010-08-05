@@ -7,7 +7,7 @@ Feature: proportion_bounded_divide instruction
     Given I have pushed "<arg1>" onto the :proportion stack
     And I have pushed "<arg2>" onto the :proportion stack
     When I execute the Nudge instruction "<instruction>"
-    Then "<result>" should be in position -1 of the :proportion stack
+    Then something close to "<result>" should be in position -1 of the :proportion stack
     And "<error_msg>" should be in position -1 of the :error stack
 
 

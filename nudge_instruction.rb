@@ -53,6 +53,10 @@ class NudgeInstruction
     end
     
     process
+    
+  rescue NudgeError => error
+    @executable.stacks[:error] << error
+    
   end
   
   def put (value_type, result)

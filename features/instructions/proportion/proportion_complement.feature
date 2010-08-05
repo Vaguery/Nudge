@@ -6,8 +6,8 @@ Feature: proportion_complement instruction
   Scenario Outline: proportion_complement
     Given I have pushed "<arg1>" onto the :proportion stack
     When I execute the Nudge instruction "<instruction>"
-    Then "<result>" should be in position -1 of the :proportion stack
-    And that stack's depth should be 1
+    Then something close to "<result>" should be in position -1 of the :proportion stack
+    And stack :proportion should have depth 1
     
     Examples: proportion_complement
       | arg1  | instruction           | result |
