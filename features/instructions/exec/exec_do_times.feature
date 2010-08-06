@@ -17,6 +17,21 @@ Feature: exec_do_times instruction
     And stack :exec should have depth 2
     
     
+    
+  Scenario: exec_do_times should execute the top :exec item for each integer in [n1, n2]
+    Given I have pushed "ref j" onto the :exec stack
+    And I have pushed "do exec_do_times" onto the :exec stack
+    And I have pushed "3" onto the :int stack
+    And I have pushed "5" onto the :int stack
+    When I run the interpreter
+    Then stack :name should have depth 3
+    And "j" should be in position -1 of the :name stack
+    And "j" should be in position -2 of the :name stack
+    And "j" should be in position -3 of the :name stack
+    And stack :int should have depth 0
+    
+    
+    
   Scenario: exec_do_times should work OK for inverted indices
     Given I have pushed "ref bar" onto the :exec stack
     And I have pushed "-3" onto the :int stack

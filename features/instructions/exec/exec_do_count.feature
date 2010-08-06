@@ -16,6 +16,19 @@ Feature: exec_do_count
     And stack :int should have depth 0
     
     
+  Scenario: exec_do_count should execute the following point n times
+    Given I have pushed "ref g" onto the :exec stack
+    And I have pushed "do exec_do_count" onto the :exec stack
+    And I have pushed "4" onto the :int stack
+    When I run the interpreter
+    Then stack :name should have depth 4
+    And "g" should be in position -1 of the :name stack
+    And "g" should be in position -2 of the :name stack
+    And "g" should be in position -3 of the :name stack
+    And "g" should be in position -4 of the :name stack
+  
+    
+    
   Scenario: exec_do_count stops building its macro when n==1
     Given I have pushed "do bool_and" onto the :exec stack
     And I have pushed "1" onto the :int stack
