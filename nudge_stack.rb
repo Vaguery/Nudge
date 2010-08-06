@@ -2,9 +2,15 @@
 class NudgeStack < Array
   def initialize (value_type)
     @value_type = value_type
+    @items_pushed = 0
+  end
+  
+  def items_pushed
+    @items_pushed
   end
   
   def << (item)
+    @items_pushed += 1
     push item.to_s
   end
   
