@@ -114,7 +114,7 @@ Then /^name "([^"]*)" should be bound to "([^"]*)"$/ do |name, value|
   type = bound_value.instance_variable_get(:@value_type)
   
   if type == :exec
-    bound_value.instance_variable_get(:@value).to_script.should == value
+    bound_value.instance_variable_get(:@value).to_script.should == NudgePoint.from(value).to_script
   else
     bound_value.instance_variable_get(:@value).should == value
   end

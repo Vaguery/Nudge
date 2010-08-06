@@ -34,3 +34,7 @@ Feature: float_power instruction
       | arg1    | arg2         | instruction | result | error_msg                                  | d |
       | 99999.0 | 9999999999.0 | float_power |        | NaN: result of float_power was not a float | 0 |
       
+    Examples: float_power emits an :error when it takes a negative exponent of 0.0
+      | arg1 | arg2 | instruction | result | error_msg                                  | d |
+      | 0.0  | -3.0 | float_power |        | NaN: result of float_power was not a float | 0 |
+      
