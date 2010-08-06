@@ -10,7 +10,7 @@ describe "ValuePoint" do
     
     it "sets @string" do
       point = ValuePoint.new(:int, 5)
-      point.instance_variable_get(:@string).should == 5
+      point.instance_variable_get(:@value).should == 5
     end
   end
   

@@ -19,7 +19,7 @@ require File.expand_path("../../../nudge", File.dirname(__FILE__))
         NudgeInstruction.execute(:"#{name.downcase}_define", exe)
         exe.stacks[:name].length.should == 0
         exe.stacks[name.downcase.intern].length.should == 0
-        exe.variable_bindings[variable_name].instance_variable_get(:@string).should == expected_value
+        exe.variable_bindings[variable_name].instance_variable_get(:@value).should == expected_value
       end
     end
   end

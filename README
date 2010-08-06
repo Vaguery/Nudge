@@ -2,11 +2,13 @@
 require File.expand_path("nudge", File.dirname(__FILE__))
 
 script = NudgeWriter.new.random
-
+script = "block { ref x block { ref x do int_multiply ref x value «int» do int_add value «int» do int_multiply } do int_multiply }
+«int»6
+«int»22"
 exe = NudgeExecutable.new(script)
 
 exe.bind(:x1 => Value.new(:int, 100), :x2 => Value.new(:int, 200))
-
+exe.bind(:x => Value.new(:int, 100))
 #exe.run
 
 puts script
@@ -18,7 +20,7 @@ puts "-----------"
   case top
     when BlockPoint, RefPoint
     when ValuePoint
-      puts "«#{top.instance_variable_get(:@value_type)}» #{top.instance_variable_get(:@string).slice(0..30)}"
+      puts "«#{top.instance_variable_get(:@value_type)}» #{top.instance_variable_get(:@value).slice(0..30)}"
     when DoPoint
       puts "do #{top.instance_variable_get(:@instruction_name)}"
   end
