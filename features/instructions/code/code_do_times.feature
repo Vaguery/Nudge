@@ -57,3 +57,9 @@ Feature: code_do_times
     When I execute the Nudge instruction "code_do_times"
     Then stack :int should have depth 0
     
+    
+    Scenario: the item that's copied into the loop macro should be a different object from the item above it
+        Given context
+        When event
+        Then outcome
+    

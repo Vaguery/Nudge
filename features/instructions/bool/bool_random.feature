@@ -3,9 +3,16 @@ Feature: Bool random
   As a modeler
   I want a bool_random instruction
 
-  Scenario: flip a coin
-    Given I have stubbed the random value method so it produces a :bool with value "blue"
+  Scenario: should return a :bool
     When I execute the Nudge instruction "bool_random"
-    Then "blue" should be in position -1 of the :bool stack  
+    Then stack :bool should have depth 1 
+  
+  Scenario: should return a random value with equal probability
+    Given context
+    When event
+    Then outcome
+  
+  
+  
   
   

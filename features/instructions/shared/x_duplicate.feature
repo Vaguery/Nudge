@@ -22,3 +22,5 @@ Feature: *_duplicate instruction
     | 0.1   | 0.2   |  proportion | proportion_duplicate |
     | x     | y     |  name       | name_duplicate       |
     
+
+HEY THERE: exec_duplicate should not duplicate the object

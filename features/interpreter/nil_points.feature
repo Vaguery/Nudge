@@ -5,7 +5,7 @@ Feature: NilPoints
   
   
   Scenario: NilPoint results from parsing an empty script
-    Given the blueprint ""
+    Given the blueprint " "
     When I parse that blueprint
     Then the result should be a NilPoint
     And its script should be ""

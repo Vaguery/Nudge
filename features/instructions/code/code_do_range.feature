@@ -76,3 +76,8 @@ Feature: code_do_range
     When I execute the Nudge instruction "code_do_range"
     Then "222" should be in position -1 of the :int stack
     
+
+    Scenario: the item that's copied into the loop macro should be a different object from the item above it
+        Given context
+        When event
+        Then outcome

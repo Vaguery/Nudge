@@ -10,9 +10,10 @@ Feature: Iteration control structures
     And I have pushed "9" onto the :int stack
     When I execute the Nudge instruction "code_do_count"
     Then "block {ref x}" should be in position -1 of the :exec stack
-    Then "block { value «int» do exec_do_count block {ref x}}\n«int» 8" should be in position -2 of the :exec stack
+    And "block { value «int» do exec_do_count block {ref x}}\n«int» 8" should be in position -2 of the :exec stack
     And stack :code should have depth 0
     And stack :int should have depth 0
+    
     
     
   Scenario: code_do_count should actually run the point n times
@@ -65,3 +66,10 @@ Feature: Iteration control structures
     And stack :code should have depth 0
     And stack :int should have depth 0
     And "NegativeCounter: code_do_count called with negative counter" should be in position -1 of the :error stack
+    
+  
+  Scenario: the item that's copied into the loop macro should be a different object from the item above it
+      Given context
+      When event
+      Then outcome
+  

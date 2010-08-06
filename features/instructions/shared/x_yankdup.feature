@@ -65,3 +65,6 @@ Feature: *_yankdup instruction
     | ref a | ref b | ref c | exec       | 7162   | exec_yankdup       | ref a   |
     | 0.1   | 0.2   | 0.3   | proportion | 7162   | proportion_yankdup | 0.1     |
     | x     | y     | z     | name       | 7162   | name_yankdup       | x       |
+
+
+HEY THERE: exec_duplicate should not duplicate the object
