@@ -15,7 +15,7 @@ class ExecDoCount < NudgeInstruction
       i = Value.new(:int, int(0) - 1)
       do_count = DoPoint.new(:exec_do_count)
       
-      put :exec, BlockPoint.new(i, do_count, exec(0))
+      put :exec, BlockPoint.new(i, do_count, point.dup)
       put :exec, point
     end
   end

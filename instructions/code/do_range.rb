@@ -6,10 +6,10 @@ class CodeDoRange < NudgeInstruction
   def process
     put :int, i = int(1)
     limit = int(0)
-    point = NudgePoint.from(code(0))
+    script = code(0)
     
     if i == limit
-      put :exec, point
+      put :exec, NudgePoint.from(script)
       return
     end
     
@@ -17,7 +17,7 @@ class CodeDoRange < NudgeInstruction
     limit = Value.new(:int, limit)
     do_range = DoPoint.new(:exec_do_range)
     
-    put :exec, BlockPoint.new(i, limit, do_range, point)
-    put :exec, point
+    put :exec, BlockPoint.new(i, limit, do_range, NudgePoint.from(script))
+    put :exec, NudgePoint.from(script)
   end
 end

@@ -6,10 +6,10 @@ class CodeDoTimes < NudgeInstruction
   def process
     i = int(1)
     limit = int(0)
-    point = NudgePoint.from(code(0))
+    script = code(0)
     
     if i == limit
-      put :exec, point
+      put :exec, NudgePoint.from(script)
       return
     end
     
@@ -17,7 +17,7 @@ class CodeDoTimes < NudgeInstruction
     limit = Value.new(:int, limit)
     do_times = DoPoint.new(:exec_do_times)
     
-    put :exec, BlockPoint.new(i, limit, do_times, point)
-    put :exec, point
+    put :exec, BlockPoint.new(i, limit, do_times, NudgePoint.from(script))
+    put :exec, NudgePoint.from(script)
   end
 end
