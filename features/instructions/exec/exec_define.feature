@@ -23,9 +23,8 @@ Feature: exec_define
     And stack :exec should have depth 0
 
   Scenario: the thing that's bound to a name is not identical to the object on the :exec stack
-    Given context
-    When event
-    Then outcome
-  
-  
-  
+    Given I have pushed "do int_add" onto the :exec stack
+    And I have noted the object_id of the item in position 9 of stack :exec
+    And I have pushed "j" onto the :name stack
+    When I execute the Nudge instruction "exec_define"
+    Then the object_id of the item bound to name "j" should not be identical to the original

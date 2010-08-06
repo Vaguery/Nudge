@@ -17,6 +17,9 @@ Given /^I have pushed "([^"]*)" onto the bool stack$/ do |value|
   @context.stacks[:bool] << value
 end
 
+Given /^I have noted the object_id of the item in position (\-*\d+) of stack :([a-z\d_]+)$/ do |pos, stack|
+  @stored_object_id = @context.stacks[stack.intern][pos.to_i].object_id
+end
 
 
 Given /^I have pushed "([^"]*)" onto the :([a-z\d_]+) stack$/ do |string, stack|
@@ -107,6 +110,11 @@ end
 Then /^the result should be a random :([a-z\d_]+) value$/ do |type|
   pending
 end
+
+Then /^the object_id of the item bound to name "([^"]*)" should not be identical to the original$/ do |name|
+  @context.variable_bindings[name.intern].should_not == @stored_object_id
+end
+
 
 
 Then /^the block in position (\-*\d+) of the :exec stack should not contain the object on position (\-*\d+)$/ do |pos1, pos2|
