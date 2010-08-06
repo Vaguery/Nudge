@@ -21,3 +21,11 @@ Feature: exec_define
     Then name "x1" should be bound to "ref g"
     And stack :name should have depth 0
     And stack :exec should have depth 0
+
+  Scenario: the thing that's bound to a name is not identical to the object on the :exec stack
+    Given context
+    When event
+    Then outcome
+  
+  
+  

@@ -60,3 +60,12 @@ Feature: exec_do_count
     And I have pushed "10" onto the :int stack
     When I execute the Nudge instruction "exec_do_count"
     And stack :int should have depth 0
+    
+    
+  Scenario: the :exec item that's copied into the loop macro should be a different object from the original
+    Given context
+    When event
+    Then outcome
+  
+  
+  

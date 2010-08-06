@@ -60,3 +60,11 @@ Feature: exec_do_times instruction
     When I execute the Nudge instruction "exec_do_times"
     Then stack :int should have depth 0
     
+    
+    Scenario: the :exec item that's copied into the loop macro should be a different object from the original
+      Given context
+      When event
+      Then outcome
+
+
+    

@@ -72,3 +72,11 @@ Feature: exec_do_range instruction
     And "k" should be in position -1 of the :name stack
     And stack :int should have depth 1
     And "44" should be in position -1 of the :int stack
+
+
+    Scenario: the :exec item that's copied into the loop macro should be a different object from the original
+      Given context
+      When event
+      Then outcome
+
+
