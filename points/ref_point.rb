@@ -6,7 +6,7 @@ class RefPoint < NudgePoint
   
   def evaluate (executable)
     if executable.lookup_allowed? && value = executable.variable_bindings[@variable_name]
-      executable.stacks[:exec] << value
+      value.evaluate(executable)
     else
       executable.stacks[:name] << @variable_name
     end
