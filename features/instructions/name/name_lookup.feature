@@ -14,7 +14,7 @@ Feature: Name lookup
     Given I have pushed "x" onto the :name stack
     When I execute the Nudge instruction "name_lookup"
     Then stack :name should have depth 0
-    And "UnboundName" should be in position -1 of the :error stack
+    And "UnboundName: name_lookup referenced an unbound name" should be in position -1 of the :error stack
   
   
   

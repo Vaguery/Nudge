@@ -24,5 +24,16 @@ Scenario: running pops the top item from :exec
 Scenario: popping from a standard stack returns nil
   Then "" should be in position -1 of the :name stack
   And "" should be in position -1 of the :int stack
+  
+Scenario: counting items pushed
+  Given I have pushed "value «int»\n«int» 1" onto the :exec stack
+  And I have pushed "value «int»\n«int» 2" onto the :exec stack
+  And I have pushed "value «int»\n«int» 3" onto the :exec stack
+  And I have pushed "value «int»\n«int» 4" onto the :exec stack
+  And I have pushed "value «int»\n«int» 5" onto the :exec stack
+  And I have pushed "value «int»\n«int» 6" onto the :exec stack
+  When I run the interpreter
+  Then stack :int should have pushed 5 items
+
 
 
