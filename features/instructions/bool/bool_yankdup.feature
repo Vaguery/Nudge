@@ -1,4 +1,4 @@
-Feature: *_yankdup instruction
+Feature: bool_yankdup instruction
   In order to implement tricky stack-shuffling kinda algorithms
   As a modeler
   I want to be able to pull things up from down inside any given stack
