@@ -58,8 +58,9 @@ Feature: code_do_times
     Then stack :int should have depth 0
     
     
-    Scenario: the item that's copied into the loop macro should be a different object from the item above it
-        Given context
-        When event
-        Then outcome
-    
+  Scenario: the item that's copied into the loop macro should be a different object from the item above it
+    Given I have pushed "ref x" onto the :code stack
+    And I have pushed "3" onto the :int stack
+    And I have pushed "99" onto the :int stack
+    When I execute the Nudge instruction "code_do_times"
+    Then the block in position -2 of the :exec stack should not contain the object on position -1

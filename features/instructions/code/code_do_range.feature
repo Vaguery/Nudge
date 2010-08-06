@@ -37,7 +37,8 @@ Feature: code_do_range
     And I have pushed "-4" onto the :int stack
     And I have pushed "-21" onto the :int stack
     When I execute the Nudge instruction "code_do_range"
-    Then "block { value «int» value «int» do exec_do_range block {ref a}}\n«int» -5\n«int» -21" should be in position -1 of the :exec stack
+    Then "block {ref a}" should be in position -1 of the :exec stack
+    Then "block { value «int» value «int» do exec_do_range block {ref a}}\n«int» -5\n«int» -21" should be in position -2 of the :exec stack
     And stack :code should have depth 0
     And stack :int should have depth 1
     And "-4" should be in position -1 of the :int stack
@@ -77,7 +78,9 @@ Feature: code_do_range
     Then "222" should be in position -1 of the :int stack
     
 
-    Scenario: the item that's copied into the loop macro should be a different object from the item above it
-        Given context
-        When event
-        Then outcome
+  Scenario: the item that's copied into the loop macro should be a different object from the item above it
+    Given I have pushed "ref x" onto the :code stack
+    And I have pushed "3" onto the :int stack
+    And I have pushed "99" onto the :int stack
+    When I execute the Nudge instruction "code_do_range"
+    Then the block in position -2 of the :exec stack should not contain the object on position -1

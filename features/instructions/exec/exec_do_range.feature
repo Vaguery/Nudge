@@ -74,9 +74,10 @@ Feature: exec_do_range instruction
     And "44" should be in position -1 of the :int stack
 
 
-    Scenario: the :exec item that's copied into the loop macro should be a different object from the original
-      Given context
-      When event
-      Then outcome
 
-
+  Scenario: the item that's copied into the loop macro should be a different object from the item above it
+    Given I have pushed "ref x" onto the :exec stack
+    And I have pushed "99" onto the :int stack
+    And I have pushed "199" onto the :int stack
+    When I execute the Nudge instruction "exec_do_range"
+    Then the block in position -2 of the :exec stack should not contain the object on position -1

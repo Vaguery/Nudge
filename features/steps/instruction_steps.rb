@@ -109,6 +109,13 @@ Then /^the result should be a random :([a-z\d_]+) value$/ do |type|
 end
 
 
+Then /^the block in position (\-*\d+) of the :exec stack should not contain the object on position (\-*\d+)$/ do |pos1, pos2|
+  id1 = @context.stacks[:exec][pos2.to_i].object_id
+  macro = @context.stacks[:exec][pos1.to_i]
+  macro.instance_variable_get(:@points).collect {|pt| pt.object_id}.should_not include(id1)
+end
+
+
 Then /^name "([^"]*)" should be bound to "([^"]*)"$/ do |name, value|
   bound_value = @context.variable_bindings[name.intern]
   type = bound_value.instance_variable_get(:@value_type)
