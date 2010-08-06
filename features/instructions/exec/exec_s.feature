@@ -13,3 +13,10 @@ Feature: exec_s instruction
     Then "ref A" should be in position -1 of the :exec stack
     And "ref C" should be in position -2 of the :exec stack
     And "block {ref B ref C}" should be in position -3 of the :exec stack
+
+  Scenario: the item that's copied into the macro should be a different object from the item above it
+    Given I have pushed "ref C" onto the :exec stack
+    And I have pushed "ref B" onto the :exec stack
+    And I have pushed "ref A" onto the :exec stack
+    When I execute the Nudge instruction "exec_s"
+    Then the block in position -3 of the :exec stack should not contain the object on position -2

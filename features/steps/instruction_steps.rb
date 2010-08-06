@@ -115,6 +115,9 @@ Then /^the object_id of the item bound to name "([^"]*)" should not be identical
   @context.variable_bindings[name.intern].should_not == @stored_object_id
 end
 
+Then /^the :([a-z\d_]+) stack should be (\[(?:"[^"]*",? ?)+\])$/ do |stack, stack_image|
+  @context.stacks[stack.intern].inspect.should == stack_image
+end
 
 
 Then /^the block in position (\-*\d+) of the :exec stack should not contain the object on position (\-*\d+)$/ do |pos1, pos2|
