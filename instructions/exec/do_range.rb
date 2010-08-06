@@ -17,7 +17,7 @@ class ExecDoRange < NudgeInstruction
     limit = Value.new(:int, limit)
     do_range = DoPoint.new(:exec_do_range)
     
-    put :exec, BlockPoint.new(i, limit, do_range, point)
+    put :exec, BlockPoint.new(i, limit, do_range, point.dup)
     put :exec, point
   end
 end

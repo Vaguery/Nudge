@@ -6,7 +6,7 @@ class ExecY < NudgeInstruction
     point = exec(0)
     y = DoPoint.new(:exec_y)
     
-    put :exec, BlockPoint.new(y, point)
+    put :exec, BlockPoint.new(y, point.dup)
     put :exec, point
   end
 end

@@ -17,7 +17,7 @@ class ExecDoTimes < NudgeInstruction
     limit = Value.new(:int, limit)
     do_times = DoPoint.new(:exec_do_times)
     
-    put :exec, BlockPoint.new(i, limit, do_times, point)
+    put :exec, BlockPoint.new(i, limit, do_times, point.dup)
     put :exec, point
   end
 end

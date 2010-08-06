@@ -7,7 +7,7 @@ class ExecS < NudgeInstruction
     b = exec(1)
     c = exec(2)
     
-    put :exec, BlockPoint.new(b, c)
+    put :exec, BlockPoint.new(b, c.dup)
     put :exec, c
     put :exec, a
   end
