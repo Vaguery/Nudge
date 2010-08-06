@@ -33,7 +33,11 @@ Scenario: counting items pushed
   And I have pushed "value «int»\n«int» 5" onto the :exec stack
   And I have pushed "value «int»\n«int» 6" onto the :exec stack
   When I run the interpreter
-  Then stack :int should have pushed 5 items
+  Then stack :int should have pushed 6 items
 
+  Scenario: no count when nothing happened
+    Given I have pushed "1" onto the :int stack
+    When I run the interpreter
+    Then stack :exec should have pushed 0 items
 
 

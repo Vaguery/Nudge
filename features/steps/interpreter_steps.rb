@@ -56,3 +56,7 @@ end
 Then /^the execution counter should be (\d+)$/ do |steps|
   @context.points_evaluated.should == steps.to_i
 end
+
+Then /^stack :([^"]*) should have pushed (\d+) items$/ do |stackname, count|
+  @context.stacks[stackname.intern].items_pushed.should == count.to_i
+end
