@@ -11,4 +11,4 @@ Feature: code_instructions instruction
     And I have activated the "int_add" instruction
     When I execute the Nudge instruction "code_instructions"
     Then "block {do bool_or do int_add do int_subtract}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1

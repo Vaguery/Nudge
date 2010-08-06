@@ -8,7 +8,7 @@ Feature: bool_and instruction
     And I have pushed "<arg2>" onto the :<stack2> stack
     When I execute the Nudge instruction "<instruction>"
     Then "<result>" should be in position <posn> of the :<out_stack> stack
-    And that stack's depth should be <final_depth>
+    And stack :<out_stack> should have depth <final_depth>
     
     Examples: bool_and
       | arg1  | stack1 | arg2  | stack2 | instruction | result | posn | out_stack | final_depth |

@@ -9,7 +9,7 @@ Feature: int_if instruction
     And I have pushed "<t_or_f>" onto the bool stack
     When I execute the Nudge instruction "<instruction>"
     Then "<result>" should be in position <posn> of the :<out_stack> stack
-    And that stack's depth should be <depth>
+    And stack :<out_stack> should have depth <depth>
     
     
     Examples: int_if

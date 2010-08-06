@@ -8,7 +8,7 @@ Feature: proportion_bounded_add instruction
     And I have pushed "<arg2>" onto the :proportion stack
     When I execute the Nudge instruction "<instruction>"
     Then "<result>" should be in position -1 of the :proportion stack
-    And that stack's depth should be 1
+    And stack :proportion should have depth 1
     
     Examples: proportion_bounded_add
       | arg1 | arg2 | instruction            | result |

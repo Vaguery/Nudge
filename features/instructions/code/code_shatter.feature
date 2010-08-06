@@ -9,7 +9,7 @@ Feature: code_shatter instruction
     When I execute the Nudge instruction "code_shatter"
     Then "do a" should be in position -2 of the :code stack
     And "do b" should be in position -1 of the :code stack
-    And that stack's depth should be 2
+    And stack :code should have depth 2
     
     
   Scenario: code_shatter(0) should leave a simple block alone
@@ -17,7 +17,7 @@ Feature: code_shatter instruction
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "code_shatter"
     Then "block {do a do b}" should be in position -1 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_shatter(9) should push all the elements of a simple block onto the :code stack
@@ -26,7 +26,7 @@ Feature: code_shatter instruction
     When I execute the Nudge instruction "code_shatter"
     Then "do a" should be in position -2 of the :code stack
     And "do b" should be in position -1 of the :code stack
-    And that stack's depth should be 2
+    And stack :code should have depth 2
         
     
   Scenario: code_shatter(negative) should leave a the argument alone
@@ -34,7 +34,7 @@ Feature: code_shatter instruction
     And I have pushed "-9912" onto the :int stack
     When I execute the Nudge instruction "code_shatter"
     Then "block {block {do a} block {do b do c}}" should be in position -1 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_shatter applied to a non-block should leave a the argument alone
@@ -42,7 +42,7 @@ Feature: code_shatter instruction
     And I have pushed "1" onto the :int stack
     When I execute the Nudge instruction "code_shatter"
     Then "ref x" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_shatter(1) should only unwrap one layer of a nested code block
@@ -51,7 +51,7 @@ Feature: code_shatter instruction
     When I execute the Nudge instruction "code_shatter"
     Then "block {do a}" should be in position 0 of the :code stack
     And "do b" should be in position 1 of the :code stack
-    And that stack's depth should be 2
+    And stack :code should have depth 2
     
     
   Scenario: code_shatter(12) should totally shatter a depth-3 tree
@@ -61,7 +61,7 @@ Feature: code_shatter instruction
     Then "do a" should be in position -3 of the :code stack
     And "do b" should be in position -2 of the :code stack
     And "do c" should be in position -1 of the :code stack
-    And that stack's depth should be 3
+    And stack :code should have depth 3
     
     
   Scenario: code_shatter(0) should not change depth-3 tree
@@ -69,4 +69,4 @@ Feature: code_shatter instruction
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "code_shatter"
     Then "block {block {block {do a}} do b}" should be in position -1 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1

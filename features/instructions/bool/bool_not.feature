@@ -8,7 +8,7 @@ Feature: bool_not
     Given I have pushed "<arg1>" onto the :<stack> stack
     When I execute the Nudge instruction "<instruction_name>"
     Then "<result>" should be in position <pos1> of the :<result_stack> stack
-    And that stack's depth should be <final_depth>
+    And stack :<result_stack> should have depth <final_depth>
     
     Examples:
       | arg1  | stack | instruction_name | result | pos1 | result_stack | final_depth |

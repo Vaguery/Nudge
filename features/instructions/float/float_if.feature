@@ -9,7 +9,7 @@ Feature: float_if instruction
     And I have pushed "<t_or_f>" onto the bool stack
     When I execute the Nudge instruction "<instruction>"
     Then "<result>" should be in position <posn> of the :<out_stack> stack
-    And that stack's depth should be <depth>
+    And stack :<out_stack> should have depth <depth>
     
     Examples: float_if
     | arg1 | stack1 | arg2 | stack2 | t_or_f | instruction | result | posn | out_stack | depth |

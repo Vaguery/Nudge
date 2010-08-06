@@ -9,7 +9,7 @@ Feature: Code 'list' manipulation
     And I have pushed "2" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {do c}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -18,7 +18,7 @@ Feature: Code 'list' manipulation
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {do a do b do c}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -27,7 +27,7 @@ Feature: Code 'list' manipulation
     And I have pushed "1" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
 
     
@@ -36,7 +36,7 @@ Feature: Code 'list' manipulation
     And I have pushed "3" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -45,7 +45,7 @@ Feature: Code 'list' manipulation
     And I have pushed "4" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -54,7 +54,7 @@ Feature: Code 'list' manipulation
     And I have pushed "-4" onto the :int stack
     When I execute the Nudge instruction "code_nth_cdr"
     Then "block {do a do b do c}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     

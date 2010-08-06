@@ -8,28 +8,28 @@ Feature: code_car instruction
     Given I have pushed "block {block {ref x} ref y ref z}" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "block { ref x }" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_car should return a copy of a 1-point program
     Given I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "block {}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_car should return a copy of a reference
     Given I have pushed "ref d" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "ref d" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_car should return a copy of an instruction
     Given I have pushed "do bool_flush" onto the :code stack
     When I execute the Nudge instruction "code_car"
     Then "do bool_flush" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_car should return a copy of a value
@@ -41,6 +41,6 @@ Feature: code_car instruction
   Scenario: code_car should return an error value for an unparseable program
     Given I have pushed "12345 67 8 9" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then "code_car cannot parse an argument" should be in position -1 of the :error stack
-    And that stack's depth should be 1
+    Then "InvalidScript: code_car cannot parse an argument" should be in position -1 of the :error stack
+    And stack :code should have depth 0
     

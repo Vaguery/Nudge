@@ -9,7 +9,7 @@ Feature: code_cons instruction
     And I have pushed "block {ref x ref y}" onto the :code stack
     When I execute the Nudge instruction "code_cons"
     Then "block {do a ref x ref y}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_cons should insert a block 1st argument into the first position in a 2nd argument block
@@ -17,7 +17,7 @@ Feature: code_cons instruction
     And I have pushed "block {ref x ref y}" onto the :code stack
     When I execute the Nudge instruction "code_cons"
     Then "block {block {do foo} ref x ref y}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_cons should wrap the second argument in a block if it isn't already in one
@@ -25,7 +25,7 @@ Feature: code_cons instruction
     And I have pushed "do int_add" onto the :code stack
     When I execute the Nudge instruction "code_cons"
     Then "block {ref x do int_add}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_cons should handle nested blocks correctly
@@ -33,14 +33,14 @@ Feature: code_cons instruction
     And I have pushed "do int_add" onto the :code stack
     When I execute the Nudge instruction "code_cons"
     Then "block {block {block {}} do int_add}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     
     
   Scenario: code_cons should return an :error when it can't parse arg1
     Given I have pushed "not my affair" onto the :code stack
     And I have pushed "do int_add" onto the :code stack
     When I execute the Nudge instruction "code_cons"
-    Then "code_cons cannot parse an argument" should be in position -1 of the :error stack
+    Then "InvalidScript: code_cons cannot parse an argument" should be in position -1 of the :error stack
     And stack :code should have depth 0
     
     
@@ -48,5 +48,5 @@ Feature: code_cons instruction
     Given I have pushed "do int_add" onto the :code stack
     And I have pushed "abc defgh" onto the :code stack
     When I execute the Nudge instruction "code_cons"
-    Then "code_cons cannot parse an argument" should be in position -1 of the :error stack
+    Then "InvalidScript: code_cons cannot parse an argument" should be in position -1 of the :error stack
     And stack :code should have depth 0

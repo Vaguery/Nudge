@@ -7,6 +7,6 @@ Feature: code_execute_then_pop instruction
     Given I have pushed "do int_subtract" onto the :code stack
     When I execute the Nudge instruction "code_execute_then_pop"
     Then "block {do int_subtract do code_pop}" should be in position 0 of the :exec stack
-    And that stack's depth should be 1
+    And stack :exec should have depth 1
     And "do int_subtract" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1

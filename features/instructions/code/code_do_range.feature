@@ -29,7 +29,6 @@ Feature: code_do_range
     And "11" should be in position -1 of the :int stack
     And "10" should be in position -2 of the :int stack
     And "9" should be in position -3 of the :int stack
-    
   
     
     

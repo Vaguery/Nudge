@@ -11,7 +11,7 @@ end
 
 
 Given /^the execution counter is set to (\d+)$/ do |steps|
-  @context.points_evaluated = steps.to_i
+  @context.instance_variable_set(:@points_evaluated, steps.to_i)
 end
 
 

@@ -7,7 +7,7 @@ Feature: Integer arity-1 instructions
     Given I have pushed "<arg1>" onto the :int stack
     When I execute the Nudge instruction "<instruction>"
     Then "<result>" should be in position <posn> of the :<result_stack> stack
-    And that stack's depth should be <depth>    
+    And stack :<result_stack> should have depth <depth>    
       
       
     Examples: int_negative

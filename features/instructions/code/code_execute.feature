@@ -8,5 +8,5 @@ Feature: code_execute instruction
     Given I have pushed "do int_add" onto the :code stack
     When I execute the Nudge instruction "code_execute"
     Then "do int_add" should be in position 0 of the :exec stack
-    And that stack's depth should be 1
+    And stack :exec should have depth 1
     And stack :code should have depth 0

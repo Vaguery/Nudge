@@ -9,7 +9,7 @@ Feature: code_bundle
     And I have pushed "1" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x }" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
   
   
@@ -19,7 +19,7 @@ Feature: code_bundle
     And I have pushed "2" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x do a}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -29,7 +29,7 @@ Feature: code_bundle
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "block {}" should be in position -1 of the :code stack
-    And that stack's depth should be 3
+    And stack :code should have depth 3
     And stack :int should have depth 0
     
     
@@ -39,7 +39,7 @@ Feature: code_bundle
     And I have pushed "-12" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "ref x" should be in position -1 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
     
@@ -49,7 +49,7 @@ Feature: code_bundle
     And I have pushed "1" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "block { block {} }" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     
   
@@ -61,6 +61,6 @@ Feature: code_bundle
     And I have pushed "33" onto the :int stack
     When I execute the Nudge instruction "code_bundle"
     Then "block { ref x ref y ref z}" should be in position 0 of the :code stack
-    And that stack's depth should be 1
+    And stack :code should have depth 1
     And stack :int should have depth 0
     

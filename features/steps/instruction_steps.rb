@@ -89,10 +89,6 @@ Then /^stack :([a-z\d_]+) should have depth ([\d]+)$/  do |stack, depth|
 end
 
 
-Then /^that stack's depth should be (\d+)$/ do |depth|
-  @output_stack.depth.should == depth.to_i
-end
-
 
 Then /^no warning message should be produced$/ do
   @mistakes.rewind
