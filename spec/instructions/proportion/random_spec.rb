@@ -10,8 +10,7 @@ describe "ProportionRandom" do
   
   describe "arguments" do
     it "should take no args" do
-      ProportionRandom.should_receive(:get).exactly(0).times
-      @inst.execute
+      ProportionRandom::REQUIREMENTS.should == {}
     end
   end
   

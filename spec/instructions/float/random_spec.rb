@@ -10,8 +10,7 @@ describe "FloatRandom" do
   
   describe "arguments" do
     it "should take no args" do
-      FloatRandom.should_receive(:get).exactly(0).times
-      @inst.execute
+      FloatRandom::REQUIREMENTS.should == {}
     end
     
     it "should refer to #min_float and #max_float" do

@@ -10,8 +10,7 @@ describe "BoolRandom" do
   
   describe "arguments" do
     it "should take no args" do
-      BoolRandom.should_receive(:get).exactly(0).times
-      @inst.execute
+      BoolRandom::REQUIREMENTS.should == {}
     end
   end
   

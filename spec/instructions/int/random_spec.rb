@@ -10,8 +10,7 @@ describe "IntRandom" do
   
   describe "arguments" do
     it "should take no args" do
-      IntRandom.should_receive(:get).exactly(0).times
-      @inst.execute
+      IntRandom::REQUIREMENTS.should == {}
     end
     
     it "should refer to #min_int and #max_int" do
