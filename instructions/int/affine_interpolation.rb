@@ -10,7 +10,7 @@ class IntAffineInterpolation < NudgeInstruction
     
     result = λ * x + (1.0 - λ) * y
     
-    raise NudgeError::NaN, "result of int_affine_interpolation was infinity" if result.infinite?
+    raise NudgeError::NaN, "result of int_affine_interpolation was infinity" if result == (1.0/0)
     
     put :int, result.round
   end
