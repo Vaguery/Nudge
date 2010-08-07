@@ -64,4 +64,4 @@ Feature: Code 'list' manipulation
     When I execute the Nudge instruction "code_nth_cdr"
     Then stack :code should have depth 0
     And stack :int should have depth 0
-    And "code_nth_cdr cannot parse an argument" should be in position -1 of the :error stack
+    And the top :error should include "InvalidScript"

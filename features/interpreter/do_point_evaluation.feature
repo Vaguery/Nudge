@@ -26,6 +26,6 @@ Feature: Do point evaluation
     When I take one execution step
     Then stack :exec should have depth 0
     And stack :error should have depth 1
-    And "UnknownInstruction: be_do_be_doo not recognized" should be in position -1 of the :error stack
+    And the top :error should include "UnknownInstruction"
     And the execution counter should be 1
     

@@ -40,7 +40,7 @@ Feature: code_cons instruction
     Given I have pushed "not my affair" onto the :code stack
     And I have pushed "do int_add" onto the :code stack
     When I execute the Nudge instruction "code_cons"
-    Then "InvalidScript: code_cons cannot parse an argument" should be in position -1 of the :error stack
+    Then the top :error should include "InvalidScript"
     And stack :code should have depth 0
     
     
@@ -48,5 +48,5 @@ Feature: code_cons instruction
     Given I have pushed "do int_add" onto the :code stack
     And I have pushed "abc defgh" onto the :code stack
     When I execute the Nudge instruction "code_cons"
-    Then "InvalidScript: code_cons cannot parse an argument" should be in position -1 of the :error stack
+    Then the top :error should include "InvalidScript"
     And stack :code should have depth 0

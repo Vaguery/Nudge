@@ -42,4 +42,4 @@ Feature: code_cdr instruction
     Given I have pushed "flibbertigibbet" onto the :code stack
     When I execute the Nudge instruction "code_cdr"
     And stack :code should have depth 0
-    And "InvalidScript: code_cdr cannot parse an argument" should be in position -1 of the :error stack
+    And the top :error should include "InvalidScript"

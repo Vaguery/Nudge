@@ -52,7 +52,7 @@ Feature: exec_do_count
     When I execute the Nudge instruction "exec_do_count"
     And stack :exec should have depth 0
     And stack :int should have depth 0
-    And "NegativeCounter: exec_do_count called with negative counter" should be in position -1 of the :error stack
+    And the top :error should include "NegativeCounter"
     
     
   Scenario: exec_do_count does not push a counter value

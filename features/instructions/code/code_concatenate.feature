@@ -47,12 +47,11 @@ Feature: code_concatenate instruction
     Given I have pushed "gobbledegook" onto the :code stack
     And I have pushed "ref b" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "InvalidScript: code_concatenate cannot parse an argument" should be in position -1 of the :error stack
+    Then the top :error should include "InvalidScript"
 
 
   Scenario: code_concatenate should return an error when its arg2 can't be parsed
     Given I have pushed "ref h" onto the :code stack
     And I have pushed "junkety junk" onto the :code stack
     When I execute the Nudge instruction "code_concatenate"
-    Then "InvalidScript: code_concatenate cannot parse an argument" should be in position -1 of the :error stack
-
+    Then the top :error should include "InvalidScript"

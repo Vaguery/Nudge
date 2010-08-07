@@ -19,6 +19,11 @@ Cucumber::Rake::Task.new(:int) do |t|
   t.cucumber_opts = "features/instructions/int --format progress -r features/steps -r nudge.rb"
 end
 
+Cucumber::Rake::Task.new(:name) do |t|
+  t.cucumber_opts = "features/instructions/name --format progress -r features/steps -r nudge.rb"
+end
+
+
 Cucumber::Rake::Task.new(:float) do |t|
   t.cucumber_opts = "features/instructions/float --format progress -r features/steps -r nudge.rb"
 end

@@ -43,7 +43,7 @@ Feature: code_contains? instruction
     And I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_contains?"
     Then stack :code should have depth 0
-    And "InvalidScript: code_contains? cannot parse an argument" should be in position -1 of the :error stack 
+    And the top :error should include "InvalidScript"
 
 
   Scenario: code_contains? should return an :error if its arg2 can't be parsed
@@ -51,5 +51,5 @@ Feature: code_contains? instruction
     And I have pushed "jsjnkjnsfksfd" onto the :code stack
     When I execute the Nudge instruction "code_contains?"
     Then stack :code should have depth 0
-    And "InvalidScript: code_contains? cannot parse an argument" should be in position -1 of the :error stack 
+    And the top :error should include "InvalidScript"
     

@@ -65,7 +65,7 @@ Feature: Iteration control structures
     Then stack :exec should have depth 0
     And stack :code should have depth 0
     And stack :int should have depth 0
-    And "NegativeCounter: code_do_count called with negative counter" should be in position -1 of the :error stack
+    And the top :error should include "NegativeCounter"
     
   
   Scenario: the item that's copied into the loop macro should be a different object from the item above it

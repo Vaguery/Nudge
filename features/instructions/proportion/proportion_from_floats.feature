@@ -48,6 +48,6 @@ Feature: Proportion from floats
     Given I have pushed "-1.0" onto the :float stack
     And I have pushed "0.0" onto the :float stack
     When I execute the Nudge instruction "proportion_from_floats"
-    Then "NaN: proportion_from_floats divided by zero" should be in position -1 of the :error stack
+    Then the top :error should include "NaN"
     And stack :float should have depth 0
     And stack :proportion should have depth 0

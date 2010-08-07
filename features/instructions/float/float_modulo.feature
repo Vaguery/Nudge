@@ -8,7 +8,7 @@ Feature: float_modulo instruction
     And I have pushed "<arg2>" onto the :float stack
     When I execute the Nudge instruction "<instruction>"
     Then something close to "<result>" should be in position -1 of the :float stack
-    And "<error_msg>" should be in position -1 of the :error stack
+    And the top :error should include "<error_msg>"
     And stack :float should have depth <d>
       
     
@@ -25,7 +25,7 @@ Feature: float_modulo instruction
       | -1.1 | -6.7 | float_modulo | -1.1   |           | 1 |
       
     Examples: float_modulo emits an :error for dividing by 0
-      | arg1 | arg2 | instruction  | result | error_msg                                        | d |
-      | 2.2  | 0.0  | float_modulo |        | DivisionByZero: cannot perform float modulo zero | 0 |
-      | -2.2 | 0.0  | float_modulo |        | DivisionByZero: cannot perform float modulo zero | 0 |
-      | 2.2  | -0.0 | float_modulo |        | DivisionByZero: cannot perform float modulo zero | 0 |
+      | arg1 | arg2 | instruction  | result | error_msg      | d |
+      | 2.2  | 0.0  | float_modulo |        | DivisionByZero | 0 |
+      | -2.2 | 0.0  | float_modulo |        | DivisionByZero | 0 |
+      | 2.2  | -0.0 | float_modulo |        | DivisionByZero | 0 |

@@ -26,10 +26,10 @@ Feature: Float log e
   Scenario: 0.0 should produce an :error
     Given I have pushed "0.0" onto the :float stack
     When I execute the Nudge instruction "float_log_e"
-    Then "NaN: result of log_e was not a float" should be in position -1 of the :error stack
+    Then the top :error should include "NaN"
   
   
   Scenario: negative values should produce an :error
     Given I have pushed "-12.1" onto the :float stack
     When I execute the Nudge instruction "float_log_e"
-    Then "NaN: result of log_e was not a float" should be in position -1 of the :error stack
+    Then the top :error should include "NaN"

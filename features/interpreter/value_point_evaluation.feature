@@ -27,4 +27,4 @@ Feature: Value point evaluation
     When I take one execution step
     Then stack :exec should have depth 0
     And stack :missing should have depth 0
-    And "«missing» has no value" should be in position -1 of the :error stack
+    And the top :error should include "EmptyValue"

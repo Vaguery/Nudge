@@ -41,6 +41,6 @@ Feature: code_car instruction
   Scenario: code_car should return an error value for an unparseable program
     Given I have pushed "12345 67 8 9" onto the :code stack
     When I execute the Nudge instruction "code_car"
-    Then "InvalidScript: code_car cannot parse an argument" should be in position -1 of the :error stack
+    Then the top :error should include "InvalidScript"
     And stack :code should have depth 0
     

@@ -48,7 +48,7 @@ Feature: Proportion from ints
     Given I have pushed "-100" onto the :int stack
     And I have pushed "0" onto the :int stack
     When I execute the Nudge instruction "proportion_from_ints"
-    Then "NaN: proportion_from_ints divided by zero" should be in position -1 of the :error stack
+    Then the top :error should include "NaN"
     And stack :int should have depth 0
     And stack :proportion should have depth 0
     

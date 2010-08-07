@@ -18,4 +18,4 @@ Feature: code_name_lookup instruction
     And I have pushed "y" onto the :name stack
     When I execute the Nudge instruction "code_name_lookup"
     Then stack :code should have depth 0
-    And "UnboundName: code_name_lookup referenced an unbound name" should be in position -1 of the :error stack
+    And the top :error should include "UnboundName"
