@@ -17,3 +17,11 @@ Feature: code_parses? instruction
     When I execute the Nudge instruction "code_parses?"
     Then "false" should be in position 0 of the :bool stack
     And stack :code should have depth 0
+    
+    
+  Scenario: code_parses? should be false if the :code is an empty string 
+    Given I have pushed "" onto the :code stack
+    When I execute the Nudge instruction "code_parses?"
+    Then "false" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
+  
