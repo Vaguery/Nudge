@@ -120,9 +120,9 @@ Then /^the proportion of "([^"]*)" on the :([a-z\d_]+) stack should fall between
 end
 
 
-Then /^the proportion of values less than ([0-9.]+) on the :float stack should fall between ([0-9.]+) and ([0-9.]+)$/ do |cutoff, lower_bound, upper_bound|
-  count = @context.stacks[:float].count {|v| v.to_f < cutoff.to_f}
-  (lower_bound.to_f..upper_bound.to_f).should include(count/@context.stacks[:float].length.to_f)
+Then /^the proportion of values less than ([0-9.]+) on the :([a-z\d_]+) stack should fall between ([0-9.]+) and ([0-9.]+)$/ do |cutoff, stack, lower_bound, upper_bound|
+  count = @context.stacks[stack.intern].count {|v| v.to_f < cutoff.to_f}
+  (lower_bound.to_f..upper_bound.to_f).should include(count/@context.stacks[stack.intern].length.to_f)
 end
 
 

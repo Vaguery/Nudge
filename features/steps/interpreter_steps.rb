@@ -87,10 +87,10 @@ Then /^stack :([^"]*) should have pushed (\d+) items$/ do |stackname, count|
   @context.stacks[stackname.intern].items_pushed.should == count.to_i
 end
 
-Then /^stack :float should not contain a value less than ([0-9.]+)$/ do |lower_limit|
-  @context.stacks[:float].count {|result| result.to_f < lower_limit.to_f}.should == 0
+Then /^stack :([^"]*) should not contain a value less than ([0-9.]+)$/ do |stack, lower_limit|
+  @context.stacks[stack.intern].count {|result| result.to_f < lower_limit.to_f}.should == 0
 end
 
-Then /^stack :float should not contain a value greater than ([0-9.]+)$/ do |upper_limit|
-  @context.stacks[:float].count {|result| result.to_f < upper_limit.to_f}.should == 0
+Then /^stack :([^"]*) should not contain a value greater than ([0-9.]+)$/ do |stack, upper_limit|
+  @context.stacks[stack.intern].count {|result| result.to_f > upper_limit.to_f}.should == 0
 end
