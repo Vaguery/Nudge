@@ -29,12 +29,21 @@ Feature: code_contains? instruction
     And stack :code should have depth 0
     
     
+  Scenario: works with value points
+    Given I have pushed "block {value «int» do a} \n«int» 9" onto the :code stack
+    And I have pushed "value «int» \n«int» 9" onto the :code stack
+    When I execute the Nudge instruction "code_contains?"
+    Then "true" should be in position 0 of the :bool stack
+    And stack :code should have depth 0
+    
+    
+    
   Scenario: code_contains? should return an :error if its arg1 can't be parsed
     Given I have pushed "askjdnkajsndkas" onto the :code stack
     And I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_contains?"
     Then stack :code should have depth 0
-    And "code_contains? cannot parse an argument" should be in position -1 of the :error stack 
+    And "InvalidScript: code_contains? cannot parse an argument" should be in position -1 of the :error stack 
 
 
   Scenario: code_contains? should return an :error if its arg2 can't be parsed
@@ -42,5 +51,5 @@ Feature: code_contains? instruction
     And I have pushed "jsjnkjnsfksfd" onto the :code stack
     When I execute the Nudge instruction "code_contains?"
     Then stack :code should have depth 0
-    And "code_contains? cannot parse an argument" should be in position -1 of the :error stack 
+    And "InvalidScript: code_contains? cannot parse an argument" should be in position -1 of the :error stack 
     

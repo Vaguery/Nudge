@@ -10,8 +10,8 @@ Feature: code_flatten instruction
       Then "block {do a do b}" should be in position -1 of the :code stack
       And stack :code should have depth 1
       And stack :int should have depth 0
-
-
+      
+      
     Scenario: code_flatten(0) should leave a simple block alone
       Given I have pushed "block {do a do b}" onto the :code stack
       And I have pushed "0" onto the :int stack
@@ -59,6 +59,7 @@ Feature: code_flatten instruction
       Then "block {do a do b do c}" should be in position -1 of the :code stack
       And stack :code should have depth 1
       And stack :int should have depth 0
+      
       
       
     Scenario: code_flatten(2) should somewhat flatten a depth-3 tree

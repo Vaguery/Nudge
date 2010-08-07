@@ -9,6 +9,6 @@ class CodeContainsQ < NudgeInstruction
     raise NudgeError::InvalidScript,
       "code_contains? cannot parse an argument" if a.is_a?(NilPoint) || b.is_a?(NilPoint)
     
-    put :bool, a.to_script.include?(b.to_script)
+    put :bool, a.to_script.strip.include?(b.to_script.strip)
   end
 end
