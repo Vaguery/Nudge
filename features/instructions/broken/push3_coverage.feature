@@ -55,7 +55,7 @@ Feature: Push3 coverage
       | code_from_name          | CODE.FROMNAME     |
       | code_gsub               | CODE.SUBST        |
       | code_if                 | CODE.IF           |
-      | code_instructions       | CODE.INSTRUCTIONS |
+      # | code_instructions       | CODE.INSTRUCTIONS |
       | code_list               | CODE.LIST         |
       | code_member?            | CODE.MEMBER       |
       | code_name_lookup        | CODE.DEFINITION   |
@@ -68,7 +68,7 @@ Feature: Push3 coverage
       | code_pop                | CODE.POP          |
       | code_position           | CODE.POSITION     |
       | code_quote              | CODE.QUOTE        |
-      | code.random             | CODE.RAND         |
+      # | code.random             | CODE.RAND         |
       | code_replace_nth_point  | CODE.INSERT       |
       | code_rotate             | CODE.ROT          |
       | code_shove              | CODE.SHOVE        |

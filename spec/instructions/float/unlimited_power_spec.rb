@@ -28,6 +28,14 @@ describe "FloatUnlimitedPower" do
       @context.stacks[:error][-1].should include("NaN")
     end
     
+    it "should create an :error if the result is Complex" do
+      @context.stacks[:float] << "-1.0" << "0.5"
+      @context.stacks[:exec] << NudgePoint.from("do float_unlimited_power")
+      @context.run
+      @context.stacks[:error][-1].should include("NaN")
+    end
+    
+    
     it "should create an :error if it tries to divide by zero" do
       @context.stacks[:float] << "0.0" << "-3.0"
       @context.stacks[:exec] << NudgePoint.from("do float_unlimited_power")
