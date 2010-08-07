@@ -22,7 +22,6 @@ Feature: Float random
     And stack :float should not contain a value greater than 11.1
     
     
-    
   # http://en.wikipedia.org/wiki/Checking_whether_a_coin_is_fair
   Scenario: should return a random value with equal probability 
     Given I have pushed "block {value «int» do exec_do_count do float_random}\n«int»20000" onto the :exec stack

@@ -29,6 +29,34 @@ describe "NudgeExecutable" do
     end
   end
   
+  
+  describe "default options" do
+    it "has a default point_limit of 3000" do
+      NudgeExecutable.new("").instance_variable_get(:@point_limit).should == 3000
+    end 
+    
+    it "has a default time_limit of 1" do
+      NudgeExecutable.new("").instance_variable_get(:@time_limit).should == 1
+    end
+    
+    it "has a default min_float of -100.0" do
+      NudgeExecutable.new("").instance_variable_get(:@min_float).should == -100.0
+    end
+    
+    it "has a default max_float of 100.0" do
+      NudgeExecutable.new("").instance_variable_get(:@max_float).should == 100.0
+    end
+    
+    it "has a default min_int of -100" do
+      NudgeExecutable.new("").instance_variable_get(:@min_int).should == -100
+    end
+    
+    it "has a default max_int of 100" do
+      NudgeExecutable.new("").instance_variable_get(:@max_int).should == 100
+    end
+  end
+  
+  
   describe "#set_options (options: Hash)" do
     it "sets @point_limit" do
       exe = NudgeExecutable.new("ref x")
@@ -46,16 +74,16 @@ describe "NudgeExecutable" do
     
     it "sets @min_float" do
       exe = NudgeExecutable.new("ref x")
-      exe.set_options(:float_range => 5..10)
+      exe.set_options(:float_range => 5.1..10.2)
       
-      exe.instance_variable_get(:@min_float).should == 5.0
+      exe.instance_variable_get(:@min_float).should == 5.1
     end
     
     it "sets @max_float" do
       exe = NudgeExecutable.new("ref x")
-      exe.set_options(:float_range => 5..10)
+      exe.set_options(:float_range => 5.1..10.1)
       
-      exe.instance_variable_get(:@max_float).should == 10.0
+      exe.instance_variable_get(:@max_float).should == 10.1
     end
     
     it "sets @min_int" do

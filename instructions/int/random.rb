@@ -4,6 +4,6 @@ class IntRandom < NudgeInstruction
     min = @executable.instance_variable_get(:@min_int)
     max = @executable.instance_variable_get(:@max_int)
     
-    put :int, (rand(max - min) + min).to_i
+    put :int, (Kernel.rand * (max - min + 1)).to_i + min
   end
 end

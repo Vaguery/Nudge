@@ -66,7 +66,7 @@ Then /^the result should be a NilPoint$/ do
 end
 
 Then /^the interpreter's ([^"]*) should be ([-0-9.]+)$/ do |variable_name, value|
-  @context.instance_variable_get(variable_name.intern).to_s.should == value
+  @context.instance_variable_get(variable_name.intern).should == eval(value)
 end
 
 
