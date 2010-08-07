@@ -116,7 +116,11 @@ Then /^the object_id of the item bound to name "([^"]*)" should not be identical
 end
 
 Then /^the :([a-z\d_]+) stack should be (\[(?:"[^"]*",? ?)+\])$/ do |stack, stack_image|
-  @context.stacks[stack.intern].inspect.should == stack_image
+  if stack == "exec"
+    @context.stacks[stack.intern].collect {|item| item.to_script.strip}.inspect.should == stack_image
+  else
+    @context.stacks[stack.intern].inspect.should == stack_image
+  end
 end
 
 
@@ -136,4 +140,10 @@ Then /^name "([^"]*)" should be bound to "([^"]*)"$/ do |name, value|
   else
     bound_value.instance_variable_get(:@value).should == value
   end
+end
+
+
+Then /^there should be no repeated object_ids in the :exec stack$/ do
+  unique_ids = @context.stacks[:exec].collect {|item| item.object_id}.uniq
+  @context.stacks[:exec].length.should == unique_ids.length
 end
