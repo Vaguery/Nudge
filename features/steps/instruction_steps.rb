@@ -120,6 +120,13 @@ Then /^the proportion of "([^"]*)" on the :([a-z\d_]+) stack should fall between
 end
 
 
+Then /^the proportion of values less than ([0-9.]+) on the :float stack should fall between ([0-9.]+) and ([0-9.]+)$/ do |cutoff, lower_bound, upper_bound|
+  count = @context.stacks[:float].count {|v| v.to_f < cutoff.to_f}
+  (lower_bound.to_f..upper_bound.to_f).should include(count/@context.stacks[:float].length.to_f)
+end
+
+
+
 Then /^the :([a-z\d_]+) stack should be (\[(?:"[^"]*",? ?)+\])$/ do |stack, stack_image|
   if stack == "exec"
     @context.stacks[stack.intern].collect {|item| item.to_script.strip}.inspect.should == stack_image

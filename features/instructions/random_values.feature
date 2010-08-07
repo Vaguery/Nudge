@@ -5,52 +5,6 @@ Feature: random value instructions
   
     
     
-  Scenario: int_random default bounds
-    Given no changes have been made to :int random bounds
-    When I execute the Nudge instruction 'do int_random'
-    Then a new :int value should be pushed
-    And its value should be a uniform sample from the range [-100, 100]
-    
-    
-  Scenario: int_random with bounds changed
-    Given the :int random minimum bound is 5
-    And the :int random maximum bound is 7
-    When I execute the Nudge instruction 'do int_random'
-    Then a new :int value should be pushed
-    And its value should be a uniform sample from the range [5, 7]
-    
-    
-  Scenario: int_random with bounds crossed
-    Given the :int random minimum bound is 800
-    And the :int random maximum bound is 12
-    When I execute the Nudge instruction 'do int_random'
-    Then a new :int value should be pushed
-    And its value should (definitely) be 12
-    
-    
-  Scenario: float_random default bounds
-    Given no changes have been made to :float random bounds
-    When I execute the Nudge instruction 'do float_random'
-    Then a new :float value should be pushed
-    And its value should be a uniform sample from the range [-1000.0, 1000.0]
-    
-    
-  Scenario: float_random with bounds changed
-    Given the :float random minimum bound is 5.0
-    And the :float random maximum bound is 7.0
-    When I execute the Nudge instruction 'do float_random'
-    Then a new :float value should be pushed
-    And its value should be a uniform sample from the range [5.0, 7.0]
-    
-    
-  Scenario: float_random with bounds crossed
-    Given the :float random minimum bound is 111.111
-    And the :float random maximum bound is 8.8
-    When I execute the Nudge instruction 'do float_random'
-    Then a new :float value should be pushed
-    And its value should (definitely) be 8.8
-    
-    
   Scenario: proportion_random default bounds
     Given no changes have been made to :proportion random bounds
     When I execute the Nudge instruction 'do proportion_random'
