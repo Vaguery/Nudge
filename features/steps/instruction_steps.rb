@@ -38,11 +38,6 @@ Given /^"([^"]*)" is bound to a :([a-z\d_]+) with value "([^"]*)"$/ do |var_name
 end
 
 
-Given /^I have stubbed the random value method so it produces an* :([a-z\d_]+) with value "([^"]*)"$/ do |type, result|
-  pending # express the regexp above with the code you wish you had
-end
-
-
 
 When /^I execute the Nudge instruction "([^"]*)"$/ do |instruction_name|
   @context.stacks[:exec] << DoPoint.new(instruction_name.intern)
@@ -107,13 +102,23 @@ Then /^the top :error should include "([^"]*)"/ do |message|
   end
 end
 
-Then /^the result should be a random :([a-z\d_]+) value$/ do |type|
-  pending
-end
 
 Then /^the object_id of the item bound to name "([^"]*)" should not be identical to the original$/ do |name|
   @context.variable_bindings[name.intern].should_not == @stored_object_id
 end
+
+
+Then /^stack :([a-z\d_]+) should include "([^"]*)"$/ do |stack, value|
+  @context.stacks[stack.intern].should include(value)
+end
+
+
+Then /^the proportion of "([^"]*)" on the :([a-z\d_]+) stack should fall between ([0-9.]+) and ([0-9.]+)$/ do |outcome, stack, lower_bound, upper_bound|
+  stack_of_interest = @context.stacks[stack.intern]
+  (lower_bound.to_f..upper_bound.to_f).should include(
+    stack_of_interest.count(outcome)/stack_of_interest.length.to_f)
+end
+
 
 Then /^the :([a-z\d_]+) stack should be (\[(?:"[^"]*",? ?)+\])$/ do |stack, stack_image|
   if stack == "exec"
@@ -147,3 +152,6 @@ Then /^there should be no repeated object_ids in the :exec stack$/ do
   unique_ids = @context.stacks[:exec].collect {|item| item.object_id}.uniq
   @context.stacks[:exec].length.should == unique_ids.length
 end
+
+
+

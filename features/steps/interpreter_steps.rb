@@ -19,6 +19,14 @@ Given /^the execution limit is set to (\d+)$/ do |limit|
   Outcome::POINT_LIMIT = limit.to_i
 end
 
+Given /^I have set the Interpreter's termination point_limit to (\d+)$/ do |limit|
+  @context.instance_variable_set(:@point_limit, limit.to_i)
+end
+
+Given /^I have set the Interpreter's termination time_limit to (\d+)$/ do |limit|
+  @context.instance_variable_set(:@time_limit,limit.to_i)
+end
+
 
 Given /^I have pushed an instruction called "([^"]*)" onto the :exec stack$/ do |inst|
   @context.stacks[:exec] = [DoPoint.new(inst)]
@@ -43,6 +51,7 @@ end
 Then /^the result should be a NilPoint$/ do
   @feature_tree.should be_a_kind_of(NilPoint)
 end
+
 
 
 Then /^its script should be "([^"]*)"$/ do |script|

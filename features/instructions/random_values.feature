@@ -3,18 +3,6 @@ Feature: random value instructions
   As a modeler
   I want instructions that sample random values for many types
   
-  Scenario: bool_random with default bias
-    Given the boolean random bias is the default
-    When I execute the Nudge instruction 'do bool_random'
-    Then a new :bool value should be pushed
-    And its value should be 'true' or 'false' with equal probability
-    
-    
-  Scenario: bool_random with bias
-    Given the boolean random bias is 0.8
-    When I execute the Nudge instruction 'do bool_random'
-    Then a new :bool value should be pushed
-    And its value should be 'true' with probability 0.8
     
     
   Scenario: int_random default bounds
