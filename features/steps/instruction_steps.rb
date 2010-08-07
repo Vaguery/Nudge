@@ -102,6 +102,11 @@ Then /^the top :error should include "([^"]*)"/ do |message|
   end
 end
 
+Then /^the :error stack should not include "([^"]*)"/ do |phrase|
+  @context.stacks[:error].count {|err| err.include?(phrase)}.should == 0
+end
+
+
 
 Then /^the object_id of the item bound to name "([^"]*)" should not be identical to the original$/ do |name|
   @context.variable_bindings[name.intern].should_not == @stored_object_id

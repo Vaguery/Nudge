@@ -22,11 +22,10 @@ Feature: Do point evaluation
   
   
   Scenario: instruction handling when instruction is inactive or unknown
-    Given I have pushed an instruction called "be_dü_be_doo" onto the :exec stack
+    Given I have pushed "do be_do_be_doo" onto the :exec stack
     When I take one execution step
     Then stack :exec should have depth 0
     And stack :error should have depth 1
+    And "UnknownInstruction: be_do_be_doo not recognized" should be in position -1 of the :error stack
     And the execution counter should be 1
-    
-    
     

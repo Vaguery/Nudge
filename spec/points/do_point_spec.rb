@@ -18,4 +18,11 @@ describe "DoPoint" do
       point.evaluate(exe)
     end
   end
+  
+  describe "error handling" do
+    it "should push an :error if the @instruction_name is unknown" do
+      woops = NudgeExecutable.new("do foo_bar").run
+      woops.stacks[:error][-1].should == "UnknownInstruction: foo_bar not recognized"
+    end
+  end
 end
