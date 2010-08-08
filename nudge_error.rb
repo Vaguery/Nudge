@@ -2,6 +2,7 @@
 class NudgeError < StandardError
   %w[ DivisionByZero
       EmptyValue
+      InvalidIndex
       InvalidScript
       MissingArguments
       NaN
