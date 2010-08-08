@@ -7,6 +7,7 @@ class NudgeError < StandardError
       MissingArguments
       NaN
       NegativeCounter
+      NotFound
       OutermostPointOperation
       PointIndexTooLarge
       TimeLimitExceeded

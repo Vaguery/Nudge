@@ -8,7 +8,8 @@ class CodeContainsQ < NudgeInstruction
     
     raise NudgeError::InvalidScript,
       "code_contains? cannot parse an argument" if arg1.is_a?(NilPoint) || arg2.is_a?(NilPoint)
-    put :bool, tree_match(arg1, arg2, false)
+    result = arg1.is_a?(BlockPoint) ? tree_match(arg1, arg2, false) : false
+    put :bool, result
   end
   
   

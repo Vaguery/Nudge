@@ -8,6 +8,7 @@ require File.expand_path("../nudge", File.dirname(__FILE__))
    MissingArguments
    NaN
    NegativeCounter
+   NotFound
    OutermostPointOperation
    PointIndexTooLarge
    TimeLimitExceeded

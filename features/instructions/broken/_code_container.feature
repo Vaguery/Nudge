@@ -1,9 +1,17 @@
-Feature: Code 'list' manipulation
-  In order to emulate the classical LISP-like languages
+Feature: Code container
+  In order to manipulate complex :code trees
   As a modeler
-  I want Nudge instructions for car, cdr, cons and related methods
+  I want code_container to find the enclosing block for a piece of a script
     
-    
+  
+  Scenario: code_container should return an :error if arg1 isn't a block
+    Given I have pushed "ref g" onto the :code stack
+    And I have pushed "do int_add" onto the :code stack
+    When I execute the Nudge instruction "code_container"
+    Then stack :code should have depth 0
+    And the top :error should include "InvalidIndex"
+  
+  
   Scenario: code_container should return the first block that contains the 2nd arg in its root
     Given I have pushed "block {block {do a ref x}}" onto the :code stack
     And I have pushed "ref x" onto the :code stack
@@ -35,6 +43,8 @@ Feature: Code 'list' manipulation
     Then stack :code should have depth 1
     And "block {ref z block {} ref z}" should be in position -1 of the :code stack    
     
+    
+  
     
   Scenario: code_container should return the correct footnotes
     Given I have pushed "block {block {value «int» ref x}} \n«int» 99" onto the :code stack
