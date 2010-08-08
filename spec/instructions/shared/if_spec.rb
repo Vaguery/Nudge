@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require File.expand_path("../../../nudge", File.dirname(__FILE__))
+require 'spec_helper'
 
 %w(Code Float Int Name Proportion).each do |name|
   exe = NudgeExecutable.new("block {}").step
