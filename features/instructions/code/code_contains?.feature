@@ -37,7 +37,6 @@ Feature: code_contains? instruction
     And stack :code should have depth 0
     
     
-    
   Scenario: code_contains? should return an :error if its arg1 can't be parsed
     Given I have pushed "askjdnkajsndkas" onto the :code stack
     And I have pushed "block {}" onto the :code stack
