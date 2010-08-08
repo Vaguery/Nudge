@@ -82,8 +82,9 @@ describe "CodeNthCdr" do
       
       it "generates an error" do
         @context.stacks[:int] << "2"
-        @inst.execute
-        @context.stacks[:error][-1].should == "foo"
+        @context.stacks[:exec] << NudgePoint.from("do code_nth_cdr")
+        @context.run
+        @context.stacks[:error][-1].should include("InvalidScript")
       end
     end
   end
@@ -99,7 +100,8 @@ describe "CodeNthCdr" do
     it "should push an :error when it fails" do
       @context.stacks[:code] << "foo bar"
       @context.stacks[:int] << "1"
-      @inst.execute
+      @context.stacks[:exec] << NudgePoint.from("do code_nth_cdr")
+      @context.run
       @context.stacks[:error].length.should == 1
       @context.stacks[:code].length.should == 0
     end
