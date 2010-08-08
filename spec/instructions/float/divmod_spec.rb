@@ -9,7 +9,7 @@ describe "FloatDivmod" do
   end
   
   describe "arguments" do
-    it "should take no args" do
+    it "should take two :float args" do
       FloatDivmod::REQUIREMENTS.should == {float:2}
     end
   end

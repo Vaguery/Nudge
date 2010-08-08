@@ -29,3 +29,9 @@ Feature: float_modulo instruction
       | 2.2  | 0.0  | float_modulo |        | DivisionByZero | 0 |
       | -2.2 | 0.0  | float_modulo |        | DivisionByZero | 0 |
       | 2.2  | -0.0 | float_modulo |        | DivisionByZero | 0 |
+      
+    Examples: float_modulo emits an :error when it produces an Infinite answer
+      | arg1      | arg2    | instruction  | result | error_msg | d |
+      | 5.9e+265  | 1.0e-89 | float_modulo |        | NaN       | 0 |
+      | -5.9e+265 | 1.0e-89 | float_modulo |        | NaN       | 0 |
+    
