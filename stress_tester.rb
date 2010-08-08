@@ -16,9 +16,10 @@ puts "points, steps, time, :bool, :code, :error, :exec, :float, :int, :proportio
     puts "#{NudgePoint.from(script).points}, #{o.points_evaluated}, #{o.time_elapsed}, #{o.stacks[:bool].length}, #{o.stacks[:code].length}, #{o.stacks[:error].length}, #{o.stacks[:exec].length}, #{o.stacks[:float].length}, #{o.stacks[:int].length}, #{o.stacks[:proportion].length}"
   
   rescue=> err
-    puts err
+    puts "----------"
+    puts "FAILED after #{exe.points_evaluated} steps with err \"#{err}\""
+    puts "----------"
     puts script
-    puts o.stacks.inspect
-    break
+    puts "----------"
   end
 end

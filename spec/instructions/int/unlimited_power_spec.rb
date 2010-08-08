@@ -28,6 +28,15 @@ describe "IntUnlimitedPower" do
       @context.stacks[:error][-1].should include("NaN")
     end
     
+    
+    it "should create an :error if the result is -Infinity" do
+      @context.stacks[:int] << "-48888888" << "999999999"
+      @context.stacks[:exec] << NudgePoint.from("do int_unlimited_power")
+      @context.run
+      @context.stacks[:error][-1].should include("NaN")
+    end
+    
+    
     it "should create an :error if it tries to divide by zero" do
       @context.stacks[:int] << "0" << "-3"
       @context.stacks[:exec] << NudgePoint.from("do int_unlimited_power")

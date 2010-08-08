@@ -15,7 +15,7 @@ class IntUnlimitedPower < NudgeInstruction
     
     $VERBOSE = old_verbose
     
-    raise NudgeError::NaN, "result of int_power was Infinity" if result.to_s == "Infinity"
+    raise NudgeError::NaN, "result of int_power was Infinity" if result.abs == (1.0/0)
     
     put :int, result.to_i
   rescue NoMethodError
