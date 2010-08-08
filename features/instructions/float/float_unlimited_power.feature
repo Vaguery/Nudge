@@ -30,9 +30,11 @@ Feature: float_unlimited_power instruction
       | -12.8 | 3.1  |        | NaN       | 0 |
       | -64.0 | 0.5  |        | NaN       | 0 |
 
-    Examples: float_unlimited_power emits an :error when it returns Infinity
-      | arg1    | arg2         | result | error_msg | d |
-      | 99999.0 | 9999999999.0 |        | NaN       | 0 |
+    Examples: float_unlimited_power emits an :error when it returns Infinity or -Infinity
+      | arg1     | arg2         | result | error_msg | d |
+      | 99999.0  | 9999999999.0 |        | NaN       | 0 |
+      | -99999.0 | 9999999999.0 |        | NaN       | 0 |
+      
       
     Examples: float_unlimited_power emits an :error when it takes a negative exponent of 0.0
       | arg1 | arg2 | result | error_msg | d |

@@ -23,9 +23,11 @@ Feature: int_unlimited_power
     | -4   | -2   | 0      | 1     |       |
     | -4   | -2   | 0      | 1     |       |
       
-    Examples: int_unlimited_power emits an :error for Infinity results
-    | arg1  | arg2    | result | depth | error                                 |
-    | 77777 | 9999999 |        | 0     | NaN: result of int_power was Infinity |
+    Examples: int_unlimited_power emits an :error for Infinity/-Infinity results
+    | arg1   | arg2    | result | depth | error |
+    | 77777  | 9999999 |        | 0     | NaN   |
+    | -77777 | 9999999 |        | 0     | NaN   |
+    
     
     Examples: int_unlimited_power emits an :error for dividing by zero results
     | arg1 | arg2 | result | depth | error          |

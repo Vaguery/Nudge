@@ -30,7 +30,12 @@ Feature: float_divmod instruction
       
       
     Examples: float_divmod emits an :error for dividing by 0
-      | arg1 | arg2 | q | r | depth | error                                        |
-      | 3.0  | 0.0  |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
-      | 0.0  | 0.0  |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
-      | 0.0  | -0.0 |   |   | 0     | DivisionByZero: cannot divide a float by 0.0 |
+      | arg1 | arg2 | q | r | depth | error          |
+      | 3.0  | 0.0  |   |   | 0     | DivisionByZero |
+      | 0.0  | 0.0  |   |   | 0     | DivisionByZero |
+      | 0.0  | -0.0 |   |   | 0     | DivisionByZero |
+
+    Examples: float_divmod emits an :error when results are Infinite
+      | arg1      | arg2    | q | r | depth | error |
+      | 5.9e+265  | 1.0e-89 |   |   | 0     | NaN   |
+      | -5.9e+265 | 1.0e-89 |   |   | 0     | NaN   |
