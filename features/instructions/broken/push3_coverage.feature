@@ -29,52 +29,52 @@ Feature: Push3 coverage
       | bool_yankdup    | BOOLEAN.YANKDUP     |
 
     Examples: Code
-       | instruction             | PUSH3             |
-       | code_atom?              | CODE.ATOM         |
-       | code_backbone_points    | CODE.LENGTH       |
-       | code_car                | CODE.CAR          |
-       | code_cdr                | CODE.CDR          |
-       | code_concatenate        | CODE.APPEND       |
-       | code_cons               | CODE.CONS         |
-       | code_container          | CODE.CONTAINER    |
-       | code_contains?          | CODE.CONTAINS     |
-       | code_define             | CODE.DEFINE       |
-       | code_depth              | CODE.STACKDEPTH   |
-       | code_discrepancy        | CODE.DISCREPANCY  |
-       | code_do_count           | CODE.DO*COUNT     |
-       | code_do_range           | CODE.DO*RANGE     |
-       | code_do_times           | CODE.DO*TIMES     |
-       | code_duplicate          | CODE.DUP          |
-       | code_equal?             | CODE.=            |
-       | code_execute            | CODE.DO*          |
-       | code_execute_then_pop   | CODE.DO           |
-       | code_flush              | CODE.FLUSH        |
-       | code_from_bool          | CODE.FROMBOOLEAN  |
-       | code_from_float         | CODE.FROMFLOAT    |
-       | code_from_int           | CODE.FROMINTEGER  |
-       | code_from_name          | CODE.FROMNAME     |
-       | code_gsub               | CODE.SUBST        |
-       | code_if                 | CODE.IF           |
-     # | code_instructions       | CODE.INSTRUCTIONS |
-       | code_list               | CODE.LIST         |
-       | code_member?            | CODE.MEMBER       |
-       | code_name_lookup        | CODE.DEFINITION   |
-       | code_noop               | CODE.NOOP         |
-       | code_nth_cdr            | CODE.NTHCDR       |
-       | code_nth_backbone_point | CODE.NTH          |
-       | code_nth_point          | CODE.EXTRACT      |
-       | code_null?              | CODE.NULL         |
-       | code_points             | CODE.SIZE         |
-       | code_pop                | CODE.POP          |
-       | code_position           | CODE.POSITION     |
-       | code_quote              | CODE.QUOTE        |
-     # | code.random             | CODE.RAND         |
-       | code_replace_nth_point  | CODE.INSERT       |
-       | code_rotate             | CODE.ROT          |
-       | code_shove              | CODE.SHOVE        |
-       | code_swap               | CODE.SWAP         |
-       | code_yank               | CODE.YANK         |
-       | code_yankdup            | CODE.YANKDUP      |
+        | instruction             | PUSH3             |
+        | code_atom?              | CODE.ATOM         |
+        | code_backbone_points    | CODE.LENGTH       |
+        | code_car                | CODE.CAR          |
+        | code_cdr                | CODE.CDR          |
+        | code_concatenate        | CODE.APPEND       |
+        | code_cons               | CODE.CONS         |
+        | code_container          | CODE.CONTAINER    |
+        | code_contains?          | CODE.CONTAINS     |
+        | code_define             | CODE.DEFINE       |
+        | code_depth              | CODE.STACKDEPTH   |
+        | code_discrepancy        | CODE.DISCREPANCY  |
+        | code_do_count           | CODE.DO*COUNT     |
+        | code_do_range           | CODE.DO*RANGE     |
+        | code_do_times           | CODE.DO*TIMES     |
+        | code_duplicate          | CODE.DUP          |
+        | code_equal?             | CODE.=            |
+        | code_execute            | CODE.DO*          |
+        | code_execute_then_pop   | CODE.DO           |
+        | code_flush              | CODE.FLUSH        |
+        | code_from_bool          | CODE.FROMBOOLEAN  |
+        | code_from_float         | CODE.FROMFLOAT    |
+        | code_from_int           | CODE.FROMINTEGER  |
+        | code_from_name          | CODE.FROMNAME     |
+        | code_gsub               | CODE.SUBST        |
+        | code_if                 | CODE.IF           |
+      # | code_instructions       | CODE.INSTRUCTIONS |
+        | code_list               | CODE.LIST         |
+        | code_in_backbone?       | CODE.MEMBER       |
+        | code_name_lookup        | CODE.DEFINITION   |
+        | code_noop               | CODE.NOOP         |
+        | code_nth_cdr            | CODE.NTHCDR       |
+        | code_nth_backbone_point | CODE.NTH          |
+        | code_nth_point          | CODE.EXTRACT      |
+        | code_null?              | CODE.NULL         |
+        | code_points             | CODE.SIZE         |
+        | code_pop                | CODE.POP          |
+        | code_position           | CODE.POSITION     |
+        | code_quote              | CODE.QUOTE        |
+      # | code.random             | CODE.RAND         |
+        | code_replace_nth_point  | CODE.INSERT       |
+        | code_rotate             | CODE.ROT          |
+        | code_shove              | CODE.SHOVE        |
+        | code_swap               | CODE.SWAP         |
+        | code_yank               | CODE.YANK         |
+        | code_yankdup            | CODE.YANKDUP      |
       
     Examples: Exec
       | instruction    | PUSH3           |

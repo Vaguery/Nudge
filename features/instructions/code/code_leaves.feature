@@ -1,7 +1,7 @@
 Feature: code_leaves instruction
-  In order to manipulate Nudge blocks as if they were Arrays
+  In order to restructure Nudge blocks as if they were trees of code
   As a programmer
-  I want a Nudge instruction that act like Ruby's Array.flatten method
+  I want a Nudge instruction that extracts all the non-block elements from a script
     
   Scenario: code_leaves should push the elements of a simple block onto the :code stack
     Given I have pushed "block {do a do b}" onto the :code stack
@@ -30,5 +30,12 @@ Feature: code_leaves instruction
   Scenario: code_leaves should remove empty blocks with no replacement
     Given I have pushed "block {}" onto the :code stack
     When I execute the Nudge instruction "code_leaves"
-    And stack :code should have depth 0
+    Then stack :code should have depth 0
+    
+    
+  Scenario: code_leaves should skip internal empty blocks as well
+    Given I have pushed "block {ref a block {}}" onto the :code stack
+    When I execute the Nudge instruction "code_leaves"
+    Then stack :code should have depth 1
+  
   
