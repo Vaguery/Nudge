@@ -37,12 +37,18 @@ describe "CodeNthCdr" do
         @context.stacks[:code][-1].should match_script("block {ref b block {ref c}}")
       end
       
-      it "the :int is positive >= the backbone length of the :code" do
-        pending "BROKEN"
-        @context.stacks[:int] << "6"
+      it "the :int is positive == the backbone length of the :code" do
+        @context.stacks[:int] << "3"
         @inst.execute
         @context.stacks[:code][-1].should match_script("block {}")
       end
+      
+      it "the :int is positive > the backbone length of the :code" do
+        @context.stacks[:int] << "612"
+        @inst.execute
+        @context.stacks[:code][-1].should match_script("block {}")
+      end
+      
     end
     
     describe "the :code is an atom" do
@@ -68,6 +74,18 @@ describe "CodeNthCdr" do
         @context.stacks[:code][-1].should match_script("block { }")
       end
     end
+    
+    describe "the code is crap" do
+      before(:each) do
+        @context.stacks[:code] << "bippity boppity boo"
+      end
+      
+      it "generates an error" do
+        @context.stacks[:int] << "2"
+        @inst.execute
+        @context.stacks[:error][-1].should == "foo"
+      end
+    end
   end
   
   describe "output" do
@@ -79,7 +97,6 @@ describe "CodeNthCdr" do
     end 
     
     it "should push an :error when it fails" do
-      pending "BROKEN"
       @context.stacks[:code] << "foo bar"
       @context.stacks[:int] << "1"
       @inst.execute

@@ -38,6 +38,18 @@ describe "BlockPoint" do
     end
   end
   
+  describe "#backbone_points" do
+    it "returns the number of points just inside the root" do
+      point_1 = NudgePoint.new
+      point_2 = NudgePoint.new
+      point_3 = NudgePoint.new
+      point_4 = BlockPoint.new(point_1, point_2)
+      
+      BlockPoint.new(point_3, point_4).backbone_points.should == 2
+      BlockPoint.new().backbone_points.should == 0
+    end
+  end
+  
   describe "#get_point_at (n: Fixnum)" do
     it "returns this point if n == 0" do
       point = BlockPoint.new

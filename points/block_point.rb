@@ -12,6 +12,10 @@ class BlockPoint < NudgePoint
     @points.inject(1) {|n,point| n + point.points }
   end
   
+  def backbone_points
+    @points.length
+  end
+  
   def script_and_values
     values = []
     

@@ -6,9 +6,12 @@ class CodeNthCdr < NudgeInstruction
   def process
     tree = NudgePoint.from(code(0))
     tree = BlockPoint.new(tree) unless tree.is_a?(BlockPoint)
-    n = [tree.points - 1, [int(0), 0].max].min
     
-    n.times { tree.delete_point_at(1) }
+    if tree.points > 1
+      n = [tree.points - 1, [int(0), 0].max].min
+      n.times { tree.delete_point_at(1) }
+    end
+    
     put :code, tree.to_script
   end
 end
