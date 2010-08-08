@@ -6,7 +6,7 @@ class FloatUnlimitedPower < NudgeInstruction
     result = float(1) ** float(0)
     
     raise NudgeError::NaN,
-      "result of float_unlimited_power was not a float" if result.is_a?(Complex) || result==(1.0/0)
+      "result of float_unlimited_power was not a float" if result.is_a?(Complex) || result.infinite?
     
     put :float, result
     

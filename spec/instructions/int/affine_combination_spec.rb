@@ -29,6 +29,15 @@ describe "IntAffineInterpolation" do
       @context.run
       @context.stacks[:error][-1].should include("NaN")
     end
+    
+    it "should produce an :error if the result is -Infinity" do
+      @context.stacks[:int] << "0" << "-999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999099999999999999999999999999999999999999999999999999999"
+      @context.stacks[:float] << "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999099999999999999999999999999999999999999999999999999999"
+      @context.stacks[:exec] << NudgePoint.from("do int_affine_combination")
+      @context.run
+      @context.stacks[:error][-1].should include("NaN")
+    end
+    
   end
   
   describe "effects" do
