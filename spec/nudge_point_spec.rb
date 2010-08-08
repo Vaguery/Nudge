@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require File.expand_path("../nudge", File.dirname(__FILE__))
+require 'spec_helper'
 
 describe "NudgePoint" do
   describe ".from (script: String)" do
@@ -10,8 +10,9 @@ describe "NudgePoint" do
   
   describe "#to_script" do
     it "returns a string representation of the Nudge program described by this point" do
-      script = NudgePoint.from("block { ref x value «code» do int_add }\n«int»1\n«code»value «int»\n«int»2").to_script
-      NudgePoint.from(script).to_script.should == script
+      starting_script = "block { ref x value «code» do int_add }\n«int»1\n«code»value «int»\n«int»2"
+      end_script = NudgePoint.from(starting_script).to_script
+      starting_script.should match_script(end_script)
     end
   end
   

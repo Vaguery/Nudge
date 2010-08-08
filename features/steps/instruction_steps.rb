@@ -2,6 +2,7 @@
 require 'stringio'
 require 'spec/stubs/cucumber'
 
+
 Before do
   @context = NudgeExecutable.new("")
   @context.stacks[:exec].pop_value # makes the stack empty
