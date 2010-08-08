@@ -5,7 +5,7 @@ Given /^the blueprint "([^"]*)"$/ do |script|
 end
 
 
-Given /^I have bound "([^"]*)" to an :([^"]*) with value "([^"]*)"$/ do |name, type, value|
+Given /^I have bound "([^"]*)" to an* :([^"]*) with value "([^"]*)"$/ do |name, type, value|
   @context.variable_bindings[name.to_sym] = Value.new(type.to_sym, value)
 end
 
