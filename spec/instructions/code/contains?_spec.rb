@@ -15,16 +15,9 @@ describe "CodeContainsQ" do
   
   describe "#process" do
     describe "arg1 is not a block" do
-      it "should return true if arg2 has the same script" do
+      it "should return false" do
         @context.stacks[:code] << "ref t"
         @context.stacks[:code] << "ref t"
-        @inst.execute
-        @context.stacks[:bool][-1].should == "true"
-      end
-      
-      it "should return true if arg2 is different" do
-        @context.stacks[:code] << "ref t"
-        @context.stacks[:code] << "ref q"
         @inst.execute
         @context.stacks[:bool][-1].should == "false"
       end
