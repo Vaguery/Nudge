@@ -63,7 +63,7 @@ Feature: Push3 coverage
         | code_nth_cdr            | CODE.NTHCDR       |
         | code_nth_backbone_point | CODE.NTH          |
         | code_nth_point          | CODE.EXTRACT      |
-        | code_null?              | CODE.NULL         |
+      # | code_null?              | CODE.NULL         |
         | code_points             | CODE.SIZE         |
         | code_pop                | CODE.POP          |
         | code_position           | CODE.POSITION     |

@@ -64,7 +64,7 @@ describe "CodeReplaceNthPoint" do
   end
   
   describe "output" do
-    it "should push an :int item when it works" do
+    it "should push a :code item when it works" do
       @context.stacks[:code] << "ref a"
       @context.stacks[:code] << "do int_add"
       @context.stacks[:int] << "1"
