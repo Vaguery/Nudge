@@ -1,7 +1,7 @@
 Feature: code_shatter instruction
   In order to manipulate Nudge blocks as if they were Arrays
   As a programmer
-  I want a Nudge instruction that act like Ruby's Array.flatten method
+  I want a Nudge instruction that extracts all the elements of a block
     
   Scenario: code_shatter(1) should push all the elements of a simple block onto the :code stack
     Given I have pushed "block {do a do b}" onto the :code stack

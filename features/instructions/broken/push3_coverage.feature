@@ -56,7 +56,7 @@ Feature: Push3 coverage
         | code_gsub               | CODE.SUBST        |
         | code_if                 | CODE.IF           |
       # | code_instructions       | CODE.INSTRUCTIONS |
-        | code_list               | CODE.LIST         |
+        | code_bundle             | CODE.LIST         |
         | code_in_backbone?       | CODE.MEMBER       |
         | code_name_lookup        | CODE.DEFINITION   |
         | code_noop               | CODE.NOOP         |
