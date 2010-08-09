@@ -45,8 +45,7 @@ describe "CodeTreeDuplicate" do
     describe "the code is crap" do
       it "should generate an :error if arg1 is broken" do
         @context.stacks[:code] << "ksfkjbskdf"
-        @context.stacks[:code] << "ref y"
-        @context.stacks[:exec] << NudgePoint.from("do code_position")
+        @context.stacks[:exec] << NudgePoint.from("do code_tree_duplicate")
         @context.run
         @context.stacks[:error][-1].should include("InvalidScript")
       end
