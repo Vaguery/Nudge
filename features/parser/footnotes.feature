@@ -6,19 +6,20 @@ Feature: Footnotes
 
   
   Scenario: footnotes must be indicated by guillemet-wrapped string at start of line
-    Given I have pushed "value «int» \n «int» 9" onto the :exec stack
-    When I take one execution step
-    Then stack :int should have depth 1  
+   Given context
+   When event
+   Then outcome
     
   Scenario: footnotes should be reassociated with value points in the code section, by type
-  #   Given a program "block {value «int» value «float»}\n«int» 7 \n«float» 1.1"
-  #   When I ask for a list of every program point
-  #   Then point 1 should be the entire script
-  #   And point 2 should be "value «int» \n«int» 7"
-  #   And point 3 should be "value «float» \n«float» 1.1"
-  #   
-  #   
-  # Scenario: footnotes are reassociated in order of appearance, by type
+    Given context
+    When event
+    Then outcome
+  
+  Scenario: footnotes are reassociated in order of appearance, by type
+  Given context
+  When event
+  Then outcome
+  
   #   Given a program "block {value «int» value «float» value «bool» value «int»}\n«float» 1.1 \n«bool» false \n«int» 88 \n«int» -2"
   #   When I ask for a list of every program point
   #   Then point 2 should be "value «int» \n«int» 88"
@@ -27,35 +28,55 @@ Feature: Footnotes
   #   And point 5 should be "value «int» \n«int» -2"
   # 
   # 
-  # Scenario: once a script has been parsed, the footnotes should be listed in depth-first order
+  Scenario: once a script has been parsed, the footnotes should be listed in depth-first order
+  Given context
+  When event
+  Then outcome
+  
   #   Given a program "block {value «int» value «float» value «bool» value «int»}\n«float» 1.1 \n«bool» false \n«int» 88 \n«int» -2"
   #   When I parse it
   #   And print it out again
   #   Then the script should be "block {value «int» value «float» value «bool» value «int»} \n«int» 88 \n«float» 1.1 \n«bool» false \n«int» -2"
   #   
   # 
-  # Scenario: extra footnotes should be thrown away after parsing
+  Scenario: extra footnotes should be thrown away after parsing
+  Given context
+  When event
+  Then outcome
+  
   #   Given a program "value «int» \n«int» 8 \n«int» 99"
   #   When I parse it
   #   And print it out again
   #   Then the script should be "value «int» \n«int» 8"
   #   
   #   
-  # Scenario: scripts with missing footnotes can be parsed
+  Scenario: scripts with missing footnotes can be parsed
+  Given context
+  When event
+  Then outcome
+  
   #   Given a script "block { value «int»}"
   #   When I parse it
   #   And ask for a list of every program point
   #   Then point 2 should be "value «int» \n«int»"
   # 
   # 
-  # Scenario: scripts with footnotes that lack a value string can be parsed
+  Scenario: scripts with footnotes that lack a value string can be parsed
+  Given context
+  When event
+  Then outcome
+  
   #   Given a script "block { value «int»} \n«int»"
   #   When I parse it
   #   And ask for a list of every program point
   #   Then point 2 should be "value «int» \n«int»"
   # 
   # 
-  # Scenario: no validation of footnote text occurs
+  Scenario: no validation of footnote text occurs
+  Given context
+  When event
+  Then outcome
+  
   #   Given a script "value «int» \n«int» 9.12"
   #   When I parse it
   #   Then the value string associated with the :int will be "9.12"
