@@ -23,6 +23,11 @@ Given /^I have set the Interpreter's termination time_limit to (\d+)$/ do |limit
   @context.instance_variable_set(:@time_limit,limit.to_i)
 end
 
+Given /^the time counter is set to (\d+)$/ do |seconds|
+  @context.instance_variable_set(:@time_elapsed,seconds.to_f)
+end
+
+
 Given /^I have set the Interpreter's min_int to (\d+)$/ do |lower|
   @context.instance_variable_set(:@min_int,lower.to_i)
 end
@@ -69,6 +74,9 @@ Then /^the interpreter's ([^"]*) should be ([-0-9.]+)$/ do |variable_name, value
   @context.instance_variable_get(variable_name.intern).should == eval(value)
 end
 
+Then /^the time elapsed should be (\d+) second$/ do |expected_time|
+  @context.time_elapsed.should be_close(expected_time.to_f, 0.1)
+end
 
 
 Then /^its script should be "([^"]*)"$/ do |script|
