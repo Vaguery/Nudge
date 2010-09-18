@@ -4,15 +4,15 @@ Feature: bool_and instruction
   I want a suite of Boolean logic Nudge instructions
   
   Scenario Outline: basic arity-2 instructions
-    Given I have pushed "<arg1>" onto the :<stack1> stack
-    And I have pushed "<arg2>" onto the :<stack2> stack
+    Given I have pushed "<arg1>" onto the :bool stack
+    And I have pushed "<arg2>" onto the :bool stack
     When I execute the Nudge instruction "<instruction>"
-    Then "<result>" should be in position <posn> of the :<out_stack> stack
-    And stack :<out_stack> should have depth <final_depth>
+    Then "<result>" should be in position -1 of the :bool stack
+    And stack :bool should have depth 1
     
     Examples: bool_and
-      | arg1  | stack1 | arg2  | stack2 | instruction | result | posn | out_stack | final_depth |
-      | true  | bool   | true  | bool   | bool_and    | true   | 0    | bool      | 1           |
-      | true  | bool   | false | bool   | bool_and    | false  | 0    | bool      | 1           |
-      | false | bool   | true  | bool   | bool_and    | false  | 0    | bool      | 1           |
-      | false | bool   | false | bool   | bool_and    | false  | 0    | bool      | 1           |
+      | arg1  | arg2  | instruction | result | 
+      | true  | true  | bool_and    | true   | 
+      | true  | false | bool_and    | false  | 
+      | false | true  | bool_and    | false  | 
+      | false | false | bool_and    | false  | 

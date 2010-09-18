@@ -6,9 +6,9 @@ Feature: Footnotes
 
   
   Scenario: footnotes must be indicated by guillemet-wrapped string at start of line
-    Given a script "value «int» \n «int» 9"
-    When I try to parse it
-    Then it cannot be parsed  
+    Given I have pushed "value «int» \n «int» 9" onto the :exec stack
+    When I take one execution step
+    Then stack :int should have depth 1  
     
   Scenario: footnotes should be reassociated with value points in the code section, by type
   #   Given a program "block {value «int» value «float»}\n«int» 7 \n«float» 1.1"
