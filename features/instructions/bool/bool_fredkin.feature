@@ -13,7 +13,7 @@ Feature: bool_fredkin instruction
     And "<out2>" should be in position -1 of the :bool stack
     And stack :bool should have depth 3
     
-    Examples: bool_and
+    Examples: fredkin gate
       | control_arg | arg1  | arg2  | control_out | out1  | out2  |
       | true        | true  | false | true        | false | true  |
       | true        | false | true  | true        | true  | false |
